@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="Premake4"
-	ProjectGUID="{30903A5B-29A4-0735-D991-CAF9337A861B}"
+	ProjectGUID="{D1053988-C786-5F40-B198-557DADC9D24D}"
 	RootNamespace="Premake4"
 	Keyword="Win32Proj"
 	>
@@ -777,6 +777,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\host\string_endswith.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\host\string_hash.c"
 					>
 				</File>
 			</Filter>

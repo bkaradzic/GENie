@@ -157,6 +157,7 @@
         <File Name="../../src/host/premake_main.c"/>
         <File Name="../../src/host/scripts.c"/>
         <File Name="../../src/host/string_endswith.c"/>
+        <File Name="../../src/host/string_hash.c"/>
       </VirtualDirectory>
       <VirtualDirectory Name="tools">
         <File Name="../../src/tools/dotnet.lua"/>
@@ -331,9 +332,63 @@
         <CustomPreBuild></CustomPreBuild>
       </AdditionalRules>
     </Configuration>
+    <Configuration Name="Release_Universal32" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable">
+      <General OutputFile="../../bin/release/premake4" IntermediateDirectory="obj/Universal32/Release" Command="./premake4" CommandArguments="" WorkingDirectory="../../bin/release" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-Wall -Wextra;-Os;-arch i386 -arch ppc">
+        <IncludePath Value="../../src/host/lua-5.1.4/src"/>
+        <Preprocessor Value="NDEBUG"/>
+        <Preprocessor Value="LUA_USE_MACOSX"/>
+      </Compiler>
+      <Linker Required="yes" Options="-Wl,-x;-arch i386 -arch ppc">
+        <LibraryPath Value="." />
+        <Library Value="CoreServices" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Debug_Universal32" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable">
+      <General OutputFile="../../bin/debug/premake4" IntermediateDirectory="obj/Universal32/Debug" Command="./premake4" CommandArguments="" WorkingDirectory="../../bin/debug" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-Wall -Wextra;-g;-arch i386 -arch ppc">
+        <IncludePath Value="../../src/host/lua-5.1.4/src"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="LUA_USE_MACOSX"/>
+      </Compiler>
+      <Linker Required="yes" Options="-arch i386 -arch ppc">
+        <LibraryPath Value="." />
+        <Library Value="CoreServices" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
   </Settings>
   <Dependencies name="Release">
   </Dependencies>
   <Dependencies name="Debug">
+  </Dependencies>
+  <Dependencies name="Release_Universal32">
+  </Dependencies>
+  <Dependencies name="Debug_Universal32">
   </Dependencies>
 </CodeLite_Project>

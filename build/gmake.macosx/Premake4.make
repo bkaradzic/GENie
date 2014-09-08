@@ -63,6 +63,50 @@ ifeq ($(config),debug)
   endef
 endif
 
+ifeq ($(config),releaseuniv32)
+  OBJDIR     = obj/Universal32/Release
+  TARGETDIR  = ../../bin/release
+  TARGET     = $(TARGETDIR)/premake4
+  DEFINES   += -DNDEBUG -DLUA_USE_MACOSX
+  INCLUDES  += -I../../src/host/lua-5.1.4/src
+  ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L. -Wl,-x -arch i386 -arch ppc -mmacosx-version-min=10.4
+  LDDEPS    +=
+  LIBS      += $(LDDEPS) -framework CoreServices
+  LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
+ifeq ($(config),debuguniv32)
+  OBJDIR     = obj/Universal32/Debug
+  TARGETDIR  = ../../bin/debug
+  TARGET     = $(TARGETDIR)/premake4
+  DEFINES   += -D_DEBUG -DLUA_USE_MACOSX
+  INCLUDES  += -I../../src/host/lua-5.1.4/src
+  ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
+  LDDEPS    +=
+  LIBS      += $(LDDEPS) -framework CoreServices
+  LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
 OBJECTS := \
 	$(OBJDIR)/os_chdir.o \
 	$(OBJDIR)/os_copyfile.o \
@@ -82,6 +126,7 @@ OBJECTS := \
 	$(OBJDIR)/premake_main.o \
 	$(OBJDIR)/scripts.o \
 	$(OBJDIR)/string_endswith.o \
+	$(OBJDIR)/string_hash.o \
 	$(OBJDIR)/lapi.o \
 	$(OBJDIR)/lauxlib.o \
 	$(OBJDIR)/lbaselib.o \
@@ -239,6 +284,10 @@ $(OBJDIR)/scripts.o: ../../src/host/scripts.c
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/string_endswith.o: ../../src/host/string_endswith.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/string_hash.o: ../../src/host/string_hash.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

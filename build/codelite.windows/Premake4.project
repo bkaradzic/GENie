@@ -157,6 +157,7 @@
         <File Name="../../src/host/premake_main.c"/>
         <File Name="../../src/host/scripts.c"/>
         <File Name="../../src/host/string_endswith.c"/>
+        <File Name="../../src/host/string_hash.c"/>
       </VirtualDirectory>
       <VirtualDirectory Name="tools">
         <File Name="../../src/tools/dotnet.lua"/>

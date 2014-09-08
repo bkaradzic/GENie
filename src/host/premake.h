@@ -47,6 +47,7 @@
 
 
 /* Bootstrapping helper functions */
+unsigned long do_hash(const char* str, int seed);
 int do_isfile(const char* filename);
 
 

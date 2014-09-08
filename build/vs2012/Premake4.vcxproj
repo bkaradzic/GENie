@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{31F45095-3DDC-0DC9-BEC3-0E6B4A80D413}</ProjectGuid>
+    <ProjectGuid>{2119AF28-35F1-E342-81E3-369E6203164A}</ProjectGuid>
     <RootNamespace>Premake4</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
@@ -171,6 +171,8 @@
     </ClCompile>
     <ClCompile Include="..\..\src\host\string_endswith.c">
     </ClCompile>
+    <ClCompile Include="..\..\src\host\string_hash.c">
+    </ClCompile>
     <ClCompile Include="..\..\src\host\lua-5.1.4\src\lapi.c">
     </ClCompile>
     <ClCompile Include="..\..\src\host\lua-5.1.4\src\lauxlib.c">
@@ -241,20 +243,19 @@
     <None Include="..\..\src\_manifest.lua" />
     <None Include="..\..\src\_premake_main.lua" />
     <None Include="..\..\src\actions\clean\_clean.lua" />
-    <None Include="..\..\src\actions\codeblocks\_codeblocks.lua" />
     <None Include="..\..\src\actions\codeblocks\codeblocks_cbp.lua" />
     <None Include="..\..\src\actions\codeblocks\codeblocks_workspace.lua" />
-    <None Include="..\..\src\actions\codelite\_codelite.lua" />
+    <None Include="..\..\src\actions\codeblocks\_codeblocks.lua" />
     <None Include="..\..\src\actions\codelite\codelite_project.lua" />
     <None Include="..\..\src\actions\codelite\codelite_workspace.lua" />
-    <None Include="..\..\src\actions\example\_example.lua" />
+    <None Include="..\..\src\actions\codelite\_codelite.lua" />
     <None Include="..\..\src\actions\example\example_project.lua" />
     <None Include="..\..\src\actions\example\example_solution.lua" />
-    <None Include="..\..\src\actions\make\_make.lua" />
+    <None Include="..\..\src\actions\example\_example.lua" />
     <None Include="..\..\src\actions\make\make_cpp.lua" />
     <None Include="..\..\src\actions\make\make_csharp.lua" />
     <None Include="..\..\src\actions\make\make_solution.lua" />
-    <None Include="..\..\src\actions\vstudio\_vstudio.lua" />
+    <None Include="..\..\src\actions\make\_make.lua" />
     <None Include="..\..\src\actions\vstudio\vs2002_csproj.lua" />
     <None Include="..\..\src\actions\vstudio\vs2002_csproj_user.lua" />
     <None Include="..\..\src\actions\vstudio\vs2002_solution.lua" />
@@ -268,10 +269,11 @@
     <None Include="..\..\src\actions\vstudio\vs2010_vcxproj_filters.lua" />
     <None Include="..\..\src\actions\vstudio\vs2012.lua" />
     <None Include="..\..\src\actions\vstudio\vs2013.lua" />
-    <None Include="..\..\src\actions\xcode\_xcode.lua" />
+    <None Include="..\..\src\actions\vstudio\_vstudio.lua" />
     <None Include="..\..\src\actions\xcode\xcode4_workspace.lua" />
     <None Include="..\..\src\actions\xcode\xcode_common.lua" />
     <None Include="..\..\src\actions\xcode\xcode_project.lua" />
+    <None Include="..\..\src\actions\xcode\_xcode.lua" />
     <None Include="..\..\src\base\action.lua" />
     <None Include="..\..\src\base\api.lua" />
     <None Include="..\..\src\base\bake.lua" />
@@ -297,6 +299,7 @@
     <None Include="..\..\src\tools\snc.lua" />
     <None Include="..\..\tests\pepperfish_profiler.lua" />
     <None Include="..\..\tests\premake4.lua" />
+    <None Include="..\..\tests\testfx.lua" />
     <None Include="..\..\tests\test_dofile.lua" />
     <None Include="..\..\tests\test_gmake_cpp.lua" />
     <None Include="..\..\tests\test_gmake_cs.lua" />
@@ -309,16 +312,15 @@
     <None Include="..\..\tests\test_targets.lua" />
     <None Include="..\..\tests\test_vs2002_sln.lua" />
     <None Include="..\..\tests\test_vs2003_sln.lua" />
-    <None Include="..\..\tests\testfx.lua" />
     <None Include="..\..\tests\actions\test_clean.lua" />
     <None Include="..\..\tests\actions\codeblocks\codeblocks_files.lua" />
     <None Include="..\..\tests\actions\codeblocks\environment_variables.lua" />
     <None Include="..\..\tests\actions\codeblocks\test_filters.lua" />
     <None Include="..\..\tests\actions\codelite\codelite_files.lua" />
+    <None Include="..\..\tests\actions\make\test_makesettings.lua" />
     <None Include="..\..\tests\actions\make\test_make_escaping.lua" />
     <None Include="..\..\tests\actions\make\test_make_linking.lua" />
     <None Include="..\..\tests\actions\make\test_make_pch.lua" />
-    <None Include="..\..\tests\actions\make\test_makesettings.lua" />
     <None Include="..\..\tests\actions\make\test_wiidev.lua" />
     <None Include="..\..\tests\actions\vstudio\test_vs200x_vcproj.lua" />
     <None Include="..\..\tests\actions\vstudio\test_vs200x_vcproj_linker.lua" />
@@ -346,8 +348,8 @@
     <None Include="..\..\tests\actions\vstudio\vc2010\test_files.lua" />
     <None Include="..\..\tests\actions\vstudio\vc2010\test_filters.lua" />
     <None Include="..\..\tests\actions\vstudio\vc2010\test_header.lua" />
-    <None Include="..\..\tests\actions\vstudio\vc2010\test_link_settings.lua" />
     <None Include="..\..\tests\actions\vstudio\vc2010\test_links.lua" />
+    <None Include="..\..\tests\actions\vstudio\vc2010\test_link_settings.lua" />
     <None Include="..\..\tests\actions\vstudio\vc2010\test_mfc.lua" />
     <None Include="..\..\tests\actions\vstudio\vc2010\test_output_props.lua" />
     <None Include="..\..\tests\actions\vstudio\vc2010\test_pch.lua" />

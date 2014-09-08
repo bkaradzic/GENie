@@ -58,7 +58,7 @@ function dorelease()
 --
 -- Pre-release checklist
 --
-
+--[[
    print( "")
    print( "BEFORE RUNNING THIS SCRIPT follow the checklist in RELEASE.txt" )
    print( "")
@@ -105,7 +105,7 @@ function dorelease()
 	io.output("src/host/premake.c")
 	io.write(text)
 	io.close()
-
+--]]
 
 --
 -- Make absolutely sure the embedded scripts have been updated
@@ -128,7 +128,7 @@ function dorelease()
 	--
 	-- Remove extra directories
 	--
-
+--[[
 		print("Cleaning up the source tree...")
 
 		os.rmdir("samples")
@@ -136,7 +136,7 @@ function dorelease()
 		os.rmdir(".hg")
 		os.rmdir(".hgignore")
 		os.rmdir(".hgtags")
-
+--]]
 	
 	--
 	-- Generate project files to the build directory
@@ -144,9 +144,10 @@ function dorelease()
 
 		print("Generating project files...")
 		
-		exec("premake4 /to=build/vs2005 vs2005")
+--		exec("premake4 /to=build/vs2005 vs2005")
 		exec("premake4 /to=build/vs2008 vs2008")
 		exec("premake4 /to=build/vs2010 vs2010")
+		exec("premake4 /to=build/vs2012 vs2012")
 		exec("premake4 /to=build/gmake.windows /os=windows gmake")
 		exec("premake4 /to=build/gmake.unix /os=linux gmake")
 		exec("premake4 /to=build/gmake.macosx /os=macosx /platform=universal32 gmake")
@@ -162,12 +163,12 @@ function dorelease()
 	--
 	-- Create source package
 	--
-
+--[[
 		print("Creating source code package...")
 
 		os.chdir("..")
 		exec("zip -r9 %s-src.zip %s/*", pkgname, pkgname)
-
+--]]
 --
 -- Create a binary package for this platform. This step requires a working
 -- GNU/Make/GCC environment. I use MinGW on Windows.

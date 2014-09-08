@@ -67,7 +67,8 @@ SYSTEM_INFO getsysteminfo()
 	GetNativeSystemInfoSig nativeSystemInfo = (GetNativeSystemInfoSig)
 	GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetNativeSystemInfo");
 
-	SYSTEM_INFO systemInfo = {{0}};
+	SYSTEM_INFO systemInfo;
+	memset(&systemInfo, 0, sizeof(systemInfo));
 	if ( nativeSystemInfo ) nativeSystemInfo(&systemInfo);
 	else GetSystemInfo(&systemInfo);
 	return systemInfo;
@@ -75,7 +76,8 @@ SYSTEM_INFO getsysteminfo()
 
 void getversion(struct OsVersionInfo* info)
 {
-	OSVERSIONINFOEX versionInfo = {0};
+	OSVERSIONINFOEX versionInfo;
+	memset(&versionInfo, 0, sizeof(versionInfo));
 
 	versionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	GetVersionEx((OSVERSIONINFO*)&versionInfo);

@@ -41,6 +41,45 @@
 					<Add library="CoreServices" />
 				</Linker>
 			</Target>
+			<Target title="Release|Universal32">
+				<Option output="../../bin/release/premake4" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Universal32/Release" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall -Wextra" />
+					<Add option="-Os" />
+					<Add option="-arch i386 -arch ppc" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DLUA_USE_MACOSX" />
+					<Add directory="../../src/host/lua-5.1.4/src" />
+				</Compiler>
+				<Linker>
+					<Add option="-Wl,-x" />
+					<Add option="-arch i386 -arch ppc" />
+					<Add directory="." />
+					<Add library="CoreServices" />
+				</Linker>
+			</Target>
+			<Target title="Debug|Universal32">
+				<Option output="../../bin/debug/premake4" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Universal32/Debug" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall -Wextra" />
+					<Add option="-g" />
+					<Add option="-arch i386 -arch ppc" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DLUA_USE_MACOSX" />
+					<Add directory="../../src/host/lua-5.1.4/src" />
+				</Compiler>
+				<Linker>
+					<Add option="-arch i386 -arch ppc" />
+					<Add directory="." />
+					<Add library="CoreServices" />
+				</Linker>
+			</Target>
 		</Build>
 		<Unit filename="../../BUILD.txt">
 			<Option virtualFolder="." />
@@ -72,17 +111,14 @@
 		<Unit filename="../../src/actions/clean/_clean.lua">
 			<Option virtualFolder="src/actions/clean" />
 		</Unit>
-		<Unit filename="../../src/actions/codeblocks/_codeblocks.lua">
-			<Option virtualFolder="src/actions/codeblocks" />
-		</Unit>
 		<Unit filename="../../src/actions/codeblocks/codeblocks_cbp.lua">
 			<Option virtualFolder="src/actions/codeblocks" />
 		</Unit>
 		<Unit filename="../../src/actions/codeblocks/codeblocks_workspace.lua">
 			<Option virtualFolder="src/actions/codeblocks" />
 		</Unit>
-		<Unit filename="../../src/actions/codelite/_codelite.lua">
-			<Option virtualFolder="src/actions/codelite" />
+		<Unit filename="../../src/actions/codeblocks/_codeblocks.lua">
+			<Option virtualFolder="src/actions/codeblocks" />
 		</Unit>
 		<Unit filename="../../src/actions/codelite/codelite_project.lua">
 			<Option virtualFolder="src/actions/codelite" />
@@ -90,8 +126,8 @@
 		<Unit filename="../../src/actions/codelite/codelite_workspace.lua">
 			<Option virtualFolder="src/actions/codelite" />
 		</Unit>
-		<Unit filename="../../src/actions/example/_example.lua">
-			<Option virtualFolder="src/actions/example" />
+		<Unit filename="../../src/actions/codelite/_codelite.lua">
+			<Option virtualFolder="src/actions/codelite" />
 		</Unit>
 		<Unit filename="../../src/actions/example/example_project.lua">
 			<Option virtualFolder="src/actions/example" />
@@ -99,8 +135,8 @@
 		<Unit filename="../../src/actions/example/example_solution.lua">
 			<Option virtualFolder="src/actions/example" />
 		</Unit>
-		<Unit filename="../../src/actions/make/_make.lua">
-			<Option virtualFolder="src/actions/make" />
+		<Unit filename="../../src/actions/example/_example.lua">
+			<Option virtualFolder="src/actions/example" />
 		</Unit>
 		<Unit filename="../../src/actions/make/make_cpp.lua">
 			<Option virtualFolder="src/actions/make" />
@@ -111,8 +147,8 @@
 		<Unit filename="../../src/actions/make/make_solution.lua">
 			<Option virtualFolder="src/actions/make" />
 		</Unit>
-		<Unit filename="../../src/actions/vstudio/_vstudio.lua">
-			<Option virtualFolder="src/actions/vstudio" />
+		<Unit filename="../../src/actions/make/_make.lua">
+			<Option virtualFolder="src/actions/make" />
 		</Unit>
 		<Unit filename="../../src/actions/vstudio/vs2002_csproj.lua">
 			<Option virtualFolder="src/actions/vstudio" />
@@ -153,8 +189,8 @@
 		<Unit filename="../../src/actions/vstudio/vs2013.lua">
 			<Option virtualFolder="src/actions/vstudio" />
 		</Unit>
-		<Unit filename="../../src/actions/xcode/_xcode.lua">
-			<Option virtualFolder="src/actions/xcode" />
+		<Unit filename="../../src/actions/vstudio/_vstudio.lua">
+			<Option virtualFolder="src/actions/vstudio" />
 		</Unit>
 		<Unit filename="../../src/actions/xcode/xcode4_workspace.lua">
 			<Option virtualFolder="src/actions/xcode" />
@@ -163,6 +199,9 @@
 			<Option virtualFolder="src/actions/xcode" />
 		</Unit>
 		<Unit filename="../../src/actions/xcode/xcode_project.lua">
+			<Option virtualFolder="src/actions/xcode" />
+		</Unit>
+		<Unit filename="../../src/actions/xcode/_xcode.lua">
 			<Option virtualFolder="src/actions/xcode" />
 		</Unit>
 		<Unit filename="../../src/base/action.lua">
@@ -240,6 +279,9 @@
 		<Unit filename="../../tests/premake4.lua">
 			<Option virtualFolder="tests" />
 		</Unit>
+		<Unit filename="../../tests/testfx.lua">
+			<Option virtualFolder="tests" />
+		</Unit>
 		<Unit filename="../../tests/test_dofile.lua">
 			<Option virtualFolder="tests" />
 		</Unit>
@@ -276,9 +318,6 @@
 		<Unit filename="../../tests/test_vs2003_sln.lua">
 			<Option virtualFolder="tests" />
 		</Unit>
-		<Unit filename="../../tests/testfx.lua">
-			<Option virtualFolder="tests" />
-		</Unit>
 		<Unit filename="../../tests/actions/test_clean.lua">
 			<Option virtualFolder="tests/actions" />
 		</Unit>
@@ -294,6 +333,9 @@
 		<Unit filename="../../tests/actions/codelite/codelite_files.lua">
 			<Option virtualFolder="tests/actions/codelite" />
 		</Unit>
+		<Unit filename="../../tests/actions/make/test_makesettings.lua">
+			<Option virtualFolder="tests/actions/make" />
+		</Unit>
 		<Unit filename="../../tests/actions/make/test_make_escaping.lua">
 			<Option virtualFolder="tests/actions/make" />
 		</Unit>
@@ -301,9 +343,6 @@
 			<Option virtualFolder="tests/actions/make" />
 		</Unit>
 		<Unit filename="../../tests/actions/make/test_make_pch.lua">
-			<Option virtualFolder="tests/actions/make" />
-		</Unit>
-		<Unit filename="../../tests/actions/make/test_makesettings.lua">
 			<Option virtualFolder="tests/actions/make" />
 		</Unit>
 		<Unit filename="../../tests/actions/make/test_wiidev.lua">
@@ -387,10 +426,10 @@
 		<Unit filename="../../tests/actions/vstudio/vc2010/test_header.lua">
 			<Option virtualFolder="tests/actions/vstudio/vc2010" />
 		</Unit>
-		<Unit filename="../../tests/actions/vstudio/vc2010/test_link_settings.lua">
+		<Unit filename="../../tests/actions/vstudio/vc2010/test_links.lua">
 			<Option virtualFolder="tests/actions/vstudio/vc2010" />
 		</Unit>
-		<Unit filename="../../tests/actions/vstudio/vc2010/test_links.lua">
+		<Unit filename="../../tests/actions/vstudio/vc2010/test_link_settings.lua">
 			<Option virtualFolder="tests/actions/vstudio/vc2010" />
 		</Unit>
 		<Unit filename="../../tests/actions/vstudio/vc2010/test_mfc.lua">
@@ -595,6 +634,9 @@
 			<Option virtualFolder="src/host" />
 		</Unit>
 		<Unit filename="../../src/host/string_endswith.c">
+			<Option virtualFolder="src/host" />
+		</Unit>
+		<Unit filename="../../src/host/string_hash.c">
 			<Option virtualFolder="src/host" />
 		</Unit>
 		<Unit filename="../../src/host/lua-5.1.4/src/lapi.c">

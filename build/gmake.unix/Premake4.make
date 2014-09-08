@@ -82,6 +82,7 @@ OBJECTS := \
 	$(OBJDIR)/premake_main.o \
 	$(OBJDIR)/scripts.o \
 	$(OBJDIR)/string_endswith.o \
+	$(OBJDIR)/string_hash.o \
 	$(OBJDIR)/lapi.o \
 	$(OBJDIR)/lauxlib.o \
 	$(OBJDIR)/lbaselib.o \
@@ -239,6 +240,10 @@ $(OBJDIR)/scripts.o: ../../src/host/scripts.c
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/string_endswith.o: ../../src/host/string_endswith.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/string_hash.o: ../../src/host/string_hash.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
