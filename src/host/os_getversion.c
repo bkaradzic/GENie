@@ -6,6 +6,7 @@
 
 #include "premake.h"
 #include <stdlib.h>
+#include <string.h> // OSX memset
 
 struct OsVersionInfo
 {
@@ -21,7 +22,8 @@ static void getversion(struct OsVersionInfo* info);
 
 int os_getversion(lua_State* L)
 {
-	struct OsVersionInfo info = {0};
+	struct OsVersionInfo info;
+	memset(&info, 0, sizeof(info));
 	getversion(&info);
 
 	lua_newtable(L);
