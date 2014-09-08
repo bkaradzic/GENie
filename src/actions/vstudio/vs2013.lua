@@ -4,9 +4,13 @@
 -- Copyright (c) 2013 Jason Perkins and the Premake project
 --
 
+	premake.vstudio.vc2013 = {}
+	local vc2013 = premake.vstudio.vc2013
+	local vstudio = premake.vstudio
+
 
 ---
--- Register a command-line action for Visual Studio 2012.
+-- Register a command-line action for Visual Studio 2013.
 ---
 
 	newaction
