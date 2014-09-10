@@ -17,32 +17,33 @@
 		language    "C"
 		kind        "ConsoleApp"
 		flags       { "No64BitChecks", "ExtraWarnings", "StaticRuntime" }
-		includedirs { "src/host/lua-5.1.4/src" }
+		includedirs { "../src/host/lua-5.1.4/src" }
 
 		files
 		{
-			"*.txt", "**.lua",
-			"src/**.h", "src/**.c",
-			"src/host/scripts.c"
+			"../**.lua",
+			"../src/**.h",
+			"../src/**.c",
+			"../src/host/scripts.c"
 		}
 
 		excludes
 		{
-			"src/premake.lua",
-			"src/host/lua-5.1.4/src/lua.c",
-			"src/host/lua-5.1.4/src/luac.c",
-			"src/host/lua-5.1.4/src/print.c",
-			"src/host/lua-5.1.4/**.lua",
-			"src/host/lua-5.1.4/etc/*.c"
+			"../src/premake.lua",
+			"../src/host/lua-5.1.4/src/lua.c",
+			"../src/host/lua-5.1.4/src/luac.c",
+			"../src/host/lua-5.1.4/src/print.c",
+			"../src/host/lua-5.1.4/**.lua",
+			"../src/host/lua-5.1.4/etc/*.c"
 		}
 
 		configuration "Debug"
-			targetdir   "bin/debug"
+			targetdir   "../bin/debug"
 			defines     "_DEBUG"
 			flags       { "Symbols" }
 
 		configuration "Release"
-			targetdir   "bin/release"
+			targetdir   "../bin/release"
 			defines     "NDEBUG"
 			flags       { "OptimizeSize" }
 
