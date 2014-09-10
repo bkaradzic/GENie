@@ -1,5 +1,5 @@
-[genie](https://github.com/bkaradzic/genie) - Project generator tool
-====================================================================
+[genie](https://github.com/bkaradzic/genie#what-is-it) - Project generator tool
+===============================================================================
 
 What is it?
 -----------
@@ -55,7 +55,7 @@ In conclusion, forking it and maintaining it is not much different from current
 state of premake, it's just acknowledging the problem, and dealing with it.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
----------------------------------------------
+-----------------------------------------------------------------
 
 	Copyright (c) 2003-2013 Jason Perkins and individual contributors.
 	All rights reserved.
