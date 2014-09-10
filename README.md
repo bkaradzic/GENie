@@ -28,7 +28,7 @@ Premake project is on long hiatus. The last official release 4.3 is released in
 November 2010, 4.4 beta 5 was released in November 2013, and the main developer
 is focusing on Premake 5.
 
-Multiple requests for releasing new version end up with this type of answer [Link](http://industriousone.com/topic/premake-release-neglect-becoming-critical):
+Multiple requests for releasing new version end up with this type of [answer](http://industriousone.com/topic/premake-release-neglect-becoming-critical):
 
 	Then help fix the bugs marked 4.4 in the SourceForge tracker so that we can
 	make a release. Or review and improve the patches so that I may get them
