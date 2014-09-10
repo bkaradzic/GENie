@@ -52,7 +52,7 @@ only one thing. I don't need build system, or package manager, etc. just a
 simple project generator.
 
 In conclusion, forking it and maintaining it is not much different from current
-state of premake, it's just acknowledging the problem, and dealing with it.
+state of Premake, it's just acknowledging the problem, and dealing with it.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
