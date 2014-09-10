@@ -37,8 +37,8 @@ Multiple requests for releasing new version end up with this type of [answer](ht
 	know, pays me).
 
 So author has high expectations for release, but he is not working on it, but
-rather working on completely different... **pay me to finish this sentence**,
-you get a point. :)
+rather working on completely different... Pay me to finish this sentence...
+You get the point. :)
 
 This long period between releases where multiple versions are in flight cause
 confusion for users who are not familiar with Premake, and they just need to
