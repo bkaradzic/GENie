@@ -5,9 +5,8 @@
 --
 
 
-	local scriptfile    = "premake4.lua"
-	local shorthelp     = "Type 'premake4 --help' for help"
-	local versionhelp   = "premake4 (Premake Build Script Generator) %s"
+	local shorthelp     = "Type 'genie --help' for help"
+	local versionhelp   = "genie - Project generator tool %s"
 	
 	_WORKING_DIR        = os.getcwd()
 
@@ -84,11 +83,34 @@
 		-- If there is a project script available, run it to get the
 		-- project information, available options and actions, etc.
 		
-		local fname = _OPTIONS["file"] or scriptfile
-		if (os.isfile(fname)) then
-			dofile(fname)
-		end
 
+		if (nil ~= _OPTIONS["file"]) then
+			local fname = _OPTIONS["file"]
+			if (os.isfile(fname)) then
+				dofile(fname)
+			else
+				error("No genie script '" .. fname .. "' found!", 2)
+			end
+		else
+			local found = false
+			local scriptfiles = {
+				"genie.lua",
+				"scripts/genie.lua",
+				"scripts/solution.lua",
+				"premake4.lua" -- legacy
+			}
+			for _, fname in ipairs(scriptfiles) do
+				if (os.isfile(fname)) then
+					dofile(fname)
+					found = true
+					break
+				end
+			end
+
+			if (not found) then
+				error("No genie script found!", 2)
+			end
+		end
 
 		-- Process special options
 		
@@ -108,13 +130,6 @@
 		if (not _ACTION) then
 			print(shorthelp)
 			return 1
-		end
-
-		
-		-- If there wasn't a project script I've got to bail now
-		
-		if (not os.isfile(fname)) then
-			error("No Premake script ("..scriptfile..") found!", 2)
 		end
 
 		

@@ -107,7 +107,7 @@
 -- a release build.
 --
 
-	dofile("scripts/embed.lua")
+	dofile("embed.lua")
 
 	newaction {
 		trigger     = "embed",
@@ -122,7 +122,7 @@
 --
 
 
-	dofile("scripts/release.lua")
+	dofile("release.lua")
 
 	newaction {
 		trigger     = "release",
