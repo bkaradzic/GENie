@@ -11,8 +11,8 @@ Supported project generators:
  * Visual Studio 2008, 2010, 2012, 2013
  * GNU Makefile
 
-Download
---------
+Download (stable)
+-----------------
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -23,8 +23,8 @@ https://github.com/bkaradzic/bx/raw/master/tools/bin/darwin/genie
 Windows:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/windows/genie.exe
 
-Building
---------
+Building (dev)
+--------------
 
 	$ git clone https://github.com/bkaradzic/genie
 	$ cd genie
@@ -39,7 +39,7 @@ intention to keep it in sync with it.
 ## Changelog (since fork)
 
  - Added vs2013 support.
- - Added hash UUID support. os.uuid(<string>) should produce consistent UUID.
+ - Added hash UUID support. `os.uuid(<string>)` should produce consistent UUID.
  - Added search for default script. Default script name is changed to genie.lua
    (solution.lua and premake4.lua are also allowed), and it can be located in
    `scripts` directory.
