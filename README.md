@@ -11,10 +11,22 @@ Supported project generators:
  * Visual Studio 2008, 2010, 2012, 2013
  * GNU Makefile
 
+Download
+--------
+
+Linux:
+https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
+
+OSX:
+https://github.com/bkaradzic/bx/raw/master/tools/bin/darwin/genie
+
+Windows:
+https://github.com/bkaradzic/bx/raw/master/tools/bin/windows/genie.exe
+
 Building
 --------
 
-	$ make -C build/gmake.<linux/osx/windows>
+	$ make -C build/gmake.<linux/macosx/windows>
 
 History
 -------
