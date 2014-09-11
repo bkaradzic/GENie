@@ -26,6 +26,8 @@ https://github.com/bkaradzic/bx/raw/master/tools/bin/windows/genie.exe
 Building
 --------
 
+	$ git clone https://github.com/bkaradzic/genie
+	$ cd genie
 	$ make -C build/gmake.<linux/macosx/windows>
 
 History
