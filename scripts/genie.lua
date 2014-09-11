@@ -8,15 +8,19 @@
 -- worry about the /scripts argument and all that.
 --
 
-	solution "Premake4"
+	solution "genie"
 		configurations { "Release", "Debug" }
 		location ( _OPTIONS["to"] )
 
-	project "Premake4"
-		targetname  "premake4"
+	project "genie"
+		targetname  "genie"
 		language    "C"
 		kind        "ConsoleApp"
-		flags       { "No64BitChecks", "ExtraWarnings", "StaticRuntime" }
+		flags       {
+			"No64BitChecks",
+			"ExtraWarnings",
+			"StaticRuntime"
+		}
 		includedirs { "../src/host/lua-5.1.4/src" }
 
 		files

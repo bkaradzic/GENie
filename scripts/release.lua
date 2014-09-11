@@ -39,14 +39,14 @@ function dorelease()
 	local version = _ARGS[1]
 	local kind = _ARGS[2]
 	
-    local pkgname = "premake-" .. version
+    local pkgname = "genie-" .. version
 
 
 --
 -- Look for required utilities
 --
 
-	local required = { "hg", "make", "gcc" }
+	local required = { "make", "gcc" }
 	for _, value in ipairs(required) do
 		z = exec("%s --version", value)
 		if z ~= 0 then
@@ -113,7 +113,7 @@ function dorelease()
 
 	print("Updating embedded scripts...")
 
-	z = exec("premake4 embed")
+	z = exec("genie embed")
 	if z ~= 0 then
 		error("** Failed to update the embedded scripts", 0)
 	end
@@ -144,21 +144,9 @@ function dorelease()
 
 		print("Generating project files...")
 		
-		exec("premake4 /to=../build/vs2008 vs2008")
-		exec("premake4 /to=../build/vs2010 vs2010")
-		exec("premake4 /to=../build/vs2012 vs2012")
-		exec("premake4 /to=../build/vs2013 vs2013")
-		exec("premake4 /to=../build/gmake.windows /os=windows gmake")
-		exec("premake4 /to=../build/gmake.unix /os=linux gmake")
-		exec("premake4 /to=../build/gmake.macosx /os=macosx /platform=universal32 gmake")
-		exec("premake4 /to=../build/codeblocks.windows /os=windows codeblocks")
-		exec("premake4 /to=../build/codeblocks.unix /os=linux codeblocks")
-		exec("premake4 /to=../build/codeblocks.macosx /os=macosx /platform=universal32 codeblocks")
-		exec("premake4 /to=../build/codelite.windows /os=windows codelite")
-		exec("premake4 /to=../build/codelite.unix /os=linux codelite")
-		exec("premake4 /to=../build/codelite.macosx /os=macosx /platform=universal32 codelite")
-		exec("premake4 /to=../build/xcode3 /platform=universal32 xcode3")
-
+		exec("genie /to=../build/gmake.windows /os=windows gmake")
+		exec("genie /to=../build/gmake.unix /os=linux gmake")
+		exec("genie /to=../build/gmake.macosx /os=macosx /platform=universal32 gmake")
 
 	--
 	-- Create source package
@@ -178,17 +166,17 @@ function dorelease()
 	
 		print("Building platform binary release...")
 
-		exec("premake4 /platform=universal32 gmake")
+		exec("genie /platform=universal32 gmake")
 		exec("make config=%s", iif(os.is("macosx"), "releaseuniv32", "release"))
 
 		local fname
 		os.chdir("bin/release")
 		if os.is("windows") then
 			fname = string.format("%s-windows.zip", pkgname)
-			exec("zip -9 %s premake4.exe", fname)
+			exec("zip -9 %s genie.exe", fname)
 		else
 			fname = string.format("%s-%s.tar.gz", pkgname, os.get())
-			exec("tar czvf %s premake4", fname)
+			exec("tar czvf %s genie", fname)
 		end
 
 		os.copyfile(fname, "../../../" .. fname)

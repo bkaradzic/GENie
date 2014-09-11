@@ -6,18 +6,18 @@ ifndef config
 endif
 export config
 
-PROJECTS := Premake4
+PROJECTS := genie
 
 .PHONY: all clean help $(PROJECTS)
 
 all: $(PROJECTS)
 
-Premake4: 
-	@echo "==== Building Premake4 ($(config)) ===="
-	@${MAKE} --no-print-directory -C . -f Premake4.make
+genie: 
+	@echo "==== Building genie ($(config)) ===="
+	@${MAKE} --no-print-directory -C . -f genie.make
 
 clean:
-	@${MAKE} --no-print-directory -C . -f Premake4.make clean
+	@${MAKE} --no-print-directory -C . -f genie.make clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -29,6 +29,6 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   Premake4"
+	@echo "   genie"
 	@echo ""
 	@echo "For more information, see http://industriousone.com/premake/quick-start"

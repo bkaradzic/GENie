@@ -22,16 +22,16 @@ endif
 ifeq ($(config),release)
   OBJDIR     = obj/Release
   TARGETDIR  = ../../bin/release
-  TARGET     = $(TARGETDIR)/premake4
-  DEFINES   += -DNDEBUG -DLUA_USE_POSIX -DLUA_USE_DLOPEN
+  TARGET     = $(TARGETDIR)/genie.exe
+  DEFINES   += -DNDEBUG
   INCLUDES  += -I../../src/host/lua-5.1.4/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
   ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -s -rdynamic
+  ALL_LDFLAGS   += $(LDFLAGS) -L. -s
   LDDEPS    +=
-  LIBS      += $(LDDEPS) -lm -ldl
+  LIBS      += $(LDDEPS) -lole32
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -44,16 +44,16 @@ endif
 ifeq ($(config),debug)
   OBJDIR     = obj/Debug
   TARGETDIR  = ../../bin/debug
-  TARGET     = $(TARGETDIR)/premake4
-  DEFINES   += -D_DEBUG -DLUA_USE_POSIX -DLUA_USE_DLOPEN
+  TARGET     = $(TARGETDIR)/genie.exe
+  DEFINES   += -D_DEBUG
   INCLUDES  += -I../../src/host/lua-5.1.4/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
   ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -rdynamic
+  ALL_LDFLAGS   += $(LDFLAGS) -L.
   LDDEPS    +=
-  LIBS      += $(LDDEPS) -lm -ldl
+  LIBS      += $(LDDEPS) -lole32
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -129,7 +129,7 @@ all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)
 	@:
 
 $(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)
-	@echo Linking Premake4
+	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -150,7 +150,7 @@ else
 endif
 
 clean:
-	@echo Cleaning Premake4
+	@echo Cleaning genie
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)

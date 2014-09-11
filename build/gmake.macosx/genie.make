@@ -22,7 +22,7 @@ endif
 ifeq ($(config),release)
   OBJDIR     = obj/Release
   TARGETDIR  = ../../bin/release
-  TARGET     = $(TARGETDIR)/premake4
+  TARGET     = $(TARGETDIR)/genie
   DEFINES   += -DNDEBUG -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.1.4/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -44,7 +44,7 @@ endif
 ifeq ($(config),debug)
   OBJDIR     = obj/Debug
   TARGETDIR  = ../../bin/debug
-  TARGET     = $(TARGETDIR)/premake4
+  TARGET     = $(TARGETDIR)/genie
   DEFINES   += -D_DEBUG -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.1.4/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -66,7 +66,7 @@ endif
 ifeq ($(config),releaseuniv32)
   OBJDIR     = obj/Universal32/Release
   TARGETDIR  = ../../bin/release
-  TARGET     = $(TARGETDIR)/premake4
+  TARGET     = $(TARGETDIR)/genie
   DEFINES   += -DNDEBUG -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.1.4/src
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
@@ -88,7 +88,7 @@ endif
 ifeq ($(config),debuguniv32)
   OBJDIR     = obj/Universal32/Debug
   TARGETDIR  = ../../bin/debug
-  TARGET     = $(TARGETDIR)/premake4
+  TARGET     = $(TARGETDIR)/genie
   DEFINES   += -D_DEBUG -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.1.4/src
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
@@ -173,7 +173,7 @@ all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)
 	@:
 
 $(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)
-	@echo Linking Premake4
+	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -194,7 +194,7 @@ else
 endif
 
 clean:
-	@echo Cleaning Premake4
+	@echo Cleaning genie
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)
