@@ -2,100 +2,100 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="scripts">
-      <UniqueIdentifier>{C71C3968-6F6B-99DE-8E33-C511F216CB04}</UniqueIdentifier>
+      <UniqueIdentifier>{02F4E16F-AA0E-1F3C-068B-CEFC26058520}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{145F7A85-F234-8370-B55C-6864895D1E37}</UniqueIdentifier>
+      <UniqueIdentifier>{82E0D8B9-9807-D110-3C77-12CBF98D3ACF}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions">
-      <UniqueIdentifier>{26502C18-76EE-DB96-CC87-E0F3BE3638E7}</UniqueIdentifier>
+      <UniqueIdentifier>{B635D29C-3A94-F86C-83F0-A754F3907FDF}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\clean">
-      <UniqueIdentifier>{ACA037DA-50AC-846C-11BD-DA1EE62AC7E8}</UniqueIdentifier>
+      <UniqueIdentifier>{09013A8E-4DEF-BE47-E59C-BC21599AAC29}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\codeblocks">
-      <UniqueIdentifier>{D4B7E901-9269-C4A4-41FB-61D27CA15590}</UniqueIdentifier>
+      <UniqueIdentifier>{3BEAE4E8-C194-6C95-C87F-A993DFA12C08}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\codelite">
-      <UniqueIdentifier>{00F27A03-E1F4-9DA4-F72B-E5A65AEBA7FF}</UniqueIdentifier>
+      <UniqueIdentifier>{EA101BBF-A582-F380-C80C-59F0B008BAFD}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\example">
-      <UniqueIdentifier>{0BA0B24B-ACD8-5CED-3C7C-18BA9E2570B4}</UniqueIdentifier>
+      <UniqueIdentifier>{CC5A0D3C-ACA8-20AF-AD2A-6C621D22C2B3}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\make">
-      <UniqueIdentifier>{CBA59A2F-D4B4-3A47-0B53-D2540AADF969}</UniqueIdentifier>
+      <UniqueIdentifier>{F8C898DE-CECB-C47E-5224-8946A44A6757}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\vstudio">
-      <UniqueIdentifier>{D74650A0-CD38-DE54-A240-021A99B8865C}</UniqueIdentifier>
+      <UniqueIdentifier>{F68916D8-128B-FD1E-B5A4-3EC2B699783E}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\actions\xcode">
-      <UniqueIdentifier>{BF28672D-9E9E-4E6A-3E66-0B51183CE9BC}</UniqueIdentifier>
+      <UniqueIdentifier>{A08BA2AF-1315-A80D-67FF-A2BC6CF93BB6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\base">
-      <UniqueIdentifier>{A4E06200-CCB7-D40C-4B5A-96630E5E2357}</UniqueIdentifier>
+      <UniqueIdentifier>{97D0845C-D81A-BA9C-2125-7B9571332E6F}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\tools">
-      <UniqueIdentifier>{729417DC-278E-B8CD-59D1-7969F3953052}</UniqueIdentifier>
+      <UniqueIdentifier>{BA0D9649-5901-29BC-DC21-533036247B73}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests">
-      <UniqueIdentifier>{002DDB27-737C-2988-27D3-052292777813}</UniqueIdentifier>
+      <UniqueIdentifier>{FE4D7E08-7A9F-CDD3-B65B-E3B9C64C4BB9}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions">
-      <UniqueIdentifier>{13B22D59-39A7-4C4F-239F-A6EC0A08598A}</UniqueIdentifier>
+      <UniqueIdentifier>{11569CB9-5226-B258-7F10-56CF3EA44212}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\codeblocks">
-      <UniqueIdentifier>{5BC1C942-912F-B7D9-DF30-199FC9F905EE}</UniqueIdentifier>
+      <UniqueIdentifier>{FF2085C3-E47D-2793-E469-FE0438047D4F}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\codelite">
-      <UniqueIdentifier>{5E4B4755-7A26-4CBA-E369-45E348595FDB}</UniqueIdentifier>
+      <UniqueIdentifier>{E969AAAB-6702-3482-3A84-A171AC25B5EF}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\make">
-      <UniqueIdentifier>{45755673-4CD9-0B99-5B60-CCC618611AD5}</UniqueIdentifier>
+      <UniqueIdentifier>{85EB580F-B80A-EC73-AFDD-64A2067C72FA}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\vstudio">
-      <UniqueIdentifier>{51542FB6-85A2-20DB-11F7-25DE74028A16}</UniqueIdentifier>
+      <UniqueIdentifier>{CC684009-C887-079B-2E22-EA2D05EFC593}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\vstudio\cs2002">
-      <UniqueIdentifier>{138A6E9E-5229-C58A-6628-1AFBFD8C1CFF}</UniqueIdentifier>
+      <UniqueIdentifier>{0853F9D7-98E8-EBC9-0296-A7AA92CF0304}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\vstudio\cs2005">
-      <UniqueIdentifier>{DF593C28-4843-DB14-27AA-73A838302D52}</UniqueIdentifier>
+      <UniqueIdentifier>{1D27B379-A03B-337E-53EF-D6CEBA713717}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\vstudio\sln2005">
-      <UniqueIdentifier>{AD233FD7-4FA8-0AC7-4D12-A0F605C187F3}</UniqueIdentifier>
+      <UniqueIdentifier>{B8CDBD77-0488-ED26-1774-E7B98D34E190}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\vstudio\vc200x">
-      <UniqueIdentifier>{7A8C76F3-2E41-156B-50A3-9E499A8AAA36}</UniqueIdentifier>
+      <UniqueIdentifier>{0D54C6A5-091E-289E-14A3-5500DA4C3191}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\vstudio\vc2010">
-      <UniqueIdentifier>{89D3CE0D-03B4-DA12-E8E5-B308AA94D7FA}</UniqueIdentifier>
+      <UniqueIdentifier>{CF5019FE-3B54-2CB2-8D45-C05E654E74E5}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\actions\xcode">
-      <UniqueIdentifier>{5CC63E94-D6CD-541C-7160-7BFEB55F542B}</UniqueIdentifier>
+      <UniqueIdentifier>{15F33DAE-68C0-780F-A633-A3F1D9DF524A}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\baking">
-      <UniqueIdentifier>{0C54FB43-8D55-2693-22F2-BFF5FB073F2F}</UniqueIdentifier>
+      <UniqueIdentifier>{5EE92493-655D-5B99-BA2A-073CBED6835C}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\base">
-      <UniqueIdentifier>{A62BF4A1-4872-37EB-3BAE-A925094CB662}</UniqueIdentifier>
+      <UniqueIdentifier>{16CE05EE-0D9D-0FB9-5BD5-E3487E7C4EF8}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\folder">
-      <UniqueIdentifier>{AD9E895F-83B6-BDD6-D378-C439DF4A4683}</UniqueIdentifier>
+      <UniqueIdentifier>{340CB265-D95E-15EF-1A5B-83FE8C843FE5}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\project">
-      <UniqueIdentifier>{DC5B052F-6A32-31C7-AA91-61C220D3D80B}</UniqueIdentifier>
+      <UniqueIdentifier>{B14AC028-2214-9011-5B98-C0235D0767DB}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\tools">
-      <UniqueIdentifier>{4D86DF80-2F91-E865-87E1-F664BC1D89E4}</UniqueIdentifier>
+      <UniqueIdentifier>{3EDB6977-C8BC-118C-015B-AC55318F6C98}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\host">
-      <UniqueIdentifier>{7A8B279B-D16F-13AE-05E3-1D60CC7C1D73}</UniqueIdentifier>
+      <UniqueIdentifier>{02CD0C86-EE14-9F78-5235-42CB12ABE701}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\host\lua-5.1.4">
-      <UniqueIdentifier>{D33D55F7-EC01-6B23-08FF-71447F154518}</UniqueIdentifier>
+      <UniqueIdentifier>{DB7D6181-2C05-355F-B846-C144FDFCD529}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\host\lua-5.1.4\src">
-      <UniqueIdentifier>{23C340B3-3756-8EA8-ACD1-A6BEF70B285B}</UniqueIdentifier>
+      <UniqueIdentifier>{E38F9112-2640-E36A-75B7-6D0A20F524AA}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

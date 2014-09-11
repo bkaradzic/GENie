@@ -1,10 +1,10 @@
-[genie](https://github.com/bkaradzic/genie#what-is-it) - Project generator tool
+[GENie](https://github.com/bkaradzic/genie#what-is-it) - Project generator tool
 ===============================================================================
 
 What is it?
 -----------
 
-**genie** is project generator tool. It automagically generates project from LUA
+**GENie** is project generator tool. It automagically generates project from LUA
 script, making applying the same settings for multiple projects easy.
 
 Supported project generators:
@@ -19,7 +19,7 @@ Building
 History
 -------
 
-Initial version of **genie** is fork of Premake 4.4 beta 5, and there is no
+Initial version of **GENie** is fork of Premake 4.4 beta 5, and there is no
 intention to keep it in sync with it.
 
 ## Why fork?

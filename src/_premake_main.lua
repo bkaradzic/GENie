@@ -43,7 +43,32 @@
 		
 		return true
 	end
-	
+
+	local function findDefaultScript(names)
+		local dir  = path.getabsolute("./")
+		local last = ""
+		while dir ~= last do
+			for _, name in ipairs(names) do
+
+				local script0 = dir .. "/" .. name
+				if (os.isfile(script0)) then
+					return dir, name
+				end
+
+				local script1 = dir .. "/scripts/" .. name
+				if (os.isfile(script1)) then
+					return dir .. "/scripts/", name
+				end
+			end
+
+			last = dir
+			dir  = path.getabsolute(dir .. "/..")
+
+			if dir == "." then break end
+		end
+
+		return nil, nil
+	end
 
 --
 -- Script-side program entry point.
@@ -92,22 +117,11 @@
 				error("No genie script '" .. fname .. "' found!", 2)
 			end
 		else
-			local found = false
-			local scriptfiles = {
-				"genie.lua",
-				"scripts/genie.lua",
-				"scripts/solution.lua",
-				"premake4.lua" -- legacy
-			}
-			for _, fname in ipairs(scriptfiles) do
-				if (os.isfile(fname)) then
-					dofile(fname)
-					found = true
-					break
-				end
-			end
-
-			if (not found) then
+			local dir, name = findDefaultScript({"genie.lua", "solution.lua", "premake4.lua"})
+			if dir ~= nil then
+				os.chdir(dir)
+				dofile(name)
+			else
 				error("No genie script found!", 2)
 			end
 		end

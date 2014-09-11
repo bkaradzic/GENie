@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{935B85D6-8A06-8062-0FE2-B1CCFBF2FCFC}</ProjectGuid>
+    <ProjectGuid>{25285A01-0257-8EC2-057C-B99EACDA770E}</ProjectGuid>
     <RootNamespace>Premake4</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
