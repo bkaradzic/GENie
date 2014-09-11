@@ -53,6 +53,7 @@
 --
 
 	function io.printf(msg, ...)
+		local arg={...}
 		if not io.eol then
 			io.eol = "\n"
 		end
@@ -62,9 +63,9 @@
 		end
 
 		if type(msg) == "number" then
-			s = string.rep(io.indent, msg) .. string.format(unpack(arg))
+			s = string.rep(io.indent, msg) .. string.format(table.unpack(arg))
 		else
-			s = string.format(msg, unpack(arg))
+			s = string.format(msg, table.unpack(arg))
 		end
 		
 		if io.captured then

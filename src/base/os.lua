@@ -10,7 +10,8 @@
 --
 
 	function os.executef(cmd, ...)
-		cmd = string.format(cmd, unpack(arg))
+		local arg={...}
+		cmd = string.format(cmd, table.unpack(arg))
 		return os.execute(cmd)
 	end
 
@@ -217,6 +218,7 @@
 	end
 
 	function os.matchdirs(...)
+		local arg={...}
 		local result = { }
 		for _, mask in ipairs(arg) do
 			domatch(result, mask, false)
@@ -225,6 +227,7 @@
 	end
 
 	function os.matchfiles(...)
+		local arg={...}
 		local result = { }
 		for _, mask in ipairs(arg) do
 			domatch(result, mask, true)

@@ -228,6 +228,7 @@
 --
 
 	function path.join(...)
+		local arg={...}
 		local numargs = select("#", ...)
 		if numargs == 0 then
 			return "";
