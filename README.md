@@ -22,6 +22,14 @@ History
 Initial version of **GENie** is fork of Premake 4.4 beta 5, and there is no
 intention to keep it in sync with it.
 
+## Changelog (since fork)
+
+ - Added vs2013 support.
+ - Added hash UUID support. os.uuid(<string>) should produce consistent UUID.
+ - Added search for default script. Default script name is changed to genie.lua
+   (solution.lua and premake4.lua are also allowed), and it can be located in
+   script directory.
+
 ## Why fork?
 
 At the time of writing this, September 2014, Premake project is on long hiatus.
