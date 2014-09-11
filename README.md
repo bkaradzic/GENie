@@ -14,13 +14,13 @@ Supported project generators:
 Download
 --------
 
-Linux:
+Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
 
-OSX:
+OSX:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/darwin/genie
 
-Windows:
+Windows:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/windows/genie.exe
 
 Building
