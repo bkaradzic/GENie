@@ -42,7 +42,7 @@ intention to keep it in sync with it.
  - Added hash UUID support. os.uuid(<string>) should produce consistent UUID.
  - Added search for default script. Default script name is changed to genie.lua
    (solution.lua and premake4.lua are also allowed), and it can be located in
-   script directory.
+   `scripts` directory.
 
 ## Why fork?
 
