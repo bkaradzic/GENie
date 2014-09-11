@@ -24,9 +24,9 @@ intention to keep it in sync with it.
 
 ## Why fork?
 
-Premake project is on long hiatus. The last official release 4.3 is released in
-November 2010, 4.4 beta 5 was released in November 2013, and the main developer
-is focusing on Premake 5.
+At the time of writing this, September 2014, Premake project is on long hiatus.
+The last official release 4.3 is released in November 2010, 4.4 beta 5 was
+released in November 2013, and the main developer is focusing on Premake 5.
 
 Multiple requests for releasing new version end up with this type of [answer](http://industriousone.com/topic/premake-release-neglect-becoming-critical):
 
