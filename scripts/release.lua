@@ -19,7 +19,7 @@ function dorelease()
 --
 
 	local function exec(cmd, ...)
-		cmd = string.format(cmd, unpack(arg))
+		cmd = string.format(cmd, ...)
 		local z = os.execute(cmd .. " > output.log 2> error.log")
 		os.remove("output.log")
 		os.remove("error.log")
@@ -49,7 +49,7 @@ function dorelease()
 	local required = { "make", "gcc" }
 	for _, value in ipairs(required) do
 		z = exec("%s --version", value)
-		if z ~= 0 then
+		if z ~= true then
 			error("** '" .. value .. "' not found", 0)
 		end
 	end
@@ -86,7 +86,7 @@ function dorelease()
 	
 	os.rmdir(pkgname)
 	z = exec( "hg clone -r %s .. %s", version, pkgname)
-	if z ~= 0 then
+	if z ~= true then
 		error("** Failed to download tagged sources", 0)
 	end
 	
@@ -114,7 +114,7 @@ function dorelease()
 	print("Updating embedded scripts...")
 
 	z = exec("genie embed")
-	if z ~= 0 then
+	if z ~= true then
 		error("** Failed to update the embedded scripts", 0)
 	end
 
