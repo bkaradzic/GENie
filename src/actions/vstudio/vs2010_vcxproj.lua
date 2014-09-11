@@ -285,7 +285,7 @@
 			end
 
 			if cfg.flags.ExtraWarnings then
-				_p(3,'<SmallerTypeCheck>true</SmallerTypeCheck>')
+--				_p(3,'<SmallerTypeCheck>true</SmallerTypeCheck>')
 			end
 		else
 			_p(3,'<StringPooling>true</StringPooling>')

@@ -44,6 +44,8 @@ intention to keep it in sync with it.
    (solution.lua and premake4.lua are also allowed), and it can be located in
    `scripts` directory.
  - Updated LUA from 5.1.4 to 5.2.3.
+ - Disabled SmallerTypeCheck VS option when ExtraWarnings is set (need to move
+   it into separate option).
 
 ## Why fork?
 
