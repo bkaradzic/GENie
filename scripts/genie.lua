@@ -21,7 +21,7 @@
 			"ExtraWarnings",
 			"StaticRuntime"
 		}
-		includedirs { "../src/host/lua-5.1.4/src" }
+		includedirs { "../src/host/lua-5.2.3/src" }
 
 		files
 		{
@@ -34,21 +34,20 @@
 		excludes
 		{
 			"../src/premake.lua",
-			"../src/host/lua-5.1.4/src/lua.c",
-			"../src/host/lua-5.1.4/src/luac.c",
-			"../src/host/lua-5.1.4/src/print.c",
-			"../src/host/lua-5.1.4/**.lua",
-			"../src/host/lua-5.1.4/etc/*.c"
+			"../src/host/lua-5.2.3/src/lua.c",
+			"../src/host/lua-5.2.3/src/luac.c",
+			"../src/host/lua-5.2.3/**.lua",
+			"../src/host/lua-5.2.3/etc/*.c"
 		}
 
 		configuration "Debug"
 			targetdir   "../bin/debug"
-			defines     "_DEBUG"
+			defines     { "_DEBUG", "LUA_COMPAT_MODULE" }
 			flags       { "Symbols" }
 
 		configuration "Release"
 			targetdir   "../bin/release"
-			defines     "NDEBUG"
+			defines     { "NDEBUG", "LUA_COMPAT_MODULE" }
 			flags       { "OptimizeSize" }
 
 		configuration "vs*"

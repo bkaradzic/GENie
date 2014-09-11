@@ -128,7 +128,8 @@
 --
 
 	function printf(msg, ...)
-		print(string.format(msg, unpack(arg)))
+		local arg={...}
+		print(string.format(msg, table.unpack(arg)))
 	end
 
 	
