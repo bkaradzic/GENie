@@ -43,6 +43,7 @@ intention to keep it in sync with it.
  - Added search for default script. Default script name is changed to genie.lua
    (solution.lua and premake4.lua are also allowed), and it can be located in
    `scripts` directory.
+ - Updated LUA from 5.1.4 to 5.2.3.
 
 ## Why fork?
 
