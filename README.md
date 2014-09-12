@@ -46,6 +46,7 @@ intention to keep it in sync with it.
  - Updated LUA from 5.1.4 to 5.2.3.
  - Disabled SmallerTypeCheck VS option when ExtraWarnings is set (need to move
    it into separate option).
+ - New versioning scheme based on revision number from git.
 
 ## Why fork?
 
