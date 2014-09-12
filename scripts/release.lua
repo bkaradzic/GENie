@@ -96,16 +96,19 @@ function dorelease()
 --
 -- Update the version number in premake.c
 --
-
+--]]
 	print("Updating version number...")
 
-	io.input("src/host/premake.c")
-	local text = io.read("*a")
-	text = text:gsub("HEAD", version)
-	io.output("src/host/premake.c")
-	io.write(text)
+	local f = io.popen("git rev-list --count HEAD")
+	local rev = string.match(f:read("*a"), ".*%S")
+	f:close()
+	f = io.popen("git log --format=format:%H HEAD^..HEAD")
+	local sha1 = f:read("*a")
+	f:close()
+	io.output("../src/host/version.h")
+	io.write("#define VERSION \"version " ..rev .. " (commit " .. sha1 .. ")\"\n")
 	io.close()
---]]
+
 
 --
 -- Make absolutely sure the embedded scripts have been updated

@@ -7,13 +7,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "premake.h"
+#include "version.h"
 
 #if PLATFORM_MACOSX
-#include <CoreFoundation/CFBundle.h>
+#	include <CoreFoundation/CFBundle.h>
 #endif
 
 
-#define VERSION        "4.4-beta5"
 #define COPYRIGHT      "Copyright (C) 2002-2013 Jason Perkins and the Premake Project"
 #define ERROR_MESSAGE  "%s\n"
 
