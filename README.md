@@ -4,7 +4,7 @@
 What is it?
 -----------
 
-**GENie** is project generator tool. It automagically generates project from LUA
+**GENie** is project generator tool. It automagically generates project from Lua
 script, making applying the same settings for multiple projects easy.
 
 Supported project generators:
@@ -45,7 +45,7 @@ intention to keep it in sync with it.
  - Added search for default script. Default script name is changed to genie.lua
    (solution.lua and premake4.lua are also allowed), and it can be located in
    `scripts` directory.
- - Updated LUA from 5.1.4 to 5.2.3.
+ - Updated Lua from 5.1.4 to 5.2.3.
  - Disabled SmallerTypeCheck VS option when ExtraWarnings is set (need to move
    it into separate option).
  - New versioning scheme based on revision number from git.
