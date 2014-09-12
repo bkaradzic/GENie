@@ -30,7 +30,7 @@ Building (dev)
 
 	$ git clone https://github.com/bkaradzic/genie
 	$ cd genie
-	$ make -C build/gmake.<linux/macosx/windows>
+	$ make
 
 History
 -------

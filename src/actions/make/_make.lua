@@ -24,8 +24,8 @@
 			-- handle simple replacements
 			result = value:gsub("\\", "\\\\")
 			result = result:gsub(" ", "\\ ")
-			result = result:gsub("%(", "\\%(")
-			result = result:gsub("%)", "\\%)")
+			result = result:gsub("%%(", "\\%(")
+			result = result:gsub("%%)", "\\%)")
 
 			-- leave $(...) shell replacement sequences alone
 			result = result:gsub("$\\%((.-)\\%)", "$%(%1%)")
