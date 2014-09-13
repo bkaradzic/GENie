@@ -16,15 +16,17 @@ endif
 
 .PHONY: release
 
-GENIE=../bx/tools/bin/$(OS)/genie
+GENIE=bin/$(OS)/genie
 
-all:
+$(GENIE):
 	make -C build/gmake.$(OS)
+
+all: $(GENIE)
 
 rebuild:
 	make -C build/gmake.$(OS) clean all
 
-release:
-	bin/release/genie release
+release: $(GENIE)
+	$(GENIE) release
 	make -C build/gmake.$(OS) clean all
 	git checkout src/host/version.h

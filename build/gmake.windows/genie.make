@@ -21,7 +21,7 @@ endif
 
 ifeq ($(config),release)
   OBJDIR     = obj/Release
-  TARGETDIR  = ../../bin/release
+  TARGETDIR  = ../../bin/windows
   TARGET     = $(TARGETDIR)/genie.exe
   DEFINES   += -DNDEBUG -DLUA_COMPAT_MODULE
   INCLUDES  += -I../../src/host/lua-5.2.3/src
@@ -43,7 +43,7 @@ endif
 
 ifeq ($(config),debug)
   OBJDIR     = obj/Debug
-  TARGETDIR  = ../../bin/debug
+  TARGETDIR  = ../../bin/windows
   TARGET     = $(TARGETDIR)/genie.exe
   DEFINES   += -D_DEBUG -DLUA_COMPAT_MODULE
   INCLUDES  += -I../../src/host/lua-5.2.3/src

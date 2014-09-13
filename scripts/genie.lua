@@ -9,30 +9,33 @@
 --
 
 	solution "genie"
-		configurations { "Release", "Debug" }
-		location ( _OPTIONS["to"] )
+		configurations {
+			"Release",
+			"Debug"
+		}
+		location (_OPTIONS["to"])
 
 	project "genie"
-		targetname  "genie"
-		language    "C"
-		kind        "ConsoleApp"
-		flags       {
+		targetname "genie"
+		language "C"
+		kind "ConsoleApp"
+		flags {
 			"No64BitChecks",
 			"ExtraWarnings",
 			"StaticRuntime"
 		}
-		includedirs { "../src/host/lua-5.2.3/src" }
+		includedirs {
+			"../src/host/lua-5.2.3/src"
+		}
 
-		files
-		{
+		files {
 			"../**.lua",
 			"../src/**.h",
 			"../src/**.c",
 			"../src/host/scripts.c"
 		}
 
-		excludes
-		{
+		excludes {
 			"../src/premake.lua",
 			"../src/host/lua-5.2.3/src/lua.c",
 			"../src/host/lua-5.2.3/src/luac.c",
@@ -41,43 +44,40 @@
 		}
 
 		configuration "Debug"
-			targetdir   "../bin/debug"
 			defines     { "_DEBUG", "LUA_COMPAT_MODULE" }
 			flags       { "Symbols" }
 
 		configuration "Release"
-			targetdir   "../bin/release"
 			defines     { "NDEBUG", "LUA_COMPAT_MODULE" }
 			flags       { "OptimizeSize" }
 
 		configuration "vs*"
 			defines     { "_CRT_SECURE_NO_WARNINGS" }
 
-		configuration "vs2005"
-			defines	{"_CRT_SECURE_NO_DEPRECATE" }
-
 		configuration "windows"
+			targetdir   "../bin/windows"
 			links { "ole32" }
+
+		configuration "linux"
+			targetdir   "../bin/linux"
+			links       { "dl" }
+
+		configuration "bsd"
+			targetdir   "../bin/bsd"
 
 		configuration "linux or bsd"
 			defines     { "LUA_USE_POSIX", "LUA_USE_DLOPEN" }
 			links       { "m" }
 			linkoptions { "-rdynamic" }
 
-		configuration "linux"
-			links       { "dl" }
-
 		configuration "macosx"
+			targetdir   "../bin/darwin"
 			defines     { "LUA_USE_MACOSX" }
 			links       { "CoreServices.framework" }
 
 		configuration { "macosx", "gmake" }
 			buildoptions { "-mmacosx-version-min=10.4" }
 			linkoptions  { "-mmacosx-version-min=10.4" }
-
-		configuration { "solaris" }
-			linkoptions { "-Wl,--export-dynamic" }
-
 
 
 --

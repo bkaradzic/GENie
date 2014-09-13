@@ -21,7 +21,7 @@ endif
 
 ifeq ($(config),release)
   OBJDIR     = obj/Release
-  TARGETDIR  = ../../bin/release
+  TARGETDIR  = ../../bin/linux
   TARGET     = $(TARGETDIR)/genie
   DEFINES   += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_POSIX -DLUA_USE_DLOPEN
   INCLUDES  += -I../../src/host/lua-5.2.3/src
@@ -31,7 +31,7 @@ ifeq ($(config),release)
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -s -rdynamic
   LDDEPS    +=
-  LIBS      += $(LDDEPS) -lm -ldl
+  LIBS      += $(LDDEPS) -ldl -lm
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -43,7 +43,7 @@ endif
 
 ifeq ($(config),debug)
   OBJDIR     = obj/Debug
-  TARGETDIR  = ../../bin/debug
+  TARGETDIR  = ../../bin/linux
   TARGET     = $(TARGETDIR)/genie
   DEFINES   += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_POSIX -DLUA_USE_DLOPEN
   INCLUDES  += -I../../src/host/lua-5.2.3/src
@@ -53,7 +53,7 @@ ifeq ($(config),debug)
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -rdynamic
   LDDEPS    +=
-  LIBS      += $(LDDEPS) -lm -ldl
+  LIBS      += $(LDDEPS) -ldl -lm
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
