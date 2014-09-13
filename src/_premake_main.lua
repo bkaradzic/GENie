@@ -121,8 +121,6 @@
 			if dir ~= nil then
 				os.chdir(dir)
 				dofile(name)
-			else
-				error("No genie script found!", 2)
 			end
 		end
 
