@@ -26,7 +26,16 @@ all: $(GENIE)
 rebuild:
 	make -C build/gmake.$(OS) clean all
 
-release: $(GENIE)
+release-windows release-darwin: $(GENIE)
 	$(GENIE) release
 	make -C build/gmake.$(OS) clean all
 	git checkout src/host/version.h
+
+release-linux: $(GENIE)
+	$(GENIE) release
+	make -C build/gmake.darwin  clean all CC=x86_64-apple-darwin12-clang++
+	make -C build/gmake.linux   clean all
+	make -C build/gmake.windows clean all CC=x86_64-w64-mingw32-gcc
+	git checkout src/host/version.h
+
+release: release-$(OS)
