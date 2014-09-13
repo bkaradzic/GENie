@@ -14,6 +14,8 @@ else
 OS=windows
 endif
 
+.PHONY: release
+
 GENIE=../bx/tools/bin/$(OS)/genie
 
 all:
