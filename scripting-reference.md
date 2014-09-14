@@ -2375,15 +2375,15 @@ And of course, you can specify more than one rule at a time.
 	vpaths { ["Headers"] = "**.h", ["Sources/*"] = {"**.c", "**.cpp"}, ["Docs"]
 	= "**.txt" }
 
-[ 1]: http://www.lua.org/manual/5.1/
-[ 2]: http://luaforge.net/ 
-[ 3]: http://industriousone.com/command-line-arguments
-[ 4]: https://bitbucket.org/premake/premake-stable/wiki/buildaction
-[ 5]: http://industriousone.com/configurations
-[ 6]: http://industriousone.com/premake/quick-start
-[ 7]: http://industriousone.com/osget
-[ 8]: http://industriousone.com/platforms-0
-[ 9]: http://industriousone.com#block
+[1]: http://www.lua.org/manual/5.1/
+[2]: http://luaforge.net/ 
+[3]: http://industriousone.com/command-line-arguments
+[4]: https://bitbucket.org/premake/premake-stable/wiki/buildaction
+[5]: http://industriousone.com/configurations
+[6]: http://industriousone.com/premake/quick-start
+[7]: http://industriousone.com/osget
+[8]: http://industriousone.com/platforms-0
+[9]: http://industriousone.com#block
 [10]: http://industriousone.com/buildaction
 [11]: https://bitbucket.org/premake/premake-dev/wiki/configurations
 [12]: http://industriousone.com/files
