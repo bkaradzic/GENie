@@ -274,6 +274,8 @@ resincludedirs : A list of include file search paths for the resource compiler.
 
 resoptions : A list of resource compiler options.
 
+startproject : The default startup project (for VS2005+)
+
 targetdir : The target output directory.
 
 targetextension : The target file extension.
