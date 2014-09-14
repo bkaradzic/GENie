@@ -73,6 +73,7 @@
 			{ "universal64", "Mac OS X Universal, 64-bit only" },
 			{ "ps3",         "Playstation 3 (experimental)" },
 			{ "xbox360",     "Xbox 360 (experimental)" },
+			{ "ARM",         "ARM (Microsoft)" },
 		}
 	}
 	

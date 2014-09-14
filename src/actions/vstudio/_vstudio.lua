@@ -22,6 +22,7 @@
 		x64     = "x64",
 		PS3     = "PS3",
 		Xbox360 = "Xbox 360",
+		ARM     = "ARM"
 	}
 
 
