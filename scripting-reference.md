@@ -2375,45 +2375,53 @@ And of course, you can specify more than one rule at a time.
 	vpaths { ["Headers"] = "**.h", ["Sources/*"] = {"**.c", "**.cpp"}, ["Docs"]
 	= "**.txt" }
 
-[1]: http://www.lua.org/manual/5.1/ [2]: http://luaforge.net/ [3]:
-http://industriousone.com/command-line-arguments [4]:
-https://bitbucket.org/premake/premake-stable/wiki/buildaction [5]:
-http://industriousone.com/configurations [6]:
-http://industriousone.com/premake/quick-start [7]:
-http://industriousone.com/osget [8]: http://industriousone.com/platforms-0 [9]:
-http://industriousone.com#block [10]: http://industriousone.com/buildaction
-[11]: https://bitbucket.org/premake/premake-dev/wiki/configurations [12]:
-http://industriousone.com/files [13]: http://industriousone.com/excludes [14]:
-https://bitbucket.org/premake/premake-stable/wiki/flags [15]:
-http://msdn.microsoft.com/en-us/library/kfz8ad09(VS.80).aspx [16]:
-http://industriousone.com/pchheader [17]: http://industriousone.com/pchsource
-[18]: http://www.microsoft.com/msj/0197/exception/exception.aspx [19]:
-http://industriousone.com/buildoptions [20]:
-http://industriousone.com/linkoptions [21]:
-http://industriousone.com/imageoptions [22]:
-http://industriousone.com/implibname [23]:
-http://industriousone.com/implibextension [24]:
-http://industriousone.com/implibprefix [25]:
-http://industriousone.com/implibsuffix [26]:
-http://industriousone.com/implibdir [27]: http://industriousone.com/targetname
-[28]: http://www.lua.org/manual/5.1/manual.html#pdf-dofile [29]:
-https://bitbucket.org/premake/premake-stable/wiki/kind [30]:
-http://industriousone.com/links [31]: http://industriousone.com/action [32]:
-https://bitbucket.org/premake/premake-dev/wiki/objdir [33]:
-http://en.wikipedia.org/wiki/UUID [34]:
-https://bitbucket.org/premake/premake-stable/wiki/pchheader [35]:
-https://bitbucket.org/premake/premake-stable/wiki/pchsource [36]:
-http://industriousone.com/platforms [37]:
-https://bitbucket.org/premake/premake-dev/wiki/platforms [38]:
-http://industriousone.com/configuration [39]:
-http://industriousone.com/prebuildcommands [40]:
-http://industriousone.com/prelinkcommands [41]:
-http://industriousone.com/postbuildcommands [42]:
-http://industriousone.com#object [43]: http://industriousone.com/solution [44]:
-http://industriousone.com/targetextension [45]:
-http://industriousone.com/targetprefix [46]:
-http://industriousone.com/targetdir [47]:
-http://industriousone.com/targetsuffix [48]:
-http://en.wikipedia.org/wiki/Globally_Unique_Identifier [49]:
-http://msdn2.microsoft.com/en-us/library/ms241442(VS.80).aspx [50]:
-http://www.famkruithof.net/uuid/uuidgen
+[ 1]: http://www.lua.org/manual/5.1/
+[ 2]: http://luaforge.net/ 
+[ 3]: http://industriousone.com/command-line-arguments
+[ 4]: https://bitbucket.org/premake/premake-stable/wiki/buildaction
+[ 5]: http://industriousone.com/configurations
+[ 6]: http://industriousone.com/premake/quick-start
+[ 7]: http://industriousone.com/osget
+[ 8]: http://industriousone.com/platforms-0
+[ 9]: http://industriousone.com#block
+[10]: http://industriousone.com/buildaction
+[11]: https://bitbucket.org/premake/premake-dev/wiki/configurations
+[12]: http://industriousone.com/files
+[13]: http://industriousone.com/excludes
+[14]: https://bitbucket.org/premake/premake-stable/wiki/flags
+[15]: http://msdn.microsoft.com/en-us/library/kfz8ad09(VS.80).aspx
+[16]: http://industriousone.com/pchheader
+[17]: http://industriousone.com/pchsource
+[18]: http://www.microsoft.com/msj/0197/exception/exception.aspx
+[19]: http://industriousone.com/buildoptions
+[20]: http://industriousone.com/linkoptions
+[21]: http://industriousone.com/imageoptions
+[22]: http://industriousone.com/implibname
+[23]: http://industriousone.com/implibextension
+[24]: http://industriousone.com/implibprefix
+[25]: http://industriousone.com/implibsuffix
+[26]: http://industriousone.com/implibdir
+[27]: http://industriousone.com/targetname
+[28]: http://www.lua.org/manual/5.1/manual.html#pdf-dofile
+[29]: https://bitbucket.org/premake/premake-stable/wiki/kind
+[30]: http://industriousone.com/links
+[31]: http://industriousone.com/action
+[32]: https://bitbucket.org/premake/premake-dev/wiki/objdir
+[33]: http://en.wikipedia.org/wiki/UUID
+[34]: https://bitbucket.org/premake/premake-stable/wiki/pchheader
+[35]: https://bitbucket.org/premake/premake-stable/wiki/pchsource
+[36]: http://industriousone.com/platforms
+[37]: https://bitbucket.org/premake/premake-dev/wiki/platforms
+[38]: http://industriousone.com/configuration
+[39]: http://industriousone.com/prebuildcommands
+[40]: http://industriousone.com/prelinkcommands
+[41]: http://industriousone.com/postbuildcommands
+[42]: http://industriousone.com#object
+[43]: http://industriousone.com/solution
+[44]: http://industriousone.com/targetextension
+[45]: http://industriousone.com/targetprefix
+[46]: http://industriousone.com/targetdir
+[47]: http://industriousone.com/targetsuffix
+[48]: http://en.wikipedia.org/wiki/Globally_Unique_Identifier
+[49]: http://msdn2.microsoft.com/en-us/library/ms241442(VS.80).aspx
+[50]: http://www.famkruithof.net/uuid/uuidgen
