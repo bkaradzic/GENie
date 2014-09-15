@@ -18,24 +18,30 @@ endif
 
 GENIE=bin/$(OS)/genie
 
+SILENT?=@
+
 $(GENIE):
-	make -C build/gmake.$(OS)
+	$(SILENT) make -C build/gmake.$(OS)
 
 all: $(GENIE)
 
+clean:
+	$(SILENT) make -C build/gmake.$(OS) clean
+	$(SILENT) -rm -rf bin
+
 rebuild:
-	make -C build/gmake.$(OS) clean all
+	$(SILENT) make -C build/gmake.$(OS) clean all
 
 release-windows release-darwin: $(GENIE)
 	$(GENIE) release
-	make -C build/gmake.$(OS) clean all
-	git checkout src/host/version.h
+	$(SILENT) make -C build/gmake.$(OS) clean all
+	$(SILENT) git checkout src/host/version.h
 
 release-linux: $(GENIE)
-	$(GENIE) release
-	make -C build/gmake.darwin  clean all CC=x86_64-apple-darwin12-clang++
-	make -C build/gmake.linux   clean all
-	make -C build/gmake.windows clean all CC=x86_64-w64-mingw32-gcc
-	git checkout src/host/version.h
+	$(SILENT) $(GENIE) release
+	$(SILENT) make -C build/gmake.darwin  clean all CC=x86_64-apple-darwin12-clang++
+	$(SILENT) make -C build/gmake.linux   clean all
+	$(SILENT) make -C build/gmake.windows clean all CC=x86_64-w64-mingw32-gcc
+	$(SILENT) git checkout src/host/version.h
 
 release: release-$(OS)
