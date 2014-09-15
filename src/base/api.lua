@@ -335,6 +335,12 @@
 			scope = "config",
 		},
 
+		startproject =
+		{
+			kind  = "string",
+			scope = "solution",
+		},
+
 		targetdir =
 		{
 			kind  = "path",

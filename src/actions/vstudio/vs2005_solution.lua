@@ -18,6 +18,8 @@
 		-- Mark the file as Unicode
 		_p('\239\187\191')
 
+		sln2005.reorderProjects(sln)
+
 		sln2005.header(sln)
 
 		for prj in premake.solution.eachproject(sln) do
@@ -31,6 +33,22 @@
 		_p('EndGlobal')
 	end
 
+--
+-- If a startup project is specified, move it to the front of the project list. 
+-- This will make Visual Studio treat it like a startup project.
+--
+
+		function sln2005.reorderProjects(sln)
+				if sln.startproject then
+						for i, prj in ipairs(sln.projects) do
+							if sln.startproject == prj.name then
+								table.remove(sln.projects, i)
+								table.insert(sln.projects, 1, prj)
+								break
+							end
+						end
+				end
+		end
 
 --
 -- Generate the solution header
