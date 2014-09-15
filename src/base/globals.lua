@@ -57,6 +57,12 @@
 			iscrosscompiler = true,
 			namestyle       = "windows",
 		},
+		ARM =
+		{
+			cfgsuffix       = "ARM",
+			iscrosscompiler = true,
+			namestyle       = "windows"
+		}
 	}
 
 
