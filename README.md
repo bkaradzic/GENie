@@ -32,6 +32,11 @@ Building (dev)
 	$ cd genie
 	$ make
 
+Documentation
+-------------
+
+[Scripting Reference](https://github.com/bkaradzic/genie/blob/master/scripting-reference.md)
+
 History
 -------
 
