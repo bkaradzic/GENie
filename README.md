@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 49 (commit a308f00bb292e1afb0c91de76d2f59a2344658f3)
+	version 60 (commit aac14a2caed1f5505c6be280d370bf64d6f19f52)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -54,6 +54,8 @@ intention to keep it in sync with it.
  - Disabled SmallerTypeCheck VS option when ExtraWarnings is set (need to move
    it into separate option).
  - New versioning scheme based on revision number from git.
+ - Preliminary support for WinRT.
+ - Added `startproject "<project name>"` to set default project in VS.
 
 ## Why fork?
 
