@@ -30,12 +30,12 @@
 			_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
 			_p(2,'<Keyword>ManagedCProj</Keyword>')
 		elseif prj.flags and prj.flags.WinPhone8 then
-            _p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
-            _p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
-            _p(2,'<AppContainerApplication>true</AppContainerApplication>')
-            _p(2,'<ApplicationType>Windows Phone</ApplicationType>')
-            _p(2,'<ApplicationTypeRevision>8.1</ApplicationTypeRevision>')
-        else
+			_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
+			_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
+			_p(2,'<AppContainerApplication>true</AppContainerApplication>')
+			_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
+			_p(2,'<ApplicationTypeRevision>8.1</ApplicationTypeRevision>')
+		else
 			_p(2,'<Keyword>Win32Proj</Keyword>')
 		end
 		_p(1,'</PropertyGroup>')
@@ -84,15 +84,15 @@
 		_p(2,'<ConfigurationType>%s</ConfigurationType>',vc2010.config_type(cfg))
 		_p(2,'<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 
-        if not cfg.flags.WinPhone8 then
-		    _p(2,'<CharacterSet>%s</CharacterSet>',iif(cfg.flags.Unicode,"Unicode","MultiByte"))
-        end
+		if not cfg.flags.WinPhone8 then
+			_p(2,'<CharacterSet>%s</CharacterSet>',iif(cfg.flags.Unicode,"Unicode","MultiByte"))
+		end
 
 		local toolsets = { vs2012 = "v110", vs2013 = "v120" }
 		local toolset = toolsets[_ACTION]
-        if cfg.flags.WinPhone8 then
-            toolset = "v120_wp81"
-        end
+		if cfg.flags.WinPhone8 then
+			toolset = "v120_wp81"
+		end
 
 		if toolset then
 			_p(2,'<PlatformToolset>%s</PlatformToolset>', toolset)
@@ -287,11 +287,11 @@
 					table.concat(premake.esc(cfg.buildoptions), " "))
 		end
 
-			_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
+		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
 
-			include_dirs(3,cfg)
-			preprocessor(3,cfg)
-			minimal_build(cfg)
+		include_dirs(3,cfg)
+		preprocessor(3,cfg)
+		minimal_build(cfg)
 
 		if  not premake.config.isoptimizedbuild(cfg.flags) then
 			if not cfg.flags.Managed then
@@ -305,11 +305,11 @@
 			_p(3,'<StringPooling>true</StringPooling>')
 		end
 
-			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
+		_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
+		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
+		_p(3,'<MultiProcessorCompilation>true</MultiProcessorCompilation>')
 
-			_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
-
-			precompiled_header(cfg)
+		precompiled_header(cfg)
 
 		if cfg.flags.ExtraWarnings then
 			_p(3,'<WarningLevel>Level4</WarningLevel>')
@@ -321,12 +321,12 @@
 			_p(3,'<TreatWarningAsError>true</TreatWarningAsError>')
 		end
 
-			exceptions(cfg)
-			rtti(cfg)
-			wchar_t_buildin(cfg)
-			sse(cfg)
-			floating_point(cfg)
-			debug_info(cfg)
+		exceptions(cfg)
+		rtti(cfg)
+		wchar_t_buildin(cfg)
+		sse(cfg)
+		floating_point(cfg)
+		debug_info(cfg)
 
 		if cfg.flags.Symbols then
 			_p(3,'<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
@@ -337,7 +337,7 @@
 			_p(3,'<OmitFramePointers>true</OmitFramePointers>')
 		end
 
-			compile_language(cfg)
+		compile_language(cfg)
 
 		_p(2,'</ClCompile>')
 	end
