@@ -232,7 +232,7 @@
 		_p(4,'Name="%s"', iif(cfg.platform ~= "Xbox360", "VCCLCompilerTool", "VCCLX360CompilerTool"))
 		
 		if #cfg.buildoptions > 0 then
-			_p(4,'AdditionalOptions="%s"', table.concat(premake.esc(cfg.buildoptions), " "))
+			_p(4,'AdditionalOptions="%s /MP"', table.concat(premake.esc(cfg.buildoptions), " "))
 		end
 		
 		_p(4,'Optimization="%s"', vc200x.optimization(cfg))
