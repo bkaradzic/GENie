@@ -105,6 +105,7 @@
 					FloatStrict = 1,
 					Managed = 1,
 					MFC = 1,
+					MultiProcessorCompilation = 1,
 					NativeWChar = 1,
 					No64BitChecks = 1,
 					NoEditAndContinue = 1,
