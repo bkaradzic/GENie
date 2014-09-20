@@ -550,7 +550,7 @@ NoImportLib : Prevent the generation of an import library for a Windows DLL.
 NoManifest : Prevent the generation of a manifest for Windows executables and
 shared libraries.
 
-NoMinimalRebuild : Disable Visual Studio's [minimal rebuild feature][15]. Not compatible with MultiProcessorCompilation, and will be ignored if that is specified.
+NoMinimalRebuild : Disable Visual Studio's [minimal rebuild feature][15].
 
 NoPCH : Disable precompiled header support. If not specified, the toolset
 default behavior will be used. Also see [pchheader][16] and [pchsource][17].
