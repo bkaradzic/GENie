@@ -516,6 +516,8 @@ by a particular platform or toolset are ignored.
 
 EnableSSE, EnableSSE2 : Use the SSE instruction sets for floating point math.
 
+EnableMinimalRebuild : Enable Visual Studio's [minimal rebuild feature][15]. This will also disable multiprocessor compilation.
+
 ExtraWarnings : Sets the compiler's maximum warning level.
 
 FatalWarnings : Treat warnings as errors.
@@ -525,8 +527,6 @@ FloatFast : Enable floating point optimizations at the expense of accuracy.
 FloatStrict : Improve floating point consistency at the expense of performance.
 
 Managed : Enable Managed C++ (.NET).
-
-MinimalRebuild : Enable Visual Studio's [minimal rebuild feature][15]. This will also disable multiprocessor compilation.
 
 MFC : Enable support for Microsoft Foundation Classes.
 

@@ -266,7 +266,7 @@
 	end
 
 	local function minimal_build(cfg)
-		if premake.config.isdebugbuild(cfg) and cfg.flags.MinimalRebuild and not cfg.flags.WinPhone8 then
+		if premake.config.isdebugbuild(cfg) and cfg.flags.EnableMinimalRebuild and not cfg.flags.WinPhone8 then
 			_p(3,'<MinimalRebuild>true</MinimalRebuild>')
 		else
 			_p(3,'<MinimalRebuild>false</MinimalRebuild>')
@@ -310,7 +310,7 @@
 
 		-- If we aren't running NoMultiprocessorCompilation and not wanting a minimal rebuild,
 		-- then enable MultiProcessorCompilation.
-		if not cfg.flags.NoMultiProcessorCompilation and not cfg.flags.MinimalRebuild then
+		if not cfg.flags.NoMultiProcessorCompilation and not cfg.flags.EnableMinimalRebuild then
 			_p(3,'<MultiProcessorCompilation>true</MultiProcessorCompilation>')
 		else
 			_p(3,'<MultiProcessorCompilation>false</MultiProcessorCompilation>')

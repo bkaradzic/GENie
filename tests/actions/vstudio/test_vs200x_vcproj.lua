@@ -550,7 +550,7 @@
 --
 
 	function suite.CompilerBlock_OnMinimalRebuild()
-		flags { "Symbols", "MinimalRebuild" }
+		flags { "Symbols", "EnableMinimalRebuild" }
 		prepare()
 		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
 		test.capture [[
