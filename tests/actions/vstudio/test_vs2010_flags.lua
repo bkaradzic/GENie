@@ -184,11 +184,11 @@ end
 
 
 
-function vs10_flags.debugAndNoMinimalRebuildAndSymbols_minimalRebuild_setToFalse()
-	flags {debug_string,"NoMinimalRebuild"}
+function vs10_flags.debugAndMinimalRebuildAndSymbols_minimalRebuild_setToFalse()
+	flags {debug_string,"MinimalRebuild"}
 
 	local buffer = get_buffer()
-	test.string_contains(buffer,'<MinimalRebuild>false</MinimalRebuild>')
+	test.string_contains(buffer,'<MinimalRebuild>true</MinimalRebuild>')
 end
 
 function vs10_flags.debugYetNotMinimalRebuild_minimalRebuild_setToTrue()

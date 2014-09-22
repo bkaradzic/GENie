@@ -22,8 +22,7 @@
 		flags {
 			"No64BitChecks",
 			"ExtraWarnings",
-			"StaticRuntime",
-			"MultiProcessorCompilation"
+			"StaticRuntime"
 		}
 		includedirs {
 			"../src/host/lua-5.2.3/src"

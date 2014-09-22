@@ -549,8 +549,8 @@
 -- Compilation option tests
 --
 
-	function suite.CompilerBlock_OnNoMinimalRebuild()
-		flags { "Symbols", "NoMinimalRebuild" }
+	function suite.CompilerBlock_OnMinimalRebuild()
+		flags { "Symbols", "MinimalRebuild" }
 		prepare()
 		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
 		test.capture [[

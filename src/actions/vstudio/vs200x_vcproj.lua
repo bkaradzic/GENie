@@ -249,7 +249,7 @@
 			_p(4,'PreprocessorDefinitions="%s"', premake.esc(table.concat(cfg.defines, ";")))
 		end
 		
-		if premake.config.isdebugbuild(cfg) and not cfg.flags.NoMinimalRebuild and not cfg.flags.Managed then
+		if premake.config.isdebugbuild(cfg) and cfg.flags.MinimalRebuild and not cfg.flags.Managed then
 			_p(4,'MinimalRebuild="%s"', bool(true))
 		end
 		
