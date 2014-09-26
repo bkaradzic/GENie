@@ -8,11 +8,12 @@
 	function premake.showhelp()
 	
 		-- display the basic usage
-		printf("Premake %s, a build script generator", _PREMAKE_VERSION)
+		printf("genie - Project generator tool %s", _PREMAKE_VERSION)
+		printf("https://github.com/bkaradzic/genie")
 		printf(_PREMAKE_COPYRIGHT)
 		printf("%s %s", _VERSION, _COPYRIGHT)
 		printf("")
-		printf("Usage: premake4 [options] action [arguments]")
+		printf("Usage: genie [options] action [arguments]")
 		printf("")
 
 		
