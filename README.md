@@ -56,6 +56,8 @@ intention to keep it in sync with it.
  - New versioning scheme based on revision number from git.
  - Preliminary support for WinRT.
  - Added `startproject "<project name>"` to set default project in VS.
+ - Removed `NoMinimalRebuild` and added reversed logic to `EnableMinimalRebuild`.
+ - Added `NoMultiProcessorCompilation`.
 
 ## Why fork?
 
