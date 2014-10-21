@@ -5,6 +5,15 @@
 --
 
 	premake.vstudio = { }
+
+--
+-- Set default toolset
+--
+
+	local toolsets = { vs2012 = "v110", vs2013 = "v120", vs2014 = "v140" }
+	premake.vstudio.toolset = toolsets[_ACTION]
+
+
 	local vstudio = premake.vstudio
 
 

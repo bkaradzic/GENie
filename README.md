@@ -58,6 +58,7 @@ intention to keep it in sync with it.
  - Added `startproject "<project name>"` to set default project in VS.
  - Removed `NoMinimalRebuild` and added reversed logic to `EnableMinimalRebuild`.
  - Added `NoMultiProcessorCompilation`.
+ - Added ability to configure Visual Studio toolset from GENie script.
 
 ## Why fork?
 

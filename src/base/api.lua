@@ -128,7 +128,6 @@
 					Unicode = 1,
 					Unsafe = 1,
 					WinMain = 1,
-                    WinPhone8 = 1
 				}
 
 				local englishToAmericanSpelling =

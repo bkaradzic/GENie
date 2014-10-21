@@ -29,12 +29,6 @@
 		if prj.flags and prj.flags.Managed then
 			_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
 			_p(2,'<Keyword>ManagedCProj</Keyword>')
-		elseif prj.flags and prj.flags.WinPhone8 then
-			_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
-			_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
-			_p(2,'<AppContainerApplication>true</AppContainerApplication>')
-			_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
-			_p(2,'<ApplicationTypeRevision>8.1</ApplicationTypeRevision>')
 		else
 			_p(2,'<Keyword>Win32Proj</Keyword>')
 		end
@@ -84,19 +78,7 @@
 		_p(2,'<ConfigurationType>%s</ConfigurationType>',vc2010.config_type(cfg))
 		_p(2,'<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 
-		if not cfg.flags.WinPhone8 then
-			_p(2,'<CharacterSet>%s</CharacterSet>',iif(cfg.flags.Unicode,"Unicode","MultiByte"))
-		end
-
-		local toolsets = { vs2012 = "v110", vs2013 = "v120" }
-		local toolset = toolsets[_ACTION]
-		if cfg.flags.WinPhone8 then
-			toolset = "v120_wp81"
-		end
-
-		if toolset then
-			_p(2,'<PlatformToolset>%s</PlatformToolset>', toolset)
-		end
+		_p(2,'<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
 
 		if cfg.flags.MFC then
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
@@ -254,7 +236,6 @@
 				or cfg.flags.Managed
 				or premake.config.isoptimizedbuild(cfg.flags)
 				or cfg.flags.NoEditAndContinue
-                or cfg.flags.WinPhone8
 			then
 					debug_info = "ProgramDatabase"
 			else
@@ -266,7 +247,7 @@
 	end
 
 	local function minimal_build(cfg)
-		if premake.config.isdebugbuild(cfg) and cfg.flags.EnableMinimalRebuild and not cfg.flags.WinPhone8 then
+		if premake.config.isdebugbuild(cfg) and cfg.flags.EnableMinimalRebuild then
 			_p(3,'<MinimalRebuild>true</MinimalRebuild>')
 		else
 			_p(3,'<MinimalRebuild>false</MinimalRebuild>')
@@ -412,9 +393,7 @@
 
 	function vc2010.link(cfg)
 		_p(2,'<Link>')
-        if not cfg.flags.WinPhone8 then
-		    _p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
-        end
+		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
 		_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 
 		if premake.config.isoptimizedbuild(cfg.flags) then
@@ -431,7 +410,7 @@
 						premake.esc(path.translate(table.concat(cfg.libdirs, ';'), '\\')))
 			end
 
-			if vc2010.config_type(cfg) == 'Application' and not cfg.flags.WinMain and not cfg.flags.Managed and not cfg.flags.WinPhone8 then
+			if vc2010.config_type(cfg) == 'Application' and not cfg.flags.WinMain and not cfg.flags.Managed then
 				_p(3,'<EntryPointSymbol>mainCRTStartup</EntryPointSymbol>')
 			end
 
