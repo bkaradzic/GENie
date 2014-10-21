@@ -40,8 +40,11 @@ executable.
 
 Introduced in Premake 4.4.
 
-The `_PREMAKE_VERSION` global variable stores the current Premake version, i.e.
-"4.2".
+The `_GENIE_VERSION` global variable stores the current GENie version, i.e.
+62.
+
+The `_GENIE_VERSION_STR` global variable stores the current GENie version with
+git commit hash.
 
 The `_SCRIPT` global variable stores the full path of the currently executing
 script.

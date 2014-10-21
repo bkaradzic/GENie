@@ -79,8 +79,11 @@ int premake_init(lua_State* L)
 	lua_pushstring(L, LUA_COPYRIGHT);
 	lua_setglobal(L, "_COPYRIGHT");
 
-	lua_pushstring(L, VERSION);
-	lua_setglobal(L, "_PREMAKE_VERSION");
+	lua_pushnumber(L, VERSION);
+	lua_setglobal(L, "_GENIE_VERSION");
+
+	lua_pushstring(L, VERSION_STR);
+	lua_setglobal(L, "_GENIE_VERSION_STR");
 
 	lua_pushstring(L, COPYRIGHT);
 	lua_setglobal(L, "_PREMAKE_COPYRIGHT");

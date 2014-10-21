@@ -5,9 +5,6 @@
 --
 
 
-	local shorthelp     = "Type 'genie --help' for help"
-	local versionhelp   = "genie - Project generator tool %s"
-	
 	_WORKING_DIR        = os.getcwd()
 
 
@@ -126,25 +123,15 @@
 
 		-- Process special options
 		
-		if (_OPTIONS["version"]) then
-			printf(versionhelp, _PREMAKE_VERSION)
-			return 1
-		end
-		
-		if (_OPTIONS["help"]) then
-			premake.showhelp()
-			return 1
-		end
-		
-			
-		-- If no action was specified, show a short help message
-		
-		if (not _ACTION) then
-			print(shorthelp)
+		if (_OPTIONS["version"] or _OPTIONS["help"] or not _ACTION) then
+			printf("GENie - Project generator tool %s", _GENIE_VERSION_STR)
+			printf("https://github.com/bkaradzic/genie")
+			if (not _OPTIONS["version"]) then
+				premake.showhelp()
+			end
 			return 1
 		end
 
-		
 		-- Validate the command-line arguments. This has to happen after the
 		-- script has run to allow for project-specific options
 		

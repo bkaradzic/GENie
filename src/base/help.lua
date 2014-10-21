@@ -8,8 +8,6 @@
 	function premake.showhelp()
 	
 		-- display the basic usage
-		printf("genie - Project generator tool %s", _PREMAKE_VERSION)
-		printf("https://github.com/bkaradzic/genie")
 		printf(_PREMAKE_COPYRIGHT)
 		printf("%s %s", _VERSION, _COPYRIGHT)
 		printf("")

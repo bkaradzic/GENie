@@ -22,7 +22,8 @@ function dorelease()
 	local sha1 = f:read("*a")
 	f:close()
 	io.output("../src/host/version.h")
-	io.write("#define VERSION \"version " ..rev .. " (commit " .. sha1 .. ")\"\n")
+	io.write("#define VERSION " ..rev .. "\n")
+	io.write("#define VERSION_STR \"version " ..rev .. " (commit " .. sha1 .. ")\"\n")
 	io.close()
 
 
