@@ -25,6 +25,7 @@
 		"base/bake.lua",
 		"base/api.lua",
 		"base/cmdline.lua",
+		"base/inspect.lua",
 		"tools/dotnet.lua",
 		"tools/gcc.lua",
 		"tools/msc.lua",
