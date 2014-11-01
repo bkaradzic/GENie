@@ -577,6 +577,8 @@ behavior is used.
 
 Unsafe : Enable the use of unsafe code in .NET applications.
 
+UnsignedChar : Force char type to be unsigned.
+
 WinMain : Use **WinMain()** as the program entry point for Windows
 applications, rather than the default **main()**.
 

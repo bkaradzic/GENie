@@ -57,8 +57,10 @@ intention to keep it in sync with it.
  - Preliminary support for WinRT.
  - Added `startproject "<project name>"` to set default project in VS.
  - Removed `NoMinimalRebuild` and added reversed logic to `EnableMinimalRebuild`.
- - Added `NoMultiProcessorCompilation`.
+ - Added `NoMultiProcessorCompilation` flag to disable multiprocessor
+   compilation in MSVC.
  - Added ability to configure Visual Studio toolset from GENie script.
+ - Added `UnsignedChar` flag to force char to be unsigned.
 
 ## Why fork?
 
