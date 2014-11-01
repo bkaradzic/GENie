@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 77 (commit 0f7cc384617df181af19efe588a8f6f99a59fd12)
+	version 84 (commit 0109cd44c49e0fc7c2455b23be68c470eecf1192)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -61,6 +61,7 @@ intention to keep it in sync with it.
    compilation in MSVC.
  - Added ability to configure Visual Studio toolset from GENie script.
  - Added `UnsignedChar` flag to force char to be unsigned.
+ - Removed vs2002 support.
 
 ## Why fork?
 

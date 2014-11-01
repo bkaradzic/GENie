@@ -39,7 +39,7 @@ release-windows release-darwin: $(GENIE)
 
 release-linux: $(GENIE)
 	$(SILENT) $(GENIE) release
-	$(SILENT) make -C build/gmake.darwin  clean all CC=x86_64-apple-darwin12-clang++
+	$(SILENT) make -C build/gmake.darwin  clean all CC=x86_64-apple-darwin13-clang++
 	$(SILENT) make -C build/gmake.linux   clean all
 	$(SILENT) make -C build/gmake.windows clean all CC=x86_64-w64-mingw32-gcc
 	$(SILENT) git checkout src/host/version.h
