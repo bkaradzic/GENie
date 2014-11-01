@@ -230,7 +230,11 @@
 	function vc200x.VCCLCompilerTool(cfg)
 		_p(3,'<Tool')
 		_p(4,'Name="%s"', iif(cfg.platform ~= "Xbox360", "VCCLCompilerTool", "VCCLX360CompilerTool"))
-		
+	
+		if cfg.flags.UnsignedChar then
+			table.insert(cfg.buildoptions, '/J')
+		end
+
 		if #cfg.buildoptions > 0 then
 			_p(4,'AdditionalOptions="%s /MP"', table.concat(premake.esc(cfg.buildoptions), " "))
 		end
@@ -443,6 +447,7 @@
 		else
 			_p(4,'UsePrecompiledHeader="%s"', iif(_ACTION > "vs2003" or cfg.flags.NoPCH, 0, 2))
 		end
+
 		_p(4,'AdditionalOptions="%s"', premake.esc(table.concat(buildoptions, " ")))
 
 		if #cfg.includedirs > 0 then

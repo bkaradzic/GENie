@@ -40,6 +40,7 @@
 	{
 		NoExceptions   = "-fno-exceptions",
 		NoRTTI         = "-fno-rtti",
+		UnsignedChar   = "-funsigned-char",
 	}
 
 

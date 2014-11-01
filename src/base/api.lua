@@ -128,6 +128,7 @@
 					Unicode = 1,
 					Unsafe = 1,
 					WinMain = 1,
+					UnsignedChar = 1,
 				}
 
 				local englishToAmericanSpelling =

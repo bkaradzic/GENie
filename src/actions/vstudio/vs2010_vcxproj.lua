@@ -263,10 +263,10 @@
 	local function vs10_clcompile(cfg)
 		_p(2,'<ClCompile>')
 
-		if #cfg.buildoptions > 0 then
-			_p(3,'<AdditionalOptions>%s %%(AdditionalOptions)</AdditionalOptions>',
-					table.concat(premake.esc(cfg.buildoptions), " "))
-		end
+		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
+			, table.concat(premake.esc(cfg.buildoptions), " ")
+			, iif(cfg.flags.UnsignedChar, "/J ", " ")
+			)
 
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
 
