@@ -19,11 +19,7 @@
 --
 
 	local function bool(value)
-		if (_ACTION < "vs2005") then
-			return iif(value, "TRUE", "FALSE")
-		else
-			return iif(value, "true", "false")
-		end
+		return iif(value, "true", "false")
 	end
 
 
@@ -249,8 +245,8 @@
 		end
 		
 		if cfg.flags.NoExceptions then
-			_p(4,'ExceptionHandling="%s"', iif(_ACTION < "vs2005", "FALSE", 0))
-		elseif cfg.flags.SEH and _ACTION > "vs2003" then
+			_p(4,'ExceptionHandling="0"')
+		elseif cfg.flags.SEH then
 			_p(4,'ExceptionHandling="2"')
 		end
 		
@@ -271,31 +267,21 @@
 
 		_p(4,'EnableFunctionLevelLinking="%s"', bool(true))
 
-		if _ACTION > "vs2003" and cfg.platform ~= "Xbox360" and cfg.platform ~= "x64" then
+		if cfg.platform ~= "Xbox360" and cfg.platform ~= "x64" then
 			if cfg.flags.EnableSSE then
 				_p(4,'EnableEnhancedInstructionSet="1"')
 			elseif cfg.flags.EnableSSE2 then
 				_p(4,'EnableEnhancedInstructionSet="2"')
 			end
 		end
-	
-		if _ACTION < "vs2005" then
-			if cfg.flags.FloatFast then
-				_p(4,'ImproveFloatingPointConsistency="%s"', bool(false))
-			elseif cfg.flags.FloatStrict then
-				_p(4,'ImproveFloatingPointConsistency="%s"', bool(true))
-			end
-		else
-			if cfg.flags.FloatFast then
-				_p(4,'FloatingPointModel="2"')
-			elseif cfg.flags.FloatStrict then
-				_p(4,'FloatingPointModel="1"')
-			end
+
+		if cfg.flags.FloatFast then
+			_p(4,'FloatingPointModel="2"')
+		elseif cfg.flags.FloatStrict then
+			_p(4,'FloatingPointModel="1"')
 		end
-		
-		if _ACTION < "vs2005" and not cfg.flags.NoRTTI then
-			_p(4,'RuntimeTypeInfo="%s"', bool(true))
-		elseif _ACTION > "vs2003" and cfg.flags.NoRTTI and not cfg.flags.Managed then
+
+		if cfg.flags.NoRTTI and not cfg.flags.Managed then
 			_p(4,'RuntimeTypeInfo="%s"', bool(false))
 		end
 		
@@ -306,10 +292,10 @@
 		end
 		
 		if not cfg.flags.NoPCH and cfg.pchheader then
-			_p(4,'UsePrecompiledHeader="%s"', iif(_ACTION < "vs2005", 3, 2))
+			_p(4,'UsePrecompiledHeader="2"')
 			_p(4,'PrecompiledHeaderThrough="%s"', cfg.pchheader)
 		else
-			_p(4,'UsePrecompiledHeader="%s"', iif(_ACTION > "vs2003" or cfg.flags.NoPCH, 0, 2))
+			_p(4,'UsePrecompiledHeader="%s"', iif(cfg.flags.NoPCH, 0, 2))
 		end
 		
 		_p(4,'WarningLevel="%s"', iif(cfg.flags.ExtraWarnings, 4, 3))
@@ -432,11 +418,11 @@
 
 		local buildoptions = table.join(premake.snc.getcflags(cfg), premake.snc.getcxxflags(cfg), cfg.buildoptions)
 		if not cfg.flags.NoPCH and cfg.pchheader then
-			_p(4,'UsePrecompiledHeader="%s"', iif(_ACTION < "vs2005", 3, 2))
+			_p(4,'UsePrecompiledHeader="2"')
 			_p(4,'PrecompiledHeaderThrough="%s"', path.getname(cfg.pchheader))
 			table.insert(buildoptions, '--use_pch="$(IntDir)/$(TargetName).pch"')
 		else
-			_p(4,'UsePrecompiledHeader="%s"', iif(_ACTION > "vs2003" or cfg.flags.NoPCH, 0, 2))
+			_p(4,'UsePrecompiledHeader="%s"', iif(cfg.flags.NoPCH, 0, 2))
 		end
 
 		_p(4,'AdditionalOptions="%s"', premake.esc(table.concat(buildoptions, " ")))
@@ -679,19 +665,15 @@
 		
 		_p(1,'Name="%s"', premake.esc(prj.name))
 		_p(1,'ProjectGUID="{%s}"', prj.uuid)
-		if _ACTION > "vs2003" then
-			_p(1,'RootNamespace="%s"', prj.name)
-		end
+		_p(1,'RootNamespace="%s"', prj.name)
 		_p(1,'Keyword="%s"', iif(prj.flags.Managed, "ManagedCProj", "Win32Proj"))
 		_p(1,'>')
 
 		-- list the target platforms
 		vc200x.Platforms(prj)
 
-		if _ACTION > "vs2003" then
-			_p(1,'<ToolFiles>')
-			_p(1,'</ToolFiles>')
-		end
+		_p(1,'<ToolFiles>')
+		_p(1,'</ToolFiles>')
 
 		_p(1,'<Configurations>')
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do

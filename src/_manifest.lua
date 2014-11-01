@@ -55,7 +55,6 @@
 		"actions/vstudio/_vstudio.lua",
 		"actions/vstudio/vs200x_vcproj.lua",
 		"actions/vstudio/vs200x_vcproj_user.lua",
-		"actions/vstudio/vs2003_solution.lua",
 		"actions/vstudio/vs2005_solution.lua",
 		"actions/vstudio/vs2005_csproj.lua",
 		"actions/vstudio/vs2005_csproj_user.lua",

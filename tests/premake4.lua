@@ -70,7 +70,6 @@
 	dofile("actions/test_clean.lua")
 
 	-- Visual Studio tests
-	dofile("test_vs2003_sln.lua")
 	dofile("actions/vstudio/test_vs200x_vcproj.lua")
 	dofile("actions/vstudio/test_vs200x_vcproj_linker.lua")
 	dofile("actions/vstudio/test_vs2010_vcxproj.lua")
