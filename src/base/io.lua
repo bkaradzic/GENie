@@ -63,7 +63,7 @@
 		end
 
 		if type(msg) == "number" then
-			s = string.rep(io.indent, msg) .. string.format(table.unpack(arg))
+			s = string.format(string.rep(io.indent, msg), table.unpack(arg))
 		else
 			s = string.format(msg, table.unpack(arg))
 		end
