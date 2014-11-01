@@ -20,3 +20,17 @@ clean:
 	@${MAKE} --no-print-directory -C . -f genie.make clean
 
 help:
+	@echo "Usage: make [config=name] [target]"
+	@echo ""
+	@echo "CONFIGURATIONS:"
+	@echo "   release"
+	@echo "   debug"
+	@echo "   releaseuniv32"
+	@echo "   debuguniv32"
+	@echo ""
+	@echo "TARGETS:"
+	@echo "   all (default)"
+	@echo "   clean"
+	@echo "   genie"
+	@echo ""
+	@echo "For more information, see http://industriousone.com/premake/quick-start"

@@ -31,18 +31,6 @@
 -- Tests
 --
 
-	function suite.On2002()
-		_ACTION = 'vs2002'
-		prepare()
-		test.capture [[
-<?xml version="1.0" encoding="Windows-1252"?>
-<VisualStudioProject
-	ProjectType="Visual C++"
-	Version="7.00"
-		]]
-	end
-
-
 	function suite.On2008()
 		_ACTION = 'vs2008'
 		prepare()

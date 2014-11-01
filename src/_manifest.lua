@@ -53,9 +53,6 @@
 
 		-- Visual Studio actions
 		"actions/vstudio/_vstudio.lua",
-		"actions/vstudio/vs2002_solution.lua",
-		"actions/vstudio/vs2002_csproj.lua",
-		"actions/vstudio/vs2002_csproj_user.lua",
 		"actions/vstudio/vs200x_vcproj.lua",
 		"actions/vstudio/vs200x_vcproj_user.lua",
 		"actions/vstudio/vs2003_solution.lua",

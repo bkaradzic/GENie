@@ -56,16 +56,7 @@
 		_p('<?xml version="1.0" encoding="Windows-1252"?>')
 		_p('<%s', element)
 		_p(1,'ProjectType="Visual C++"')
-
-		if _ACTION == "vs2002" then
-			_p(1,'Version="7.00"')
-		elseif _ACTION == "vs2003" then
-			_p(1,'Version="7.10"')
-		elseif _ACTION == "vs2005" then
-			_p(1,'Version="8.00"')
-		elseif _ACTION == "vs2008" then
-			_p(1,'Version="9.00"')
-		end
+		_p(1,'Version="9.00"')
 	end
 
 
@@ -611,37 +602,6 @@
 --
 
 	local function getsections(version, platform)
-		if version == "vs2002" then
-			return {
-				"VCCLCompilerTool",
-				"VCCustomBuildTool",
-				"VCLinkerTool",
-				"VCMIDLTool",
-				"VCPostBuildEventTool",
-				"VCPreBuildEventTool",
-				"VCPreLinkEventTool",
-				"VCResourceCompilerTool",
-				"VCWebServiceProxyGeneratorTool",
-				"VCWebDeploymentTool"
-			}
-		end
-		if version == "vs2003" then
-			return {
-				"VCCLCompilerTool",
-				"VCCustomBuildTool",
-				"VCLinkerTool",
-				"VCMIDLTool",
-				"VCPostBuildEventTool",
-				"VCPreBuildEventTool",
-				"VCPreLinkEventTool",
-				"VCResourceCompilerTool",
-				"VCWebServiceProxyGeneratorTool",
-				"VCXMLDataGeneratorTool",
-				"VCWebDeploymentTool",
-				"VCManagedWrapperGeneratorTool",
-				"VCAuxiliaryManagedWrapperGeneratorTool"
-			}
-		end
 		if platform == "Xbox360" then
 			return {
 				"VCPreBuildEventTool",
@@ -662,6 +622,7 @@
 				"DebuggerTool",
 			}
 		end
+
 		if platform == "PS3" then
 			return {
 				"VCPreBuildEventTool",
@@ -682,29 +643,29 @@
 				"VCAppVerifierTool",
 				"VCWebDeploymentTool",
 				"VCPostBuildEventTool"
-			}	
-		else
-			return {	
-				"VCPreBuildEventTool",
-				"VCCustomBuildTool",
-				"VCXMLDataGeneratorTool",
-				"VCWebServiceProxyGeneratorTool",
-				"VCMIDLTool",
-				"VCCLCompilerTool",
-				"VCManagedResourceCompilerTool",
-				"VCResourceCompilerTool",
-				"VCPreLinkEventTool",
-				"VCLinkerTool",
-				"VCALinkTool",
-				"VCManifestTool",
-				"VCXDCMakeTool",
-				"VCBscMakeTool",
-				"VCFxCopTool",
-				"VCAppVerifierTool",
-				"VCWebDeploymentTool",
-				"VCPostBuildEventTool"
-			}	
+			}
 		end
+
+		return {
+			"VCPreBuildEventTool",
+			"VCCustomBuildTool",
+			"VCXMLDataGeneratorTool",
+			"VCWebServiceProxyGeneratorTool",
+			"VCMIDLTool",
+			"VCCLCompilerTool",
+			"VCManagedResourceCompilerTool",
+			"VCResourceCompilerTool",
+			"VCPreLinkEventTool",
+			"VCLinkerTool",
+			"VCALinkTool",
+			"VCManifestTool",
+			"VCXDCMakeTool",
+			"VCBscMakeTool",
+			"VCFxCopTool",
+			"VCAppVerifierTool",
+			"VCWebDeploymentTool",
+			"VCPostBuildEventTool"
+		}
 	end
 
 

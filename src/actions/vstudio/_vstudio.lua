@@ -10,9 +10,13 @@
 -- Set default toolset
 --
 
-	local toolsets = { vs2012 = "v110", vs2013 = "v120", vs2014 = "v140" }
-	premake.vstudio.toolset = toolsets[_ACTION]
-
+	local toolsets = {
+		vs2010 = "v90",
+		vs2012 = "v110",
+		vs2013 = "v120",
+		vs2014 = "v140"
+	}
+	premake.vstudio.toolset = toolsets[_ACTION] or "unknown?"
 
 	local vstudio = premake.vstudio
 
@@ -204,88 +208,6 @@
 			return "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942"
 		end
 	end
-
-
---
--- Register Visual Studio 2002
---
-
-	newaction {
-		trigger         = "vs2002",
-		shortname       = "Visual Studio 2002",
-		description     = "Generate Microsoft Visual Studio 2002 project files",
-		os              = "windows",
-
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib" },
-
-		valid_languages = { "C", "C++", "C#" },
-
-		valid_tools     = {
-			cc     = { "msc"   },
-			dotnet = { "msnet" },
-		},
-
-		onsolution = function(sln)
-			premake.generate(sln, "%%.sln", vstudio.sln2002.generate)
-		end,
-
-		onproject = function(prj)
-			if premake.isdotnetproject(prj) then
-				premake.generate(prj, "%%.csproj", vstudio.cs2002.generate)
-				premake.generate(prj, "%%.csproj.user", vstudio.cs2002.generate_user)
-			else
-				premake.generate(prj, "%%.vcproj", vstudio.vc200x.generate)
-				premake.generate(prj, "%%.vcproj.user", vstudio.vc200x.generate_user)
-			end
-		end,
-
-		oncleansolution = premake.vstudio.cleansolution,
-		oncleanproject  = premake.vstudio.cleanproject,
-		oncleantarget   = premake.vstudio.cleantarget,
-
-		vstudio = {}
-	}
-
-
---
--- Register Visual Studio 2003
---
-
-	newaction {
-		trigger         = "vs2003",
-		shortname       = "Visual Studio 2003",
-		description     = "Generate Microsoft Visual Studio 2003 project files",
-		os              = "windows",
-
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib" },
-
-		valid_languages = { "C", "C++", "C#" },
-
-		valid_tools     = {
-			cc     = { "msc"   },
-			dotnet = { "msnet" },
-		},
-
-		onsolution = function(sln)
-			premake.generate(sln, "%%.sln", vstudio.sln2003.generate)
-		end,
-
-		onproject = function(prj)
-			if premake.isdotnetproject(prj) then
-				premake.generate(prj, "%%.csproj", vstudio.cs2002.generate)
-				premake.generate(prj, "%%.csproj.user", vstudio.cs2002.generate_user)
-			else
-				premake.generate(prj, "%%.vcproj", vstudio.vc200x.generate)
-				premake.generate(prj, "%%.vcproj.user", vstudio.vc200x.generate_user)
-			end
-		end,
-
-		oncleansolution = premake.vstudio.cleansolution,
-		oncleanproject  = premake.vstudio.cleanproject,
-		oncleantarget   = premake.vstudio.cleantarget,
-
-		vstudio = {}
-	}
 
 
 --
