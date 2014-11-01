@@ -16,10 +16,8 @@
 	function suite.findlib_FindSystemLib()
 		if os.is("windows") then
 			test.istrue(os.findlib("user32"))
-		elseif os.is("haiku") then
-			test.istrue(os.findlib("root"))		
 		else
-			test.istrue(os.findlib("m"))		
+			test.istrue(os.findlib("m"))
 		end
 	end
 	

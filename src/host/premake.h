@@ -21,12 +21,6 @@
 #elif defined(__APPLE__) && defined(__MACH__)
 #define PLATFORM_MACOSX   (1)
 #define PLATFORM_STRING   "macosx"
-#elif defined(__sun__) && defined(__svr4__)
-#define PLATFORM_SOLARIS  (1)
-#define PLATFORM_STRING   "solaris"
-#elif defined(__HAIKU__)
-#define PLATFORM_HAIKU    (1)
-#define PLATFORM_STRING   "haiku"
 #else
 #define PLATFORM_WINDOWS  (1)
 #define PLATFORM_STRING   "windows"

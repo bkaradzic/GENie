@@ -33,14 +33,6 @@
 		test.isequal("-MMD -MP", table.concat(r, " "))
 	end
 
-	function suite.cppflags_OnHaiku()
-		cfg.system = "haiku"
-		local r = premake.gcc.getcppflags(cfg)
-		test.isequal("-MMD", table.concat(r, " "))
-	end
-
-		
-
 --
 -- CFLAGS tests
 --

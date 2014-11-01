@@ -52,10 +52,8 @@
 		description = "Generate files for a different operating system",
 		allowed = {
 			{ "bsd",      "OpenBSD, NetBSD, or FreeBSD" },
-			{ "haiku",    "Haiku" },
 			{ "linux",    "Linux" },
 			{ "macosx",   "Apple Mac OS X" },
-			{ "solaris",  "Solaris" },
 			{ "windows",  "Microsoft Windows" },
 		}
 	}

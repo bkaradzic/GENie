@@ -454,7 +454,7 @@
 --
 
 	function premake.gettarget(cfg, direction, pathstyle, namestyle, system)
-		if system == "bsd" or system == "solaris" then
+		if system == "bsd" then
 			system = "linux"
 		end
 

@@ -62,9 +62,6 @@
 		if os.is("windows") then
 			formats = { "%s.dll", "%s" }
 			path = os.getenv("PATH")
-		elseif os.is("haiku") then
-			formats = { "lib%s.so", "%s.so" }
-			path = os.getenv("LIBRARY_PATH")
 		else
 			if os.is("macosx") then
 				formats = { "lib%s.dylib", "%s.dylib" }

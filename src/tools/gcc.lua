@@ -104,9 +104,8 @@
 		table.insert(flags, platforms[cfg.platform].cppflags)
 
 		-- We want the -MP flag for dependency generation (creates phony rules
-		-- for headers, prevents make errors if file is later deleted), but
-		-- Haiku doesn't support it (yet)
-		if flags[1]:startswith("-MMD") and cfg.system ~= "haiku" then
+		-- for headers, prevents make errors if file is later deleted)
+		if flags[1]:startswith("-MMD") then
 			table.insert(flags, "-MP")
 		end
 

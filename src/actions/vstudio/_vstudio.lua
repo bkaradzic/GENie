@@ -47,11 +47,7 @@
 
 	function vstudio.arch(prj)
 		if (prj.language == "C#") then
-			if (_ACTION < "vs2005") then
-				return ".NET"
-			else
-				return "Any CPU"
-			end
+			return "Any CPU"
 		else
 			return "Win32"
 		end
@@ -209,49 +205,6 @@
 		end
 	end
 
-
---
--- Register Visual Studio 2005
---
-
-	newaction {
-		trigger         = "vs2005",
-		shortname       = "Visual Studio 2005",
-		description     = "Generate Microsoft Visual Studio 2005 project files",
-		os              = "windows",
-
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib" },
-
-		valid_languages = { "C", "C++", "C#" },
-
-		valid_tools     = {
-			cc     = { "msc"   },
-			dotnet = { "msnet" },
-		},
-
-		onsolution = function(sln)
-			premake.generate(sln, "%%.sln", vstudio.sln2005.generate)
-		end,
-
-		onproject = function(prj)
-			if premake.isdotnetproject(prj) then
-				premake.generate(prj, "%%.csproj", vstudio.cs2005.generate)
-				premake.generate(prj, "%%.csproj.user", vstudio.cs2005.generate_user)
-			else
-				premake.generate(prj, "%%.vcproj", vstudio.vc200x.generate)
-				premake.generate(prj, "%%.vcproj.user", vstudio.vc200x.generate_user)
-			end
-		end,
-
-		oncleansolution = vstudio.cleansolution,
-		oncleanproject  = vstudio.cleanproject,
-		oncleantarget   = vstudio.cleantarget,
-
-		vstudio = {
-			productVersion  = "8.0.50727",
-			solutionVersion = "9",
-		}
-	}
 
 --
 -- Register Visual Studio 2008
