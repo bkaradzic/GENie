@@ -61,7 +61,7 @@ intention to keep it in sync with it.
    compilation in MSVC.
  - Added ability to configure Visual Studio toolset from GENie script.
  - Added `UnsignedChar` flag to force char to be unsigned.
- - Removed vs2002, vs2003, and vs2005 support.
+ - Removed vs2002, vs2003, vs2005, Solaris, and Haiku support.
 
 ## Why fork?
 
