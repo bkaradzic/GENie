@@ -41,7 +41,7 @@ History
 -------
 
 Initial version of **GENie** is fork of Premake 4.4 beta 5, and there is no
-intention to keep it in sync with it.
+intention to keep it compatible with it.
 
 ## Changelog (since fork)
 
@@ -62,7 +62,7 @@ intention to keep it in sync with it.
  - Added ability to configure Visual Studio toolset from GENie script.
  - Added `UnsignedChar` flag to force char to be unsigned.
  - Removed vs2002, vs2003, vs2005, Solaris, and Haiku support.
- - Allow source files to have the same name.
+ - Allow source files in the same project to have the same name.
 
 ## Why fork?
 
@@ -100,7 +100,9 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
 
-	Copyright (c) 2003-2013 Jason Perkins and individual contributors.
+	GENie
+	Copyright (c) 2014 Branimir Karadžić
+	Copyright (c) 2014 Neil Richardson
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification,
@@ -113,7 +115,7 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 		this list of conditions and the following disclaimer in the documentation
 		and/or other materials provided with the distribution.
 	
-	3. Neither the name of the Premake nor the names of its contributors may be 
+	3. Neither the name of the GENie nor the names of its contributors may be 
 		used to endorse or promote products derived from this software without
 		specific prior written permission.
 	
