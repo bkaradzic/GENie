@@ -51,8 +51,8 @@ intention to keep it in sync with it.
    (solution.lua and premake4.lua are also allowed), and it can be located in
    `scripts` directory.
  - Updated Lua from 5.1.4 to 5.2.3.
- - Disabled SmallerTypeCheck VS option when ExtraWarnings is set (need to move
-   it into separate option).
+ - Disabled `SmallerTypeCheck` VS option when `ExtraWarnings` is set (need to
+   move it into separate option).
  - New versioning scheme based on revision number from git.
  - Preliminary support for WinRT.
  - Added `startproject "<project name>"` to set default project in VS.
