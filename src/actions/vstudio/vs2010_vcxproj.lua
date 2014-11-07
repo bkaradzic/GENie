@@ -549,7 +549,10 @@
 			_p(1,'<ItemGroup>')
 			for _, file in ipairs(files) do
 				local translatedpath = path.translate(file.name, "\\")
-				_p(2,'<ClCompile Include=\"%s\">', translatedpath)
+				_p(2, '<ClCompile Include=\"%s\">', translatedpath)
+				_p(3, '<ObjectFileName>$(IntDir)%s.obj</ObjectFileName>'
+					, premake.esc(path.translate(path.trimdots(path.removeext(file.name))))
+					)
 				for _, cfginfo in ipairs(configs) do
 					if config_mappings[cfginfo] and translatedpath == config_mappings[cfginfo] then
 						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>Create</PrecompiledHeader>', premake.esc(cfginfo.name))

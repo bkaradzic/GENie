@@ -55,8 +55,20 @@
 			return name
 		end
 	end
-	
-		
+
+--
+-- Retrieve the path, without any extension.
+--
+
+	function path.removeext(name)
+		local i = name:findlast(".", true)
+		if (i) then
+			return name:sub(1, i - 1)
+		else
+			return name
+		end
+	end
+
 --
 -- Retrieve the directory portion of a path, or an empty string if 
 -- the path does not include a directory.
@@ -316,4 +328,23 @@
 		pattern = pattern:gsub("\002", "[^/]*")
 		
 		return pattern
+	end
+
+--
+-- remove any dot ("./", "../") patterns from the start of the path
+--
+	function path.trimdots(p)
+		local changed
+		repeat
+			changed = true
+			if p:startswith("./") then
+				p = p:sub(3)
+			elseif p:startswith("../") then
+				p = p:sub(4)
+			else
+				changed = false
+			end
+		until not changed
+
+		return p
 	end

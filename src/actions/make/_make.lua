@@ -34,7 +34,6 @@
 	end
 
 
-
 --
 -- Rules for file ops based on the shell type. Can't use defines and $@ because
 -- it screws up the escaping of spaces and parethesis (anyone know a solution?)
@@ -43,20 +42,12 @@
 	function premake.make_copyrule(source, target)
 		_p('%s: %s', target, source)
 		_p('\t@echo Copying $(notdir %s)', target)
-		_p('ifeq (posix,$(SHELLTYPE))')
-		_p('\t$(SILENT) cp -fR %s %s', source, target)
-		_p('else')
-		_p('\t$(SILENT) copy /Y $(subst /,\\\\,%s) $(subst /,\\\\,%s)', source, target)
-		_p('endif')
+		_p('\t-$(call COPY,%s,%s)', source, target)
 	end
 
 	function premake.make_mkdirrule(var)
 		_p('\t@echo Creating %s', var)
-		_p('ifeq (posix,$(SHELLTYPE))')
-		_p('\t$(SILENT) mkdir -p %s', var)
-		_p('else')
-		_p('\t$(SILENT) mkdir $(subst /,\\\\,%s)', var)
-		_p('endif')
+		_p('\t-$(call MKDIR,%s)', var)
 		_p('')
 	end
 

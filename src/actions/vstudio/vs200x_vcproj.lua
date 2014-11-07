@@ -129,22 +129,26 @@
 						local isSourceCode = path.iscppfile(fname)
 						local needsCompileAs = (path.iscfile(fname) ~= premake.project.iscproject(prj))
 						
-						if usePCH or (isSourceCode and needsCompileAs) then
+						if usePCH or isSourceCode then
 							_p(depth, '<FileConfiguration')
 							_p(depth, '\tName="%s"', cfginfo.name)
 							_p(depth, '\t>')
 							_p(depth, '\t<Tool')
-							_p(depth, '\t\tName="%s"', iif(cfg.system == "Xbox360", 
-							                                 "VCCLX360CompilerTool", 
-							                                 "VCCLCompilerTool"))
+							_p(depth, '\t\tName="%s"'
+								, iif(cfg.system == "Xbox360", "VCCLX360CompilerTool", "VCCLCompilerTool")
+								)
+							_p(depth, '\t\tObjectFile="$(IntDir)\\%s.obj"'
+								, path.translate(path.trimdots(path.removeext(fname)), "\\")
+								)
+
 							if needsCompileAs then
 								_p(depth, '\t\tCompileAs="%s"', iif(path.iscfile(fname), 1, 2))
 							end
-							
+
 							if usePCH then
 								if cfg.system == "PS3" then
-									local options = table.join(premake.snc.getcflags(cfg), 
-									                           premake.snc.getcxxflags(cfg), 
+									local options = table.join(premake.snc.getcflags(cfg),
+									                           premake.snc.getcxxflags(cfg),
 									                           cfg.buildoptions)
 									options = table.concat(options, " ");
 									options = options .. ' --create_pch="$(IntDir)/$(TargetName).pch"'			                    

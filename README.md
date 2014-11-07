@@ -62,6 +62,7 @@ intention to keep it in sync with it.
  - Added ability to configure Visual Studio toolset from GENie script.
  - Added `UnsignedChar` flag to force char to be unsigned.
  - Removed vs2002, vs2003, vs2005, Solaris, and Haiku support.
+ - Allow source files to have the same name.
 
 ## Why fork?
 
