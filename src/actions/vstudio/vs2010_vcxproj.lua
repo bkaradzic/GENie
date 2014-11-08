@@ -29,6 +29,12 @@
 		if prj.flags and prj.flags.Managed then
 			_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
 			_p(2,'<Keyword>ManagedCProj</Keyword>')
+		elseif vstudio.toolset == "v120_wp81" then
+			_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
+			_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
+			_p(2,'<AppContainerApplication>true</AppContainerApplication>')
+			_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
+			_p(2,'<ApplicationTypeRevision>8.1</ApplicationTypeRevision>')
 		else
 			_p(2,'<Keyword>Win32Proj</Keyword>')
 		end
