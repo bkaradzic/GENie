@@ -646,6 +646,9 @@
 				local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
 				_p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
 				_p(3,'<Project>{%s}</Project>', dep.uuid)
+				if vstudio.toolset == "v120_wp81" then
+					_p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
+				end
 				_p(2,'</ProjectReference>')
 			end
 			_p(1,'</ItemGroup>')
