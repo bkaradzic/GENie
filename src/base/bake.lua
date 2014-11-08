@@ -173,6 +173,17 @@
 		end
 		return tbl
 	end
+
+	local function removevalues(tbl, removes)
+        for index, value in ipairs(tbl) do
+            for _, pattern in ipairs(removes) do
+                if pattern == value then
+                    table.remove(tbl, index)
+                    break
+                end
+            end
+        end
+	end
 	
 	local function mergeobject(dest, src)
 		-- if there's nothing to add, quick out
@@ -187,6 +198,12 @@
 				if field then
 					if type(value) == "table" then
 						dest[fieldname] = mergefield(field.kind, dest[fieldname], value)
+						if src.removes then
+							removes = src.removes[fieldname]
+							if removes then
+								removevalues(dest[fieldname], removes)
+							end
+						end
 					else
 						dest[fieldname] = value
 					end
