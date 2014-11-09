@@ -175,10 +175,10 @@
 	end
 
 	local function removevalues(tbl, removes)
-        for index, value in ipairs(tbl) do
+		for i=#tbl,1,-1 do
             for _, pattern in ipairs(removes) do
-                if pattern == value then
-                    table.remove(tbl, index)
+                if pattern == tbl[i] then
+                    table.remove(tbl, i)
                     break
                 end
             end
