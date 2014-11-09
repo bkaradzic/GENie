@@ -501,6 +501,14 @@
 				end
 			end
 
+			-- WinRT projects get an auto-generated appxmanifest file
+			if vstudio.toolset == "v120_wp81" and prj.kind == "WindowedApp" then
+				local fcfg = {}
+				fcfg.name = prj.name .. ".appxmanifest"
+				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
+				table.insert(sortedfiles.AppxManifest, fcfg)
+			end
+
 			-- Cache the sorted files; they are used several places
 			prj.vc2010sortedfiles = sortedfiles
 		end
@@ -694,5 +702,49 @@
 		_p('</Project>')
 	end
 
+	function premake.vs2010_appxmanifest(prj)
+		io.indent = "  "
+		io.eol = "\r\n"
+		_p('<?xml version="1.0" encoding="utf-8"?>')
+		_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">')
+		
+		_p(1,'<Identity Name="' .. prj.uuid .. '"')
+		_p(2,'Publisher="CN=Unknown"')
+		_p(2,'Version="1.0.0.0" />')
 
+		_p(1,'<mp:PhoneIdentity PhoneProductId="' .. prj.uuid .. '" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
 
+		_p(1,'<Properties>')
+		_p(2,'<DisplayName>' .. prj.name .. '</DisplayName>')
+		_p(2,'<PublisherDisplayName>Unknown</PublisherDisplayName>')
+		_p(2,'<Logo>EmptyLogo.png</Logo>')
+		_p(1,'</Properties>')
+
+		_p(1,'<Prerequisites>')
+		_p(2,'<OSMinVersion>6.3.1</OSMinVersion>')
+		_p(2,'<OSMaxVersionTested>6.3.1</OSMaxVersionTested>')
+		_p(1,'</Prerequisites>')
+
+		_p(1,'<Resources>')
+		_p(2,'<Resource Language="x-generate"/>')
+		_p(1,'</Resources>')
+
+		_p(1,'<Applications>')
+		_p(2,'<Application Id="App"')
+		_p(3,'Executable="$targetnametoken$.exe"')
+		_p(3,'EntryPoint="App">')
+		_p(3,'<m3:VisualElements')
+		_p(4,'DisplayName="Blah"')
+		_p(4,'Square150x150Logo="Assets\\Logo.png"')
+		_p(4,'Square44x44Logo="Assets\\SmallLogo.png"')
+		_p(4,'Description="Blah"')
+		_p(4,'ForegroundText="light"')
+		_p(4,'BackgroundColor="transparent">')
+		--_p(4,'<m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png"/>')
+		--_p(4,'<m3:SplashScreen Image="Assets\\SplashScreen.png"/>')
+		_p(3,'</m3:VisualElements>')
+		_p(2,'</Application>')
+		_p(1,'</Applications>')
+
+		_p('</Package>')
+	end
