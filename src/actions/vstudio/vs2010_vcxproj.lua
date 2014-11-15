@@ -484,6 +484,7 @@
                 AppxManifest = {}
 			}
 
+			local foundAppxManifest = false
 			for file in premake.project.eachfile(prj) do
 				if path.iscppfile(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
@@ -494,6 +495,7 @@
 				else
                     local ext = path.getextension(file.name):lower()
                     if ext == ".appxmanifest" then
+						foundAppxManifest = true
                         table.insert(sortedfiles.AppxManifest, file)
                     else
 					    table.insert(sortedfiles.None, file)
@@ -501,8 +503,10 @@
 				end
 			end
 
-			-- WinRT projects get an auto-generated appxmanifest file
-			if vstudio.toolset == "v120_wp81" and prj.kind == "WindowedApp" then
+			-- WinRT projects get an auto-generated appxmanifest file if none is specified
+			if vstudio.toolset == "v120_wp81" and prj.kind == "WindowedApp" and not foundAppxManifest then
+				vstudio.needAppxManifest = true
+
 				local fcfg = {}
 				fcfg.name = prj.name .. ".appxmanifest"
 				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
@@ -740,8 +744,6 @@
 		_p(4,'Description="Blah"')
 		_p(4,'ForegroundText="light"')
 		_p(4,'BackgroundColor="transparent">')
-		--_p(4,'<m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png"/>')
-		--_p(4,'<m3:SplashScreen Image="Assets\\SplashScreen.png"/>')
 		_p(3,'</m3:VisualElements>')
 		_p(2,'</Application>')
 		_p(1,'</Applications>')
