@@ -134,6 +134,10 @@
 				if mapped == cfg.platform or cfg.platform == "Mixed Platforms" then
 					_p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 				end
+
+				if premake.vstudio.toolset == "v120_wp81" and prj.kind == "WindowedApp" then
+					_p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
+				end
 			end
 		end
 		_p('\tEndGlobalSection')

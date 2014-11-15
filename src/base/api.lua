@@ -489,39 +489,43 @@
 
 
 --
--- Adds values to an array field of a solution/project/configuration. `ctype`
--- specifies the container type (see premake.getobject) for the field.
+-- Adds values to an array field.
+--
+-- @param obj
+--    The object containing the field.
+-- @param fieldname
+--    The name of the array field to which to add.
+-- @param values
+--    The value(s) to add. May be a simple value or an array
+--    of values.
+-- @param allowed
+--    An optional list of allowed values for this field.
+-- @return
+--    The value of the target field, with the new value(s) added.
 --
 
-	function premake.setarray(ctype, fieldname, value, allowed)
-		local container, err = premake.getobject(ctype)
-		if (not container) then
-			error(err, 4)
-		end
+	function premake.setarray(obj, fieldname, value, allowed)
+		obj[fieldname] = obj[fieldname] or {}
 
-		if (not container[fieldname]) then
-			container[fieldname] = { }
-		end
-
-		local function doinsert(value, depth)
-			if (type(value) == "table") then
+		local function add(value, depth)
+			if type(value) == "table" then
 				for _,v in ipairs(value) do
-					doinsert(v, depth + 1)
+					add(v, depth + 1)
 				end
 			else
 				value, err = premake.checkvalue(value, allowed)
-				if (not value) then
+				if not value then
 					error(err, depth)
 				end
-				table.insert(container[fieldname], value)
+				table.insert(obj[fieldname], value)
 			end
 		end
 
-		if (value) then
-			doinsert(value, 5)
+		if value then
+			add(value, 5)
 		end
-
-		return container[fieldname]
+		
+		return obj[fieldname]
 	end
 
 
@@ -621,6 +625,14 @@
 		return container[fieldname]
 	end
 
+--
+-- Removes a value from an array
+--
+	function premake.remove(fieldname, value)
+		local cfg = premake.CurrentConfiguration
+		cfg.removes = cfg.removes or {}
+		cfg.removes[fieldname] = premake.setarray(cfg.removes, fieldname, value)
+	end
 
 
 --
@@ -638,17 +650,23 @@
 			end
 		end
 
+		-- find the container for the value	
+		local container, err = premake.getobject(scope)
+		if (not container) then
+			error(err, 3)
+		end
+
 		if kind == "string" then
 			return premake.setstring(scope, name, value, allowed)
 		elseif kind == "path" then
 			if value then value = path.getabsolute(value) end
 			return premake.setstring(scope, name, value)
 		elseif kind == "list" then
-			return premake.setarray(scope, name, value, allowed)
+			return premake.setarray(container, name, value, allowed)
 		elseif kind == "dirlist" then
-			return premake.setdirarray(scope, name, value)
+			return premake.setdirarray(container, name, value)
 		elseif kind == "filelist" then
-			return premake.setfilearray(scope, name, value)
+			return premake.setfilearray(container, name, value)
 		elseif kind == "keyvalue" or kind == "keypath" then
 			return premake.setkeyvalue(scope, name, value)
 		end
@@ -660,9 +678,19 @@
 -- Build all of the getter/setter functions from the metadata above.
 --
 
-	for name,_ in pairs(premake.fields) do
+	for name, info in pairs(premake.fields) do
 		_G[name] = function(value)
 			return accessor(name, value)
+		end
+
+		-- list value types get a remove() call too
+		if info.kind == "list" or 
+		   info.kind == "dirlist" or 
+		   info.kind == "filelist" 
+		then
+			_G["remove"..name] = function(value)
+				premake.remove(name, value)
+			end
 		end
 	end
 

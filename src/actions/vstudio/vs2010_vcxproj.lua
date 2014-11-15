@@ -29,6 +29,12 @@
 		if prj.flags and prj.flags.Managed then
 			_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
 			_p(2,'<Keyword>ManagedCProj</Keyword>')
+		elseif vstudio.toolset == "v120_wp81" then
+			_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
+			_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
+			_p(2,'<AppContainerApplication>true</AppContainerApplication>')
+			_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
+			_p(2,'<ApplicationTypeRevision>8.1</ApplicationTypeRevision>')
 		else
 			_p(2,'<Keyword>Win32Proj</Keyword>')
 		end
@@ -478,6 +484,7 @@
                 AppxManifest = {}
 			}
 
+			local foundAppxManifest = false
 			for file in premake.project.eachfile(prj) do
 				if path.iscppfile(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
@@ -488,11 +495,22 @@
 				else
                     local ext = path.getextension(file.name):lower()
                     if ext == ".appxmanifest" then
+						foundAppxManifest = true
                         table.insert(sortedfiles.AppxManifest, file)
                     else
 					    table.insert(sortedfiles.None, file)
                     end
 				end
+			end
+
+			-- WinRT projects get an auto-generated appxmanifest file if none is specified
+			if vstudio.toolset == "v120_wp81" and prj.kind == "WindowedApp" and not foundAppxManifest then
+				vstudio.needAppxManifest = true
+
+				local fcfg = {}
+				fcfg.name = prj.name .. ".appxmanifest"
+				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
+				table.insert(sortedfiles.AppxManifest, fcfg)
 			end
 
 			-- Cache the sorted files; they are used several places
@@ -640,6 +658,9 @@
 				local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
 				_p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
 				_p(3,'<Project>{%s}</Project>', dep.uuid)
+				if vstudio.toolset == "v120_wp81" then
+					_p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
+				end
 				_p(2,'</ProjectReference>')
 			end
 			_p(1,'</ItemGroup>')
@@ -685,5 +706,47 @@
 		_p('</Project>')
 	end
 
+	function premake.vs2010_appxmanifest(prj)
+		io.indent = "  "
+		io.eol = "\r\n"
+		_p('<?xml version="1.0" encoding="utf-8"?>')
+		_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">')
+		
+		_p(1,'<Identity Name="' .. prj.uuid .. '"')
+		_p(2,'Publisher="CN=Unknown"')
+		_p(2,'Version="1.0.0.0" />')
 
+		_p(1,'<mp:PhoneIdentity PhoneProductId="' .. prj.uuid .. '" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
 
+		_p(1,'<Properties>')
+		_p(2,'<DisplayName>' .. prj.name .. '</DisplayName>')
+		_p(2,'<PublisherDisplayName>Unknown</PublisherDisplayName>')
+		_p(2,'<Logo>EmptyLogo.png</Logo>')
+		_p(1,'</Properties>')
+
+		_p(1,'<Prerequisites>')
+		_p(2,'<OSMinVersion>6.3.1</OSMinVersion>')
+		_p(2,'<OSMaxVersionTested>6.3.1</OSMaxVersionTested>')
+		_p(1,'</Prerequisites>')
+
+		_p(1,'<Resources>')
+		_p(2,'<Resource Language="x-generate"/>')
+		_p(1,'</Resources>')
+
+		_p(1,'<Applications>')
+		_p(2,'<Application Id="App"')
+		_p(3,'Executable="$targetnametoken$.exe"')
+		_p(3,'EntryPoint="App">')
+		_p(3,'<m3:VisualElements')
+		_p(4,'DisplayName="Blah"')
+		_p(4,'Square150x150Logo="Assets\\Logo.png"')
+		_p(4,'Square44x44Logo="Assets\\SmallLogo.png"')
+		_p(4,'Description="Blah"')
+		_p(4,'ForegroundText="light"')
+		_p(4,'BackgroundColor="transparent">')
+		_p(3,'</m3:VisualElements>')
+		_p(2,'</Application>')
+		_p(1,'</Applications>')
+
+		_p('</Package>')
+	end
