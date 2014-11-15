@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 89 (commit 8674958db0f0e5eaebcf8384bdc6435a2ee5aa0d)
+	version 101 (commit 42d7c8830bcef64e3bc79a0de872db40e5c01457)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -54,7 +54,6 @@ intention to keep it compatible with it.
  - Disabled `SmallerTypeCheck` VS option when `ExtraWarnings` is set (need to
    move it into separate option).
  - New versioning scheme based on revision number from git.
- - Preliminary support for WinRT.
  - Added `startproject "<project name>"` to set default project in VS.
  - Removed `NoMinimalRebuild` and added reversed logic to `EnableMinimalRebuild`.
  - Added `NoMultiProcessorCompilation` flag to disable multiprocessor
@@ -63,6 +62,8 @@ intention to keep it compatible with it.
  - Added `UnsignedChar` flag to force char to be unsigned.
  - Removed vs2002, vs2003, vs2005, Solaris, and Haiku support.
  - Allow source files in the same project to have the same name.
+ - Added WinRT support.
+ - Added `removeflags`, `removelinks`.
 
 ## Why fork?
 
@@ -103,6 +104,7 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 	GENie
 	Copyright (c) 2014 Branimir Karadžić
 	Copyright (c) 2014 Neil Richardson
+	Copyright (c) 2014 Mike Popoloski
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification,
