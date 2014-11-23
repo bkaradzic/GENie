@@ -15,6 +15,7 @@ Download (stable)
 -----------------
 
 	version 101 (commit 42d7c8830bcef64e3bc79a0de872db40e5c01457)
+	version 104 (commit dc431a8fbadb49c7a09915aa814578449628cc40)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
