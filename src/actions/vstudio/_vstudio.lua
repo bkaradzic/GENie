@@ -14,7 +14,7 @@
 		vs2010 = "v90",
 		vs2012 = "v110",
 		vs2013 = "v120",
-		vs2014 = "v140"
+		vs2015 = "v140"
 	}
 	premake.vstudio.toolset = toolsets[_ACTION] or "unknown?"
 
