@@ -64,6 +64,7 @@ intention to keep it compatible with it.
  - Allow source files in the same project to have the same name.
  - Added WinRT support.
  - Added `removeflags`, `removelinks`.
+ - Added vs2015 support.
 
 ## Why fork?
 
