@@ -295,7 +295,11 @@
 			if cfg.platform:startswith("Universal") then
 				_p('  LINKCMD    = libtool -o $(TARGET) $(OBJECTS)')
 			else
-				_p('  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)')
+				if cc.llvm then
+					_p('  LINKCMD    = $(AR) rcs $(TARGET) $(OBJECTS)')
+				else
+					_p('  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)')
+				end
 			end
 		else
 
