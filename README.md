@@ -8,7 +8,7 @@ What is it?
 script, making applying the same settings for multiple projects easy.
 
 Supported project generators:
- * Visual Studio 2008, 2010, 2012, 2013
+ * Visual Studio 2008, 2010, 2012, 2013, 2015
  * GNU Makefile
 
 Download (stable)
