@@ -483,10 +483,16 @@
 
 		local name    = cfg[field.."name"] or cfg.targetname or cfg.project.name
 		local dir     = cfg[field.."dir"] or cfg.targetdir or path.getrelative(cfg.location, cfg.basedir)
+		local subdir  = cfg[field.."subdir"] or cfg.targetsubdir or "."
 		local prefix  = ""
 		local suffix  = ""
 		local ext     = ""
 		local bundlepath, bundlename
+
+		-- targetpath/targetsubdir/bundlepath/prefix..name..suffix..ext
+
+		dir = path.join(dir, subdir)
+
 
 		if namestyle == "windows" then
 			if kind == "ConsoleApp" or kind == "WindowedApp" then
@@ -523,17 +529,19 @@
 
 		-- build the results object
 		local result = { }
-		result.basename   = name .. suffix
-		result.name       = prefix .. name .. suffix .. ext
-		result.directory  = dir
-		result.prefix     = prefix
-		result.suffix     = suffix
-		result.fullpath   = path.join(result.directory, result.name)
-		result.bundlepath = bundlepath or result.fullpath
+		result.basename     = name .. suffix
+		result.name         = prefix .. name .. suffix .. ext
+		result.directory    = dir
+		result.subdirectory = subdir
+		result.prefix       = prefix
+		result.suffix       = suffix
+		result.fullpath     = path.join(result.directory, result.name)
+		result.bundlepath   = bundlepath or result.fullpath
 
 		if pathstyle == "windows" then
-			result.directory = path.translate(result.directory, "\\")
-			result.fullpath  = path.translate(result.fullpath,  "\\")
+			result.directory    = path.translate(result.directory, "\\")
+			result.subdirectory = path.translate(result.subdirectory, "\\")
+			result.fullpath     = path.translate(result.fullpath,  "\\")
 		end
 
 		return result
