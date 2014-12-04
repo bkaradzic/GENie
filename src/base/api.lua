@@ -348,6 +348,12 @@
 			scope = "config",
 		},
 
+		targetsubdir =
+		{
+			kind  = "string",
+			scope = "config",
+		},
+
 		targetextension =
 		{
 			kind  = "string",
