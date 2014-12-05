@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 109 (commit 75ed8a00504b20d0b1c89df27322b4c681099b16)
+	version 114 (commit 641c30aaa68815af55e0c782b9d41f7114456386)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -65,6 +65,7 @@ intention to keep it compatible with it.
  - Added WinRT support.
  - Added `removeflags`, `removelinks`.
  - Added vs2015 support.
+ - Added `targetsubdir`.
 
 ## Why fork?
 
