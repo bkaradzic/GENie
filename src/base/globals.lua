@@ -120,11 +120,42 @@
 	
 	
 --
--- A shortcut for including another "premake4.lua" file, often used for projects.
+-- A shortcut for including another build file, often used for projects.
 --
 
 	function include(fname)
-		return dofile(fname .. "/premake4.lua")
+		local function findDefaultScript(names)
+			local dir  = fname
+			local last = ""
+			while dir ~= last do
+				for _, name in ipairs(names) do
+
+					local script0 = dir .. "/" .. name
+					if (os.isfile(script0)) then
+						return dir, name
+					end
+
+					local script1 = dir .. "/scripts/" .. name
+					if (os.isfile(script1)) then
+						return dir .. "/scripts/", name
+					end
+				end
+
+				last = dir
+				dir  = path.getabsolute(dir .. "/..")
+
+				if dir == "." then break end
+			end
+
+			return nil, nil
+		end
+
+		local dir, name = findDefaultScript({"genie.lua", "solution.lua", "premake4.lua"})
+		if dir ~= nil then
+			dofile(dir .. "/" .. name)
+		end
+		
+		return nil
 	end
 
 
