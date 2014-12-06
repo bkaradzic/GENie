@@ -177,7 +177,7 @@
 
 		for prj in premake.solution.eachproject(sln) do
 			if prj.group ~= nil then
-				_p('{%s} = {%s}', prj.uuid, prj.group.uuid)
+				_p('\t\t{%s} = {%s}', prj.uuid, prj.group.uuid)
 			end
 		end
 
