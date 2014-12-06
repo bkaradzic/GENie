@@ -26,10 +26,15 @@
 			sln2005.project(prj)
 		end
 
+		for grp in premake.solution.eachgroup(sln) do
+			sln2005.group(grp)
+		end
+
 		_p('Global')
 		sln2005.platforms(sln)
 		sln2005.project_platforms(sln)
 		sln2005.properties(sln)
+		sln2005.project_groups(sln)
 		_p('EndGlobal')
 	end
 
@@ -71,6 +76,15 @@
 
 		_p('Project("{%s}") = "%s", "%s", "{%s}"', vstudio.tool(prj), prj.name, projpath, prj.uuid)
 		sln2005.projectdependencies(prj)
+		_p('EndProject')
+	end
+
+--
+-- Write out an entry for a solution folder
+--
+	
+	function sln2005.group(grp)
+		_p('Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "%s", "%s", "{%s}"', grp.name, grp.name, grp.uuid)
 		_p('EndProject')
 	end
 
@@ -152,5 +166,20 @@
 	function sln2005.properties(sln)
 		_p('\tGlobalSection(SolutionProperties) = preSolution')
 		_p('\t\tHideSolutionNode = FALSE')
+		_p('\tEndGlobalSection')
+	end
+
+--
+-- Write out list of project nestings
+--
+	function sln2005.project_groups(sln)
+		_p('\tGlobalSection(NestedProjects) = preSolution')
+
+		for prj in premake.solution.eachproject(sln) do
+			if prj.group ~= nil then
+				_p('\t\t{%s} = {%s}', prj.uuid, prj.group.uuid)
+			end
+		end
+
 		_p('\tEndGlobalSection')
 	end
