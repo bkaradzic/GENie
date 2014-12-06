@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 114 (commit 641c30aaa68815af55e0c782b9d41f7114456386)
+	version 123 (commit eeb9b473cd5c4ddd619f2e26d27197d4af8fda8d)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -66,6 +66,7 @@ intention to keep it compatible with it.
  - Added `removeflags`, `removelinks`.
  - Added vs2015 support.
  - Added `targetsubdir`.
+ - Added support for solution folders `group`.
 
 ## Why fork?
 
@@ -104,9 +105,8 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 -----------------------------------------------------------------
 
 	GENie
-	Copyright (c) 2014 Branimir Karadžić
-	Copyright (c) 2014 Neil Richardson
-	Copyright (c) 2014 Mike Popoloski
+	Copyright (c) 2014 Branimir Karadžić, Neil Richardson, Mike Popoloski,
+	Drew Solomon, Ted de Munnik.
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification,
