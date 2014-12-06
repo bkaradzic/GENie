@@ -32,3 +32,42 @@
 		callback(obj)
 		f:close()
 	end
+
+
+-- 
+-- Finds a valid premake build file in the specified directory
+-- Used by both the main genie process, and include commands
+--
+-- @param dir
+--	  The path in which to start looking for the script
+-- @param search_upwards
+--    When the script was not found in the specified directory, does the
+--    script need to look upwards in the file system
+--
+
+	function premake.findDefaultScript(dir, search_upwards)
+		search_upwards = search_upwards or true
+
+		local last = ""
+		while dir ~= last do
+			for _, name in ipairs({ "genie.lua", "solution.lua", "premake4.lua" }) do
+
+				local script0 = dir .. "/" .. name
+				if (os.isfile(script0)) then
+					return dir, name
+				end
+
+				local script1 = dir .. "/scripts/" .. name
+				if (os.isfile(script1)) then
+					return dir .. "/scripts/", name
+				end
+			end
+
+			last = dir
+			dir  = path.getabsolute(dir .. "/..")
+
+			if dir == "." or not search_upwards then break end
+		end
+
+		return nil, nil
+	end

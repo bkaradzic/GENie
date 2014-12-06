@@ -120,11 +120,16 @@
 	
 	
 --
--- A shortcut for including another "premake4.lua" file, often used for projects.
+-- A shortcut for including another build file, often used for projects.
 --
 
 	function include(fname)
-		return dofile(fname .. "/premake4.lua")
+		local dir, name = premake.findDefaultScript(fname, false)
+		if dir ~= nil then
+			return dofile(dir .. "/" .. name)
+		end
+		
+		return nil
 	end
 
 
