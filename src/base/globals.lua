@@ -124,35 +124,9 @@
 --
 
 	function include(fname)
-		local function findDefaultScript(names)
-			local dir  = fname
-			local last = ""
-			while dir ~= last do
-				for _, name in ipairs(names) do
-
-					local script0 = dir .. "/" .. name
-					if (os.isfile(script0)) then
-						return dir, name
-					end
-
-					local script1 = dir .. "/scripts/" .. name
-					if (os.isfile(script1)) then
-						return dir .. "/scripts/", name
-					end
-				end
-
-				last = dir
-				dir  = path.getabsolute(dir .. "/..")
-
-				if dir == "." then break end
-			end
-
-			return nil, nil
-		end
-
-		local dir, name = findDefaultScript({"genie.lua", "solution.lua", "premake4.lua"})
+		local dir, name = premake.findDefaultScript(fname, false)
 		if dir ~= nil then
-			dofile(dir .. "/" .. name)
+			return dofile(dir .. "/" .. name)
 		end
 		
 		return nil
