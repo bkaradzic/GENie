@@ -739,7 +739,22 @@
 
 		return cfg
 	end
+	local function creategroup(name, sln)
+		local group = {}
 
+		-- attach a type
+		setmetatable(group, {
+			__type = "group"
+		})
+
+		-- add to master list
+		sln.groups[name] = group
+
+		group.solution = sln
+		group.name = name
+		group.uuid = os.uuid()
+		return group
+	end
 	local function createproject(name, sln, isUsage)
 		local prj = {}
 
@@ -770,12 +785,21 @@
 			sln.projects[name] = prj
 		end
 
+
+		-- if a current group is set, get or create it for the current solution
+		local group = sln.groups[premake.CurrentGroup]
+		if group == nil and premake.CurrentGroup ~= nil then
+			group = creategroup(premake.CurrentGroup, sln)
+		end
+
+
 		prj.solution       = sln
 		prj.name           = name
 		prj.basedir        = os.getcwd()
 		prj.uuid           = os.uuid()
 		prj.blocks         = { }
-		prj.usage		   = isUsage;
+		prj.usage		   = isUsage
+		prj.group          = group
 
 		return prj;
 	end
@@ -865,6 +889,16 @@
 		configuration { }
 
 		return premake.CurrentContainer
+	end
+
+
+	function group(name)
+		if not name then 
+			return premake.CurrentGroup
+		end
+		premake.CurrentGroup = name
+
+		return premake.CurrentGroup
 	end
 
 
