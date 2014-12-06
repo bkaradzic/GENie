@@ -747,7 +747,8 @@
 			__type = "group"
 		})
 
-		-- add to master list
+		-- add to master list keyed by both name and index
+		table.insert(sln.groups, group)
 		sln.groups[name] = group
 
 		group.solution = sln

@@ -76,6 +76,24 @@
 		end
 	end
 
+--
+-- Iterate over the groups of a solution
+--
+-- @param sln
+--    The solution.
+-- @returns
+--    An iterator function.
+
+	function premake.solution.eachgroup(sln)
+		local i = 0
+		return function()
+			i = i + 1
+			if(i <= #sln.groups) then
+				return premake.solution.getgroup(sln, i)
+			end
+		end
+	end
+
 
 --
 -- Retrieve a solution by name or index.
@@ -111,4 +129,19 @@
 		-- root configuration doesn't have a name; use the project's
 		cfg.name = prj.name
 		return cfg
+	end
+
+--
+-- Retrieve the group at a particular index
+-- 
+-- @param sln
+--   The solution.
+-- @param idx
+--   The index into the array of groups
+-- @returns
+--    The group at the given index
+	
+	function premake.solution.getgroup(sln, idx)
+		local grp = sln.groups[idx]
+		return grp
 	end
