@@ -281,6 +281,28 @@
 			scope = "config",
 		},
 
+		options =
+		{
+			kind  = "list",
+			scope = "container",
+			isflags = true,
+			usagecopy = true,
+			allowed = function(value)
+
+				local allowed_options = {
+					ForceCPP = 1,
+				}
+
+				local lowervalue = value:lower()
+				for v, _ in pairs(allowed_options) do
+					if v:lower() == lowervalue then
+						return v
+					end
+				end
+				return nil, "invalid option"
+			end,
+		},
+
 		pchheader =
 		{
 			kind  = "string",

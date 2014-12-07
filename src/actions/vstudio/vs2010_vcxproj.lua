@@ -261,8 +261,12 @@
 	end
 
 	local function compile_language(cfg)
-		if cfg.language == "C" then
-			_p(3,'<CompileAs>CompileAsC</CompileAs>')
+		if cfg.options.ForceCPP then
+			_p(3,'<CompileAs>CompileAsCpp</CompileAs>')	
+		else
+			if cfg.language == "C" then
+				_p(3,'<CompileAs>CompileAsC</CompileAs>')
+			end
 		end
 	end
 
