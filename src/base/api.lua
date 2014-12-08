@@ -862,6 +862,8 @@
 --
 
 	local function creategroupsfrompath(inpath, sln)
+		if inpath == nil then return nil end
+
 		-- Split groups in hierarchy
 		inpath = path.translate(inpath, "/")
 		local groups = string.explode(inpath, "/")
@@ -881,7 +883,7 @@
 
 		return lastgroup
 	end
-	
+
 	local function createproject(name, sln, isUsage)
 		local prj = {}
 
