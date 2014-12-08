@@ -97,7 +97,7 @@
 		premake.make_mkdirrule("$(TARGETDIR)")
 
 		_p('$(OBJDIRS):')
-		if not table.contains(prj.solution.messageskip, "SkipCreatingMessage") then		
+		if prj.solution.messageskip and not table.contains(prj.solution.messageskip, "SkipCreatingMessage") then		
 			_p('\t@echo Creating $(OBJDIR)')
 		end
 		_p('\t-$(call MKDIR,$(OBJDIR))')
@@ -115,7 +115,7 @@
 
 		-- clean target
 		_p('clean:')
-		if not table.contains(prj.solution.messageskip, "SkipCleaningMessage") then		
+		if prj.solution.messageskip and not table.contains(prj.solution.messageskip, "SkipCleaningMessage") then		
 			_p('\t@echo Cleaning %s', prj.name)
 		end
 		_p('ifeq (posix,$(SHELLTYPE))')
