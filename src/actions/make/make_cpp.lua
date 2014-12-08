@@ -268,6 +268,11 @@
 			_p('  FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))')
 		end
 
+		if #cfg.forcedincludes > 0 then
+			_p('  FORCE_INCLUDE += -include %s'
+					,premake.esc(path.translate(table.concat(cfg.forcedincludes, ";"), '\\')))
+		end
+
 		_p('  ALL_CPPFLAGS  += $(CPPFLAGS) %s $(DEFINES) $(INCLUDES)', table.concat(cc.getcppflags(cfg), " "))
 
 		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions)))

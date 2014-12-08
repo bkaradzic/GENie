@@ -164,6 +164,12 @@
 			}
 		},
 
+		forcedincludes = 
+		{
+			kind  = "filelist",
+			scope = "config",
+		},
+
 		imagepath =
 		{
 			kind = "path",
