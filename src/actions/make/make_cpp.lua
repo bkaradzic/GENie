@@ -72,11 +72,21 @@
 
 		-- target build rule
 		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)')
-		if prj.msglinking then
-			_p('\t@echo ' .. prj.msglinking)
+		
+		if prj.kind == "StaticLib" then		
+			if prj.msgarchiving then
+				_p('\t@echo ' .. prj.msgarchiving)
+			else
+				_p('\t@echo Archiving %s', prj.name)
+			end		
 		else
-			_p('\t@echo Linking %s', prj.name)
-		end		
+			if prj.msglinking then
+				_p('\t@echo ' .. prj.msglinking)
+			else
+				_p('\t@echo Linking %s', prj.name)
+			end		
+		end
+	
 		_p('\t$(SILENT) $(LINKCMD)')
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')

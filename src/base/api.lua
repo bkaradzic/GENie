@@ -306,6 +306,12 @@
 			end,
 		},
 
+		msgarchiving =
+		{
+			kind  = "string",
+			scope = "config",
+		},		
+
 		msgcompile =
 		{
 			kind  = "string",
