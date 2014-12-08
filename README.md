@@ -67,6 +67,9 @@ intention to keep it compatible with it.
  - Added vs2015 support.
  - Added `targetsubdir`.
  - Added support for solution folders `group`.
+ - Added `options` section (and `ForceCpp` to enforce C++ compile even if extension is for C files)
+ - Added `msgcompile`, `msgresource`, `msglinking` and `msgarchiving` as overrides for make messages
+ - Added `messageskip` list to disable some of compiler messages
 
 ## Why fork?
 

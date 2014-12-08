@@ -269,6 +269,13 @@
 			end
 		end
 	end
+	
+	local function forcedinclude_files(indent,cfg)
+		if #cfg.forcedincludes > 0 then
+			_p(indent,'<ForcedIncludeFiles>%s</ForcedIncludeFiles>'
+					,premake.esc(path.translate(table.concat(cfg.forcedincludes, ";"), '\\')))
+		end
+	end	
 
 	local function vs10_clcompile(cfg)
 		_p(2,'<ClCompile>')
@@ -336,7 +343,8 @@
 		end
 
 		compile_language(cfg)
-
+		
+		forcedinclude_files(3,cfg);
 		_p(2,'</ClCompile>')
 	end
 
