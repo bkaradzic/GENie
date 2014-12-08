@@ -175,6 +175,12 @@
 	function sln2005.project_groups(sln)
 		_p('\tGlobalSection(NestedProjects) = preSolution')
 
+		for grp in premake.solution.eachgroup(sln) do
+			if grp.parent ~= nil then
+				_p('\t\t{%s} = {%s}', grp.uuid, grp.parent.uuid)
+			end
+		end
+
 		for prj in premake.solution.eachproject(sln) do
 			if prj.group ~= nil then
 				_p('\t\t{%s} = {%s}', prj.uuid, prj.group.uuid)

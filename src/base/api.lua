@@ -816,7 +816,23 @@
 
 		return cfg
 	end
-	local function creategroup(name, sln)
+
+--
+-- Creates a single group element
+-- @param name
+--    the display name of the group
+-- @param sln
+--    the solution to add the group to
+-- @param parent
+--    the parent of this group, can be nil
+-- @param inpath
+--    the full path to this group, lower case only
+-- @returns
+--    the group object
+--
+
+	local function creategroup(name, sln, parent, inpath)
+
 		local group = {}
 
 		-- attach a type
@@ -826,13 +842,46 @@
 
 		-- add to master list keyed by both name and index
 		table.insert(sln.groups, group)
-		sln.groups[name] = group
+		sln.groups[inpath] = group
 
 		group.solution = sln
 		group.name = name
 		group.uuid = os.uuid()
+		group.parent = parent
 		return group
 	end
+
+--
+-- Creates all groups that exist in a given group hierarchy
+-- @param inpath
+--    the path to create groups from (i.e. "Examples/Simple")
+-- @param sln
+--    the solution to add the groups to
+-- @returns 
+--    the group object for the deepest folder
+--
+
+	local function creategroupsfrompath(inpath, sln)
+		-- Split groups in hierarchy
+		inpath = path.translate(inpath, "/")
+		local groups = string.explode(inpath, "/")
+
+		-- Each part of the hierarchy may already exist
+		local curpath = ""
+		local lastgroup = nil
+		for i, v in ipairs(groups) do
+			curpath = curpath .. "/" .. v:lower()
+
+			local group = sln.groups[curpath]
+			if group == nil then
+				group = creategroup(v, sln, lastgroup, curpath)
+			end
+			lastgroup = group
+		end
+
+		return lastgroup
+	end
+	
 	local function createproject(name, sln, isUsage)
 		local prj = {}
 
@@ -863,12 +912,7 @@
 			sln.projects[name] = prj
 		end
 
-
-		-- if a current group is set, get or create it for the current solution
-		local group = sln.groups[premake.CurrentGroup]
-		if group == nil and premake.CurrentGroup ~= nil then
-			group = creategroup(premake.CurrentGroup, sln)
-		end
+		local group = creategroupsfrompath(premake.CurrentGroup, sln)
 
 
 		prj.solution       = sln
