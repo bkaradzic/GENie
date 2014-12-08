@@ -72,7 +72,11 @@
 
 		-- target build rule
 		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)')
-		_p('\t@echo Linking %s', prj.name)
+		if prj.msglinking then
+			_p('\t@echo ' .. prj.msglinking)
+		else
+			_p('\t@echo Linking %s', prj.name)
+		end		
 		_p('\t$(SILENT) $(LINKCMD)')
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')
@@ -83,7 +87,9 @@
 		premake.make_mkdirrule("$(TARGETDIR)")
 
 		_p('$(OBJDIRS):')
-		_p('\t@echo Creating $(OBJDIR)')
+		if not table.contains(prj.solution.messageskip, "SkipCreatingMessage") then		
+			_p('\t@echo Creating $(OBJDIR)')
+		end
 		_p('\t-$(call MKDIR,$(OBJDIR))')
 		for dir, _ in pairs(objdirs) do
 			_p('\t-$(call MKDIR,$(OBJDIR)/%s)', dir)
@@ -99,7 +105,9 @@
 
 		-- clean target
 		_p('clean:')
-		_p('\t@echo Cleaning %s', prj.name)
+		if not table.contains(prj.solution.messageskip, "SkipCleaningMessage") then		
+			_p('\t@echo Cleaning %s', prj.name)
+		end
 		_p('ifeq (posix,$(SHELLTYPE))')
 		_p('\t$(SILENT) rm -f  $(TARGET)')
 		_p('\t$(SILENT) rm -rf $(OBJDIR)')
@@ -386,12 +394,20 @@
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
 					)
-				_p('\t@echo $(notdir $<)')
+				if prj.msgcompile then
+					_p('\t@echo ' .. prj.msgcompile)
+				else
+					_p('\t@echo $(notdir $<)')
+				end
 				cpp.buildcommand(path.iscfile(file) and not prj.options.ForceCPP, "o")
 				_p('')
 			elseif (path.getextension(file) == ".rc") then
 				_p('$(OBJDIR)/%s.res: %s', _MAKE.esc(path.getbasename(file)), _MAKE.esc(file))
-				_p('\t@echo $(notdir $<)')
+				if prj.msgresource then
+					_p('\t@echo ' .. prj.msgresource)
+				else
+					_p('\t@echo $(notdir $<)')
+				end
 				_p('\t$(SILENT) $(RESCOMP) $< -O coff -o "$@" $(ALL_RESFLAGS)')
 				_p('')
 			end

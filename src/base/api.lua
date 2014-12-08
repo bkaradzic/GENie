@@ -280,6 +280,49 @@
 			kind = "list",
 			scope = "config",
 		},
+		
+
+		messageskip =
+		{
+			kind  = "list",
+			scope = "solution",
+			isflags = true,
+			usagecopy = true,
+			allowed = function(value)
+
+				local allowed_messages = {
+					SkipCreatingMessage = 1,
+					SkipBuildingMessage = 1,
+					SkipCleaningMessage = 1,
+				}
+
+				local lowervalue = value:lower()
+				for v, _ in pairs(allowed_messages) do
+					if v:lower() == lowervalue then
+						return v
+					end
+				end
+				return nil, "invalid message to skip"
+			end,
+		},
+
+		msgcompile =
+		{
+			kind  = "string",
+			scope = "config",
+		},		
+
+		msgresource =
+		{
+			kind  = "string",
+			scope = "config",
+		},		
+
+		msglinking =
+		{
+			kind  = "string",
+			scope = "config",
+		},		
 
 		objdir =
 		{
