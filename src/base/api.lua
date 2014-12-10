@@ -846,7 +846,7 @@
 
 		group.solution = sln
 		group.name = name
-		group.uuid = os.uuid()
+		group.uuid = os.uuid(group.name)
 		group.parent = parent
 		return group
 	end
@@ -920,7 +920,7 @@
 		prj.solution       = sln
 		prj.name           = name
 		prj.basedir        = os.getcwd()
-		prj.uuid           = os.uuid()
+		prj.uuid           = os.uuid(prj.name)
 		prj.blocks         = { }
 		prj.usage		   = isUsage
 		prj.group          = group
