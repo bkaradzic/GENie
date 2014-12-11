@@ -22,14 +22,15 @@
 
 		sln2005.header(sln)
 
-		for prj in premake.solution.eachproject(sln) do
-			sln2005.project(prj)
-		end
-
 		for grp in premake.solution.eachgroup(sln) do
 			sln2005.group(grp)
 		end
 
+		for prj in premake.solution.eachproject(sln) do
+			sln2005.project(prj)
+		end
+
+		
 		_p('Global')
 		sln2005.platforms(sln)
 		sln2005.project_platforms(sln)
@@ -47,6 +48,23 @@
 				if sln.startproject then
 						for i, prj in ipairs(sln.projects) do
 							if sln.startproject == prj.name then
+								-- Move group tree containing the project to start of group list
+								local cur = prj.group
+								while cur ~= nil do
+									-- Remove group from array
+									for j, group in ipairs(sln.groups) do
+										if group == cur then
+											table.remove(sln.groups, j)
+											break
+										end
+									end
+
+									-- Add back at start
+									table.insert(sln.groups, 1, cur)
+									cur = cur.parent
+								end
+
+								-- Move the project itself to start
 								table.remove(sln.projects, i)
 								table.insert(sln.projects, 1, prj)
 								break
