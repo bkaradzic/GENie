@@ -70,6 +70,20 @@
 		_p('\t@:')
 		_p('')
 
+		if (prj.kind == "StaticLib" and prj.options.ArchiveSplit) then
+			_p('define max_args')
+			_p('\t$(eval _args:=)')
+			_p('\t$(foreach obj,$3,$(eval _args+=$(obj))$(if $(word $2,$(_args)),$1$(_args)$(EOL)$(eval _args:=)))')
+			_p('\t$(if $(_args),$1$(_args))')
+			_p('endef')
+			_p('')
+			_p('define EOL')
+			_p('')
+			_p('')
+			_p('endef')
+			_p('')
+		end
+		
 		-- target build rule
 		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)')
 		
@@ -79,15 +93,19 @@
 			else
 				_p('\t@echo Archiving %s', prj.name)
 			end		
+			if (not prj.options.ArchiveSplit) then		
+				_p('\t$(SILENT) $(LINKCMD) $(OBJECTS)')
+			else
+				_p('\t@$(call max_args,$(LINKCMD),200,$(OBJECTS))')
+		end
 		else
 			if prj.msglinking then
 				_p('\t@echo ' .. prj.msglinking)
 			else
 				_p('\t@echo Linking %s', prj.name)
 			end		
+			_p('\t$(SILENT) $(LINKCMD)')
 		end
-	
-		_p('\t$(SILENT) $(LINKCMD)')
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')
 
@@ -316,12 +334,12 @@
 
 		if cfg.kind == "StaticLib" then
 			if cfg.platform:startswith("Universal") then
-				_p('  LINKCMD    = libtool -o $(TARGET) $(OBJECTS)')
+				_p('  LINKCMD    = libtool -o $(TARGET)')
 			else
 				if cc.llvm then
-					_p('  LINKCMD    = $(AR) rcs $(TARGET) $(OBJECTS)')
+					_p('  LINKCMD    = $(AR) rcs $(TARGET)')
 				else
-					_p('  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)')
+					_p('  LINKCMD    = $(AR) -rcs $(TARGET)')
 				end
 			end
 		else
