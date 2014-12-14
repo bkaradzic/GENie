@@ -109,7 +109,7 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 
 	GENie
 	Copyright (c) 2014 Branimir Karadžić, Neil Richardson, Mike Popoloski,
-	Drew Solomon, Ted de Munnik.
+	Drew Solomon, Ted de Munnik, Miodrag Milanović.
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification,
