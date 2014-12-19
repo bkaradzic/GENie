@@ -166,7 +166,7 @@
 
 		forcedincludes = 
 		{
-			kind  = "filelist",
+			kind  = "absolutefilelist",
 			scope = "config",
 		},
 
@@ -749,7 +749,7 @@
 			return premake.setarray(container, name, value, allowed)
 		elseif kind == "dirlist" then
 			return premake.setdirarray(container, name, value)
-		elseif kind == "filelist" then
+		elseif kind == "filelist" or kind == "absolutefilelist" then
 			return premake.setfilearray(container, name, value)
 		elseif kind == "keyvalue" or kind == "keypath" then
 			return premake.setkeyvalue(scope, name, value)
@@ -770,7 +770,8 @@
 		-- list value types get a remove() call too
 		if info.kind == "list" or 
 		   info.kind == "dirlist" or 
-		   info.kind == "filelist" 
+		   info.kind == "filelist" or
+		   info.kind == "absolutefilelist" 
 		then
 			_G["remove"..name] = function(value)
 				premake.remove(name, value)
