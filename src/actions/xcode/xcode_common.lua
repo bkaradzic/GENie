@@ -93,7 +93,40 @@
 		return types[path.getextension(node.path)] or "text"
 	end
 
+--
+-- Return the Xcode type for a given file, based on the file extension.
+--
+-- @param fname
+--    The file name to identify.
+-- @returns
+--    An Xcode file type, string.
+--
 
+	function xcode.getfiletypeForced(node)
+		local types = {
+			[".c"]         = "sourcecode.cpp.cpp",
+			[".cc"]        = "sourcecode.cpp.cpp",
+			[".cpp"]       = "sourcecode.cpp.cpp",
+			[".css"]       = "text.css",
+			[".cxx"]       = "sourcecode.cpp.cpp",
+			[".framework"] = "wrapper.framework",
+			[".gif"]       = "image.gif",
+			[".h"]         = "sourcecode.cpp.h",
+			[".html"]      = "text.html",
+			[".lua"]       = "sourcecode.lua",
+			[".m"]         = "sourcecode.c.objc",
+			[".mm"]        = "sourcecode.cpp.objc",
+			[".nib"]       = "wrapper.nib",
+			[".pch"]       = "sourcecode.cpp.h",
+			[".plist"]     = "text.plist.xml",
+			[".strings"]   = "text.plist.strings",
+			[".xib"]       = "file.xib",
+			[".icns"]      = "image.icns",
+			[".bmp"]       = "image.bmp",
+			[".wav"]       = "audio.wav",
+		}
+		return types[path.getextension(node.path)] or "text"
+	end
 --
 -- Return the Xcode product type, based target kind.
 --
@@ -293,7 +326,7 @@
 	end
 
 
-	function xcode.PBXFileReference(tr)
+	function xcode.PBXFileReference(tr,prj)
 		_p('/* Begin PBXFileReference section */')
 		
 		tree.traverse(tr, {
@@ -359,8 +392,13 @@
 						end
 					end
 					
-					_p(2,'%s /* %s */ = {isa = PBXFileReference; lastKnownFileType = %s; name = "%s"; path = "%s"; sourceTree = "%s"; };',
-						node.id, node.name, xcode.getfiletype(node), node.name, pth, src)
+					if (not prj.options.ForceCPP) then
+						_p(2,'%s /* %s */ = {isa = PBXFileReference; lastKnownFileType = %s; name = "%s"; path = "%s"; sourceTree = "%s"; };',
+							node.id, node.name, xcode.getfiletype(node), node.name, pth, src)
+					else
+						_p(2,'%s /* %s */ = {isa = PBXFileReference; explicitFileType = %s; name = "%s"; path = "%s"; sourceTree = "%s"; };',
+							node.id, node.name, xcode.getfiletypeForced(node), node.name, pth, src)
+					end
 				end
 			end
 		})

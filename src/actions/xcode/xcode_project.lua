@@ -148,7 +148,7 @@
 		xcode.Header(tr)
 		xcode.PBXBuildFile(tr)
 		xcode.PBXContainerItemProxy(tr)
-		xcode.PBXFileReference(tr)
+		xcode.PBXFileReference(tr,prj)
 		xcode.PBXFrameworksBuildPhase(tr)
 		xcode.PBXGroup(tr)
 		xcode.PBXNativeTarget(tr)
