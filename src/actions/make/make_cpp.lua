@@ -93,10 +93,13 @@
 			else
 				_p('\t@echo Archiving %s', prj.name)
 			end		
+			if (not prj.archivesplit_size) then 
+				prj.archivesplit_size=200
+			end
 			if (not prj.options.ArchiveSplit) then		
 				_p('\t$(SILENT) $(LINKCMD) $(OBJECTS)')
 			else
-				_p('\t@$(call max_args,$(LINKCMD),200,$(OBJECTS))')
+				_p('\t@$(call max_args,$(LINKCMD),'.. prj.archivesplit_size ..',$(OBJECTS))')
 		end
 		else
 			if prj.msglinking then
@@ -312,7 +315,7 @@
 		_p('  ALL_CPPFLAGS  += $(CPPFLAGS) %s $(DEFINES) $(INCLUDES)', table.concat(cc.getcppflags(cfg), " "))
 
 		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions)))
-		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)%s', make.list(cc.getcxxflags(cfg)))
+		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)%s', make.list(table.join(cc.getcxxflags(cfg), cfg.buildoptions_cpp)))
 
 		_p('  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)%s',
 		        make.list(table.join(cc.getdefines(cfg.resdefines),
