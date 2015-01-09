@@ -12,6 +12,12 @@
 
 	premake.fields =
 	{
+		archivesplit_size =
+		{
+			kind  = "string",
+			scope = "container",
+		},
+		
 		basedir =
 		{
 			kind  = "path",
@@ -31,6 +37,12 @@
 		},
 
 		buildoptions =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
+		buildoptions_cpp =
 		{
 			kind  = "list",
 			scope = "config",
