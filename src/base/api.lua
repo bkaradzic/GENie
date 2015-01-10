@@ -15,7 +15,7 @@
 		archivesplit_size =
 		{
 			kind  = "string",
-			scope = "container",
+			scope = "config",
 		},
 		
 		basedir =
