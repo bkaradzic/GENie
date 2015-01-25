@@ -5,6 +5,12 @@
 --
 
 	premake.xcode = { }
+
+--
+-- Set default toolset
+--
+
+	premake.xcode.toolset = "macosx"
 	
 	newaction 
 	{

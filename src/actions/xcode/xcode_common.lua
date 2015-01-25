@@ -810,6 +810,8 @@
 			Universal = "$(ARCHS_STANDARD_32_64_BIT)",
 		}
 		_p(4,'ARCHS = "%s";', archs[cfg.platform])
+
+		_p(4,'SDKROOT = "%s";', xcode.toolset)
 		
 		local targetdir = path.getdirectory(cfg.buildtarget.bundlepath)
 		if targetdir ~= "." then
