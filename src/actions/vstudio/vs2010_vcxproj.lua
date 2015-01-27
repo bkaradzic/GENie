@@ -593,6 +593,18 @@
 						config_mappings[cfginfo] = nil  --only one source file per pch
 					end
 				end
+
+				-- Per configuration excludes
+				for _, vsconfig in ipairs(configs) do
+					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					for _, exclude in ipairs(cfg.excludes) do
+
+						if exclude == file.name then
+							_p(3, '<ExcludedFromBuild ' .. if_config_and_platform() .. '>true</ExcludedFromBuild>', premake.esc(vsconfig.name))
+						end
+					end
+				end
+
 				_p(2,'</ClCompile>')
 			end
 			_p(1,'</ItemGroup>')
