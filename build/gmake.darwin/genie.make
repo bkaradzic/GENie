@@ -19,7 +19,7 @@ ifeq (posix,$(SHELLTYPE))
   MKDIR = $(SILENT) mkdir -p "$(1)"
   COPY  = $(SILENT) cp -fR "$(1)" "$(2)"
 else
-  MKDIR = $(SILENT) mkdir "$(subst /,\\,$(1))" 2> nul || true
+  MKDIR = $(SILENT) mkdir "$(subst /,\\,$(1))" 2> nul || exit 0
   COPY  = $(SILENT) copy /Y "$(subst /,\\,$(1))" "$(subst /,\\,$(2))"
 endif
 
