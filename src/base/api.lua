@@ -42,6 +42,12 @@
 			scope = "config",
 		},
 
+		buildoptions_conly =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
 		buildoptions_cpp =
 		{
 			kind  = "list",
