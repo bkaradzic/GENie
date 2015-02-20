@@ -324,9 +324,8 @@
 
 		_p('  ALL_CPPFLAGS  += $(CPPFLAGS) %s $(DEFINES) $(INCLUDES)', table.concat(cc.getcppflags(cfg), " "))
 
-		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions)))
-		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)%s', make.list(table.join(cc.getcxxflags(cfg), cfg.buildoptions_cpp)))
-		_p('  ALL_CONLYFLAGS+= $(ALL_CFLAGS)%s', make.list(table.join(cc.getcxxflags(cfg), cfg.buildoptions_conly)))
+		_p('  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
+		_p('  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
 
 		_p('  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)%s',
 		        make.list(table.join(cc.getdefines(cfg.resdefines),
@@ -417,7 +416,7 @@
 		_p('$(GCH): $(PCH)')
 		_p('\t@echo $(notdir $<)')
 
-		local cmd = iif(prj.language == "C", "$(CC) -x c-header $(ALL_CONLYFLAGS)", "$(CXX) -x c++-header $(ALL_CXXFLAGS)")
+		local cmd = iif(prj.language == "C", "$(CC) -x c-header $(ALL_CFLAGS)", "$(CXX) -x c++-header $(ALL_CXXFLAGS)")
 		_p('\t$(SILENT) %s -MMD -MP $(DEFINES) $(INCLUDES) -o "$@" -MF "$(@:%%.gch=%%.d)" -c "$<"', cmd)
 
 		_p('endif')
@@ -457,6 +456,6 @@
 	end
 
 	function cpp.buildcommand(iscfile, objext)
-		local flags = iif(iscfile, '$(CC) $(ALL_CONLYFLAGS)', '$(CXX) $(ALL_CXXFLAGS)')
+		local flags = iif(iscfile, '$(CC) $(ALL_CFLAGS)', '$(CXX) $(ALL_CXXFLAGS)')
 		_p('\t$(SILENT) %s $(FORCE_INCLUDE) -o "$@" -MF $(@:%%.%s=%%.d) -c "$<"', flags, objext)
 	end

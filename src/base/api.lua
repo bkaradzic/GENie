@@ -42,7 +42,7 @@
 			scope = "config",
 		},
 
-		buildoptions_conly =
+		buildoptions_c =
 		{
 			kind  = "list",
 			scope = "config",
