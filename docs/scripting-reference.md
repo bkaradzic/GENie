@@ -1010,43 +1010,7 @@ Retrieves version information for the host operating system
 Table containing the following key-value pairs:
 
 | Key          | Value                                        |
-| [Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
---- | [Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
------ |
+| ------------ | -------------------------------------------- |
 | majorversion | major version number                         |
 | minorversion | minor version number                         |
 | revision     | bug fix release or service pack number       |
@@ -1231,23 +1195,7 @@ _path_ - path to file for which to retrieve information
 Table of values:
 
 | Key   | Value                   |
-| [Back to top](#table-of-contents)
-
------ | [Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
----[Back to top](#table-of-contents)
-
------ |
+| ----- | ----------------------- |
 | mtime | Last modified timestamp |
 | size  | File size in bytes      |
 
