@@ -1,6 +1,110 @@
 # Scripting Reference
 
-## Global Variables
+## Table of Contents
+
+* Predefined Variables
+    * [_ACTION](#_action)
+    * [_ARGS](#_args)
+    * [_OPTIONS](#_options)
+    * [_PREMAKE_COMMAND](#_premake_command)
+    * [_PREMAKE_VERSION](#_premake_version)
+    * [_SCRIPT](#_script)
+    * [_WORKING_DIR](#_working_dir)
+* Script Functions
+    * [buildaction](#buildactionaction)
+    * [buildoptions](#buildoptionsoptions)
+    * [configuration](#configurationkeywords)
+    * [configurations](#configurationsnames)
+    * [debugargs](#debugargsargs)
+    * [debugdir](#debugdirpath)
+    * [defines](#definessymbols)
+    * [deploymentoptions](#deploymentoptionsoptions)
+    * [excludes](#excludesfiles)
+    * [files](#filesfiles)
+    * [flags](#flagsflags)
+    * [framework](#frameworkversion)
+    * [iif](#iifcondition-trueval-falseval)
+    * [imageoptions](#imageoptionsoptions)
+    * [imagepath](#imagepathpath)
+    * [implibdir](#implibdir)
+    * [implibextension](#implibextensionextension)
+    * [implibname](#implibnamename)
+    * [implibprefix](#implibprefixprefix)
+    * [implibsuffix](#implibsuffixsuffix)
+    * [include](#includedirectory)
+    * [includedirs](#includedirspaths)
+    * [kind](#kindkind)
+    * [language](#languagelang)
+    * [libdirs](#libdirspaths)
+    * [linkoptions](#linkoptionsoptions)
+    * [links](#linksreferences)
+    * [location](#locationpath)
+    * [newaction](#newactiondescription)
+    * [newoption](#newoptionsdescription)
+    * [objdir](#objdirpath)
+    * [os.chdir](#oschdirpath)
+    * [os.copyfile](#oscopyfilesource-destination)
+    * [os.findlib](#osfindliblibname)
+    * [os.get](#osget)
+    * [os.getcwd](#osgetcwd)
+    * [os.getversion](#osgetversion)
+    * [os.is](#osisid)
+    * [os.is64bit](#osis64bit)
+    * [os.isdir](#osisdirpath)
+    * [os.isfile](#osisfilepath)
+    * [os.matchdirs](#osmatchdirspattern)
+    * [os.matchfiles](#osmatchfilespatterns)
+    * [os.mkdir](#osmkdirpath)
+    * [os.outputof](#osoutputofcommand)
+    * [os.pathsearch](#ospathsearchfname-paths)
+    * [os.rmdir](#osrmdirpath)
+    * [os.stat](#osstatpath)
+    * [os.uuid](#osuuid)
+    * [path.getabsolute](#pathgetabsolutepath)
+    * [path.getbasename](#pathgetbasenamepath)
+    * [path.getdirectory](#pathgetdirectorypath)
+    * [path.getdrive](#pathgetdrivepath)
+    * [path.getextension](#pathgetextension)
+    * [path.getname](#pathgetnamepath)
+    * [path.getrelative](#pathgetrelativesrc-dest)
+    * [path.isabsolute](#pathisabsolutepath)
+    * [path.iscfile](#pathiscfilepath)
+    * [path.iscppfile](#pathiscppfilepath)
+    * [path.isresourcefile](#pathisresourcefilepath)
+    * [path.join](#pathjoinleading-trailing)
+    * [path.rebase](#pathrebasepath-oldbase-newbase)
+    * [path.translate](#pathtranslatepath-newsep)
+    * [pchheader](#pchheaderfile)
+    * [pchsource](#pchsourcefile)
+    * [platforms](#platformsidentifiers)
+    * [postbuildcommands](#postbuildcommandscommands)
+    * [prebuildcommands](#prebuildcommandscommands)
+    * [prelinkcommands](#prelinkcommandscommands)
+    * [printf](#printfformat-args)
+    * [project](#projectname)
+    * [resdefines](#resdefinessymbols)
+    * [resincludedirs](#resincludedirspaths)
+    * [resoptions](#resoptionsoptions)
+    * [solution](#solutionname)
+    * [string.endswith](#stringendswithhaystack-needle)
+    * [string.explode](#stringexplodestr-pattern)
+    * [string.findlast](#stringfindlaststr-pattern-plain)
+    * [string.startswith](#stringstartswithhaystack-needle)
+    * [table.contains](#tablecontainsarray-value)
+    * [table.implode](#tableimplodearray-before-after-between)
+    * [targetdir](#targetdirpath)
+    * [targetextension](#targetextensionext)
+    * [targetname](#targetnamename)
+    * [targetprefix](#targetprefixprefix)
+    * [targetsuffix](#targetsuffixsuffix)
+    * [uuid](#uuidprojectuuid)
+    * [vpaths](#vpathsgroup--pattern)
+* Additional Information
+    * [Wildcards](#wildcards)
+
+---
+
+## Predefined Variables
 
 Each of the following variables is available for use in any GENie script.
 
@@ -14,6 +118,8 @@ produces
 
 `_ACTION: "vs2005"`
 
+[Back to top](#table-of-contents)
+
 ---
 ### _ARGS
 
@@ -25,6 +131,8 @@ produces
 
 `_ARGS[0]: "alpha"`
 `_ARGS[1]: "beta"`
+
+[Back to top](#table-of-contents)
 
 ---
 ### _OPTIONS
@@ -39,29 +147,39 @@ produces
 
 **Note:** Options may be registered with [newoption](#newoption) to fully integrate them into the CLI.
 
+[Back to top](#table-of-contents)
+
 ---
 ### _PREMAKE_COMMAND
 
 Full path to the GENie (Premake) executable.
+
+[Back to top](#table-of-contents)
 
 ---
 ### _PREMAKE_VERSION
 
 GENie (Premake) version.
 
+[Back to top](#table-of-contents)
+
 ---
 ### _SCRIPT
 
 Full path to the currently executing script.
+
+[Back to top](#table-of-contents)
 
 ---
 ### _WORKING_DIR
 
 Current working directory.
 
+[Back to top](#table-of-contents)
+
 ---
 
-## Script Methods
+## Script Functions
 
 ### buildaction(_action_)
 Specifies what action should be performed on a set of files during compilation. Usually paired with a configuration filter to select a file set. If no build action is specified for a file, a default action will be used (chosen based on the file's extension).
@@ -83,6 +201,8 @@ Embed all PNGs into the target binary
 configuration "**.png"
     buildaction "Embed"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### buildoptions({_options_...})
 Passes arguments direction to the compiler command line. Multiple calls in a project will be concatenated in order.
@@ -98,6 +218,8 @@ Add some GCC-specific options
 configuration {"linux", "gmake"}
     buildoptions {"-ansi", "-pedantic"}
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### configuration({_keywords_...})
 Limits subsequent build settings to a particular environment. Acts as a filter, only applying settings that appear after this function if the environment matches the keywords.
@@ -179,6 +301,8 @@ Reset the configuration filter
 ```lua
 configuration {}
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### configurations({_names_...})
 Defines a set of build configurations, such as "Debug" and "Release". Must be specified before any projects are defined, so can't be called after a project has been defined.
@@ -207,6 +331,8 @@ Retrieve current list of configurations
 ```lua
 local cfgs = configurations()
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### debugargs({_args_...})
 Specifies a list of arguments to pas to the application when run under the debugger.
@@ -225,6 +351,8 @@ _args_ - list of arguments to pas to the executable while debugging
 configuration "Debug"
     debugargs { "--append", "somefile.txt" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### debugdir(_path_)
 Sets the working directory for the integrated debugger.
@@ -243,6 +371,8 @@ _path_ - path to the working directory, relative to the currently-executing scri
 configuration "Debug"
     debugdir "bin/debug"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### defines({_symbols_...})
 Adds preprocessor or compiler symbols to the project. Multiple calls are concatenated.
@@ -262,6 +392,8 @@ Assign a symbol value
 ```lua
 defines { "CALLSPEC=__dllexport" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### deploymentoptions({_options_...})
 Passes arguments directly to the deployment tool command line. Multiple calls are concatenated.
@@ -272,6 +404,8 @@ Passes arguments directly to the deployment tool command line. Multiple calls ar
 
 #### Arguments
 _options_ - list of arguments
+
+[Back to top](#table-of-contents)
 
 ---
 ### excludes({_files_...})
@@ -296,6 +430,8 @@ Add an entire directory of C files, then exclude one directory
 files { "*.c" }
 excludes { "tests/*.c" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### files({_files_...})
 Adds files to a project. Multiple calls are concatenated.
@@ -322,6 +458,8 @@ Add all C++ files from the "src/" directory and any subdirectories
 ```lua
 files { "src/**.cpp" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### flags({_flags_...})
 Specifies build flags to modify the compiling or linking process. Multiple calls are concatenated.
@@ -372,6 +510,8 @@ configuration "Debug"
 configuration "Release"
     flags { "OptimizeSpeed", "No64BitChecks" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### framework(_version_)
 Specifies a .NET framework version.
@@ -395,6 +535,8 @@ Use the .NET 3.0 framework
 ```lua
 framework "3.0"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### iif(_condition_, _trueval_, _falseval_)
 Implements an immediate `if` clause, returning one of two possible values.
@@ -413,6 +555,8 @@ Note that all expressions are evaluated before the condition is checked. The fol
 ```lua
 result = iif(x -= nil, "x is " .. x, "x is nil")
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### imageoptions({_options_...})
 Passes arguments directly to the image tool command line without translation. Multiple calls are concatenated.
@@ -422,6 +566,8 @@ Passes arguments directly to the image tool command line without translation. Mu
 #### Arguments
 _options_ - list of image tools flags and options
 
+[Back to top](#table-of-contents)
+
 ---
 ### imagepath(_path_)
 Sets the file name of the deployment image produced by the build
@@ -430,6 +576,8 @@ Sets the file name of the deployment image produced by the build
 
 #### Arguments
 _path_ - the full path for the image file, relative to the currently-executing script
+
+[Back to top](#table-of-contents)
 
 ---
 ### implibdir(_path_)
@@ -444,6 +592,8 @@ _path_ - the output directory for the library, relative to the currently-executi
 ```lua
 implibdir "../Libraries"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### implibextension(_extension_)
 Specifies the import library file extension. Import libraries are generated for Windows DLL projects. By default, the toolset static library file extension will be used (`.lib` with Windows tools, `.a` with GNU tools).
@@ -453,6 +603,8 @@ Specifies the import library file extension. Import libraries are generated for 
 #### Arguments
 _extension_ - the extension, including the leading dot
 
+[Back to top](#table-of-contents)
+
 ---
 ### implibname(_name_)
 Specifies the import library base file name. Import libraries are generated for Windows DLL projects. By default the target name will be used as the import library file name.
@@ -461,6 +613,8 @@ Specifies the import library base file name. Import libraries are generated for 
 
 #### Arguments
 _name_ - new base file name
+
+[Back to top](#table-of-contents)
 
 ---
 ### implibprefix(_prefix_)
@@ -480,6 +634,8 @@ The prefix may also be set to an empty string for no prefix
 ```lua
 implibprefix ""
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### implibsuffix(_suffix_)
 Specifies the file name suffix for the import library base file name. Import libraries are generated for Windows DLL projects.
@@ -495,6 +651,8 @@ _suffix_ - the new filename suffix
 configuration "Debug"
     implibsuffix "-d"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### include(_directory_)
 Includes a file named `premake4.lua` from the specified directory. This allows you to specify each project in its own file, and easily include them into a solution.
@@ -513,6 +671,8 @@ include "src/MyApplication"
 -- runs "src/MyLibrary/premake4.lua"
 include "src/MyLibrary"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### includedirs({_paths_...})
 Specifies include file search paths. Multiple calls are concatenated.
@@ -531,6 +691,8 @@ You can also use [wildcards](#wildcards) to match multiple directories.
 ```lua
 includedirs { "../includes/**" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### kind(_kind_)
 Sets the kind of binary object being created by the project, such as a console or windowed application.
@@ -561,6 +723,8 @@ project "MyProject"
     configuration "*DLL"
         kind "SharedLib"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### language(_lang_)
 Sets the programming language used by a project. GENie currently supports C, C++, and C#. Not all languages are supported by all of the generators. For instance, SharpDevelop does not currently support C or C++ development, and Code::Blocks does not support the .NET languages (C#, managed C++).
@@ -574,6 +738,8 @@ _lang_ - language identifier string ("C", "C++", or "C#"). Case insensitive.
 ```lua
 language "C++"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### libdirs({_paths_...})
 Specifies the library search paths. Library search directories are not well supported by the .NET tools. Visual Studio will change relative paths to absolute, making it difficult to share the generated project. MonoDevelop and SharpDevelop do not support search directories at all, using only the GAC. In general, it is better to include the full (relative) path to the assembly in links instead. C/C++ projects do not have this limitation.
@@ -593,6 +759,8 @@ You can also use [wildcards](#wildcards) to match multiple directories.
 ```lua
 libdirs { "../libs/**" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### linkoptions({_options_...})
 Passes arguments to the linker command line. Multiple calls are concatenated.
@@ -608,6 +776,8 @@ Use `pkg-config`-style configuration when building on Linux with GCC.
 configuration { "linux", "gmake" }
     linkoptions { "`wx-config --libs`"}
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### links({_references_...})
 Specifies a list of libraries and projects to link against. Multiple calls are concatenated.
@@ -631,7 +801,9 @@ configuration "linux"
     links { "m", "png" }
 
 configuration "macosx"
-    --- OS X frameworks need the extension to be handled properly
+    [Back to top](#table-of-contents)
+
+--- OS X frameworks need the extension to be handled properly
     links { "Cocoa.framework", "png" }
 ```
 In a solution with two projects, link the library into the executable. Note that the project name is used to specify the link. GENie will automatically figure out the correect library file name and directory and create a project dependency.
@@ -665,6 +837,8 @@ solution "MySolution"
         kind "ConsoleApp"
         files "**.cpp"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### location(_path_)
 Sets the destination directory for a generated solution or project file. By default, project files are generated into the same directory as the script that defines them.
@@ -685,6 +859,8 @@ If you plan to build with multiple tools from the same source tree, you might wa
 ```lua
 location ("../build/" .. _ACTION)
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### newaction(_description_)
 Registers a new command-line action argument.
@@ -706,6 +882,8 @@ newaction {
     end
 }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### newoption(_description_)
 Registers a new command-line option argument.
@@ -733,6 +911,8 @@ newoption {
     }
 }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### objdir(_path_)
 Sets an object and intermediate file directory for a project. By default, object and intermediate files are stored in a directory named "obj" in the same directory as the project.
@@ -755,6 +935,8 @@ configuration "Debug"
 configuration "Release"
     objdir "../obj_release"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.chdir(_path_)
 Changes the working directory
@@ -764,6 +946,8 @@ _path_ - path to the new working directory
 
 #### Return Value
 `true` if successful, otherwise `nil` and an error message
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.copyfile(_source_, _destination_)
@@ -776,6 +960,8 @@ _destination_ - path to the copy location
 #### Return Value
 `true` if successful, otherwise `nil` and an error message
 
+[Back to top](#table-of-contents)
+
 ---
 ### os.findlib(_libname_)
 Scans the well-known system locations looking for a binary file.
@@ -785,6 +971,8 @@ _libname_ - name of the library to locate. May be specified with (libX11.so) or 
 
 #### Return Value
 The path containing the library file, if found. Otherwise, `nil`.
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.get()
@@ -801,12 +989,16 @@ if os.get() == "windows" then
     -- do something windows-specific
 end
 ```
+[Back to top](#table-of-contents)
+
 ---
-### osgetcwd()
+### os.getcwd()
 Gets the current working directory.
 
 #### Return Value
 The current working directory
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.getversion()
@@ -818,7 +1010,43 @@ Retrieves version information for the host operating system
 Table containing the following key-value pairs:
 
 | Key          | Value                                        |
-| ------------ | -------------------------------------------- |
+| [Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+--- | [Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+----- |
 | majorversion | major version number                         |
 | minorversion | minor version number                         |
 | revision     | bug fix release or service pack number       |
@@ -834,6 +1062,8 @@ print(string.format(" %d.%d.%d (%s)",
 -- On Windows XP: "5.1.3 (Windows XP)"
 -- On OSX: "10.6.6 (Mac OS X Snow Leopard)"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.is(_id_)
 Checks the current operating system identifier against a particular value
@@ -845,6 +1075,8 @@ _id_ - one of "bsd", "linux", "macosx", "solaris", or "windows"
 
 #### Return Value
 `true` if the supplied _id_ matches the current operating system identifer, `false` otherwise.
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.is64bit()
@@ -862,6 +1094,8 @@ else
     print("This is NOT a 64-bit system")
 end
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.isdir(_path_)
 Checks for the existence of a directory.
@@ -873,6 +1107,8 @@ _path_ - the file system path to check
 `true` if a matching directory is found
 `false` if there is no such file system path, or if the path points to a file
 
+[Back to top](#table-of-contents)
+
 ---
 ### os.isfile(_path_)
 Checks for the existence of a file.
@@ -883,6 +1119,8 @@ _path_ - the file system path to check
 #### Return Value
 `true` if a matching file is found
 `false` if there is no such file system path or if the path points to a directory instead of a file
+[Back to top](#table-of-contents)
+
 ---
 ### os.matchdirs(_pattern_)
 Performs a wildcard match to locate one or more directories.
@@ -899,6 +1137,8 @@ matches = os.matchdirs("src/*")     -- non-recursive match
 matches = os.matchdirs("src/**")    -- recursive match
 matches = os.matchdirs("src/test*") -- may also match partial name
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.matchfiles(_patterns_)
 Performs a wildcard match to locate one or more directories.
@@ -914,6 +1154,8 @@ List of files which match the specified pattern. May be empty.
 matches = os.matchfiles("src/*.c")  -- non-recursive match
 matches = os.matchfiles("src/**.c") -- recursive match
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.mkdir(_path_)
 Creates a new directory.
@@ -924,6 +1166,8 @@ _path_ - path to be created
 #### Return Value
 `true` if successful
 `nil` and an error message otherwise
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.outputof(_command_)
@@ -940,6 +1184,8 @@ The output of the command
 -- Get the ID for the host processor architecture
 local proc = os.outputof("uname -p")
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.pathsearch(_fname_, _paths..._)
 description
@@ -959,6 +1205,8 @@ Path to the directory which contains the file, if found
 ```lua
 local p = os.pathsearch("mysystem.config", "./config:/usr/local/etc:/etc")
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### os.rmdir(_path_)
 Removes an existing directory as well as any files or subdirectories it contains.
@@ -969,6 +1217,8 @@ _path_ - file system path to be removed
 #### Return Value
 `true` if successful
 `nil` and an error message otherwise
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.stat(_path_)
@@ -981,9 +1231,27 @@ _path_ - path to file for which to retrieve information
 Table of values:
 
 | Key   | Value                   |
-| ----- | ----------------------- |
+| [Back to top](#table-of-contents)
+
+----- | [Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+---[Back to top](#table-of-contents)
+
+----- |
 | mtime | Last modified timestamp |
 | size  | File size in bytes      |
+
+[Back to top](#table-of-contents)
 
 ---
 ### os.uuid()
@@ -991,6 +1259,8 @@ Returns a Universally Unique Identifier
 
 #### Return Value
 A new UUID, a string value with the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+
+[Back to top](#table-of-contents)
 
 ---
 ### path.getabsolute(_path_)
@@ -1002,6 +1272,8 @@ _path_ - the relative path to be converted
 #### Return Value
 new absolute path, calculated from the current working directory
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.getbasename(_path_)
 Extracts base file portion of a path, with the directory and extension removed.
@@ -1011,6 +1283,8 @@ _path_ - path to be split
 
 #### Return Value
 Base name portion of the path
+
+[Back to top](#table-of-contents)
 
 ---
 ### path.getdirectory(_path_)
@@ -1022,6 +1296,8 @@ _path_ - path to be split
 #### Return Value
 Directory portion of the path
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.getdrive(_path_)
 Returns drive letter portion of a path
@@ -1031,6 +1307,8 @@ _path_ - path to be split
 
 #### Return Value
 Drive letter portion of the path, or `nil`
+
+[Back to top](#table-of-contents)
 
 ---
 ### path.getextension(_path_)
@@ -1042,6 +1320,8 @@ _path_ - path to be split
 #### Return Value
 File extension portion of the path, or an empty string
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.getname(_path_)
 Returns file name and extension, removes directory information.
@@ -1051,6 +1331,8 @@ _path_ - path to be split
 
 #### Return Value
 File name and extension without directory information
+
+[Back to top](#table-of-contents)
 
 ---
 ### path.getrelative(_src_, _dest_)
@@ -1063,6 +1345,8 @@ _dest_ - target directory
 #### Return Value
 Relative path from _src_ to _dest_
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.isabsolute(_path_)
 Returns whether or not a path is absolute.
@@ -1073,6 +1357,8 @@ _path_ - path to check
 #### Return Value
 `true` if path is absolute
 `false` otherwise
+
+[Back to top](#table-of-contents)
 
 ---
 ### path.iscfile(_path_)
@@ -1085,6 +1371,8 @@ _path_ - path to check
 `true` if path uses a C file extension
 `false` otherwise
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.iscppfile(_path_)
 Determines whether a file is a C++ source code file, based on extension.
@@ -1096,6 +1384,8 @@ _path_ - path to check
 `true` if path uses a C++ file extension
 `false` otherwise
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.isresourcefile(_path_)
 Determines whether a path represends a Windows resource file, based on extension.
@@ -1106,6 +1396,8 @@ _path_ - path to check
 #### Return Value
 `true` if path uses a well-known Windows resource file extension
 `false` otherwise
+
+[Back to top](#table-of-contents)
 
 ---
 ### path.join(_leading_, _trailing_)
@@ -1130,6 +1422,8 @@ p = path.join("MySolution", "/usr/bin")
 
 -- tokens are assumed to be absolute. This returns `${ProjectDir}`
 p = path.join("MySolution", "$(ProjectDir)")
+```
+[Back to top](#table-of-contents)
 
 ---
 ### path.rebase(_path_, _oldbase_, _newbase_)
@@ -1143,6 +1437,8 @@ _newbase_ - the new base directory, from where the resulting path should be rela
 #### Return Value
 Rebased path
 
+[Back to top](#table-of-contents)
+
 ---
 ### path.translate(_path_, _newsep_)
 Converts the separators in a path.
@@ -1153,6 +1449,8 @@ _newsep_ - new path separator. Defaults to current environment default.
 
 #### Return Value
 Modified path
+[Back to top](#table-of-contents)
+
 ---
 ### pchheader(_file_)
 Sets the main header file for precompiled header support.
@@ -1167,6 +1465,8 @@ _file_ - name of the header file, as it is specified in your `#include` statemen
 pchheader "afxwin.h"
 pchsource "afxwin.cpp"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### pchsource(_file_)
 Sets the main source file for precompiled header support. Only used by Visual Studio.
@@ -1181,6 +1481,8 @@ _file_ - name of the source file, relative to the currently-executing script fil
 pchheader "afxwin.h"
 pchsource "afxwin.cpp"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### platforms({_identifiers_...})
 Specifies a set of target hardware platforms for a solution.
@@ -1232,6 +1534,8 @@ configuration "x64"
 configuration { "Debug", "x64" }
     defines "IS_64BIT_DEBUG"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### postbuildcommands({_commands_...})
 Specifies shell commands to run after build is finished
@@ -1249,6 +1553,8 @@ configuration "windows"
 configuration "not windows"
     postbuildcommands { "cp default.config bin/project.config" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### prebuildcommands({_commands_...})
 Specifies shell commands to run before each build
@@ -1266,6 +1572,8 @@ configuration "windows"
 configuration "not windows"
     prebuildcommands { "cp default.config bin/project.config" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### prelinkcommands({_commands_...})
 Specifies shell commands to run after source files have been compiled, but before the link step
@@ -1283,6 +1591,8 @@ configuration "windows"
 configuration "not windows"
     prelinkcommands { "cp default.config bin/project.config" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### printf(_format_, _args_...)
 Prints a formatted string
@@ -1290,6 +1600,8 @@ Prints a formatted string
 #### Arguments
 _format_ - formatting string, containing C `printf()` formatting codes
 _args_ - arguments to be substituted into the format string
+
+[Back to top](#table-of-contents)
 
 ---
 ### project(_name_)
@@ -1335,6 +1647,8 @@ for i, prj in ipairs(prjs) do
     print(prj.name)
 end
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### resdefines({_symbols_...})
 Specifies preprocessor symbols for the resource compiler. Multiple calls are concatenated.
@@ -1352,6 +1666,8 @@ resdefines { "DEBUG", "TRACE" }
 ```lua
 resdefines { "CALLSPEC=__dllexport" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### resincludedirs({_paths_...})
 Specifies the include file search paths for the resource compiler. Multiple calls are concatenated.
@@ -1370,6 +1686,8 @@ May use wildcards
 ```lua
 resincludedirs { "../includes/**" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### resoptions({_options_...})
 Passes arguments directly to the resource compiler. Multiple calls are concatenated.
@@ -1384,6 +1702,8 @@ _options_ - list of resource compiler flags and options
 configuration { "linux", "gmake" }
     resoptions { "`wx-config --cxxflags`", "-ansi", "-pedantic" }
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### solution(_name_)
 Creates a new solution and makes it active. Solutions are the top-level opjects in a GENie build script, and are synonymous with a Visual Studio solution. Each solution contains one or more projects, which in turn contain the settings to generate a single binary target.
@@ -1422,6 +1742,8 @@ for i, sln in ipairs(_SOLUTIONS) do
     print(sln.name)
 end
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### string.endswith(_haystack_, _needle_)
 Checks if the given _haystack_ string ends with _needle_.
@@ -1434,6 +1756,8 @@ _needle_   - string to check ending of _haystack_ against
 `true`  - _haystack_ ends with _needle_
 `false` - _haystack_ does not end with _needle_
 
+[Back to top](#table-of-contents)
+
 ---
 ### string.explode(_str_, _pattern_)
 Breaks a string into an array of strings, formed by splitting _str_ on _pattern_.
@@ -1444,6 +1768,8 @@ _pattern_ - separator pattern at which to split; may use Lua's pattern matching 
 
 #### Return Value
 List of substrings
+
+[Back to top](#table-of-contents)
 
 ---
 ### string.findlast(_str_, _pattern_, _plain_)
@@ -1457,6 +1783,8 @@ _plain_   - whether or not plain string comparison should be used (rather than p
 #### Return Value
 The matching pattern, if found, or `nil`
 
+[Back to top](#table-of-contents)
+
 ---
 ### string.startswith(_haystack_, _needle_)
 Checks if the given _haystack_ starts with _needle_.
@@ -1468,6 +1796,8 @@ _needle_   - string to check start of _haystack_ against
 #### Return Value
 `true`  - _haystack_ starts with _needle_
 `false` - _haystack_ does not start with _needle_
+
+[Back to top](#table-of-contents)
 
 ---
 ### table.contains(_array_, _value_)
@@ -1481,6 +1811,8 @@ _value_ - _value_ being tested for
 `true`  - _array_ contains _value_
 `false` - _array_ does not contain _value_
 
+[Back to top](#table-of-contents)
+
 ---
 ### table.implode(_array_, _before_, _after_, _between_)
 Merges an array of items into a single formatted string.
@@ -1493,6 +1825,8 @@ _between_ - string to be inserted between each item
 
 #### Return Value
 Formatted string
+
+[Back to top](#table-of-contents)
 
 ---
 ### targetdir(_path_)
@@ -1513,6 +1847,8 @@ project "MyProject"
     configuration "Release"
         targetdir "bin/release"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### targetextension(_ext_)
 Specifies the file extension for the compiled binary target. By default, the project will use the system's normal naming conventions: ".exe" for Windows executables, ".so" for Linux shared libraries, etc.
@@ -1526,6 +1862,8 @@ _ext_ - new file extension, including leading dot
 ```lua
 targetextension ".zmf"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### targetname(_name_)
 Specifies the base file name for the compiled binary target. By default, the project name will be used as the file name of the compiled binary target.
@@ -1539,6 +1877,8 @@ _name_ - new base file name
 ```lua
 targetname "mytarget"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### targetprefix(_prefix_)
 Specifies the file name prefix for the compiled binary target. By default, system naming conventions will be used: "lib" for POSIX libraries (e.g. "libMyProject.so") and no prefix elsewhere.
@@ -1557,6 +1897,8 @@ The prefix may also be set to an empty string for no prefix
 ```lua
 targetprefix ""
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### targetsuffix(_suffix_)
 Specifies a file name suffix for the compiled binary target.
@@ -1568,10 +1910,14 @@ _suffix_ - new filename suffix
 
 #### Examples
 ```lua
+[Back to top](#table-of-contents)
+
 --- Add "-d" to debug versions of files
 configuration "Debug"
     targetsuffix "-d"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### uuid(_projectuuid_)
 Sets the UUID for a project. GENie automatically assigns a UUID to each project, which is used by the Visual Studio generators to identify the project within a solution. This UUID is essentially random and will change each time the project file is generated. If you are storing the generated Visual Studio project files in a version control system, this will create a lot of unnecessary deltas. Using the `uuid` function, you can assign a fixed UUID to each project which never changes.
@@ -1588,6 +1934,8 @@ Current project UUID or `nil` if no UUID has been set
 ```lua
 uuid "XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX"
 ```
+[Back to top](#table-of-contents)
+
 ---
 ### vpaths({[_group_] = {_pattern_...}})
 Places files into groups for "virtual paths", rather than mirroring the filesystem. This allows you to, for instance, put all header files in a group called "Headers", no matter where they appeared in the source tree.
@@ -1639,29 +1987,15 @@ vpaths {
     ["Docs"]      = "**.txt"
 }
 ```
+[Back to top](#table-of-contents)
+
 ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Additional Information
 
 ### Wildcards
 
-In some places, wildcards may be used a values passed to a function.
+In some places, wildcards may be used in string values passed to a function. Usually, these strings represent paths. There are two types of wildcards:
 
-**ADD MORE HERE**
+* `*` - matches files within a single directory
+* `**` - matches files recursively in any child directory
