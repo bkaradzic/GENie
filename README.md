@@ -35,7 +35,7 @@ Building (dev)
 Documentation
 -------------
 
-[Scripting Reference](https://github.com/bkaradzic/genie/blob/master/docs/scripting-reference.md)
+[Scripting Reference](https://github.com/bkaradzic/genie/blob/master/docs/scripting-reference.md#scripting-reference)
 
 History
 -------
