@@ -787,7 +787,7 @@ Specifies a list of libraries and projects to link against. Multiple calls are c
 #### Arguments
 _references_ - list of library and project names
 
-When linkig against another project in the same solution, specify the project name here, rather than the library name. GENie will figure out the correct library to link against for the current configuration and will also create a dependency between the projects to ensure proper build order.
+When linking against another project in the same solution, specify the project name here, rather than the library name. GENie will figure out the correct library to link against for the current configuration and will also create a dependency between the projects to ensure proper build order.
 
 When linking against system libraries, do not include any prefix or file extension. GENie will use the appropriate naming conventions for the current platform.
 
@@ -801,8 +801,6 @@ configuration "linux"
     links { "m", "png" }
 
 configuration "macosx"
-    [Back to top](#table-of-contents)
-
 --- OS X frameworks need the extension to be handled properly
     links { "Cocoa.framework", "png" }
 ```
@@ -1858,8 +1856,6 @@ _suffix_ - new filename suffix
 
 #### Examples
 ```lua
-[Back to top](#table-of-contents)
-
 --- Add "-d" to debug versions of files
 configuration "Debug"
     targetsuffix "-d"
