@@ -53,7 +53,13 @@
 			kind  = "list",
 			scope = "config",
 		},
-
+		
+		buildoptions_objc =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
 		configurations =
 		{
 			kind  = "list",
