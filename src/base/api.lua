@@ -343,6 +343,12 @@
 			scope = "config",
 		},		
 
+		msgcompile_objc =
+		{
+			kind  = "string",
+			scope = "config",
+		},		
+		
 		msgresource =
 		{
 			kind  = "string",
