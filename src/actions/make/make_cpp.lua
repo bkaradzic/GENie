@@ -436,7 +436,9 @@
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
 					)
-				if prj.msgcompile then
+				if (path.isobjcfile(file) and prj.msgcompile_objc) then
+					_p('\t@echo ' .. prj.msgcompile_objc)
+				elseif prj.msgcompile then
 					_p('\t@echo ' .. prj.msgcompile)
 				else
 					_p('\t@echo $(notdir $<)')
