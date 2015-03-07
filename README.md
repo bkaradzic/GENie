@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 197 (commit 2b34cf0f0831d265b274d8e11a24bf6320d73d6e)
+	version 206 (commit e65d8143b1186496b9da03c6461a25402a2ee873)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
