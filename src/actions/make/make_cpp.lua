@@ -5,7 +5,7 @@
 --
 
 	premake.make.cpp = { }
-	premake.gmake_undefine = { }
+	premake.make.undefine = { }
 	local cpp = premake.make.cpp
 	local make = premake.make
 
@@ -174,7 +174,7 @@
 		_p('  config=%s', _MAKE.esc(premake.getconfigname(prj.solution.configurations[1], platforms[1], true)))
 		_p('endif')
 		_p('')
-		for _, variable in ipairs(premake.gmake_undefine) do
+		for _, variable in ipairs(premake.make.undefine) do
 			_p('override undefine '.. variable)
 		end
 		_p('')
