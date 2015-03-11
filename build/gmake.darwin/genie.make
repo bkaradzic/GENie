@@ -45,7 +45,8 @@ ifeq ($(config),release)
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -Wl,-x -mmacosx-version-min=10.4
   LDDEPS    +=
@@ -120,7 +121,8 @@ ifeq ($(config),debug)
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -mmacosx-version-min=10.4
   LDDEPS    +=
@@ -195,7 +197,8 @@ ifeq ($(config),releaseuniv32)
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -Wl,-x -arch i386 -arch ppc -mmacosx-version-min=10.4
   LDDEPS    +=
@@ -270,7 +273,8 @@ ifeq ($(config),debuguniv32)
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -mmacosx-version-min=10.4
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
   LDDEPS    +=
