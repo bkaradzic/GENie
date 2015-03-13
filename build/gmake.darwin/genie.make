@@ -40,7 +40,7 @@ endif
 ifeq ($(config),release)
   OBJDIR     = obj/Release
   TARGETDIR  = ../../bin/darwin
-  TARGET     = $(TARGETDIR)/genie
+  override TARGET     = $(TARGETDIR)/genie
   DEFINES   += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -116,7 +116,7 @@ endif
 ifeq ($(config),debug)
   OBJDIR     = obj/Debug
   TARGETDIR  = ../../bin/darwin
-  TARGET     = $(TARGETDIR)/genie
+  override TARGET     = $(TARGETDIR)/genie
   DEFINES   += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -192,7 +192,7 @@ endif
 ifeq ($(config),releaseuniv32)
   OBJDIR     = obj/Universal32/Release
   TARGETDIR  = ../../bin/darwin
-  TARGET     = $(TARGETDIR)/genie
+  override TARGET     = $(TARGETDIR)/genie
   DEFINES   += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
@@ -268,7 +268,7 @@ endif
 ifeq ($(config),debuguniv32)
   OBJDIR     = obj/Universal32/Debug
   TARGETDIR  = ../../bin/darwin
-  TARGET     = $(TARGETDIR)/genie
+  override TARGET     = $(TARGETDIR)/genie
   DEFINES   += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES  += -I../../src/host/lua-5.2.3/src
   ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
