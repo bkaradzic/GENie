@@ -112,10 +112,7 @@
 		if (not prj.solution.messageskip) or (not table.contains(prj.solution.messageskip, "SkipCreatingMessage")) then
 			_p('\t@echo Creating $(OBJDIR)')
 		end
-		_p('\t-$(call MKDIR,$(OBJDIR))')
-		for dir, _ in pairs(objdirs) do
-			_p('\t-$(call MKDIR,$(OBJDIR)/%s)', dir)
-		end
+		_p('\t-$(call MKDIR,$@)')
 		_p('')
 
 		-- Mac OS X specific targets
