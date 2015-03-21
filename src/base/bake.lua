@@ -701,15 +701,13 @@
 		end
 
 		-- remove excluded files from the file list
-		local files = { }
+		local removefiles = cfg.removefiles
+		if _ACTION == 'gmake' then
+			removefiles = table.join(cfg.removefiles, cfg.excludes)
+		end
+		local files = {}
 		for _, fname in ipairs(cfg.files) do
-			local removed = false
-			for _, removefname in ipairs(cfg.removefiles) do
-				removed = (fname == removefname)
-				if (removed) then break end
-			end
-
-			if (not removed) then
+			if not table.icontains(removefiles, fname) then
 				table.insert(files, fname)
 			end
 		end
