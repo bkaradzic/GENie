@@ -14,7 +14,7 @@ Supported project generators:
 Download (stable)
 -----------------
 
-	version 225 (commit 2321131cbf61d5a13df44c255b8d18d73121149d)
+	version 236 (commit d40c35facdb7d6d78351a665f55dc71595dab20e)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -73,6 +73,11 @@ intention to keep it compatible with it.
  - Added `msgcompile`, `msgresource`, `msglinking` and `msgarchiving` as
    overrides for make messages.
  - Added `messageskip` list to disable some of compiler messages.
+ - Added `buildoptions_c`, `buildoptions_cpp`, `buildoptions_objc` for
+   configuring language specific build options.
+ - Split functionality of `excludes` in `removefiles` and `excludes`. With VS
+   `excludes` will exclude files from build but files will be added to project
+   file. `removefiles` removes files completely from project.
 
 ## Why fork?
 
