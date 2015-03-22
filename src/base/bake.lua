@@ -198,12 +198,12 @@
 				if field then
 					if type(value) == "table" then
 						dest[fieldname] = mergefield(field.kind, dest[fieldname], value)
-						if src.removes then
-							removes = src.removes[fieldname]
-							if removes then
-								removevalues(dest[fieldname], removes)
-							end
-						end
+--						if src.removes then
+--							removes = src.removes[fieldname]
+--							if removes then
+--								removevalues(dest[fieldname], removes)
+--							end
+--						end
 					else
 						dest[fieldname] = value
 					end
@@ -253,6 +253,7 @@
 		-- build the configuration base by merging the solution and project level settings
 		local cfg = {}
 		mergeobject(cfg, basis[key])
+
 		adjustpaths(obj.location, cfg)
 		mergeobject(cfg, obj)
 
@@ -703,7 +704,7 @@
 		-- remove excluded files from the file list
 		local removefiles = cfg.removefiles
 		if _ACTION == 'gmake' then
-			removefiles = table.join(cfg.removefiles, cfg.excludes)
+			removefiles = table.join(removefiles, cfg.excludes)
 		end
 		local files = {}
 		for _, fname in ipairs(cfg.files) do
