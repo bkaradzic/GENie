@@ -109,9 +109,16 @@
 		_p('$(TARGETDIR):')
 		premake.make_mkdirrule("$(TARGETDIR)")
 
-		_p('$(OBJDIRS):')
 		if (not prj.solution.messageskip) or (not table.contains(prj.solution.messageskip, "SkipCreatingMessage")) then
-			_p('\t@echo Creating $(OBJDIR)')
+		_p('objdirmessage:')
+		_p('\t@echo Creating $(OBJDIR)')
+		_p('')
+		end
+
+		if (not prj.solution.messageskip) or (not table.contains(prj.solution.messageskip, "SkipCreatingMessage")) then
+		_p('$(OBJDIRS): objdirmessage')
+		else
+		_p('$(OBJDIRS):')
 		end
 		_p('\t-$(call MKDIR,$@)')
 		_p('')
