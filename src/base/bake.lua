@@ -198,12 +198,12 @@
 				if field then
 					if type(value) == "table" then
 						dest[fieldname] = mergefield(field.kind, dest[fieldname], value)
---						if src.removes then
---							removes = src.removes[fieldname]
---							if removes then
---								removevalues(dest[fieldname], removes)
---							end
---						end
+						if src.removes then
+							removes = src.removes[fieldname]
+							if removes then
+								removevalues(dest[fieldname], removes)
+							end
+						end
 					else
 						dest[fieldname] = value
 					end
