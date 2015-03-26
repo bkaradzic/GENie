@@ -377,7 +377,7 @@
 
 					local dir
 					local start = iif(cfg.name, 2, 1)
-					for v = start, iif(cfg.flags.SingleOutputDir,num_variations-1,num_variations) do
+					for v = start, iif(cfg.flags.SingleOutputDir==true,num_variations-1,num_variations) do
 						dir = cfg_dirs[cfg][v]
 						if hit_counts[dir] == 1 then break end
 					end
