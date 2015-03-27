@@ -66,6 +66,7 @@ ifeq ($(config),release)
 	$(OBJDIR)/src/host/premake.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
 	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/os_ticks.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_is64bit.o \
 	$(OBJDIR)/src/host/os_match.o \
@@ -143,6 +144,7 @@ ifeq ($(config),debug)
 	$(OBJDIR)/src/host/premake.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
 	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/os_ticks.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_is64bit.o \
 	$(OBJDIR)/src/host/os_match.o \
@@ -289,6 +291,10 @@ $(OBJDIR)/src/host/os_getcwd.o: ../../src/host/os_getcwd.c
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/src/host/premake_main.o: ../../src/host/premake_main.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/src/host/os_ticks.o: ../../src/host/os_ticks.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
