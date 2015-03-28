@@ -66,6 +66,7 @@ ifeq ($(config),release)
 	$(OBJDIR)/src/host/premake.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
 	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/os_ticks.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_is64bit.o \
 	$(OBJDIR)/src/host/os_match.o \
@@ -143,6 +144,7 @@ ifeq ($(config),debug)
 	$(OBJDIR)/src/host/premake.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
 	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/os_ticks.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_is64bit.o \
 	$(OBJDIR)/src/host/os_match.o \
@@ -220,6 +222,7 @@ ifeq ($(config),releaseuniv32)
 	$(OBJDIR)/src/host/premake.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
 	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/os_ticks.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_is64bit.o \
 	$(OBJDIR)/src/host/os_match.o \
@@ -297,6 +300,7 @@ ifeq ($(config),debuguniv32)
 	$(OBJDIR)/src/host/premake.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
 	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/os_ticks.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_is64bit.o \
 	$(OBJDIR)/src/host/os_match.o \
@@ -347,8 +351,8 @@ endif
 
 OBJDIRS := \
 	$(OBJDIR) \
-	$(OBJDIR)/src/host/lua-5.3.0/src \
 	$(OBJDIR)/src/host \
+	$(OBJDIR)/src/host/lua-5.3.0/src \
 
 RESOURCES := \
 
@@ -443,6 +447,10 @@ $(OBJDIR)/src/host/os_getcwd.o: ../../src/host/os_getcwd.c
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/src/host/premake_main.o: ../../src/host/premake_main.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/src/host/os_ticks.o: ../../src/host/os_ticks.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
