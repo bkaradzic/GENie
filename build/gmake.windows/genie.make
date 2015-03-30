@@ -214,10 +214,8 @@ $(TARGETDIR):
 	@echo Creating $(TARGETDIR)
 	-$(call MKDIR,$(TARGETDIR))
 
-objdirmessage:
-	@echo Creating $(OBJDIR)
-
-$(OBJDIRS): objdirmessage
+$(OBJDIRS):
+	@echo Creating $(@)
 	-$(call MKDIR,$@)
 
 clean:
