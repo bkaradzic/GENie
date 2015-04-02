@@ -62,6 +62,18 @@
 			cppflags = "-MMD",
 			flags    = "-m64",
 		},
+		ppc = {
+			cppflags = "-MMD",
+		},
+		ppc64 = {
+			cppflags = "-MMD",
+		},
+		arm = {
+			cppflags = "-MMD",
+		},
+		mips = {
+			cppflags = "-MMD",
+		},		
 		Universal = {
 			cppflags = "",
 			flags    = "-arch i386 -arch x86_64 -arch ppc -arch ppc64",

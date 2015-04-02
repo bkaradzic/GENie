@@ -26,6 +26,22 @@
 		{ 
 			cfgsuffix       = "64",
 		},
+		ppc = 
+		{ 
+			cfgsuffix       = "ppc",
+		},
+		ppc64 = 
+		{ 
+			cfgsuffix       = "ppc64",
+		},
+		arm = 
+		{ 
+			cfgsuffix       = "arm",
+		},
+		mips = 
+		{ 
+			cfgsuffix       = "mips",
+		},		
 		Universal = 
 		{ 
 			cfgsuffix       = "univ",
