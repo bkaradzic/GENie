@@ -66,6 +66,10 @@
 		allowed = {
 			{ "x32",         "32-bit" },
 			{ "x64",         "64-bit" },
+			{ "ppc",         "PowerPC 32-bit" },
+			{ "ppc64",       "PowerPC 64-bit" },
+			{ "arm",         "ARM" },
+			{ "mips",        "MIPS" },
 			{ "universal",   "Mac OS X Universal, 32- and 64-bit" },
 			{ "universal32", "Mac OS X Universal, 32-bit only" },
 			{ "universal64", "Mac OS X Universal, 64-bit only" },
