@@ -561,28 +561,40 @@
 		end		
 		if #files > 0  then
 			_p(1,'<ItemGroup>')
+			local groupedBuildTasks = {}
 			for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 				for _, buildtask in ipairs(custombuildtask or {}) do
-					_p(2,'<CustomBuild Include=\"%s\">', path.translate(path.getrelative(prj.location,buildtask[1]), "\\"))
-					_p(3,'<FileType>Text</FileType>')
-					local cmd = ""
+					if (groupedBuildTasks[buildtask[1]] == nil) then
+						groupedBuildTasks[buildtask[1]] = {}
+					end
+					table.insert(groupedBuildTasks[buildtask[1]], buildtask)
+				end
+			end
+			
+			for name, custombuildtask in pairs(groupedBuildTasks or {}) do
+				_p(2,'<CustomBuild Include=\"%s\">', path.translate(path.getrelative(prj.location,name), "\\"))
+				_p(3,'<FileType>Text</FileType>')
+				local cmd = ""
+				local outputs = ""
+				for _, buildtask in ipairs(custombuildtask or {}) do
 					for _, cmdline in ipairs(buildtask[4] or {}) do
 						cmd = cmd .. cmdline
 						local num = 1
 						for _, depdata in ipairs(buildtask[3] or {}) do
-							cmd = string.gsub(cmd,"__" .. num .."__", string.format("%s ",path.getrelative(prj.location,depdata)))
+							cmd = string.gsub(cmd,"%$%(" .. num .."%)", string.format("%s ",path.getrelative(prj.location,depdata)))
 							num = num + 1
 						end
-						cmd = string.gsub(cmd, "__I__", string.format("%s ",path.getrelative(prj.location,buildtask[1])))
-						cmd = string.gsub(cmd, "__O__", string.format("%s ",path.getrelative(prj.location,buildtask[2])))
+						cmd = string.gsub(cmd, "%$%(<%)", string.format("%s ",path.getrelative(prj.location,buildtask[1])))
+						cmd = string.gsub(cmd, "%$%(@%)", string.format("%s ",path.getrelative(prj.location,buildtask[2])))
 						cmd = cmd .. "\r\n"
-					end	 					
-					_p(3,'<Command>%s</Command>',cmd)
-					_p(3,'<Outputs>%s;%%(Outputs)</Outputs>',path.getrelative(prj.location,buildtask[2]))
-					_p(3,'<SubType>Designer</SubType>')
-					_p(3,'<Message></Message>')
-					_p(2,'</CustomBuild>')
+					end	 
+					outputs = outputs .. path.getrelative(prj.location,buildtask[2]) .. ";"
 				end
+				_p(3,'<Command>%s</Command>',cmd)
+				_p(3,'<Outputs>%s%%(Outputs)</Outputs>',outputs)
+				_p(3,'<SubType>Designer</SubType>')
+				_p(3,'<Message></Message>')
+				_p(2,'</CustomBuild>')
 			end
 			_p(1,'</ItemGroup>')
 		end
