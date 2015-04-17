@@ -11,6 +11,17 @@ Supported project generators:
  * Visual Studio 2008, 2010, 2012, 2013, 2015
  * GNU Makefile
 
+Who is using it?
+----------------
+
+https://github.com/bkaradzic/bgfx bgfx - Cross-platform, graphics API
+agnostic, "Bring Your Own Engine/Framework" style rendering library.
+
+https://github.com/Psybrus/Psybrus Psybrus Engine & Toolchain
+
+http://sol.gfxile.net/soloud SoLoud is an easy to use, free, 
+portable c/c++ audio engine for games.
+
 Download (stable)
 -----------------
 
