@@ -19,6 +19,8 @@ agnostic, "Bring Your Own Engine/Framework" style rendering library.
 
 https://github.com/Psybrus/Psybrus Psybrus Engine & Toolchain
 
+https://github.com/mamedev/mame MAME - Multiple Arcade Machine Emulator
+
 http://sol.gfxile.net/soloud SoLoud is an easy to use, free, 
 portable c/c++ audio engine for games.
 
