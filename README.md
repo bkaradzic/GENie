@@ -29,6 +29,8 @@ portable c/c++ audio engine for games.
 Download (stable)
 -----------------
 
+[![Build Status](https://travis-ci.org/bkaradzic/genie.svg?branch=master)](https://travis-ci.org/bkaradzic/genie)
+
 	version 273 (commit aa7e321e7a29dd140e285c4ab9aacc06f54c4de7)
 
 Linux:  
