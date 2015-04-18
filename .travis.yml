@@ -5,9 +5,11 @@ compiler:
   - clang
 
 before_install:
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get install -y -qq mingw-w64 mingw-w64-i686-dev; fi
 
 script:
-  make -C build/gmake.linux clean all
+  make -C build/gmake.linux   clean all
+  make -C build/gmake.windows clean all CC=i686-w64-mingw32-gcc
 
 branches:
   only:
