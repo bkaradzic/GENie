@@ -6,9 +6,15 @@ compiler:
 
 before_install:
 
+script:
+  make -C build/gmake.linux clean all
+
 branches:
   only:
     - master
+
+notifications:
+  email: false
 
 os:
   - linux
