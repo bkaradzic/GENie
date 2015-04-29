@@ -26,6 +26,10 @@ https://github.com/mamedev/mame MAME - Multiple Arcade Machine Emulator
 http://sol.gfxile.net/soloud SoLoud is an easy to use, free, 
 portable c/c++ audio engine for games.
 
+https://github.com/andr3wmac/Torque6 Torque 6 is an MIT licensed 3D engine
+loosely based on Torque2D. Being neither Torque2D or Torque3D it is the 6th
+derivative of the original Torque Engine.
+
 Download (stable)
 -----------------
 
