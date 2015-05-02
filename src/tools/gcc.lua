@@ -89,6 +89,12 @@
   endif
   include $(DEVKITPPC)/wii_rules']],
 		},
+		Orbis = {
+			cc         = "orbis-clang",
+			cxx        = "orbis-clang++",
+			ar         = "orbis-ar",
+			cppflags   = "-MMD -MP",
+		}
 	}
 
 	local platforms = premake.gcc.platforms
