@@ -99,6 +99,7 @@ intention to keep it compatible with it.
  - Split functionality of `excludes` in `removefiles` and `excludes`. With VS
    `excludes` will exclude files from build but files will be added to project
    file. `removefiles` removes files completely from project.
+ - Added support for generating PS4/Orbis projects.
 
 ## Why fork?
 
@@ -138,7 +139,8 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 
 	GENie
 	Copyright (c) 2014 Branimir Karadžić, Neil Richardson, Mike Popoloski,
-	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers.
+	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers,
+	Terry Hendrix II.
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification,
