@@ -205,6 +205,14 @@
 		end
 	end
 
+	local function calling_convention(cfg)
+		if cfg.flags.FastCall then
+			_p(3,'<CallingConvention>FastCall</CallingConvention>')
+		elseif cfg.flags.StdCall then
+			_p(3,'<CallingConvention>StdCall</CallingConvention>')
+		end
+	end
+
 	local function wchar_t_buildin(cfg)
 		if cfg.flags.NativeWChar then
 			_p(3,'<TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>')
@@ -328,6 +336,7 @@
 
 		exceptions(cfg)
 		rtti(cfg)
+		calling_convention(cfg)
 		wchar_t_buildin(cfg)
 		sse(cfg)
 		floating_point(cfg)
@@ -558,7 +567,7 @@
 				fcfg.vpath = path.trimdots(fcfg.name)
 				table.insert(files, fcfg)
 			end
-		end		
+		end
 		if #files > 0  then
 			_p(1,'<ItemGroup>')
 			local groupedBuildTasks = {}
@@ -570,7 +579,7 @@
 					table.insert(groupedBuildTasks[buildtask[1]], buildtask)
 				end
 			end
-			
+
 			for name, custombuildtask in pairs(groupedBuildTasks or {}) do
 				_p(2,'<CustomBuild Include=\"%s\">', path.translate(path.getrelative(prj.location,name), "\\"))
 				_p(3,'<FileType>Text</FileType>')
@@ -587,7 +596,7 @@
 						cmd = string.gsub(cmd, "%$%(<%)", string.format("%s ",path.getrelative(prj.location,buildtask[1])))
 						cmd = string.gsub(cmd, "%$%(@%)", string.format("%s ",path.getrelative(prj.location,buildtask[2])))
 						cmd = cmd .. "\r\n"
-					end	 
+					end
 					outputs = outputs .. path.getrelative(prj.location,buildtask[2]) .. ";"
 				end
 				_p(3,'<Command>%s</Command>',cmd)
@@ -599,7 +608,7 @@
 			_p(1,'</ItemGroup>')
 		end
 	end
-	
+
 	function vc2010.simplefilesgroup(prj, section, subtype)
 		local files = vc2010.getfilegroup(prj, section)
 		if #files > 0  then
