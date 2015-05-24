@@ -84,7 +84,7 @@ intention to keep it compatible with it.
  - Removed vs2002, vs2003, vs2005, Solaris, and Haiku support.
  - Allow source files in the same project to have the same name. Added 
    `SingleOutputDir` flag to use single output directory (original behaviour).
- - Added WinRT support.
+ - Added WinRT support (Windows Phone 8.1, Windows Store, Universal Apps).
  - Added `removeflags`, `removelinks`.
  - Added vs2015 support.
  - Added `targetsubdir`.
