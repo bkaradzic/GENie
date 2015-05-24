@@ -29,12 +29,16 @@
 		if prj.flags and prj.flags.Managed then
 			_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
 			_p(2,'<Keyword>ManagedCProj</Keyword>')
-		elseif vstudio.toolset == "v120_wp81" then
+		elseif vstudio.iswinrt() then
 			_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
 			_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
 			_p(2,'<AppContainerApplication>true</AppContainerApplication>')
-			_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
-			_p(2,'<ApplicationTypeRevision>8.1</ApplicationTypeRevision>')
+			if vstudio.toolset == "v120_wp81" then
+				_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
+			else
+				_p(2,'<ApplicationType>Windows Store</ApplicationType>')
+			end
+			_p(2,'<ApplicationTypeRevision>%s</ApplicationTypeRevision>', vstudio.storeapp)
 		else
 			_p(2,'<Keyword>Win32Proj</Keyword>')
 		end
@@ -503,7 +507,8 @@
 				ClInclude = {},
 				None = {},
 				ResourceCompile = {},
-				AppxManifest = {}
+				AppxManifest = {},
+				Image = {}
 			}
 
 			local foundAppxManifest = false
@@ -528,13 +533,19 @@
 			end
 
 			-- WinRT projects get an auto-generated appxmanifest file if none is specified
-			if vstudio.toolset == "v120_wp81" and prj.kind == "WindowedApp" and not foundAppxManifest then
+			if vstudio.iswinrt() and prj.kind == "WindowedApp" and not foundAppxManifest then
 				vstudio.needAppxManifest = true
 
 				local fcfg = {}
 				fcfg.name = prj.name .. ".appxmanifest"
 				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
 				table.insert(sortedfiles.AppxManifest, fcfg)
+
+				-- We also need a link to the splash screen because WinRT is retarded
+				local splashcfg = {}
+				splashcfg.name = premake.vstudio.splashpath
+				splashcfg.vpath = premake.vstudio.splashpath
+				table.insert(sortedfiles.Image, splashcfg)
 			end
 
 			-- Cache the sorted files; they are used several places
@@ -556,6 +567,7 @@
 		vc2010.customtaskgroup(prj)
 		vc2010.simplefilesgroup(prj, "ResourceCompile")
 		vc2010.simplefilesgroup(prj, "AppxManifest")
+		vc2010.deploymentcontentgroup(prj, "Image")
 	end
 
 	function vc2010.customtaskgroup(prj)
@@ -626,6 +638,18 @@
 		end
 	end
 
+	function vc2010.deploymentcontentgroup(prj, section)
+		local files = vc2010.getfilegroup(prj, section)
+		if #files > 0  then
+			_p(1,'<ItemGroup>')
+			for _, file in ipairs(files) do
+				_p(2,'<%s Include=\"%s\">', section, path.translate(file.name, "\\"))
+				_p(3,'<DeploymentContent>true</DeploymentContent>')
+				_p(2,'</%s>', section)
+			end
+			_p(1,'</ItemGroup>')
+		end
+	end
 
 	function vc2010.compilerfilesgroup(prj)
 		local configs = prj.solution.vstudio_configs
@@ -746,7 +770,7 @@
 				local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
 				_p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
 				_p(3,'<Project>{%s}</Project>', dep.uuid)
-				if vstudio.toolset == "v120_wp81" then
+				if vstudio.iswinrt() then
 					_p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
 				end
 				_p(2,'</ProjectReference>')
@@ -761,7 +785,7 @@
 --
 
 	function vc2010.debugdir(cfg)
-		if cfg.debugdir then
+		if cfg.debugdir and not vstudio.iswinrt() then
 			_p('    <LocalDebuggerWorkingDirectory>%s</LocalDebuggerWorkingDirectory>', path.translate(cfg.debugdir, '\\'))
 			_p('    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>')
 		end
@@ -794,17 +818,26 @@
 		_p('</Project>')
 	end
 
+--- This whole thing is stupid
 	function premake.vs2010_appxmanifest(prj)
 		io.indent = "  "
 		io.eol = "\r\n"
 		_p('<?xml version="1.0" encoding="utf-8"?>')
-		_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">')
+		if vstudio.toolset == "v120_wp81" then
+			_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">')
+		elseif vstudio.storeapp == "8.1" then
+			_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2013/manifest">')
+		else
+			_p('<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:m3="http://schemas.microsoft.com/appx/manifest/uap/windows10">')
+		end
 
 		_p(1,'<Identity Name="' .. prj.uuid .. '"')
 		_p(2,'Publisher="CN=Unknown"')
 		_p(2,'Version="1.0.0.0" />')
 
-		_p(1,'<mp:PhoneIdentity PhoneProductId="' .. prj.uuid .. '" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
+		if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
+			_p(1,'<mp:PhoneIdentity PhoneProductId="' .. prj.uuid .. '" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
+		end
 
 		_p(1,'<Properties>')
 		_p(2,'<DisplayName>' .. prj.name .. '</DisplayName>')
@@ -812,10 +845,16 @@
 		_p(2,'<Logo>EmptyLogo.png</Logo>')
 		_p(1,'</Properties>')
 
-		_p(1,'<Prerequisites>')
-		_p(2,'<OSMinVersion>6.3.1</OSMinVersion>')
-		_p(2,'<OSMaxVersionTested>6.3.1</OSMaxVersionTested>')
-		_p(1,'</Prerequisites>')
+		if vstudio.storeapp == "8.2" then
+			_p(1,'<Dependencies>')
+			_p(2,'<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10069.0" MaxVersionTested="10.0.10069.0" />')
+			_p(1,'</Dependencies>')
+		else
+			_p(1,'<Prerequisites>')
+			_p(2,'<OSMinVersion>6.3.0</OSMinVersion>')
+			_p(2,'<OSMaxVersionTested>6.3.0</OSMaxVersionTested>')
+			_p(1,'</Prerequisites>')
+		end
 
 		_p(1,'<Resources>')
 		_p(2,'<Resource Language="x-generate"/>')
@@ -828,10 +867,15 @@
 		_p(3,'<m3:VisualElements')
 		_p(4,'DisplayName="Blah"')
 		_p(4,'Square150x150Logo="Assets\\Logo.png"')
-		_p(4,'Square44x44Logo="Assets\\SmallLogo.png"')
+		if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
+			_p(4,'Square44x44Logo="Assets\\SmallLogo.png"')
+		else
+			_p(4,'Square30x30Logo="Assets\\SmallLogo.png"')
+		end
 		_p(4,'Description="Blah"')
 		_p(4,'ForegroundText="light"')
 		_p(4,'BackgroundColor="transparent">')
+		_p(4,'<m3:SplashScreen Image="%s" />', path.getname(vstudio.splashpath))
 		_p(3,'</m3:VisualElements>')
 		_p(2,'</Application>')
 		_p(1,'</Applications>')

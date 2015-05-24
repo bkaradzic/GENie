@@ -17,6 +17,7 @@
 		vs2015 = "v140"
 	}
 	premake.vstudio.toolset = toolsets[_ACTION] or "unknown?"
+	premake.vstudio.splashpath = ''
 
 	local vstudio = premake.vstudio
 
@@ -52,6 +53,12 @@
 		else
 			return "Win32"
 		end
+	end
+
+
+
+	function vstudio.iswinrt()
+		return vstudio.storeapp ~= nil and vstudio.storeapp ~= ''
 	end
 
 
