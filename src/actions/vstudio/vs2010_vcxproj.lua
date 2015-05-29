@@ -122,13 +122,13 @@
 
 				_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
 
-				_p(2,'<OutDir>%s\\</OutDir>', premake.esc(target.directory))
+				_p(2,'<OutDir>%s</OutDir>', premake.esc(target.directory))
 
 				if cfg.platform == "Xbox360" then
 					_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', premake.esc(target.name))
 				end
 
-				_p(2,'<IntDir>%s\\</IntDir>', premake.esc(cfg.objectsdir))
+				_p(2,'<IntDir>%s</IntDir>', premake.esc(cfg.objectsdir))
 				_p(2,'<TargetName>%s</TargetName>', premake.esc(path.getbasename(target.name)))
 				_p(2,'<TargetExt>%s</TargetExt>', premake.esc(path.getextension(target.name)))
 
