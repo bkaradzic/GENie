@@ -21,9 +21,14 @@
 	end
 
 	local function vs2010_globals(prj)
+		local action = premake.action.current()
 		_p(1,'<PropertyGroup Label="Globals">')
 			_p(2,'<ProjectGuid>{%s}</ProjectGuid>',prj.uuid)
 			_p(2,'<RootNamespace>%s</RootNamespace>',prj.name)
+			local windowsTargetPlatformVersion = prj.windowstargetplatformversion or action.vstudio.windowsTargetPlatformVersion
+			if windowsTargetPlatformVersion ~= nil then
+				_p(2,'<WindowsTargetPlatformVersion>%s</WindowsTargetPlatformVersion>',windowsTargetPlatformVersion)
+			end
 		--if prj.flags is required as it is not set at project level for tests???
 		--vs200x generator seems to swap a config for the prj in test setup
 		if prj.flags and prj.flags.Managed then

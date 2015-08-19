@@ -25,6 +25,7 @@
 			"ExtraWarnings",
 			"StaticRuntime"
 		}
+
 		includedirs {
 			"../src/host/lua-5.3.0/src"
 		}
