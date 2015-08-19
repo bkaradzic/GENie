@@ -209,6 +209,12 @@
 			}
 		},
 
+		windowstargetplatformversion =
+		{
+			kind  = "string",
+			scope = "project",
+		},
+
 		forcedincludes =
 		{
 			kind  = "absolutefilelist",
