@@ -98,7 +98,7 @@
 				prj.archivesplit_size=200
 			end
 			if (not prj.options.ArchiveSplit) then
-				_p('\t$(SILENT) $(LINKCMD) $(OBJECTS)')
+				_p('\t$(SILENT) $(LINKCMD) $(OBJECTS)' .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 			else
 				_p('\t$(call RM,$(TARGET))')
 				_p('\t@$(call max_args,$(LINKCMD),'.. prj.archivesplit_size ..',$(OBJECTS))')
