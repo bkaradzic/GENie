@@ -9,7 +9,7 @@ matrix:
       env: OS=darwin
 
 script:
-  make -C build/gmake.$(OS) clean all
+  make -C build/gmake.x$OS clean all
 
 branches:
   only:
