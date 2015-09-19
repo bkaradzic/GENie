@@ -63,7 +63,6 @@ ifeq ($(config),release)
 	$(OBJDIR)/src/host/os_copyfile.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/os_getversion.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_pathsearch.o \
 	$(OBJDIR)/src/host/os_rmdir.o \
@@ -141,7 +140,6 @@ ifeq ($(config),debug)
 	$(OBJDIR)/src/host/os_copyfile.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/os_getversion.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_pathsearch.o \
 	$(OBJDIR)/src/host/os_rmdir.o \
@@ -219,7 +217,6 @@ ifeq ($(config),releaseuniv32)
 	$(OBJDIR)/src/host/os_copyfile.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/os_getversion.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_pathsearch.o \
 	$(OBJDIR)/src/host/os_rmdir.o \
@@ -297,7 +294,6 @@ ifeq ($(config),debuguniv32)
 	$(OBJDIR)/src/host/os_copyfile.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/os_getversion.o \
 	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/os_pathsearch.o \
 	$(OBJDIR)/src/host/os_rmdir.o \
@@ -351,8 +347,8 @@ endif
 
 OBJDIRS := \
 	$(OBJDIR) \
-	$(OBJDIR)/src/host \
 	$(OBJDIR)/src/host/lua-5.3.0/src \
+	$(OBJDIR)/src/host \
 
 RESOURCES := \
 
@@ -433,10 +429,6 @@ $(OBJDIR)/src/host/scripts.o: ../../src/host/scripts.c
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/src/host/string_endswith.o: ../../src/host/string_endswith.c
-	@echo $(notdir $<)
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-
-$(OBJDIR)/src/host/os_getversion.o: ../../src/host/os_getversion.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
