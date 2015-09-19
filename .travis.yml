@@ -1,11 +1,15 @@
 language: cpp
-
-compiler:
-  - gcc
-  - clang
+matrix:
+  include:
+    - compiler: gcc
+      os: linux
+      env: OS=linux
+    - compiler: clang
+      os: osx
+      env: OS=darwin
 
 script:
-  make -C build/gmake.linux clean all
+  make -C build/gmake.$(OS) clean all
 
 branches:
   only:
@@ -13,10 +17,6 @@ branches:
 
 notifications:
   email: false
-
-os:
-  - linux
-  - osx
 
 osx_image:
   xcode61
