@@ -3,13 +3,11 @@ matrix:
   include:
     - compiler: gcc
       os: linux
-      env: OS=linux
     - compiler: clang
       os: osx
-      env: OS=darwin
 
 script:
-  make -C build/gmake.x$OS clean all
+  make
 
 branches:
   only:
