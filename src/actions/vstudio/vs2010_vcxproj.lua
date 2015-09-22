@@ -292,6 +292,10 @@
 		else
 			if cfg.language == "C" then
 				_p(3,'<CompileAs>CompileAsC</CompileAs>')
+				-- Don't compile C as WinRT
+				if vstudio.iswinrt() then
+					_p(3,'<CompileAsWinRT>false</CompileAsWinRT>')
+				end
 			end
 		end
 	end
