@@ -166,6 +166,8 @@
 					Optimize = 1,
 					OptimizeSize = 1,
 					OptimizeSpeed = 1,
+					DebugRuntime = 1,
+					ReleaseRuntime = 1,
 					SEH = 1,
 					StaticATL = 1,
 					StaticRuntime = 1,
