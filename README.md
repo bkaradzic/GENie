@@ -4,8 +4,9 @@
 What is it?
 -----------
 
-**GENie** is project generator tool. It automagically generates project from Lua
-script, making applying the same settings for multiple projects easy.
+**GENie** (pronounced as Jenny) is project generator tool. It automagically
+generates project from Lua script, making applying the same settings for
+multiple projects easy.
 
 Supported project generators:
  * Visual Studio 2008, 2010, 2012, 2013, 2015
