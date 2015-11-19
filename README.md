@@ -101,6 +101,7 @@ intention to keep it compatible with it.
    `excludes` will exclude files from build but files will be added to project
    file. `removefiles` removes files completely from project.
  - Added support for generating PS4/Orbis projects.
+ - Fixed PCH race when using concurrent build.
 
 ## Why fork?
 
@@ -140,7 +141,7 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 
 	GENie
 	Copyright (c) 2014-2015 Branimir Karadžić, Neil Richardson, Mike Popoloski,
-	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers,
+	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist
 	Terry Hendrix II.
 	All rights reserved.
 
