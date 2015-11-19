@@ -34,13 +34,13 @@
 				objdirs[_MAKE.esc(path.getdirectory(path.trimdots(file)))] = 1
 			end
 		end
-		
+
 		for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 			for _, buildtask in ipairs(custombuildtask or {}) do
 				additionalobjdirs[_MAKE.esc(path.getdirectory(path.getrelative(prj.location,buildtask[2])))] = 1
 			end
 		end
-		
+
 		_p('OBJDIRS := \\')
 		_p('\t$(OBJDIR) \\')
 		for dir, _ in pairs(objdirs) do
@@ -149,7 +149,7 @@
 		_p('')
 
 		-- custom build step targets
-		_p('prebuild:')
+		_p('prebuild: $(GCH)')
 		_p('\t$(PREBUILDCMDS)')
 		_p('')
 
@@ -162,7 +162,7 @@
 
 		-- per-file build rules
 		cpp.fileRules(prj)
-		
+
 		-- per-dependency build rules
 		cpp.dependencyRules(prj)
 
@@ -185,14 +185,14 @@
 					end
 					cmd = string.gsub(cmd, "%$%(<%)", "$<")
 					cmd = string.gsub(cmd, "%$%(@%)", "$@")
-					 
+
 					_p('\t$(SILENT) %s',cmd)
-					
+
 				end
 				_p('')
 			end
 		end
-		
+
 		-- include the dependencies, built by GCC (with the -MMD flag)
 		_p('-include $(OBJECTS:%%.o=%%.d)')
 		_p('ifneq (,$(PCH))')
@@ -479,7 +479,7 @@
 	function cpp.fileRules(prj)
 		for _, file in ipairs(prj.files or {}) do
 			if path.iscppfile(file) then
-				_p('$(OBJDIR)/%s.o: %s'
+				_p('$(OBJDIR)/%s.o: %s prebuild'
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
 					)
@@ -499,7 +499,7 @@
 					_p('\t$(SILENT) %s', task)
 					_p('')
 				end
-				
+
 				_p('')
 			elseif (path.getextension(file) == ".rc") then
 				_p('$(OBJDIR)/%s.res: %s', _MAKE.esc(path.getbasename(file)), _MAKE.esc(file))
@@ -513,7 +513,7 @@
 			end
 		end
 	end
-	
+
 	function cpp.dependencyRules(prj)
 		for _, dependency in ipairs(prj.dependency or {}) do
 			for _, dep in ipairs(dependency or {}) do
@@ -532,7 +532,7 @@
 			end
 		end
 	end
-	
+
 
 	function cpp.buildcommand(iscfile, objext)
 		local flags = iif(iscfile, '$(CC) $(ALL_CFLAGS)', '$(CXX) $(ALL_CXXFLAGS)')
