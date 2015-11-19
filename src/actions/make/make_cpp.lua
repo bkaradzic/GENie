@@ -149,7 +149,7 @@
 		_p('')
 
 		-- custom build step targets
-		_p('prebuild: $(GCH)')
+		_p('prebuild:')
 		_p('\t$(PREBUILDCMDS)')
 		_p('')
 
@@ -479,7 +479,7 @@
 	function cpp.fileRules(prj)
 		for _, file in ipairs(prj.files or {}) do
 			if path.iscppfile(file) then
-				_p('$(OBJDIR)/%s.o: %s prebuild'
+				_p('$(OBJDIR)/%s.o: %s $(GCH)'
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
 					)
