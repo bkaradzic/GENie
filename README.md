@@ -101,7 +101,7 @@ intention to keep it compatible with it.
    `excludes` will exclude files from build but files will be added to project
    file. `removefiles` removes files completely from project.
  - Added support for generating PS4/Orbis projects.
- - Fixed PCH race when using concurrent build.
+ - Fixed PCH race when using concurrent Makefile build.
 
 ## Why fork?
 
