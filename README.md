@@ -102,6 +102,7 @@ intention to keep it compatible with it.
    file. `removefiles` removes files completely from project.
  - Added support for generating PS4/Orbis projects.
  - Fixed PCH race when using concurrent Makefile build.
+ - Added Green Hills Software compiler support.
 
 ## Why fork?
 
@@ -142,7 +143,7 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 	GENie
 	Copyright (c) 2014-2015 Branimir Karadžić, Neil Richardson, Mike Popoloski,
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist
-	Terry Hendrix II.
+	Terry Hendrix II, Ryan Juckett
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
