@@ -384,24 +384,11 @@
 		_p('  LIBS      += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
 
 		if cfg.kind == "StaticLib" then
-			if cfg.platform:startswith("Universal") then
-				_p('  LINKCMD    = libtool -o $(TARGET)')
+			if (not prj.options.ArchiveSplit) then
+				_p('  LINKCMD    = $(AR) %s $(TARGET)', make.list(cc.getarchiveflags(prj, cfg, false)))
 			else
-				if (not prj.options.ArchiveSplit) then
-					if cc.llvm then
-						_p('  LINKCMD    = $(AR) rcs $(TARGET)')
-					else
-						_p('  LINKCMD    = $(AR) -rcs $(TARGET)')
-					end
-				else
-					if cc.llvm then
-						_p('  LINKCMD    = $(AR) qc $(TARGET)')
-						_p('  LINKCMD_NDX= $(AR) cs $(TARGET)')
-					else
-						_p('  LINKCMD    = $(AR) -qc $(TARGET)')
-						_p('  LINKCMD_NDX= $(AR) -cs $(TARGET)')
-					end
-				end
+				_p('  LINKCMD    = $(AR) %s $(TARGET)', make.list(cc.getarchiveflags(prj, cfg, false)))
+				_p('  LINKCMD_NDX= $(AR) %s $(TARGET)', make.list(cc.getarchiveflags(prj, cfg, true)))
 			end
 		else
 
@@ -465,7 +452,7 @@
 		_p('\t@echo $(notdir $<)')
 
 		local cmd = iif(prj.language == "C", "$(CC) -x c-header $(ALL_CFLAGS)", "$(CXX) -x c++-header $(ALL_CXXFLAGS)")
-		_p('\t$(SILENT) %s -MMD -MP $(DEFINES) $(INCLUDES) -o "$@" -MF "$(@:%%.gch=%%.d)" -c "$<"', cmd)
+		_p('\t$(SILENT) %s $(DEFINES) $(INCLUDES) -o "$@" -c "$<"', cmd)
 
 		_p('endif')
 		_p('')
@@ -491,7 +478,7 @@
 					_p('\t@echo $(notdir $<)')
 				end
 				if (path.isobjcfile(file)) then
-					_p('\t$(SILENT) $(CXX) $(ALL_OBJCFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%%.o=%%.d) -c "$<"')
+					_p('\t$(SILENT) $(CXX) $(ALL_OBJCFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"')
 				else
 					cpp.buildcommand(path.iscfile(file) and not prj.options.ForceCPP, "o")
 				end
@@ -536,5 +523,5 @@
 
 	function cpp.buildcommand(iscfile, objext)
 		local flags = iif(iscfile, '$(CC) $(ALL_CFLAGS)', '$(CXX) $(ALL_CXXFLAGS)')
-		_p('\t$(SILENT) %s $(FORCE_INCLUDE) -o "$@" -MF $(@:%%.%s=%%.d) -c "$<"', flags, objext)
+		_p('\t$(SILENT) %s $(FORCE_INCLUDE) -o "$@" -c "$<"', flags, objext)
 	end
