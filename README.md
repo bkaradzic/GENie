@@ -11,6 +11,7 @@ multiple projects easy.
 Supported project generators:
  * Visual Studio 2008, 2010, 2012, 2013, 2015
  * GNU Makefile
+ * XCode
 
 Who is using it?
 ----------------
