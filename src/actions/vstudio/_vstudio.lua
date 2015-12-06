@@ -36,6 +36,7 @@
 		x64     = "x64",
 		PS3     = "PS3",
 		Xbox360 = "Xbox 360",
+		Durango = "Durango", --For an example project, see: https://github.com/Microsoft/FX11/blob/master/Effects11_XboxOneXDK.vcxproj 
 		ARM     = "ARM",
 		Orbis	= "Orbis"
 	}

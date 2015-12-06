@@ -29,24 +29,34 @@
 			if windowsTargetPlatformVersion ~= nil then
 				_p(2,'<WindowsTargetPlatformVersion>%s</WindowsTargetPlatformVersion>',windowsTargetPlatformVersion)
 			end
-		--if prj.flags is required as it is not set at project level for tests???
-		--vs200x generator seems to swap a config for the prj in test setup
-		if prj.flags and prj.flags.Managed then
-			_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
-			_p(2,'<Keyword>ManagedCProj</Keyword>')
-		elseif vstudio.iswinrt() then
-			_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
-			_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
-			_p(2,'<AppContainerApplication>true</AppContainerApplication>')
-			if vstudio.toolset == "v120_wp81" then
-				_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
-			else
-				_p(2,'<ApplicationType>Windows Store</ApplicationType>')
+
+			--set the ApplicationEnvironment propery for projects with Durango platforms 
+			for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
+				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+				if cfg.platform == "Durango" then
+					_p(2,'<ApplicationEnvironment>title</ApplicationEnvironment>')
+					break
+				end
 			end
-			_p(2,'<ApplicationTypeRevision>%s</ApplicationTypeRevision>', vstudio.storeapp)
-		else
-			_p(2,'<Keyword>Win32Proj</Keyword>')
-		end
+
+			--if prj.flags is required as it is not set at project level for tests???
+			--vs200x generator seems to swap a config for the prj in test setup
+			if prj.flags and prj.flags.Managed then
+				_p(2,'<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
+				_p(2,'<Keyword>ManagedCProj</Keyword>')
+			elseif vstudio.iswinrt() then
+				_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
+				_p(2,'<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
+				_p(2,'<AppContainerApplication>true</AppContainerApplication>')
+				if vstudio.toolset == "v120_wp81" then
+					_p(2,'<ApplicationType>Windows Phone</ApplicationType>')
+				else
+					_p(2,'<ApplicationType>Windows Store</ApplicationType>')
+				end
+				_p(2,'<ApplicationTypeRevision>%s</ApplicationTypeRevision>', vstudio.storeapp)
+			else
+				_p(2,'<Keyword>Win32Proj</Keyword>')
+			end
 		_p(1,'</PropertyGroup>')
 	end
 
