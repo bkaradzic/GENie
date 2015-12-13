@@ -37,7 +37,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/genie.svg?branch=master)](https://travis-ci.org/bkaradzic/genie)
 
-	version 342 (commit a95de6a11f250b3dc2af75c7004179d1c473b6df)
+	version 346 (commit d32a1069056d3ecdfd8f70ee75ea4ea99ccd076c)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -104,6 +104,7 @@ intention to keep it compatible with it.
  - Added support for generating PS4/Orbis projects.
  - Fixed PCH race when using concurrent Makefile build.
  - Added Green Hills Software compiler support.
+ - Added edit & continue support for 64-bit builds in VS2013 upwards.
 
 ## Why fork?
 
