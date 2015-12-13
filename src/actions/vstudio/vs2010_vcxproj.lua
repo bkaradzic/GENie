@@ -169,6 +169,10 @@
 					_p(2,'<GenerateManifest>false</GenerateManifest>')
 				end
 
+				if #cfg.referencedirs > 0 then
+					_p(2,'<ReferencePath>%s</ReferencePath>', premake.esc(path.translate(table.concat(cfg.referencedirs, ";"), '\\')))
+				end
+
 				_p(1,'</PropertyGroup>')
 			end
 
@@ -207,6 +211,13 @@
 		if #cfg.includedirs > 0 then
 			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
 					,premake.esc(path.translate(table.concat(cfg.includedirs, ";"), '\\')))
+		end
+	end
+
+	local function using_dirs(indent,cfg)
+		if #cfg.usingdirs > 0 then
+			_p(indent,'<AdditionalUsingDirectories>%s;%%(AdditionalUsingDirectories)</AdditionalUsingDirectories>'
+					,premake.esc(path.translate(table.concat(cfg.usingdirs, ";"), '\\')))
 		end
 	end
 
@@ -324,6 +335,7 @@
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
 
 		include_dirs(3,cfg)
+		using_dirs(3,cfg)
 		preprocessor(3,cfg)
 		minimal_build(cfg)
 

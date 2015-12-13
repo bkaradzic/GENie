@@ -272,6 +272,20 @@
 			usagecopy = true,
 		},
 
+		usingdirs =
+		{
+			kind  = "dirlist",
+			scope = "config",
+			usagecopy = true,
+		},
+
+		referencedirs =
+		{
+			kind  = "dirlist",
+			scope = "config",
+			usagecopy = true,
+		},
+
 		kind =
 		{
 			kind  = "string",
