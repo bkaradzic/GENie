@@ -30,11 +30,13 @@
 				_p(2,'<WindowsTargetPlatformVersion>%s</WindowsTargetPlatformVersion>',windowsTargetPlatformVersion)
 			end
 
-			--set the ApplicationEnvironment propery for projects with Durango platforms 
+			--set the properties needed for projects with Durango platforms 
 			for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
 				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 				if cfg.platform == "Durango" then
 					_p(2,'<ApplicationEnvironment>title</ApplicationEnvironment>')
+					_p(2,'<DefaultLanguage>en-US</DefaultLanguage>')
+					_p(2,'<TargetRuntime>Native</TargetRuntime>')
 					break
 				end
 			end
