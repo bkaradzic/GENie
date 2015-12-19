@@ -37,7 +37,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/genie.svg?branch=master)](https://travis-ci.org/bkaradzic/genie)
 
-	version 349 (commit 3d4f244dc51151ae2cbd2c34c76342221016e499)
+	version 351 (commit c6b4338876f5c6db8c5a7f1863aec6a071b50a68)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
