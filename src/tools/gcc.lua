@@ -231,13 +231,13 @@
 				table.insert(result, '-o')
 		else
 			if (not prj.options.ArchiveSplit) then
-				if llvm then
+				if premake.gcc.llvm then
 					table.insert(result, 'rcs')
 				else
 					table.insert(result, '-rcs')
 				end
 			else
-				if llvm then
+				if premake.gcc.llvm then
 					if (not ndx) then
 						table.insert(result, 'qc')
 					else
