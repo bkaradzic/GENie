@@ -105,6 +105,7 @@ intention to keep it compatible with it.
  - Fixed PCH race when using concurrent Makefile build.
  - Added Green Hills Software compiler support.
  - Added edit & continue support for 64-bit builds in VS2013 upwards.
+ - Added `windowstargetplatformversion` to specify VS Windows target version.
 
 ## Why fork?
 
