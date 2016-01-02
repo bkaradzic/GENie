@@ -64,9 +64,9 @@
 		_p('')
 
 		if os.is("MacOSX") and prj.kind == "WindowedApp" then
-			_p('all: $(TARGETDIR) $(OBJDIRS) prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist')
+			_p('all: $(OBJDIRS) prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR)')
 		else
-			_p('all: $(TARGETDIR) $(OBJDIRS) prebuild prelink $(TARGET)')
+			_p('all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)')
 		end
 		_p('\t@:')
 		_p('')
@@ -86,7 +86,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(TARGETDIR) $(OBJDIRS) $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)')
+		_p('$(TARGET): $(OBJDIRS) $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
