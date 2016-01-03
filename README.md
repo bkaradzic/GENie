@@ -37,7 +37,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/genie.svg?branch=master)](https://travis-ci.org/bkaradzic/genie)
 
-	version 354 (commit 898dae0cf22a0b4920abc6d4320f1edf740d6449)
+	version 362 (commit 621244825ebf929950d5248c1e66a230a219f1a0)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -144,9 +144,9 @@ state of Premake, it's just acknowledging the problem, and dealing with it.
 -----------------------------------------------------------------
 
 	GENie
-	Copyright (c) 2014-2015 Branimir Karadžić, Neil Richardson, Mike Popoloski,
-	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist
-	Terry Hendrix II, Ryan Juckett
+	Copyright (c) 2014-2016 Branimir Karadžić, Neil Richardson, Mike Popoloski,
+	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
+	Terry Hendrix II, Ryan Juckett, Andrew Johnson
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
