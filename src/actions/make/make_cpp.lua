@@ -86,7 +86,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(OBJDIRS) $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR)')
+		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
@@ -172,7 +172,7 @@
 				for _, depdata in ipairs(buildtask[3] or {}) do
 					deps = deps .. string.format("%s ",path.getrelative(prj.location,depdata))
 				end
-				_p('%s: %s'
+				_p('%s: %s | $(TARGETDIR) $(OBJDIRS)'
 					,path.getrelative(prj.location,buildtask[2])
 					, deps
 					)
