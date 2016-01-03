@@ -359,7 +359,7 @@ RESOURCES := \
 all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)
 	@:
 
-$(TARGET): $(OBJDIRS) $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR)
+$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
@@ -389,7 +389,7 @@ prelink:
 	$(PRELINKCMDS)
 
 ifneq (,$(PCH))
-$(GCH): $(PCH)
+$(GCH): $(PCH) | $(OBJDIR)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) -x c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
 endif
