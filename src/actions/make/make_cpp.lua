@@ -448,7 +448,7 @@
 
 	function cpp.pchrules(prj)
 		_p('ifneq (,$(PCH))')
-		_p('$(GCH): $(PCH)')
+		_p('$(GCH): $(PCH) | $(OBJDIR)')
 		if prj.msgprecompile then
 			_p('\t@echo ' .. prj.msgprecompile)
 		else
