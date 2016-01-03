@@ -193,17 +193,17 @@ endif
 
 OBJDIRS := \
 	$(OBJDIR) \
-	$(OBJDIR)/src/host \
 	$(OBJDIR)/src/host/lua-5.3.0/src \
+	$(OBJDIR)/src/host \
 
 RESOURCES := \
 
 .PHONY: clean prebuild prelink
 
-all: $(TARGETDIR) $(OBJDIRS) prebuild prelink $(TARGET)
+all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)
 	@:
 
-$(TARGET): $(TARGETDIR) $(OBJDIRS) $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)
+$(TARGET): $(OBJDIRS) $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
@@ -235,7 +235,7 @@ prelink:
 ifneq (,$(PCH))
 $(GCH): $(PCH)
 	@echo $(notdir $<)
-	$(SILENT) $(CC) -x c-header $(ALL_CFLAGS) $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
+	$(SILENT) $(CC) $(ALL_CFLAGS) -x c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
 endif
 
 $(OBJDIR)/src/host/os_getcwd.o: ../../src/host/os_getcwd.c $(GCH)
