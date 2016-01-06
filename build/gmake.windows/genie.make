@@ -14,6 +14,9 @@ endif
 ifeq (/bin,$(findstring /bin,$(SHELL)))
   SHELLTYPE := posix
 endif
+ifeq (/bin,$(findstring /bin,$(MAKESHELL)))
+  SHELLTYPE := posix
+endif
 
 ifeq (posix,$(SHELLTYPE))
   MKDIR = $(SILENT) mkdir -p "$(1)"
@@ -193,8 +196,8 @@ endif
 
 OBJDIRS := \
 	$(OBJDIR) \
-	$(OBJDIR)/src/host \
 	$(OBJDIR)/src/host/lua-5.3.0/src \
+	$(OBJDIR)/src/host \
 
 RESOURCES := \
 

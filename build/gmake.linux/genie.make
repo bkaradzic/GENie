@@ -14,6 +14,9 @@ endif
 ifeq (/bin,$(findstring /bin,$(SHELL)))
   SHELLTYPE := posix
 endif
+ifeq (/bin,$(findstring /bin,$(MAKESHELL)))
+  SHELLTYPE := posix
+endif
 
 ifeq (posix,$(SHELLTYPE))
   MKDIR = $(SILENT) mkdir -p "$(1)"
