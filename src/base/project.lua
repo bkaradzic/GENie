@@ -380,7 +380,7 @@
 				if pathstyle == "windows" and part ~= "object" then
 					item = path.translate(item, "\\")
 				end
-				if not table.contains(result, item) then
+				if part=="name" or not table.contains(result, item) then
 					table.insert(result, item)
 				end
 			end
