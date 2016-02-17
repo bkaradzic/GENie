@@ -157,15 +157,15 @@
 --    The source object, containing the settings to added to the destination.
 --
 
-	local function mergefield(kind, dest, src)
+	local function mergefield(kind, dest, src, fieldname)
 		local tbl = dest or { }
 		if kind == "keyvalue" or kind == "keypath" then
 			for key, value in pairs(src) do
-				tbl[key] = mergefield("list", tbl[key], value)
+				tbl[key] = mergefield("list", tbl[key], value, fieldname)
 			end
 		else
 			for _, item in ipairs(src) do
-				if not tbl[item] then
+				if fieldname == "links" or not tbl[item] then
 					table.insert(tbl, item)
 					tbl[item] = item
 				end
@@ -197,7 +197,7 @@
 				local field = premake.fields[fieldname]
 				if field then
 					if type(value) == "table" then
-						dest[fieldname] = mergefield(field.kind, dest[fieldname], value)
+						dest[fieldname] = mergefield(field.kind, dest[fieldname], value, fieldname)
 						if src.removes then
 							removes = src.removes[fieldname]
 							if removes then
