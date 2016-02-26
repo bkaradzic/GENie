@@ -54,6 +54,7 @@ ifeq ($(config),release)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -s
   LDDEPS    +=
   LIBS      += $(LDDEPS) -lole32
+  EXTERNAL_LIBS +=
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -131,6 +132,7 @@ ifeq ($(config),debug)
   ALL_LDFLAGS   += $(LDFLAGS) -L.
   LDDEPS    +=
   LIBS      += $(LDDEPS) -lole32
+  EXTERNAL_LIBS +=
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -206,7 +208,7 @@ RESOURCES := \
 all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)

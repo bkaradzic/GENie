@@ -54,6 +54,7 @@ ifeq ($(config),release)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -mmacosx-version-min=10.4
   LDDEPS    +=
   LIBS      += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS +=
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -131,6 +132,7 @@ ifeq ($(config),debug)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -mmacosx-version-min=10.4
   LDDEPS    +=
   LIBS      += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS +=
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -209,6 +211,7 @@ ifeq ($(config),releaseuniv32)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
   LDDEPS    +=
   LIBS      += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS +=
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -287,6 +290,7 @@ ifeq ($(config),debuguniv32)
   ALL_LDFLAGS   += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
   LDDEPS    +=
   LIBS      += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS +=
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -362,7 +366,7 @@ RESOURCES := \
 all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
