@@ -25,7 +25,7 @@
 		_p(1,'<PropertyGroup Label="Globals">')
 			_p(2, '<ProjectGuid>{%s}</ProjectGuid>',prj.uuid)
 			_p(2, '<RootNamespace>%s</RootNamespace>',prj.name)
-			if vstudio.iswinrt() and vstudio.storeapp ~= "durango" then
+			if vstudio.storeapp ~= "durango" then
 				local windowsTargetPlatformVersion = prj.windowstargetplatformversion or action.vstudio.windowsTargetPlatformVersion
 				if windowsTargetPlatformVersion ~= nil then
 					_p(2,'<WindowsTargetPlatformVersion>%s</WindowsTargetPlatformVersion>',windowsTargetPlatformVersion)
