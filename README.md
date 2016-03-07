@@ -35,7 +35,7 @@ derivative of the original Torque Engine.
 Download (stable)
 -----------------
 
-[![Build Status](https://travis-ci.org/bkaradzic/genie.svg?branch=master)](https://travis-ci.org/bkaradzic/genie)
+[![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
 	version 391 (commit d02c374a5eb26587b6708cad52b22c0eed68c542)
 
