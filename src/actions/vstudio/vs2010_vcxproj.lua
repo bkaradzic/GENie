@@ -711,6 +711,12 @@
 				_p(3, '<ObjectFileName>$(IntDir)%s.obj</ObjectFileName>'
 					, premake.esc(path.translate(path.trimdots(path.removeext(file.name))))
 					)
+
+				--For Windows Store Builds, if the file is .c we have to exclude it from /ZW compilation
+				if vstudio.iswinrt() and string.len(file.name) > 2 and string.sub(file.name, -2) == ".c" then
+					_p(3,'<CompileAsWinRT>FALSE</CompileAsWinRT>')
+				end
+
 				for _, cfginfo in ipairs(configs) do
 					if config_mappings[cfginfo] and translatedpath == config_mappings[cfginfo] then
 						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>Create</PrecompiledHeader>', premake.esc(cfginfo.name))
