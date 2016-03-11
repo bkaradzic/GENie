@@ -219,7 +219,7 @@
 
 		forcedincludes =
 		{
-			kind  = "absolutefilelist",
+			kind  = "list",
 			scope = "config",
 		},
 
