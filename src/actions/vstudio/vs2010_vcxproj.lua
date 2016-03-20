@@ -29,6 +29,10 @@
 				local windowsTargetPlatformVersion = prj.windowstargetplatformversion or action.vstudio.windowsTargetPlatformVersion
 				if windowsTargetPlatformVersion ~= nil then
 					_p(2,'<WindowsTargetPlatformVersion>%s</WindowsTargetPlatformVersion>',windowsTargetPlatformVersion)
+
+					if windowsTargetPlatformVersion and string.startswith(windowsTargetPlatformVersion, "10.") then
+						_p(2,'<WindowsTargetPlatformMinVersion>%s</WindowsTargetPlatformMinVersion>', prj.windowstargetplatformminversion or "10.0.10240.0")
+					end
 				end
 			end
 		--if prj.flags is required as it is not set at project level for tests???

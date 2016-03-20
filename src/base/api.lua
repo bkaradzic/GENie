@@ -216,6 +216,12 @@
 			kind  = "string",
 			scope = "project",
 		},
+		
+		windowstargetplatformminversion =
+		{
+			kind = "string",
+			scope = "project",
+		},
 
 		forcedincludes =
 		{
