@@ -549,7 +549,8 @@
 				None = {},
 				ResourceCompile = {},
 				AppxManifest = {},
-				Image = {}
+				Image = {},
+				DeploymentContent = {}
 			}
 
 			local foundAppxManifest = false
@@ -562,14 +563,13 @@
 					end
 				elseif path.isresourcefile(file.name) then
 					table.insert(sortedfiles.ResourceCompile, file)
+				elseif path.isappxmanifest(file.name) then
+					foundAppxManifest = true
+					table.insert(sortedfiles.AppxManifest, file)
+				elseif file.flags and table.icontains(file.flags, "DeploymentContent") then
+					table.insert(sortedfiles.DeploymentContent, file)
 				else
-					local ext = path.getextension(file.name):lower()
-					if ext == ".appxmanifest" then
-						foundAppxManifest = true
-						table.insert(sortedfiles.AppxManifest, file)
-					else
-						table.insert(sortedfiles.None, file)
-					end
+					table.insert(sortedfiles.None, file)
 				end
 			end
 
@@ -609,6 +609,7 @@
 		vc2010.simplefilesgroup(prj, "ResourceCompile")
 		vc2010.simplefilesgroup(prj, "AppxManifest")
 		vc2010.deploymentcontentgroup(prj, "Image")
+		vc2010.deploymentcontentgroup(prj, "DeploymentContent", "None")
 	end
 
 	function vc2010.customtaskgroup(prj)
@@ -679,14 +680,20 @@
 		end
 	end
 
-	function vc2010.deploymentcontentgroup(prj, section)
+	function vc2010.deploymentcontentgroup(prj, section, filetype)
+		if filetype == nil then
+			filetype = section
+		end
+		
 		local files = vc2010.getfilegroup(prj, section)
 		if #files > 0  then
 			_p(1,'<ItemGroup>')
 			for _, file in ipairs(files) do
-				_p(2,'<%s Include=\"%s\">', section, path.translate(file.name, "\\"))
+				_p(2,'<%s Include=\"%s\">', filetype, path.translate(file.name, "\\"))
+				
 				_p(3,'<DeploymentContent>true</DeploymentContent>')
-				_p(2,'</%s>', section)
+				_p(3,'<Link>%s</Link>', path.translate(file.vpath, "\\"))
+				_p(2,'</%s>', filetype)
 			end
 			_p(1,'</ItemGroup>')
 		end
