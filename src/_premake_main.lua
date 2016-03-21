@@ -99,7 +99,7 @@
 
 		if (_OPTIONS["version"] or _OPTIONS["help"] or not _ACTION) then
 			printf("GENie - Project generator tool %s", _GENIE_VERSION_STR)
-			printf("https://github.com/bkaradzic/genie")
+			printf("https://github.com/bkaradzic/GENie")
 			if (not _OPTIONS["version"]) then
 				premake.showhelp()
 			end
@@ -130,7 +130,7 @@
 		if (not ok) then error("Error: " .. err, 0) end
 
 		local profiler = newProfiler()
-		if _OPTIONS["debug-profile"] then
+		if (nil ~= _OPTIONS["debug-profiler"]) then
 			profiler:start()
 		end
 
@@ -138,11 +138,11 @@
 		print("Building configurations...")
 		premake.bake.buildconfigs()
 
-		if _OPTIONS["debug-profile"] then
+		if (nil ~= _OPTIONS["debug-profiler"]) then
 			profiler:stop()
 
 			local filePath = path.getabsolute("GENie-profiler-bake.txt")
-			print("Writing debug-profile report " .. filePath .. ".")
+			print("Writing debug-profiler report " .. filePath .. ".")
 
 			local outfile = io.open(filePath, "w+")
 			profiler:report(outfile)
@@ -160,4 +160,3 @@
 		return 0
 
 	end
-

@@ -729,12 +729,15 @@
 		cfg.__fileconfigs = { }
 		for _, fname in ipairs(cfg.files) do
 			local fcfg = {}
---			cfg.terms.required = fname:lower()
---			for _, blk in ipairs(cfg.project.blocks) do
---				if (premake.iskeywordsmatch(blk.keywords, cfg.terms)) then
---					mergeobject(fcfg, blk)
---				end
---			end
+			if premake.isdotnetproject(prj) then
+				cfg.terms.required = fname:lower()
+				for _, blk in ipairs(cfg.project.blocks) do
+					-- BK - `iskeywordsmatch` call is super slow for large projects...
+					if (premake.iskeywordsmatch(blk.keywords, cfg.terms)) then
+						mergeobject(fcfg, blk)
+					end
+				end
+			end
 
 			-- add indexed by name and integer
 			-- TODO: when everything is converted to trees I won't need
