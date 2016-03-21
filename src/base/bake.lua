@@ -728,13 +728,13 @@
 		-- step of building it later?
 		cfg.__fileconfigs = { }
 		for _, fname in ipairs(cfg.files) do
-			cfg.terms.required = fname:lower()
 			local fcfg = {}
-			for _, blk in ipairs(cfg.project.blocks) do
-				if (premake.iskeywordsmatch(blk.keywords, cfg.terms)) then
-					mergeobject(fcfg, blk)
-				end
-			end
+--			cfg.terms.required = fname:lower()
+--			for _, blk in ipairs(cfg.project.blocks) do
+--				if (premake.iskeywordsmatch(blk.keywords, cfg.terms)) then
+--					mergeobject(fcfg, blk)
+--				end
+--			end
 
 			-- add indexed by name and integer
 			-- TODO: when everything is converted to trees I won't need

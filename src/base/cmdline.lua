@@ -89,6 +89,12 @@
 
 	newoption
 	{
+		trigger     = "debug-profile",
+		description = "Profile GENie script generation."
+	}
+
+	newoption
+	{
 		trigger     = "version",
 		description = "Display version information"
 	}
