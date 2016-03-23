@@ -729,7 +729,9 @@
 		cfg.__fileconfigs = { }
 		for _, fname in ipairs(cfg.files) do
 			local fcfg = {}
-			if premake.isdotnetproject(prj) then
+
+			-- Only do this if the script has called enablefilelevelconfig()
+			if premake._filelevelconfig then
 				cfg.terms.required = fname:lower()
 				for _, blk in ipairs(cfg.project.blocks) do
 					-- BK - `iskeywordsmatch` call is super slow for large projects...
