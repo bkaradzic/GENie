@@ -166,9 +166,17 @@
 		else
 			for _, item in ipairs(src) do
 				if not tbl[item] then
-					table.insert(tbl, item)
 					tbl[item] = item
+				else
+					-- reindex at end of table
+					for i=#tbl,1,-1 do
+						if item == tbl[i] then
+							table.remove(tbl, i)
+							break
+						end
+					end
 				end
+				table.insert(tbl, item)
 			end
 		end
 		return tbl
