@@ -43,6 +43,8 @@
 		elseif vstudio.iswinrt() then
 			_p(2, '<DefaultLanguage>en-US</DefaultLanguage>')
 			if vstudio.storeapp == "durango" then
+				_p(2, '<Keyword>Win32Proj</Keyword>')
+				_p(2, '<ApplicationEnvironment>title</ApplicationEnvironment>')
 				_p(2, '<MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>')
 				_p(2, '<TargetRuntime>Native</TargetRuntime>')
 			else
@@ -688,13 +690,13 @@
 		if filetype == nil then
 			filetype = section
 		end
-		
+
 		local files = vc2010.getfilegroup(prj, section)
 		if #files > 0  then
 			_p(1,'<ItemGroup>')
 			for _, file in ipairs(files) do
 				_p(2,'<%s Include=\"%s\">', filetype, path.translate(file.name, "\\"))
-				
+
 				_p(3,'<DeploymentContent>true</DeploymentContent>')
 				_p(3,'<Link>%s</Link>', path.translate(file.vpath, "\\"))
 				_p(2,'</%s>', filetype)
@@ -902,7 +904,7 @@
 		_p(1,'<Properties>')
 		_p(2,'<DisplayName>' .. prj.name .. '</DisplayName>')
 		_p(2,'<PublisherDisplayName>Unknown</PublisherDisplayName>')
-		_p(2,'<Logo>EmptyLogo.png</Logo>')
+		_p(2,'<Logo>StoreLogo.png</Logo>')
 		_p(1,'</Properties>')
 
 		if vstudio.storeapp == "8.2" then
@@ -931,13 +933,13 @@
 		_p(3,'EntryPoint="App">')
 		if vstudio.storeapp == "durango" then
 			_p(3, '<VisualElements')
-			_p(4, 'DisplayName="GENie"')
-			_p(4, 'Logo="Assets\\Logo.png"')
-			_p(4, 'SmallLogo="Assets\\SmallLogo.png"')
-			_p(4, 'Description="GENie"')
+			_p(4, 'DisplayName="' .. prj.name .. '"')
+			_p(4, 'Logo="Logo.png"')
+			_p(4, 'SmallLogo="SmallLogo.png"')
+			_p(4, 'Description="' .. prj.name .. '"')
 			_p(4, 'ForegroundText="light"')
 			_p(4, 'BackgroundColor="transparent">')
-			_p(5, '<SplashScreen Image="Assets\\SplashScreen.png" />')
+			_p(5, '<SplashScreen Image="SplashScreen.png" />')
 			_p(3, '</VisualElements>')
 			_p(3, '<Extensions>')
 			_p(4, '<mx:Extension Category="xbox.system.resources">')
