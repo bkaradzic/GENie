@@ -9,7 +9,7 @@ generates project from Lua script, making applying the same settings for
 multiple projects easy.
 
 Supported project generators:
- * Visual Studio 2008, 2010, 2012, 2013, 2015
+ * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
  * GNU Makefile
  * XCode
 
@@ -106,6 +106,7 @@ intention to keep it compatible with it.
  - Added Green Hills Software compiler support.
  - Added edit & continue support for 64-bit builds in VS2013 upwards.
  - Added `windowstargetplatformversion` to specify VS Windows target version.
+ - Added vs15 support.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
