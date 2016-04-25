@@ -584,15 +584,30 @@
 				vstudio.needAppxManifest = true
 
 				local fcfg = {}
-				fcfg.name = prj.name .. ".appxmanifest"
+				fcfg.name = prj.name .. "/Package.appxmanifest"
 				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
 				table.insert(sortedfiles.AppxManifest, fcfg)
 
 				-- We also need a link to the splash screen because WinRT is retarded
-				local splashcfg = {}
-				splashcfg.name = premake.vstudio.splashpath
-				splashcfg.vpath = premake.vstudio.splashpath
-				table.insert(sortedfiles.Image, splashcfg)
+				local logo = {}
+				logo.name  = prj.name .. "/Logo.png"
+				logo.vpath = logo.name
+				table.insert(sortedfiles.Image, logo)
+
+				local smallLogo = {}
+				smallLogo.name  = prj.name .. "/SmallLogo.png"
+				smallLogo.vpath = smallLogo.name
+				table.insert(sortedfiles.Image, smallLogo)
+
+				local storeLogo = {}
+				storeLogo.name  = prj.name .. "/StoreLogo.png"
+				storeLogo.vpath = storeLogo.name
+				table.insert(sortedfiles.Image, storeLogo)
+
+				local splashScreen = {}
+				splashScreen.name  = prj.name .. "/SplashScreen.png"
+				splashScreen.vpath = splashScreen.name
+				table.insert(sortedfiles.Image, splashScreen)
 			end
 
 			-- Cache the sorted files; they are used several places
@@ -894,17 +909,19 @@
 		end
 
 		_p(1,'<Identity Name="' .. prj.uuid .. '"')
-		_p(2,'Publisher="CN=Unknown"')
+		_p(2,'Publisher="CN=Publisher"')
 		_p(2,'Version="1.0.0.0" />')
 
 		if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
 			_p(1,'<mp:PhoneIdentity PhoneProductId="' .. prj.uuid .. '" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
 		end
 
-		_p(1,'<Properties>')
-		_p(2,'<DisplayName>' .. prj.name .. '</DisplayName>')
-		_p(2,'<PublisherDisplayName>Unknown</PublisherDisplayName>')
-		_p(2,'<Logo>StoreLogo.png</Logo>')
+		_p(1, '<Properties>')
+		_p(2, '<DisplayName>' .. prj.name .. '</DisplayName>')
+		_p(2, '<PublisherDisplayName>PublisherDisplayName</PublisherDisplayName>')
+		_p(2, '<Logo>' .. prj.name .. '\\StoreLogo.png</Logo>')
+		_p(2, '<Description>' .. prj.name .. '</Description>')
+
 		_p(1,'</Properties>')
 
 		if vstudio.storeapp == "8.2" then
@@ -924,22 +941,22 @@
 		end
 
 		_p(1,'<Resources>')
-		_p(2,'<Resource Language="x-generate"/>')
+		_p(2,'<Resource Language="en-us"/>')
 		_p(1,'</Resources>')
 
 		_p(1,'<Applications>')
 		_p(2,'<Application Id="App"')
 		_p(3,'Executable="$targetnametoken$.exe"')
-		_p(3,'EntryPoint="App">')
+		_p(3,'EntryPoint="' .. prj.name .. '.App">')
 		if vstudio.storeapp == "durango" then
 			_p(3, '<VisualElements')
 			_p(4, 'DisplayName="' .. prj.name .. '"')
-			_p(4, 'Logo="Logo.png"')
-			_p(4, 'SmallLogo="SmallLogo.png"')
+			_p(4, 'Logo="' .. prj.name .. '\\Logo.png"')
+			_p(4, 'SmallLogo="' .. prj.name .. '\\SmallLogo.png"')
 			_p(4, 'Description="' .. prj.name .. '"')
 			_p(4, 'ForegroundText="light"')
 			_p(4, 'BackgroundColor="transparent">')
-			_p(5, '<SplashScreen Image="SplashScreen.png" />')
+			_p(5, '<SplashScreen Image="' .. prj.name .. '\\SplashScreen.png" />')
 			_p(3, '</VisualElements>')
 			_p(3, '<Extensions>')
 			_p(4, '<mx:Extension Category="xbox.system.resources">')
@@ -948,17 +965,17 @@
 			_p(3, '</Extensions>')
 		else
 			_p(3, '<m3:VisualElements')
-			_p(4, 'DisplayName="GENie"')
-			_p(4, 'Square150x150Logo="Assets\\Logo.png"')
+			_p(4, 'DisplayName="' .. prj.name .. '"')
+			_p(4, 'Square150x150Logo="' .. prj.name .. '\\Logo.png"')
 			if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
-				_p(4, 'Square44x44Logo="Assets\\SmallLogo.png"')
+				_p(4, 'Square44x44Logo="' .. prj.name .. '\\SmallLogo.png"')
 			else
-				_p(4, 'Square30x30Logo="Assets\\SmallLogo.png"')
+				_p(4, 'Square30x30Logo="' .. prj.name .. '\\SmallLogo.png"')
 			end
-			_p(4, 'Description="GENie"')
+			_p(4, 'Description="' .. prj.name .. '"')
 			_p(4, 'ForegroundText="light"')
 			_p(4, 'BackgroundColor="transparent">')
-			_p(4, '<m3:SplashScreen Image="%s" />', path.getname(vstudio.splashpath))
+			_p(4, '<m3:SplashScreen Image="' .. prj.name .. '\\SplashScreen.png"')
 			_p(3, '</m3:VisualElements>')
 		end
 		_p(2,'</Application>')
