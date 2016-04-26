@@ -335,8 +335,8 @@
 
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
 
-		include_dirs(3,cfg)
-		preprocessor(3,cfg)
+		include_dirs(3, cfg)
+		preprocessor(3, cfg)
 		minimal_build(cfg)
 
 		if  not premake.config.isoptimizedbuild(cfg.flags) then
@@ -561,7 +561,7 @@
 
 			local foundAppxManifest = false
 			for file in premake.project.eachfile(prj) do
-				if path.iscppfile(file.name) then
+				if path.isSourceFileVS(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
 				elseif path.iscppheader(file.name) then
 					if not table.icontains(prj.removefiles, file) then
@@ -740,6 +740,12 @@
 					, premake.esc(path.translate(path.trimdots(path.getdirectory(file.name))))
 					)
 
+				if path.iscxfile(file.name) then
+					_p(3, '<CompileAsWinRT>true</CompileAsWinRT>')
+					_p(3, '<RuntimeTypeInfo>true</RuntimeTypeInfo>')
+					_p(3, '<PrecompiledHeader>NotUsing</PrecompiledHeader>')
+				end
+
 				--For Windows Store Builds, if the file is .c we have to exclude it from /ZW compilation
 				if vstudio.iswinrt() and string.len(file.name) > 2 and string.sub(file.name, -2) == ".c" then
 					_p(3,'<CompileAsWinRT>FALSE</CompileAsWinRT>')
@@ -893,7 +899,27 @@
 		_p('</Project>')
 	end
 
---- This whole thing is stupid
+	local png1x1data = {
+		0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, -- .PNG........IHDR
+		0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x03, 0x00, 0x00, 0x00, 0x25, 0xdb, 0x56, -- .............%.V
+		0xca, 0x00, 0x00, 0x00, 0x03, 0x50, 0x4c, 0x54, 0x45, 0x00, 0x00, 0x00, 0xa7, 0x7a, 0x3d, 0xda, -- .....PLTE....z=.
+		0x00, 0x00, 0x00, 0x01, 0x74, 0x52, 0x4e, 0x53, 0x00, 0x40, 0xe6, 0xd8, 0x66, 0x00, 0x00, 0x00, -- ....tRNS.@..f...
+		0x0a, 0x49, 0x44, 0x41, 0x54, 0x08, 0xd7, 0x63, 0x60, 0x00, 0x00, 0x00, 0x02, 0x00, 0x01, 0xe2, -- .IDAT..c`.......
+		0x21, 0xbc, 0x33, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,       -- !.3....IEND.B`.
+	}
+
+	function png1x1(obj, filename)
+		filename = premake.project.getfilename(obj, filename)
+
+		local f, err = io.open(filename, "wb")
+		if f then
+			for _, byte in ipairs(png1x1data) do
+				f:write(string.char(byte))
+			end
+			f:close()
+		end
+	end
+
 	function premake.vs2010_appxmanifest(prj)
 		io.indent = "  "
 		io.eol = "\r\n"
@@ -920,6 +946,7 @@
 		_p(2, '<DisplayName>' .. prj.name .. '</DisplayName>')
 		_p(2, '<PublisherDisplayName>PublisherDisplayName</PublisherDisplayName>')
 		_p(2, '<Logo>' .. prj.name .. '\\StoreLogo.png</Logo>')
+		png1x1(prj, "%%/StoreLogo.png")
 		_p(2, '<Description>' .. prj.name .. '</Description>')
 
 		_p(1,'</Properties>')
@@ -952,11 +979,14 @@
 			_p(3, '<VisualElements')
 			_p(4, 'DisplayName="' .. prj.name .. '"')
 			_p(4, 'Logo="' .. prj.name .. '\\Logo.png"')
+			png1x1(prj, "%%/Logo.png")
 			_p(4, 'SmallLogo="' .. prj.name .. '\\SmallLogo.png"')
+			png1x1(prj, "%%/SmallLogo.png")
 			_p(4, 'Description="' .. prj.name .. '"')
 			_p(4, 'ForegroundText="light"')
 			_p(4, 'BackgroundColor="transparent">')
 			_p(5, '<SplashScreen Image="' .. prj.name .. '\\SplashScreen.png" />')
+			png1x1(prj, "%%/SplashScreen.png")
 			_p(3, '</VisualElements>')
 			_p(3, '<Extensions>')
 			_p(4, '<mx:Extension Category="xbox.system.resources">')
@@ -967,15 +997,19 @@
 			_p(3, '<m3:VisualElements')
 			_p(4, 'DisplayName="' .. prj.name .. '"')
 			_p(4, 'Square150x150Logo="' .. prj.name .. '\\Logo.png"')
+			png1x1(prj, "%%/Logo.png")
 			if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
 				_p(4, 'Square44x44Logo="' .. prj.name .. '\\SmallLogo.png"')
+				png1x1(prj, "%%/SmallLogo.png")
 			else
 				_p(4, 'Square30x30Logo="' .. prj.name .. '\\SmallLogo.png"')
+				png1x1(prj, "%%/SmallLogo.png")
 			end
 			_p(4, 'Description="' .. prj.name .. '"')
 			_p(4, 'ForegroundText="light"')
 			_p(4, 'BackgroundColor="transparent">')
 			_p(4, '<m3:SplashScreen Image="' .. prj.name .. '\\SplashScreen.png"')
+			png1x1(prj, "%%/SplashScreen.png")
 			_p(3, '</m3:VisualElements>')
 		end
 		_p(2,'</Application>')
