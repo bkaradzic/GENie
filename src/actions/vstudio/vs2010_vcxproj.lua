@@ -142,48 +142,50 @@
 	end
 
 	function vc2010.outputProperties(prj)
-			for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
-				local target = cfg.buildtarget
-				local outdir = add_trailing_backslash(target.directory)
-				local intdir = add_trailing_backslash(cfg.objectsdir)
+		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
+			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+			local target = cfg.buildtarget
+			local outdir = add_trailing_backslash(target.directory)
+			local intdir = add_trailing_backslash(cfg.objectsdir)
 
-				_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
+			_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
 
-				_p(2,'<OutDir>%s</OutDir>', premake.esc(outdir))
+			_p(2,'<OutDir>%s</OutDir>', premake.esc(outdir))
 
-				if cfg.platform == "Xbox360" then
-					_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', premake.esc(target.name))
-				end
-
-				_p(2,'<IntDir>%s</IntDir>', premake.esc(intdir))
-				_p(2,'<TargetName>%s</TargetName>', premake.esc(path.getbasename(target.name)))
-				_p(2,'<TargetExt>%s</TargetExt>', premake.esc(path.getextension(target.name)))
-
-				if cfg.kind == "SharedLib" then
-					local ignore = (cfg.flags.NoImportLib ~= nil)
-					 _p(2,'<IgnoreImportLibrary>%s</IgnoreImportLibrary>', tostring(ignore))
-				end
-
-				if cfg.platform == "Durango" then
-					_p(2, '<ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>')
-					_p(2, '<LibraryPath>$(Console_SdkLibPath)</LibraryPath>')
-					_p(2, '<LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>')
-					_p(2, '<IncludePath>$(Console_SdkIncludeRoot)</IncludePath>')
-					_p(2, '<ExecutablePath>$(Console_SdkRoot)bin;$(VCInstallDir)bin\\x86_amd64;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\\Tools\\bin;$(VSInstallDir)Common7\\tools;$(VSInstallDir)Common7\\ide;$(ProgramFiles)\\HTML Help Workshop;$(MSBuildToolsPath32);$(FxCopDir);$(PATH);</ExecutablePath>')
-				end
-
-				if cfg.kind ~= "StaticLib" then
-					_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(premake.config.isincrementallink(cfg)))
-				end
-
-				if cfg.flags.NoManifest then
-					_p(2,'<GenerateManifest>false</GenerateManifest>')
-				end
-
-				_p(1,'</PropertyGroup>')
+			if cfg.platform == "Xbox360" then
+				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', premake.esc(target.name))
 			end
 
+			_p(2,'<IntDir>%s</IntDir>', premake.esc(intdir))
+			_p(2,'<TargetName>%s</TargetName>', premake.esc(path.getbasename(target.name)))
+			_p(2,'<TargetExt>%s</TargetExt>', premake.esc(path.getextension(target.name)))
+
+			if cfg.kind == "SharedLib" then
+				local ignore = (cfg.flags.NoImportLib ~= nil)
+				_p(2,'<IgnoreImportLibrary>%s</IgnoreImportLibrary>', tostring(ignore))
+			end
+
+			if cfg.platform == "Durango" then
+				_p(2, '<ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>')
+				_p(2, '<LibraryPath>$(Console_SdkLibPath)</LibraryPath>')
+				_p(2, '<LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>')
+				_p(2, '<IncludePath>$(Console_SdkIncludeRoot)</IncludePath>')
+				_p(2, '<ExecutablePath>$(Console_SdkRoot)bin;$(VCInstallDir)bin\\x86_amd64;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\\Tools\\bin;$(VSInstallDir)Common7\\tools;$(VSInstallDir)Common7\\ide;$(ProgramFiles)\\HTML Help Workshop;$(MSBuildToolsPath32);$(FxCopDir);$(PATH);</ExecutablePath>')
+				_p(2, '<LayoutDir>%s</LayoutDir>', prj.name)
+				_p(2, '<LayoutExtensionFilter>*.pdb;*.ilk;*.exp;*.lib;*.winmd;*.appxrecipe;*.pri;*.idb</LayoutExtensionFilter>')
+				_p(2, '<IsolateConfigurationsOnDeploy>true</IsolateConfigurationsOnDeploy>')
+			end
+
+			if cfg.kind ~= "StaticLib" then
+				_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(premake.config.isincrementallink(cfg)))
+			end
+
+			if cfg.flags.NoManifest then
+				_p(2,'<GenerateManifest>false</GenerateManifest>')
+			end
+
+			_p(1,'</PropertyGroup>')
+		end
 	end
 
 	local function runtime(cfg)
