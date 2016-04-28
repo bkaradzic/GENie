@@ -37,7 +37,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 419 (commit 3c6204f80df937afe629b3972309bf9c454ab9ee)
+	version 430 (commit f803df449cb0e0d9c3d7d23821bbb89900f383ad)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -114,7 +114,7 @@ intention to keep it compatible with it.
 	GENie
 	Copyright (c) 2014-2016 Branimir Karadžić, Neil Richardson, Mike Popoloski,
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
-	Terry Hendrix II, Ryan Juckett, Andrew Johnson
+	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
