@@ -109,6 +109,10 @@
 
 		_p(2,'<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
 
+	    if cfg.flags.WholeProgramOptimization then
+		    _p(2,'<WholeProgramOptimization>true</WholeProgramOptimization>')
+        end
+
 		if cfg.flags.MFC then
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
 		end
@@ -337,6 +341,12 @@
 
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
 
+	    if cfg.flags.WholeProgramOptimization then
+		    _p(3,'<WholeProgramOptimization>true</WholeProgramOptimization>')
+	    else
+		    _p(3,'<WholeProgramOptimization>false</WholeProgramOptimization>')
+	    end
+
 		include_dirs(3, cfg)
 		preprocessor(3, cfg)
 		minimal_build(cfg)
@@ -353,11 +363,18 @@
 			_p(3,'<StringPooling>true</StringPooling>')
 		end
 
-		if cfg.platform == "Durango" then
+		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
 			_p(3, '<CompileAsWinRT>false</CompileAsWinRT>')
-		else
+		end
+		if not cfg.platform == "Durango" then
 			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 		end
+
+	    if cfg.flags.NoBufferSecurityCheck then
+		    _p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
+	    else
+		    _p(3,'<BufferSecurityCheck>true</BufferSecurityCheck>')
+	    end
 
 		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
 
@@ -373,6 +390,8 @@
 
 		if cfg.flags.ExtraWarnings then
 			_p(3,'<WarningLevel>Level4</WarningLevel>')
+		elseif cfg.flags.MinimumWarnings then
+			_p(3,'<WarningLevel>Level1</WarningLevel>')
 		else
 			_p(3,'<WarningLevel>Level3</WarningLevel>')
 		end
@@ -502,6 +521,10 @@
 
 			link_target_machine(3,cfg)
 			additional_options(3,cfg)
+
+            if cfg.flags.NoWinMD and vstudio.iswinrt() and prj.kind == "WindowedApp" then
+				_p(3,'<GenerateWindowsMetadata>false</GenerateWindowsMetadata>' )
+            end
 		end
 
 		_p(2,'</Link>')
@@ -757,6 +780,14 @@
 					if config_mappings[cfginfo] and translatedpath == config_mappings[cfginfo] then
 						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>Create</PrecompiledHeader>', premake.esc(cfginfo.name))
 						config_mappings[cfginfo] = nil  --only one source file per pch
+					end
+				end
+
+				local nopch = table.icontains(prj.nopch, file.name)
+				for _, vsconfig in ipairs(configs) do
+					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					if nopch or table.icontains(cfg.nopch, file.name) then
+						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>NotUsing</PrecompiledHeader>', premake.esc(vsconfig.name))
 					end
 				end
 
