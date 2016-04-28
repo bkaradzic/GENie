@@ -115,6 +115,12 @@
 			scope = "config",
 		},
 
+		nopch =
+		{
+			kind  = "filelist",
+			scope = "config",
+		},
+
 		files =
 		{
 			kind  = "filelist",
@@ -148,9 +154,11 @@
 					FloatFast = 1,
 					FloatStrict = 1,
 					Managed = 1,
+                    MinimumWarnings = 1,
 					MFC = 1,
 					NativeWChar = 1,
 					No64BitChecks = 1,
+					NoBufferSecurityCheck = 1,
 					NoEditAndContinue = 1,
 					NoExceptions = 1,
 					NoFramePointer = 1,
@@ -161,6 +169,8 @@
 					NoNativeWChar = 1,
 					NoPCH = 1,
 					NoRTTI = 1,
+                    NoWinRT = 1,    -- explicitly disables Windows Runtime Extension
+                    NoWinMD = 1,    -- explicitly disables Windows Metadata
 					FastCall = 1,
 					StdCall = 1,
 					SingleOutputDir = 1,
@@ -177,6 +187,7 @@
 					Unsafe = 1,
 					UnsignedChar = 1,
 					WinMain = 1,
+					WholeProgramOptimization = 1,
 				}
 
 				local englishToAmericanSpelling =
