@@ -764,6 +764,14 @@
 					end
 				end
 
+				local nopch = table.icontains(prj.nopch, file.name)
+				for _, vsconfig in ipairs(configs) do
+					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					if nopch or table.icontains(cfg.nopch, file.name) then
+						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>NotUsing</PrecompiledHeader>', premake.esc(vsconfig.name))
+					end
+				end
+
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
