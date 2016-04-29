@@ -526,6 +526,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _MFC_ - Enable support for Microsoft Foundation Classes.
 * _NativeWChar, NoNativeWChar_ - Toggle support for the wchar data type.
 * _No64BitChecks_ - Disable 64-bit portability warnings.
+* _NoBufferSecurityCheck_ - Turns off Visual Studio 'Security Check' option. Can give up to 10% performance improvement.
 * _NoEditAndContinue_ - Disable support for Visual Studio's Edit-and-Continue feature.
 * _NoExceptions_ - Disable C++ exception support.
 * _NoFramePointer_ - Disable the generation of stack frame pointers.
