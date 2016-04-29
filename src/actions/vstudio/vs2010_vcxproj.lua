@@ -506,6 +506,10 @@
 
 			link_target_machine(3,cfg)
 			additional_options(3,cfg)
+
+            if cfg.flags.NoWinMD and vstudio.iswinrt() and prj.kind == "WindowedApp" then
+				_p(3,'<GenerateWindowsMetadata>false</GenerateWindowsMetadata>' )
+            end
 		end
 
 		_p(2,'</Link>')
