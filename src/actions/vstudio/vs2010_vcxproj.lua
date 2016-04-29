@@ -360,6 +360,10 @@
 			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 		end
 
+	    if cfg.flags.NoBufferSecurityCheck then
+		    _p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
+	    end
+
 		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
 
 		-- If we aren't running NoMultiprocessorCompilation and not wanting a minimal rebuild,
