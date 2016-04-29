@@ -43,6 +43,7 @@
     * [location](#locationpath)
     * [newaction](#newactiondescription)
     * [newoption](#newoptionsdescription)
+    * [nopch](#nopch)
     * [objdir](#objdirpath)
     * [os.chdir](#oschdirpath)
     * [os.copyfile](#oscopyfilesource-destination)
@@ -955,6 +956,31 @@ newoption {
         { "software", "Software Renderer" }
     }
 }
+```
+[Back to top](#table-of-contents)
+
+---
+### nopch({_files_...})
+Sets sources files added with the [`files`](#files) function, to not use the precompiled header. Multiple calls are concatenated.
+
+**Note:** May be set on the solution, project, or configuration, but only project-level file lists are currently supported.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_files_ - List of files to not use the precompiled header. Paths should be relative to the currently-executing script file and may contain [wildcards](#wildcards).
+
+#### Examples
+Add all c files in a directory, then set a specific file to not use precompiled headers.
+```lua
+files { "*.c" }
+nopch { "a_file.c" }
+```
+
+Add an entire directory of C files, then set one directory to not use precompiled headers
+```lua
+files { "*.c" }
+nopch { "tests/*.c" }
 ```
 [Back to top](#table-of-contents)
 
