@@ -356,13 +356,14 @@
 		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
 			_p(3, '<CompileAsWinRT>false</CompileAsWinRT>')
 		end
-		if not cfg.platform == "Durango" then
+
+		if cfg.platform ~= "Durango" then
 			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 		end
 
-	    if cfg.flags.NoBufferSecurityCheck then
-		    _p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
-	    end
+		if cfg.flags.NoBufferSecurityCheck then
+			_p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
+		end
 
 		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
 
