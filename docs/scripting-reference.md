@@ -543,6 +543,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _Unicode_ - Enable Unicode strings. If not specified, the default toolset behavior is used.
 * _Unsafe_ - Enable the use of unsafe code in .NET applications.
 * _WinMain_ - Use WinMain() as the entry point for Windows applications, rather than main().
+* _WholeProgramOptimization_ - Enables 'Whole Program Optimization' in Visual Studio optimization settings.
 
 **Note:** When not set, options will default to the tool default.
 
