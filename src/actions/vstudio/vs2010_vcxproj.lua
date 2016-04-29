@@ -109,6 +109,10 @@
 
 		_p(2,'<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
 
+	    if cfg.flags.WholeProgramOptimization then
+		    _p(2,'<WholeProgramOptimization>true</WholeProgramOptimization>')
+        end
+
 		if cfg.flags.MFC then
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
 		end
@@ -336,6 +340,12 @@
 			)
 
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
+
+	    if cfg.flags.WholeProgramOptimization then
+		    _p(3,'<WholeProgramOptimization>true</WholeProgramOptimization>')
+	    else
+		    _p(3,'<WholeProgramOptimization>false</WholeProgramOptimization>')
+	    end
 
 		include_dirs(3, cfg)
 		preprocessor(3, cfg)
