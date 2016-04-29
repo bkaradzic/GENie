@@ -115,6 +115,12 @@
 			scope = "config",
 		},
 
+		nopch =
+		{
+			kind  = "filelist",
+			scope = "config",
+		},
+
 		files =
 		{
 			kind  = "filelist",
