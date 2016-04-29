@@ -161,6 +161,7 @@
 					NoNativeWChar = 1,
 					NoPCH = 1,
 					NoRTTI = 1,
+					NoWinRT = 1,    -- explicitly disables Windows Runtime Extension
 					FastCall = 1,
 					StdCall = 1,
 					SingleOutputDir = 1,
