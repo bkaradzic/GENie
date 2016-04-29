@@ -353,9 +353,10 @@
 			_p(3,'<StringPooling>true</StringPooling>')
 		end
 
-		if cfg.platform == "Durango" then
+		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
 			_p(3, '<CompileAsWinRT>false</CompileAsWinRT>')
-		else
+		end
+		if not cfg.platform == "Durango" then
 			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 		end
 
