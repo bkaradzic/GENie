@@ -517,7 +517,7 @@ Specifies build flags to modify the compiling or linking process. Multiple calls
 #### Arguments
 _flags_ - List of flag names from list below. Names are case-insensitive and ignored if not supported on a platform.
 
-* _EnableSSE, EnableSSE2_ - Enable SSE instruction sets
+* _EnableSSE, EnableSSE2, EnableAVX, EnableAVX2_ - Enable SSE/AVX instruction sets
 * _ExtraWarnings_ - Sets compiler's max warning level.
 * _FatalWarnings_ - Treat warnings as errors.
 * _FloatFast_ - Enable floating point optimizations at the expense of accuracy.

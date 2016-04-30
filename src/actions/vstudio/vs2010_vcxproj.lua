@@ -265,9 +265,13 @@
 
 	local function sse(cfg)
 		if cfg.flags.EnableSSE then
-			_p(3,'<EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>')
+			_p(3, '<EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>')
 		elseif cfg.flags.EnableSSE2 then
-			_p(3,'<EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>')
+			_p(3, '<EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>')
+		elseif cfg.flags.EnableAVX then
+			_p(3, '<EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>')
+		elseif cfg.flags.EnableAVX2 then
+			_p(3, '<EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>')
 		end
 	end
 
