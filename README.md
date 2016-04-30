@@ -107,6 +107,9 @@ intention to keep it compatible with it.
  - Added edit & continue support for 64-bit builds in VS2013 upwards.
  - Added `windowstargetplatformversion` to specify VS Windows target version.
  - Added vs15 support.
+ - Added `NoWinRT` flag to disable WinRT CX builds.
+ - Added `NoBufferSecurityCheck` flag to disable security checks in VS.
+ - Added `nopch` file list to exclude files from using PCH.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
