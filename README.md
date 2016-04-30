@@ -18,7 +18,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 441 (commit c47c52d2c347816c8303c479cb8408e8f0fd3f0a)
+	version 445 (commit 6798f93ba8ee029b629cfc340e90c653e780d8b1)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -110,6 +110,7 @@ intention to keep it compatible with it.
  - Added `NoWinRT` flag to disable WinRT CX builds.
  - Added `NoBufferSecurityCheck` flag to disable security checks in VS.
  - Added `nopch` file list to exclude files from using PCH.
+ - Added `EnableAVX` and `EnableAVX2` flags to enable enhanced instruction set.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
