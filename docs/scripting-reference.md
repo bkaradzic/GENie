@@ -537,6 +537,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoMinimalRebuild_ - Disable Visual Studio's minimal rebuild feature.
 * _NoPCH_ - Disable precompiled headers.
 * _NoRTTI_ - Disable C++ runtime type information.
+* _NoWinMD_ - Disables Generation of Windows Metadata.
 * _NoWinRT_ - Disables Windows RunTime Extension for project.
 * _Optimize_ - Perform a balanced set of optimizations.
 * _OptimizeSize_ - Optimize for the smallest file size.
