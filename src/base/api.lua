@@ -115,6 +115,12 @@
 			scope = "config",
 		},
 
+		nopch =
+		{
+			kind  = "filelist",
+			scope = "config",
+		},
+
 		files =
 		{
 			kind  = "filelist",
@@ -143,6 +149,8 @@
 					EnableMinimalRebuild = 1,
 					EnableSSE = 1,
 					EnableSSE2 = 1,
+					EnableAVX = 1,
+					EnableAVX2 = 1,
 					ExtraWarnings = 1,
 					FatalWarnings = 1,
 					FloatFast = 1,
@@ -162,7 +170,11 @@
 					NoNativeWChar = 1,
 					NoPCH = 1,
 					NoRTTI = 1,
+<<<<<<< HEAD
 					NoWinMD = 1,    -- explicitly disables Windows Metadata
+=======
+					NoWinRT = 1,    -- explicitly disables Windows Runtime Extension
+>>>>>>> refs/remotes/bkaradzic/master
 					FastCall = 1,
 					StdCall = 1,
 					SingleOutputDir = 1,
@@ -219,7 +231,7 @@
 			kind  = "string",
 			scope = "project",
 		},
-		
+
 		windowstargetplatformminversion =
 		{
 			kind = "string",
