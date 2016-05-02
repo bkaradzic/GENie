@@ -156,6 +156,7 @@
 					FloatFast = 1,
 					FloatStrict = 1,
 					Managed = 1,
+					MinimumWarnings = 1,
 					MFC = 1,
 					NativeWChar = 1,
 					No64BitChecks = 1,

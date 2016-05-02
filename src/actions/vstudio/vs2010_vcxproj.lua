@@ -383,6 +383,8 @@
 
 		if cfg.flags.ExtraWarnings then
 			_p(3,'<WarningLevel>Level4</WarningLevel>')
+		elseif cfg.flags.MinimumWarnings then
+			_p(3,'<WarningLevel>Level1</WarningLevel>')
 		else
 			_p(3,'<WarningLevel>Level3</WarningLevel>')
 		end
