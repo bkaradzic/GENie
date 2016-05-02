@@ -9,7 +9,7 @@ generates project from Lua script, making applying the same settings for
 multiple projects easy.
 
 Supported project generators:
- * Visual Studio 2008, 2010, 2012, 2013, 2015
+ * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
  * GNU Makefile
  * XCode
 
@@ -37,7 +37,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 419 (commit 3c6204f80df937afe629b3972309bf9c454ab9ee)
+	version 424 (commit 39bd5bca55b3ffb912b0ad489baf8c45845cf92a)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -106,6 +106,7 @@ intention to keep it compatible with it.
  - Added Green Hills Software compiler support.
  - Added edit & continue support for 64-bit builds in VS2013 upwards.
  - Added `windowstargetplatformversion` to specify VS Windows target version.
+ - Added vs15 support.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
@@ -113,7 +114,7 @@ intention to keep it compatible with it.
 	GENie
 	Copyright (c) 2014-2016 Branimir Karadžić, Neil Richardson, Mike Popoloski,
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
-	Terry Hendrix II, Ryan Juckett, Andrew Johnson
+	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
