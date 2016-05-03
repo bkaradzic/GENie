@@ -72,7 +72,7 @@
     * [path.getrelative](#pathgetrelativesrc-dest)
     * [path.isabsolute](#pathisabsolutepath)
     * [path.iscfile](#pathiscfilepath)
-    * [path.iscppfile](#pathiscppfilepath)
+    * [path.isSourceFile](#pathiscppfilepath)
     * [path.isresourcefile](#pathisresourcefilepath)
     * [path.join](#pathjoinleading-trailing)
     * [path.rebase](#pathrebasepath-oldbase-newbase)
@@ -1397,7 +1397,7 @@ _path_ - path to check
 [Back to top](#table-of-contents)
 
 ---
-### path.iscppfile(_path_)
+### path.isSourceFile(_path_)
 Determines whether a file is a C++ source code file, based on extension.
 
 #### Arguments
