@@ -14,15 +14,23 @@
 
 		-- Find vsvarsall.bat, run it to get the standard includes and libpaths:
 		local vstoolspath = os.getenv('VS140COMNTOOLS')
-		local getvcvarspatt = 'call "%s..\\..\\VC\\vcvarsall.bat"%s & cmd /c echo %%INCLUDE%% & cmd /c echo %%LIB%%'
-		local includeslibsrawx64 = os.outputof(string.format(getvcvarspatt, vstoolspath, target64))
+		local getvcvarspath = 'set %%INCLUDE%%=' ..
+			' & set %%LIB%%=' ..
+			' & call "%s..\\..\\VC\\vcvarsall.bat"%s' ..
+			' & cmd /c echo %%INCLUDE%%' ..
+			' & cmd /c echo %%LIB%%'
+
+		local includeslibsrawx86 = os.outputof(string.format(getvcvarspath, vstoolspath, target32))
+		local includeslibsrawx64 = os.outputof(string.format(getvcvarspath, vstoolspath, target64))
+
 		local msvcvars = {}
+		msvcvars.x32 = {}
 		msvcvars.x64 = {}
+
 		local includeslibssplitter = string.gmatch(includeslibsrawx64, "[^\n]+")
 		msvcvars.x64.includesraw = includeslibssplitter()
 		msvcvars.x64.libpathsraw = includeslibssplitter()
-		local includeslibsrawx86 = os.outputof(string.format(getvcvarspatt, vstoolspath, target32))
-		msvcvars.x32 = {}
+
 		includeslibssplitter = string.gmatch(includeslibsrawx86, "[^\n]+")
 		msvcvars.x32.includesraw = includeslibssplitter()
 		msvcvars.x32.libpathsraw = includeslibssplitter()
@@ -30,64 +38,64 @@
 		if is64bit then
 			_p('.MSVCx64Config =')
 			_p('[')
-			_p(1, ".Compiler = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\cl.exe'")
+			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\lib.exe'")
-			_p(1, ".Linker = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\link.exe'")
+			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\link.exe'")
 			_p(1, ".MSVCIncludes = ''")
 			for i in string.gmatch(msvcvars.x64.includesraw, "[^;]+") do
-				_p(1, "              + ' /I\"%s\"'", i)
+				_p(2, "+ ' /I\"%s\"'", i)
 			end
 			_p(1, ".MSVCLibPaths = ''")
 			for i in string.gmatch(msvcvars.x64.libpathsraw, "[^;]+") do
-				_p(1, "              + ' /LIBPATH:\"%s\"'", i)
+				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
 			end
 			_p(']')
 			_p('')
 
 			_p('.MSVCx86Config =')
 			_p('[')
-			_p(1, ".Compiler = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\cl.exe'")
+			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\lib.exe'")
-			_p(1, ".Linker = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\link.exe'")
+			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\link.exe'")
 			_p(1, ".MSVCIncludes = ''")
 			for i in string.gmatch(msvcvars.x32.includesraw, "[^;]+") do
-				_p(1, "              + ' /I\"%s\"'", i)
+				_p(2, "+ ' /I\"%s\"'", i)
 			end
 			_p(1, ".MSVCLibPaths = ''")
 			for i in string.gmatch(msvcvars.x32.libpathsraw, "[^;]+") do
-				_p(1, "              + ' /LIBPATH:\"%s\"'", i)
+				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
 			end
 			_p(']')
 			_p('')
 		else
 			_p('.MSVCx64Config =')
 			_p('[')
-			_p(1, ".Compiler = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\cl.exe'")
+			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\lib.exe'")
-			_p(1, ".Linker = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\link.exe'")
+			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\link.exe'")
 			_p(1, ".MSVCIncludes = ''")
 			for i in string.gmatch(msvcvars.x64.includesraw, "[^;]+") do
-				_p(1, "              + ' /I\"%s\"'", i)
+				_p(2, "+ ' /I\"%s\"'", i)
 			end
 			_p(1, ".MSVCLibPaths = ''")
 			for i in string.gmatch(msvcvars.x64.libpathsraw, "[^;]+") do
-				_p(1, "              + ' /LIBPATH:\"%s\"'", i)
+				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
 			end
 			_p(']')
 			_p('')
 
 			_p('.MSVCx86Config =')
 			_p('[')
-			_p(1, ".Compiler = '$VS140COMNTOOLS$..\\..\\VC\\bin\\cl.exe'")
+			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\lib.exe'")
-			_p(1, ".Linker = '$VS140COMNTOOLS$..\\..\\VC\\bin\\link.exe'")
+			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\link.exe'")
 			_p(1, ".MSVCIncludes = ''")
 			for i in string.gmatch(msvcvars.x32.includesraw, "[^;]+") do
-				_p(1, "              + ' /I\"%s\"'", i)
+				_p(2, "+ ' /I\"%s\"'", i)
 			end
 			_p(1, ".MSVCLibPaths = ''")
 			for i in string.gmatch(msvcvars.x32.libpathsraw, "[^;]+") do
-				_p(1, "              + ' /LIBPATH:\"%s\"'", i)
+				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
 			end
 			_p(']')
 			_p('')
@@ -95,11 +103,11 @@
 
 		local function projkindsort(a, b)
 			local projvaluemap = {
-				ConsoleApp = 3,
+				ConsoleApp  = 3,
 				WindowedApp = 3,
-				SharedLib = 2,
-				StaticLib = 1,
-				}
+				SharedLib   = 2,
+				StaticLib   = 1,
+			}
 
 			return projvaluemap[a.kind] < projvaluemap[b.kind]
 		end
@@ -125,7 +133,7 @@
 			_p(1, "'%s-%s',", cfg, plat)
 			end
 		end
-		_p(1, '}')
+		_p('}')
 		_p('')
 
 		_p('ForEach(.Variant in .ProjectVariants)')
@@ -136,7 +144,7 @@
 		for prj in premake.solution.eachproject(sln) do
 			_p(3, "'%s-$Variant$',", prj.name)
 		end
-		_p(3, '}')
+		_p(2, '}')
 		_p(1, '}')
 		_p('}')
 	end
