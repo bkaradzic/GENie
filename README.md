@@ -112,6 +112,7 @@ intention to keep it compatible with it.
  - Added `NoBufferSecurityCheck` flag to disable security checks in VS.
  - Added `nopch` file list to exclude files from using PCH.
  - Added `EnableAVX` and `EnableAVX2` flags to enable enhanced instruction set.
+ - Added FASTBuild (.bff) project generator.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
