@@ -458,6 +458,12 @@
 				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>',cfg.buildtarget.name)
 				additional_options(2,cfg)
 				link_target_machine(2,cfg)
+				vc2010.additionalDependencies(2,cfg)  -- for static libs, additional dependencies go in the Lib section
+				if #cfg.libdirs > 0 then
+				    _p(2,'<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
+				        , premake.esc(path.translate(table.concat(cfg.libdirs, ';'), '\\'))
+				        )
+				end
 			_p(1,'</Lib>')
 		end
 	end
@@ -488,7 +494,7 @@
 		end
 
 		if cfg.kind ~= 'StaticLib' then
-			vc2010.additionalDependencies(cfg)
+			vc2010.additionalDependencies(3,cfg)
 			_p(3,'<OutputFile>$(OutDir)%s</OutputFile>', cfg.buildtarget.name)
 
 			if #cfg.libdirs > 0 then
@@ -530,10 +536,10 @@
 -- by an <ItemGroup/ProjectReference>).
 --
 
-	function vc2010.additionalDependencies(cfg)
+	function vc2010.additionalDependencies(tab,cfg)
 		local links = premake.getlinks(cfg, "system", "fullpath")
 		if #links > 0 then
-			_p(3,'<AdditionalDependencies>%s;%s</AdditionalDependencies>'
+			_p(tab,'<AdditionalDependencies>%s;%s</AdditionalDependencies>'
 				, table.concat(links, ";")
 				, iif(cfg.platform == "Durango"
 					, '$(XboxExtensionsDependencies)'
