@@ -189,7 +189,6 @@
 					Unsafe = 1,
 					UnsignedChar = 1,
 					WinMain = 1,
-					WholeProgramOptimization = 1,
 				}
 
 				local englishToAmericanSpelling =
