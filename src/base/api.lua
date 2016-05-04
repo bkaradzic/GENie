@@ -149,12 +149,14 @@
 					EnableMinimalRebuild = 1,
 					EnableSSE = 1,
 					EnableSSE2 = 1,
+					EnableAVX = 1,
+					EnableAVX2 = 1,
 					ExtraWarnings = 1,
 					FatalWarnings = 1,
 					FloatFast = 1,
 					FloatStrict = 1,
 					Managed = 1,
-                    MinimumWarnings = 1,
+					MinimumWarnings = 1,
 					MFC = 1,
 					NativeWChar = 1,
 					No64BitChecks = 1,
@@ -228,7 +230,7 @@
 			kind  = "string",
 			scope = "project",
 		},
-		
+
 		windowstargetplatformminversion =
 		{
 			kind = "string",

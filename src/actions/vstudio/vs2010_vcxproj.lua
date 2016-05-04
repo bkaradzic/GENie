@@ -269,9 +269,13 @@
 
 	local function sse(cfg)
 		if cfg.flags.EnableSSE then
-			_p(3,'<EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>')
+			_p(3, '<EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>')
 		elseif cfg.flags.EnableSSE2 then
-			_p(3,'<EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>')
+			_p(3, '<EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>')
+		elseif cfg.flags.EnableAVX then
+			_p(3, '<EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>')
+		elseif cfg.flags.EnableAVX2 then
+			_p(3, '<EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>')
 		end
 	end
 
@@ -366,15 +370,14 @@
 		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
 			_p(3, '<CompileAsWinRT>false</CompileAsWinRT>')
 		end
-		if not cfg.platform == "Durango" then
+
+		if cfg.platform ~= "Durango" then
 			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 		end
 
-	    if cfg.flags.NoBufferSecurityCheck then
-		    _p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
-	    else
-		    _p(3,'<BufferSecurityCheck>true</BufferSecurityCheck>')
-	    end
+		if cfg.flags.NoBufferSecurityCheck then
+			_p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
+		end
 
 		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
 
