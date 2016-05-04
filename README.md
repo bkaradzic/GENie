@@ -9,8 +9,9 @@ generates project from Lua script, making applying the same settings for
 multiple projects easy.
 
 Supported project generators:
- * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
+ * FASTBuild (experimental)
  * GNU Makefile
+ * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
  * XCode
 
 Download (stable)
@@ -18,7 +19,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 445 (commit 6798f93ba8ee029b629cfc340e90c653e780d8b1)
+	version 454 (commit 9aaece679d6c62bf39b899461f9809ab931c1974)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -111,6 +112,7 @@ intention to keep it compatible with it.
  - Added `NoBufferSecurityCheck` flag to disable security checks in VS.
  - Added `nopch` file list to exclude files from using PCH.
  - Added `EnableAVX` and `EnableAVX2` flags to enable enhanced instruction set.
+ - Added FASTBuild (.bff) project generator.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------

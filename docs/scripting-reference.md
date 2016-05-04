@@ -72,7 +72,7 @@
     * [path.getrelative](#pathgetrelativesrc-dest)
     * [path.isabsolute](#pathisabsolutepath)
     * [path.iscfile](#pathiscfilepath)
-    * [path.iscppfile](#pathiscppfilepath)
+    * [path.isSourceFile](#pathiscppfilepath)
     * [path.isresourcefile](#pathisresourcefilepath)
     * [path.join](#pathjoinleading-trailing)
     * [path.rebase](#pathrebasepath-oldbase-newbase)
@@ -537,6 +537,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoMinimalRebuild_ - Disable Visual Studio's minimal rebuild feature.
 * _NoPCH_ - Disable precompiled headers.
 * _NoRTTI_ - Disable C++ runtime type information.
+* _NoWinMD_ - Disables Generation of Windows Metadata.
 * _NoWinRT_ - Disables Windows RunTime Extension for project.
 * _NoWinMD_ - Disables Generation of Windows Metadata.
 * _Optimize_ - Perform a balanced set of optimizations.
@@ -1398,7 +1399,7 @@ _path_ - path to check
 [Back to top](#table-of-contents)
 
 ---
-### path.iscppfile(_path_)
+### path.isSourceFile(_path_)
 Determines whether a file is a C++ source code file, based on extension.
 
 #### Arguments
