@@ -120,7 +120,8 @@ intention to keep it compatible with it.
 	GENie
 	Copyright (c) 2014-2016 Branimir Karadžić, Neil Richardson, Mike Popoloski,
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
-	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld, Alastair Murray
+	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld, Alastair
+	Murray, Patrick Munns.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
