@@ -42,25 +42,6 @@ Documentation
 
 [Scripting Reference](https://github.com/bkaradzic/genie/blob/master/docs/scripting-reference.md#scripting-reference)
 
-Who is using it?
-----------------
-
-https://github.com/bkaradzic/bgfx bgfx - Cross-platform, graphics API
-agnostic, "Bring Your Own Engine/Framework" style rendering library.
-
-https://github.com/Psybrus/Psybrus Psybrus Engine & Toolchain
-
-https://github.com/dariomanesku/cmftstudio cmftStudio - cubemap filtering tool
-
-https://github.com/mamedev/mame MAME - Multiple Arcade Machine Emulator
-
-http://sol.gfxile.net/soloud SoLoud is an easy to use, free, 
-portable c/c++ audio engine for games.
-
-https://github.com/andr3wmac/Torque6 Torque 6 is an MIT licensed 3D engine
-loosely based on Torque2D. Being neither Torque2D or Torque3D it is the 6th
-derivative of the original Torque Engine.
-
 History
 -------
 
@@ -113,6 +94,25 @@ intention to keep it compatible with it.
  - Added `nopch` file list to exclude files from using PCH.
  - Added `EnableAVX` and `EnableAVX2` flags to enable enhanced instruction set.
  - Added FASTBuild (.bff) project generator.
+
+Who is using it?
+----------------
+
+https://github.com/bkaradzic/bgfx bgfx - Cross-platform, graphics API
+agnostic, "Bring Your Own Engine/Framework" style rendering library.
+
+https://github.com/Psybrus/Psybrus Psybrus Engine & Toolchain
+
+https://github.com/dariomanesku/cmftstudio cmftStudio - cubemap filtering tool
+
+https://github.com/mamedev/mame MAME - Multiple Arcade Machine Emulator
+
+http://sol.gfxile.net/soloud SoLoud is an easy to use, free, 
+portable c/c++ audio engine for games.
+
+https://github.com/andr3wmac/Torque6 Torque 6 is an MIT licensed 3D engine
+loosely based on Torque2D. Being neither Torque2D or Torque3D it is the 6th
+derivative of the original Torque Engine.
 
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
