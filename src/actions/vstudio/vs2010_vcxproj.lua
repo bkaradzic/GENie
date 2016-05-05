@@ -117,6 +117,10 @@
 			_p(2,'<UseOfAtl>%s</UseOfAtl>', iif(cfg.flags.StaticATL, "Static", "Dynamic"))
 		end
 
+		if cfg.flags.Unicode then
+			_p(2,'<CharacterSet>Unicode</CharacterSet>')
+		end
+
 		if cfg.flags.Managed then
 			_p(2,'<CLRSupport>true</CLRSupport>')
 		end
