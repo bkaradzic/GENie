@@ -310,7 +310,8 @@
 			allowed = {
 				"C",
 				"C++",
-				"C#"
+				"C#",
+				"Vala",
 			}
 		},
 
@@ -452,6 +453,12 @@
 		pchsource =
 		{
 			kind  = "path",
+			scope = "config",
+		},
+
+		pkgs =
+		{
+			kind = "list",
 			scope = "config",
 		},
 
