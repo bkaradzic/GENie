@@ -258,7 +258,7 @@
 	end
 
 	function path.isSourceFile(fname)
-		local extensions = { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm" }
+		local extensions = { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm", ".vala" }
 		local ext = path.getextension(fname):lower()
 		return table.contains(extensions, ext)
 	end

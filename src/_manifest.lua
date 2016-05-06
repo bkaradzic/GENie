@@ -33,6 +33,7 @@
 		"tools/msc.lua",
 		"tools/ow.lua",
 		"tools/snc.lua",
+		"tools/valac.lua",
 		"base/validate.lua",
 		"base/help.lua",
 		"base/premake.lua",
@@ -52,6 +53,7 @@
 		"actions/make/make_solution.lua",
 		"actions/make/make_cpp.lua",
 		"actions/make/make_csharp.lua",
+		"actions/make/make_vala.lua",
 
 		-- Visual Studio actions
 		"actions/vstudio/_vstudio.lua",
