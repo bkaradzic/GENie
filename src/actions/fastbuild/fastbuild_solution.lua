@@ -8,32 +8,57 @@
 
 		_p('#import VS140COMNTOOLS')
 
+		-- Create a batch file to run vcvarsall, and capture the variables it sets:
 		local is64bit = os.is64bit()
 		local target64 = (is64bit and ' amd64') or ' x86_amd64'
 		local target32 = (is64bit and ' amd64_x86') or ''
 
-		-- Find vsvarsall.bat, run it to get the standard includes and libpaths:
-		local vstoolspath = os.getenv('VS140COMNTOOLS')
-		local getvcvarspath = 'set %%INCLUDE%%=' ..
-			' & set %%LIB%%=' ..
-			' & call "%s..\\..\\VC\\vcvarsall.bat"%s' ..
-			' & cmd /c echo %%INCLUDE%%' ..
-			' & cmd /c echo %%LIB%%'
+		local getvcvarscontent = [[
+@set INCLUDE=
+@set LIB=
+@set CommandPromptType=
+@set PreferredToolArchitecture=
+@set Platform=
 
-		local includeslibsrawx86 = os.outputof(string.format(getvcvarspath, vstoolspath, target32))
-		local includeslibsrawx64 = os.outputof(string.format(getvcvarspath, vstoolspath, target64))
+@call "%VS140COMNTOOLS%..\..\VC\vcvarsall.bat" %1
+
+@echo %INCLUDE%
+@echo %LIB%
+@echo %CommandPromptType%
+@echo %PreferredToolArchitecture%
+@echo %Platform%
+]]
+
+		-- Save the temp file.
+
+		local getvcvarsfilepath = os.getenv('TEMP')..'\\getvcvars.bat'
+
+		local getvcvarsfile = assert(io.open(getvcvarsfilepath, 'w'))
+		getvcvarsfile:write(getvcvarscontent)
+		getvcvarsfile:close()
+
+		local vcvarsrawx86 = os.outputof(string.format('call "%s"%s', getvcvarsfilepath, target32))
+		local vcvarsrawx64 = os.outputof(string.format('call "%s"%s', getvcvarsfilepath, target64))
+
+		os.remove(getvcvarsfilepath)
 
 		local msvcvars = {}
 		msvcvars.x32 = {}
 		msvcvars.x64 = {}
 
-		local includeslibssplitter = string.gmatch(includeslibsrawx64, "[^\n]+")
+		local includeslibssplitter = string.gmatch(vcvarsrawx64, "[^\n]+")
 		msvcvars.x64.includesraw = includeslibssplitter()
 		msvcvars.x64.libpathsraw = includeslibssplitter()
+		msvcvars.x64.commandprompttype = includeslibssplitter()
+		msvcvars.x64.preferredtoolarchitecture = includeslibssplitter()
+		msvcvars.x64.platform = includeslibssplitter()
 
-		includeslibssplitter = string.gmatch(includeslibsrawx86, "[^\n]+")
+		includeslibssplitter = string.gmatch(vcvarsrawx86, "[^\n]+")
 		msvcvars.x32.includesraw = includeslibssplitter()
 		msvcvars.x32.libpathsraw = includeslibssplitter()
+		msvcvars.x32.commandprompttype = includeslibssplitter()
+		msvcvars.x32.preferredtoolarchitecture = includeslibssplitter()
+		msvcvars.x32.platform = includeslibssplitter()
 
 		if is64bit then
 			_p('.MSVCx64Config =')
