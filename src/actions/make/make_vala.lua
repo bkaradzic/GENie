@@ -54,15 +54,6 @@
 		_p('CC    = %s', valac.cc)
 		_p('')
 
-		_p('ifndef RESCOMP')
-		_p('  ifdef WINDRES')
-		_p('    RESCOMP = $(WINDRES)')
-		_p('  else')
-		_p('    RESCOMP = windres')
-		_p('  endif')
-		_p('endif')
-		_p('')
-
 		-- write configuration blocks
 		for _, platform in ipairs(platforms) do
 			for cfg in premake.eachconfig(prj, platform) do
@@ -134,7 +125,7 @@
 		_p('  TARGET     = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
 		_p('  DEFINES    +=%s', make.list(valac.getdefines(cfg.defines)))
 		_p('  PKGS       +=%s', make.list(valac.getpkgs(cfg.pkgs)))
-		_p('  FLAGS      += $(DEFINES) $(PKGS)%s', make.list(table.join(valac.getvalaflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
+		_p('  FLAGS      += $(DEFINES) $(PKGS)%s', make.list(table.join(valac.getvalaflags(cfg), valac.getbuildoptions(cfg.buildoptions), valac.getbuildoptions(cfg.buildoptions_c))))
 
 		_p('  define PREBUILDCMDS')
 		if #cfg.prebuildcommands > 0 then

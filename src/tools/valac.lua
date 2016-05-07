@@ -64,13 +64,27 @@
 
 
 --
--- Decorate defines for the GCC command line.
+-- Decorate defines for the Vala command line.
 --
 
 	function premake.valac.getdefines(defines)
 		local result = { }
 		for _, def in ipairs(defines) do
 			table.insert(result, '-D ' .. def)
+		end
+		return result
+	end
+
+
+
+--
+-- Decorate C flags for the Vala command line.
+--
+
+	function premake.valac.getbuildoptions(buildoptions)
+		local result = { }
+		for _, def in ipairs(buildoptions) do
+			table.insert(result, '-X ' .. def)
 		end
 		return result
 	end
