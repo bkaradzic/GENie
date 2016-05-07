@@ -35,6 +35,9 @@
 		DisableSinceCheck         = "--disable-since-check",          -- Do not check whether used symbols exist in local packages
 		EnableExperimentalNonNull = "--enable-experimental-non-null", -- Enable experimental enhancements for non-null types
 		EnableGObjectTracing      = "--enable-gobject-tracing",       -- Enable GObject creation tracing
+		Optimize                  = "-X -O2",
+		OptimizeSize              = "-X -Os",
+		OptimizeSpeed             = "-X -O3",
 	}
 
 	premake.valac.platforms = {}
