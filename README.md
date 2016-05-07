@@ -94,6 +94,7 @@ intention to keep it compatible with it.
  - Added `nopch` file list to exclude files from using PCH.
  - Added `EnableAVX` and `EnableAVX2` flags to enable enhanced instruction set.
  - Added FASTBuild (.bff) project generator.
+ - Added Vala language support.
 
 Who is using it?
 ----------------
