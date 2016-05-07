@@ -125,7 +125,7 @@
 		_p('  TARGET     = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
 		_p('  DEFINES    +=%s', make.list(valac.getdefines(cfg.defines)))
 		_p('  PKGS       +=%s', make.list(valac.getpkgs(cfg.pkgs)))
-		_p('  FLAGS      += $(DEFINES) $(PKGS)%s', make.list(table.join(valac.getvalaflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
+		_p('  FLAGS      += $(DEFINES) $(PKGS)%s', make.list(table.join(valac.getvalaflags(cfg), valac.getbuildoptions(cfg.buildoptions), valac.getbuildoptions(cfg.buildoptions_c))))
 
 		_p('  define PREBUILDCMDS')
 		if #cfg.prebuildcommands > 0 then
