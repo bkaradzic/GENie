@@ -54,15 +54,6 @@
 		_p('CC    = %s', valac.cc)
 		_p('')
 
-		_p('ifndef RESCOMP')
-		_p('  ifdef WINDRES')
-		_p('    RESCOMP = $(WINDRES)')
-		_p('  else')
-		_p('    RESCOMP = windres')
-		_p('  endif')
-		_p('endif')
-		_p('')
-
 		-- write configuration blocks
 		for _, platform in ipairs(platforms) do
 			for cfg in premake.eachconfig(prj, platform) do
