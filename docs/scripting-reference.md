@@ -779,12 +779,12 @@ project "MyProject"
 
 ---
 ### language(_lang_)
-Sets the programming language used by a project. GENie currently supports C, C++, and C#. Not all languages are supported by all of the generators. For instance, SharpDevelop does not currently support C or C++ development, and Code::Blocks does not support the .NET languages (C#, managed C++).
+Sets the programming language used by a project. GENie currently supports C, C++, C# and Vala. Not all languages are supported by all of the generators. For instance, SharpDevelop does not currently support C or C++ development, and Code::Blocks does not support the .NET languages (C#, managed C++).
 
 **Scope:** solutions, projects
 
 #### Arguments
-_lang_ - language identifier string ("C", "C++", or "C#"). Case insensitive.
+_lang_ - language identifier string ("C", "C++", "C#" or "Vala"). Case insensitive.
 
 #### Examples
 ```lua
