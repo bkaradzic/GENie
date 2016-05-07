@@ -462,12 +462,6 @@
 				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>',cfg.buildtarget.name)
 				additional_options(2,cfg)
 				link_target_machine(2,cfg)
-				vc2010.additionalDependencies(2,cfg)  -- for static libs, additional dependencies go in the Lib section
-				if #cfg.libdirs > 0 then
-				    _p(2,'<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
-				        , premake.esc(path.translate(table.concat(cfg.libdirs, ';'), '\\'))
-				        )
-				end
 			_p(1,'</Lib>')
 		end
 	end
