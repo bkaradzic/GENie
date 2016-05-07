@@ -456,12 +456,6 @@
 			scope = "config",
 		},
 
-		pkgs =
-		{
-			kind = "list",
-			scope = "config",
-		},
-
 		platforms =
 		{
 			kind  = "list",

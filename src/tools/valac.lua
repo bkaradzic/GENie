@@ -53,9 +53,9 @@
 -- Decorate pkgs for the Vala command line.
 --
 
-	function premake.valac.getpkgs(pkgs)
+	function premake.valac.getlinks(links)
 		local result = { }
-		for _, pkg in ipairs(pkgs) do
+		for _, pkg in ipairs(links) do
 			table.insert(result, '--pkg ' .. pkg)
 		end
 		return result
