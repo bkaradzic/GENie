@@ -79,7 +79,7 @@
 		_p('')
 
 		-- target build rule
-		_p('$(TARGET): $(SOURCES)')
+		_p('$(TARGET): $(SOURCES) | $(TARGETDIR)')
 		_p('\t$(SILENT) $(VALAC) -o $(TARGET) --cc=$(CC) $(FLAGS) $(SOURCES)')
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')
