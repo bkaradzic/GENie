@@ -21,23 +21,23 @@
 
 	local valaflags =
 	{
-		Symbols                   = "-g",                             -- Produce debug information
-		EnableThreading           = "--thread",                       -- Enable multithreading support
-		EnableMemProfiler         = "--enable-mem-profiler",          -- Enable GLib memory profiler
-		NoStdPkg                  = "--nostdpkg",                     -- Do not include standard packages
 		DisableAssert             = "--disable-assert",               -- Disable assertions
+		DisableSinceCheck         = "--disable-since-check",          -- Do not check whether used symbols exist in local packages
+		DisableWarnings           = "--disable-warnings",             -- Disable warnings
 		EnableChecking            = "--enable-checking",              -- Enable additional run-time checks
 		EnableDeprecated          = "--enable-deprecated",            -- Enable deprecated features
-		HideInternal              = "--hide-internal",                -- Hide symbols marked as internal
 		EnableExperimental        = "--enable-experimental",          -- Enable experimental features
-		DisableWarnings           = "--disable-warnings",             -- Disable warnings
-		FatalWarnings             = "--fatal-warnings",               -- Treat warnings as fatal
-		DisableSinceCheck         = "--disable-since-check",          -- Do not check whether used symbols exist in local packages
 		EnableExperimentalNonNull = "--enable-experimental-non-null", -- Enable experimental enhancements for non-null types
 		EnableGObjectTracing      = "--enable-gobject-tracing",       -- Enable GObject creation tracing
+		EnableMemProfiler         = "--enable-mem-profiler",          -- Enable GLib memory profiler
+		EnableThreading           = "--thread",                       -- Enable multithreading support
+		FatalWarnings             = "--fatal-warnings",               -- Treat warnings as fatal
+		HideInternal              = "--hide-internal",                -- Hide symbols marked as internal
+		NoStdPkg                  = "--nostdpkg",                     -- Do not include standard packages
 		Optimize                  = "-X -O2",
 		OptimizeSize              = "-X -Os",
 		OptimizeSpeed             = "-X -O3",
+		Symbols                   = "-g",                             -- Produce debug information
 	}
 
 	premake.valac.platforms = {}
