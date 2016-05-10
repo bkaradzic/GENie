@@ -19,6 +19,7 @@
 @set CommandPromptType=
 @set PreferredToolArchitecture=
 @set Platform=
+@set Path=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\wbem
 
 @call "%VS140COMNTOOLS%..\..\VC\vcvarsall.bat" %1
 
@@ -27,6 +28,7 @@
 @echo %CommandPromptType%
 @echo %PreferredToolArchitecture%
 @echo %Platform%
+@echo %Path%
 ]]
 
 		-- Save the temp file.
@@ -52,6 +54,7 @@
 		msvcvars.x64.commandprompttype = includeslibssplitter()
 		msvcvars.x64.preferredtoolarchitecture = includeslibssplitter()
 		msvcvars.x64.platform = includeslibssplitter()
+		msvcvars.x64.pathraw = includeslibssplitter()
 
 		includeslibssplitter = string.gmatch(vcvarsrawx86, "[^\n]+")
 		msvcvars.x32.includesraw = includeslibssplitter()
@@ -59,6 +62,21 @@
 		msvcvars.x32.commandprompttype = includeslibssplitter()
 		msvcvars.x32.preferredtoolarchitecture = includeslibssplitter()
 		msvcvars.x32.platform = includeslibssplitter()
+		msvcvars.x32.pathraw = includeslibssplitter()
+
+		local function printincludes(includesraw)
+			_p(1, ".MSVCIncludes = ''")
+			for i in string.gmatch(includesraw, "[^;]+") do
+				_p(2, "+ ' /I\"%s\"'", i)
+			end
+		end
+
+		local function printlibpaths(libpathsraw)
+			_p(1, ".MSVCLibPaths = ''")
+			for i in string.gmatch(libpathsraw, "[^;]+") do
+				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
+			end
+		end
 
 		if is64bit then
 			_p('.MSVCx64Config =')
@@ -66,14 +84,8 @@
 			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\lib.exe'")
 			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64\\link.exe'")
-			_p(1, ".MSVCIncludes = ''")
-			for i in string.gmatch(msvcvars.x64.includesraw, "[^;]+") do
-				_p(2, "+ ' /I\"%s\"'", i)
-			end
-			_p(1, ".MSVCLibPaths = ''")
-			for i in string.gmatch(msvcvars.x64.libpathsraw, "[^;]+") do
-				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
-			end
+			printincludes(msvcvars.x64.includesraw)
+			printlibpaths(msvcvars.x64.libpathsraw)
 			_p(']')
 			_p('')
 
@@ -82,14 +94,8 @@
 			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\lib.exe'")
 			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\amd64_x86\\link.exe'")
-			_p(1, ".MSVCIncludes = ''")
-			for i in string.gmatch(msvcvars.x32.includesraw, "[^;]+") do
-				_p(2, "+ ' /I\"%s\"'", i)
-			end
-			_p(1, ".MSVCLibPaths = ''")
-			for i in string.gmatch(msvcvars.x32.libpathsraw, "[^;]+") do
-				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
-			end
+			printincludes(msvcvars.x32.includesraw)
+			printlibpaths(msvcvars.x32.libpathsraw)
 			_p(']')
 			_p('')
 		else
@@ -98,14 +104,8 @@
 			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\lib.exe'")
 			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\x86_amd64\\link.exe'")
-			_p(1, ".MSVCIncludes = ''")
-			for i in string.gmatch(msvcvars.x64.includesraw, "[^;]+") do
-				_p(2, "+ ' /I\"%s\"'", i)
-			end
-			_p(1, ".MSVCLibPaths = ''")
-			for i in string.gmatch(msvcvars.x64.libpathsraw, "[^;]+") do
-				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
-			end
+			printincludes(msvcvars.x64.includesraw)
+			printlibpaths(msvcvars.x64.libpathsraw)
 			_p(']')
 			_p('')
 
@@ -114,17 +114,26 @@
 			_p(1, ".Compiler  = '$VS140COMNTOOLS$..\\..\\VC\\bin\\cl.exe'")
 			_p(1, ".Librarian = '$VS140COMNTOOLS$..\\..\\VC\\bin\\lib.exe'")
 			_p(1, ".Linker    = '$VS140COMNTOOLS$..\\..\\VC\\bin\\link.exe'")
-			_p(1, ".MSVCIncludes = ''")
-			for i in string.gmatch(msvcvars.x32.includesraw, "[^;]+") do
-				_p(2, "+ ' /I\"%s\"'", i)
-			end
-			_p(1, ".MSVCLibPaths = ''")
-			for i in string.gmatch(msvcvars.x32.libpathsraw, "[^;]+") do
-				_p(2, "+ ' /LIBPATH:\"%s\"'", i)
-			end
+			printincludes(msvcvars.x32.includesraw)
+			printlibpaths(msvcvars.x32.libpathsraw)
 			_p(']')
 			_p('')
 		end
+
+		local msvcbin = '$VS140COMNTOOLS$..\\..\\VC\\bin' .. ((is64bit and '\\amd64') or '')
+		_p('#import Path')
+		_p('#import TMP')
+		_p('#import SystemRoot')
+		_p('')
+		_p('Settings')
+		_p('{')
+		_p(1, '.Environment = {')
+		_p(2, "'Path=%s;$Path$',", msvcbin)
+		_p(2, "'TMP=$TMP$',")
+		_p(2, "'SystemRoot=$SystemRoot$',")
+		_p(2, '}')
+		_p('}')
+		_p('')
 
 		local function projkindsort(a, b)
 			local projvaluemap = {
