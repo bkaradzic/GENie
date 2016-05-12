@@ -95,6 +95,7 @@ intention to keep it compatible with it.
  - Added `EnableAVX` and `EnableAVX2` flags to enable enhanced instruction set.
  - Added FASTBuild (.bff) project generator.
  - Added Vala language support.
+ - Added MASM support for Visual Studio projects.
 
 Who is using it?
 ----------------
