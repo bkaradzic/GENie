@@ -268,6 +268,12 @@
 			or path.iscxfile(fname)
 	end
 
+	function path.isasmfile(fname)
+		local extensions = { ".asm" }
+		local ext = path.getextension(fname):lower()
+		return table.contains(extensions, ext)
+	end
+
 --
 -- Returns true if the filename represents a Windows resource file. This check
 -- is used to prevent passing non-resources to the compiler in makefiles.
