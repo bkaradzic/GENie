@@ -97,14 +97,17 @@ intention to keep it compatible with it.
  - Added Vala language support.
  - Added MASM support for Visual Studio projects.
 
-Debugging
----------
+Debugging GENie scripts
+-----------------------
 
-It is possible to debug build scripts using [ZeroBrane Studio][zbs]. You must compile GENie in debug mode
+It is possible to debug build scripts using [ZeroBrane Studio][zbs]. You must
+compile GENie in debug mode
 
     $ make config=debug
-  
-This ensures the core lua scripts are loaded from disk rather than compiled into the GENie binary. Create a file named `debug.lua` as a sibling to your main `genie.lua` script with the following content:
+
+This ensures the core lua scripts are loaded from disk rather than compiled
+into the GENie binary. Create a file named `debug.lua` as a sibling to your
+main `genie.lua` script with the following content:
 
     local zb_path = <path to ZeroBraneStudio>
     local cpaths = {
@@ -123,9 +126,11 @@ This ensures the core lua scripts are loaded from disk rather than compiled into
 
     require('mobdebug').start()
 
-**NOTE:** update `zb_path` to refer to the root of your ZeroBrane Studio install. For reference, you should find `lualibs` in you `zb_path` folder
+**NOTE:** update `zb_path` to refer to the root of your ZeroBrane Studio
+install. For reference, you should find `lualibs` in you `zb_path` folder
 
-To debug, make sure ZBS is listening for debug connections and add `dofile("debug.lua")` to `genie.lua`
+To debug, make sure ZBS is listening for debug connections and add
+`dofile("debug.lua")` to `genie.lua`
 
 Who is using it?
 ----------------
