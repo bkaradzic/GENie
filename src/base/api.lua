@@ -640,10 +640,10 @@
 		end
 
 		if t == "solution" then
-			if type(container) == "project" then
+			if typex(container) == "project" then
 				container = container.solution
 			end
-			if type(container) ~= "solution" then
+			if typex(container) ~= "solution" then
 				container = nil
 			end
 		end
@@ -1042,19 +1042,19 @@
 	function usage(name)
 		if (not name) then
 			--Only return usage projects.
-			if(type(premake.CurrentContainer) ~= "project") then return nil end
+			if(typex(premake.CurrentContainer) ~= "project") then return nil end
 			if(not premake.CurrentContainer.usage) then return nil end
 			return premake.CurrentContainer
 		end
 
 		-- identify the parent solution
 		local sln
-		if (type(premake.CurrentContainer) == "project") then
+		if (typex(premake.CurrentContainer) == "project") then
 			sln = premake.CurrentContainer.solution
 		else
 			sln = premake.CurrentContainer
 		end
-		if (type(sln) ~= "solution") then
+		if (typex(sln) ~= "solution") then
 			error("no active solution", 2)
 		end
 
@@ -1076,19 +1076,19 @@
 	function project(name)
 		if (not name) then
 			--Only return non-usage projects
-			if(type(premake.CurrentContainer) ~= "project") then return nil end
+			if(typex(premake.CurrentContainer) ~= "project") then return nil end
 			if(premake.CurrentContainer.usage) then return nil end
 			return premake.CurrentContainer
 		end
 
 		-- identify the parent solution
 		local sln
-		if (type(premake.CurrentContainer) == "project") then
+		if (typex(premake.CurrentContainer) == "project") then
 			sln = premake.CurrentContainer.solution
 		else
 			sln = premake.CurrentContainer
 		end
-		if (type(sln) ~= "solution") then
+		if (typex(sln) ~= "solution") then
 			error("no active solution", 2)
 		end
 
@@ -1108,7 +1108,7 @@
 
 	function solution(name)
 		if not name then
-			if type(premake.CurrentContainer) == "project" then
+			if typex(premake.CurrentContainer) == "project" then
 				return premake.CurrentContainer.solution
 			else
 				return premake.CurrentContainer
