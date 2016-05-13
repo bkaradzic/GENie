@@ -106,7 +106,7 @@ It is possible to debug build scripts using [ZeroBrane Studio][zbs]. You must co
   
 This ensures the core lua scripts are loaded from disk rather than compiled into the GENie binary. Create a file named `debug.lua` as a sibling to your main `genie.lua` script with the following content:
 
-    local zb_path = '/Users/stuartcarnie/projects/lua/ZeroBraneStudio'
+    local zb_path = <path to ZeroBraneStudio>
     local cpaths = {
         string.format("%s/bin/lib?.dylib;%s/bin/clibs53/?.dylib;", zb_path, zb_path),
         package.cpath,
