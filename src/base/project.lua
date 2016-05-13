@@ -716,3 +716,11 @@
 	function premake.isvalaproject(prj)
 		return (prj.language == "Vala")
 	end
+
+--
+-- Returns true if the project uses the Swift language.
+--
+
+	function premake.isswiftproject(prj)
+		return (prj.language == "Swift")
+	end

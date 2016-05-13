@@ -21,10 +21,11 @@
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "SharedLib", "StaticLib" },
 		
-		valid_languages = { "C", "C++" },
+		valid_languages = { "C", "C++", "Swift" },
 		
 		valid_tools     = {
 			cc     = { "gcc" },
+			swift  = { "swift" },
 		},
 
 		valid_platforms = { 
@@ -72,10 +73,11 @@
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "SharedLib", "StaticLib" },
 		
-		valid_languages = { "C", "C++" },
+		valid_languages = { "C", "C++", "Swift" },
 		
 		valid_tools     = {
 			cc     = { "gcc" },
+			swift  = { "swift" },
 		},
 
 		valid_platforms = { 
