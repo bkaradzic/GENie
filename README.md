@@ -97,6 +97,36 @@ intention to keep it compatible with it.
  - Added Vala language support.
  - Added MASM support for Visual Studio projects.
 
+Debugging
+---------
+
+It is possible to debug build scripts using [ZeroBrane Studio][zbs]. You must compile GENie in debug mode
+
+    $ make config=debug
+  
+This ensures the core lua scripts are loaded from disk rather than compiled into the GENie binary. Create a file named `debug.lua` as a sibling to your main `genie.lua` script with the following content:
+
+    local zb_path = '/Users/stuartcarnie/projects/lua/ZeroBraneStudio'
+    local cpaths = {
+        string.format("%s/bin/lib?.dylib;%s/bin/clibs53/?.dylib;", zb_path, zb_path),
+        package.cpath,
+    }
+    package.cpath = table.concat(cpaths, ';')
+
+    local paths = {
+        string.format('%s/lualibs/?.lua;%s/lualibs/?/?.lua', zb_path, zb_path),
+        string.format('%s/lualibs/?/init.lua;%s/lualibs/?/?/?.lua', zb_path, zb_path),
+        string.format('%s/lualibs/?/?/init.lua', zb),
+        package.path,
+    }
+    package.path = table.concat(paths, ';')
+
+    require('mobdebug').start()
+
+**NOTE:** update `zb_path` to refer to the root of your ZeroBrane Studio install. For reference, you should find `lualibs` in you `zb_path` folder
+
+To debug, make sure ZBS is listening for debug connections and add `dofile("debug.lua")` to `genie.lua`
+
 Who is using it?
 ----------------
 
@@ -152,3 +182,5 @@ derivative of the original Torque Engine.
 	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 	OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  [zbs]: https://studio.zerobrane.com
