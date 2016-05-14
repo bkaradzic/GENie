@@ -21,11 +21,10 @@
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "SharedLib", "StaticLib" },
 		
-		valid_languages = { "C", "C++", "Swift" },
+		valid_languages = { "C", "C++" },
 		
 		valid_tools     = {
 			cc     = { "gcc" },
-			swift  = { "swift" },
 		},
 
 		valid_platforms = { 
@@ -52,16 +51,7 @@
 			premake.clean.directory(prj, "%%.xcodeproj")
 		end,
 		
-		oncheckproject = function(prj)
-			-- Xcode can't mix target kinds within a project
-			local last
-			for cfg in premake.eachconfig(prj) do
-				if last and last ~= cfg.kind then
-					error("Project '" .. prj.name .. "' uses more than one target kind; not supported by Xcode", 0)
-				end
-				last = cfg.kind
-			end
-		end,
+		oncheckproject = xcode.checkproject,
 	}
 
 	newaction 
@@ -104,9 +94,7 @@
 			premake.clean.directory(prj, "%%.xcworkspace")
 		end,
 		
-		oncheckproject = function(prj)
-			-- Xcode can't mix target kinds within a project
-			local last
+		oncheckproject = xcode.checkproject,
 			for cfg in premake.eachconfig(prj) do
 				if last and last ~= cfg.kind then
 					error("Project '" .. prj.name .. "' uses more than one target kind; not supported by Xcode", 0)

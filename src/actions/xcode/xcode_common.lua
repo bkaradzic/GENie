@@ -281,6 +281,26 @@
 	end
 
 
+--
+-- Verify only single target kind for Xcode project
+--
+-- @param prj
+--    Project to be analyzed
+--
+
+	function xcode.checkproject(prj)
+		-- Xcode can't mix target kinds within a project
+		local last
+		for cfg in premake.eachconfig(prj) do
+			if last and last ~= cfg.kind then
+				error("Project '" .. prj.name .. "' uses more than one target kind; not supported by Xcode", 0)
+			end
+			last = cfg.kind
+		end
+	end
+
+
+
 ---------------------------------------------------------------------------
 -- Section generator functions, in the same order in which they appear
 -- in the .pbxproj file
