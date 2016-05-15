@@ -101,6 +101,7 @@
     * [targetname](#targetnamename)
     * [targetprefix](#targetprefixprefix)
     * [targetsuffix](#targetsuffixsuffix)
+    * [userincludedirs](#userincludedirspaths)
     * [uuid](#uuidprojectuuid)
     * [vpaths](#vpathsgroup--pattern)
 * Additional Information
@@ -1274,6 +1275,32 @@ Table of values:
 | mtime | Last modified timestamp |
 | size  | File size in bytes      |
 
+[Back to top](#table-of-contents)
+
+---
+### userincludedirs({_paths_...})
+Specifies the user include file search paths. Multiple calls are concatenated.
+
+For XCode, it maps to setting the USER INCLUDE SEARCH PATH. 
+
+For clang/gcc, it maps to setting the include directory using the iquote option.
+
+On the other build systems, it behaves like [includedirs](#includedirspaths).
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_paths_ - list of user include file search directories, relative to the currently-executing script file.
+
+#### Examples
+Define two include file search paths
+```lua
+userincludedirs { "../lua/include", "../zlib" }
+```
+You can also use [wildcards](#wildcards) to match multiple directories.
+```lua
+userincludedirs { "../includes/**" }
+```
 [Back to top](#table-of-contents)
 
 ---

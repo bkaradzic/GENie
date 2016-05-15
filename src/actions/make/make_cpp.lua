@@ -275,6 +275,8 @@
 		_p('  ' .. (table.contains(premake.make.override,"TARGET") and "override " or "") ..    'TARGET         = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
 		_p('  DEFINES       +=%s', make.list(cc.getdefines(cfg.defines)))
 		_p('  INCLUDES      +=%s', make.list(cc.getincludedirs(cfg.includedirs)))
+		_p('  INCLUDES      +=%s', make.list(cc.getquoteincludedirs(cfg.userincludedirs)))
+
 
 		-- set up precompiled headers
 		cpp.pchconfig(cfg)
