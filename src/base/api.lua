@@ -291,6 +291,13 @@
 			usagecopy = true,
 		},
 
+		userincludedirs =
+		{
+			kind  = "dirlist",
+			scope = "config",
+			usagecopy = true,
+		},
+
 		kind =
 		{
 			kind  = "string",
