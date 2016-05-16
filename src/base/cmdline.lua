@@ -98,3 +98,9 @@
 		trigger     = "version",
 		description = "Display version information"
 	}
+
+	newoption
+	{
+		trigger     = "delta-only",
+		description = "Only touch project and solution files that would have new contents."
+	}
