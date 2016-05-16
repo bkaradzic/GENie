@@ -47,9 +47,6 @@ local function compile(indentlevel, prj, cfg)
 	end
 
 	_p(indentlevel, ".IncludeDirs = ''")
-	for _, includedir in ipairs(cfg.userincludedirs) do
-		_p(indentlevel+1, "+ ' /I\"%s\"'", includedir)
-	end
 	for _, includedir in ipairs(cfg.includedirs) do
 		_p(indentlevel+1, "+ ' /I\"%s\"'", includedir)
 	end

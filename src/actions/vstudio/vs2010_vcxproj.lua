@@ -222,11 +222,9 @@
 	end
 
 	local function include_dirs(indent,cfg)
-		local includedirs = table.concat(cfg.userincludedirs, cfg.includedirs)
-
-		if #includedirs> 0 then
+		if #cfg.includedirs > 0 then
 			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
-					,premake.esc(path.translate(table.concat(includedirs, ";"), '\\')))
+					,premake.esc(path.translate(table.concat(cfg.includedirs, ";"), '\\')))
 		end
 	end
 
@@ -485,11 +483,9 @@
 		if hasmasmfiles(prj) then
 			_p(2, '<MASM>')
 
-			local includedir = table.concat(cfg.userincludedirs, cfg.includedirs)
-
-			if includedirs > 0 then
+			if #cfg.includedirs > 0 then
 				_p(3, '<IncludePaths>%s;%%(IncludePaths)</IncludePaths>'
-					, premake.esc(path.translate(table.concat(includedirs, ";"), '\\'))
+					, premake.esc(path.translate(table.concat(cfg.includedirs, ";"), '\\'))
 					)
 			end
 

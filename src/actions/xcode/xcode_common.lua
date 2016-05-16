@@ -897,7 +897,6 @@
 		_p(4,'GCC_WARN_UNUSED_VARIABLE = YES;')
 
 		xcode.printlist(cfg.includedirs, 'HEADER_SEARCH_PATHS')
-		xcode.printlist(cfg.userincludedirs, 'USER_HEADER_SEARCH_PATHS')
 		xcode.printlist(cfg.libdirs, 'LIBRARY_SEARCH_PATHS')
 		
 		_p(4,'OBJROOT = "%s";', cfg.objectsdir)
