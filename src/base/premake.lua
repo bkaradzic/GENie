@@ -23,16 +23,52 @@
 	function premake.generate(obj, filename, callback)
 		filename = premake.project.getfilename(obj, filename)
 		printf("Generating %s...", filename)
+		
+		if _OPTIONS["delta-only"] then
+			io.capture()
+			callback(obj)
+			local new = io.endcapture()
+			
+			local delta = false
+			
+			local f, err = io.open(filename, "rb")
+			if (not f) then
+				if string.find(err, "No such file or directory") then
+					delta = true
+				else
+					error(err, 0)
+				end
+			else
+				local existing = f:read("*all")
+				if existing ~= new then
+					delta = true
+				end
+				f:close()
+			end
+			
+			if delta then
+				local f, err = io.open(filename, "wb")
+				if (not f) then
+					error(err, 0)
+				end
+				
+				f:write(new)
+				f:close()
+			else
+				printf("Skipping %s as its contents would not change.", filename)
+			end
+			
+	    else
+			local f, err = io.open(filename, "wb")
+			if (not f) then
+				error(err, 0)
+			end
 
-		local f, err = io.open(filename, "wb")
-		if (not f) then
-			error(err, 0)
+			io.output(f)
+			callback(obj)
+			f:close()
+			end
 		end
-
-		io.output(f)
-		callback(obj)
-		f:close()
-	end
 
 
 -- 

@@ -7,7 +7,7 @@
 
 --
 -- Prepare to capture the output from all subsequent calls to io.printf(), 
--- used for automated testing of the generators.
+-- used for automated testing of the generators and also delta-only generation.
 --
 
 	function io.capture()
