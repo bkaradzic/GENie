@@ -26,6 +26,8 @@
 			end
 		end
 
+		table.sort(prj.files)
+
 		-- list object directories
 		local objdirs = {}
 		local additionalobjdirs = {}
@@ -40,6 +42,9 @@
 				additionalobjdirs[_MAKE.esc(path.getdirectory(path.getrelative(prj.location,buildtask[2])))] = 1
 			end
 		end
+
+		table.sort(objdirs)
+		table.sort(additionalobjdirs)
 
 		_p('OBJDIRS := \\')
 		_p('\t$(OBJDIR) \\')
@@ -474,6 +479,7 @@
 --
 
 	function cpp.fileRules(prj)
+		table.sort(prj.files)
 		for _, file in ipairs(prj.files or {}) do
 			if path.isSourceFile(file) then
 				_p('$(OBJDIR)/%s.o: %s $(GCH)'
