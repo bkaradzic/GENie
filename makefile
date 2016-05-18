@@ -37,6 +37,12 @@ clean:
 	$(SILENT) $(MAKE) -C build/gmake.$(OS) clean
 	$(SILENT) -rm -rf bin
 
+projgen:
+	$(GENIE) --to=../build/gmake.windows --os=windows gmake
+	$(GENIE) --to=../build/gmake.linux --os=linux gmake
+	$(GENIE) --to=../build/gmake.darwin --os=macosx --platform=universal32 gmake
+
+
 rebuild:
 	$(SILENT) $(MAKE) -C build/gmake.$(OS) clean all
 
