@@ -19,7 +19,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 503 (commit 992b8f77c80b6eacaa05d41a8e13fcccd78df0ff)
+	version 505 (commit 05b2cb82e8303256c1ff6322d6f17f76c183d6dd)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -96,6 +96,8 @@ intention to keep it compatible with it.
  - Added FASTBuild (.bff) project generator.
  - Added Vala language support.
  - Added MASM support for Visual Studio projects.
+ - Added `userincludedirs` for include header with angle brackets and quotes
+   search path control.
 
 Debugging GENie scripts
 -----------------------
