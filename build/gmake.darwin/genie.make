@@ -360,8 +360,8 @@ endif
 
 OBJDIRS := \
 	$(OBJDIR) \
-	$(OBJDIR)/src/host \
 	$(OBJDIR)/src/host/lua-5.3.0/src \
+	$(OBJDIR)/src/host \
 
 RESOURCES := \
 

@@ -22,14 +22,13 @@
 
 	function premake.generate(obj, filename, callback)
 		filename = premake.project.getfilename(obj, filename)
-		printf("Generating %s...", filename)
 
 		io.capture()
 		callback(obj)
 		local new = io.endcapture()
-		
+
 		local delta = false
-		
+
 		local f, err = io.open(filename, "rb")
 		if (not f) then
 			if string.find(err, "No such file or directory") then
@@ -44,22 +43,23 @@
 			end
 			f:close()
 		end
-		
+
 		if delta then
+			printf("Generating %s...", filename)
 			local f, err = io.open(filename, "wb")
 			if (not f) then
 				error(err, 0)
 			end
-			
+
 			f:write(new)
 			f:close()
 		else
 			printf("Skipping %s as its contents would not change.", filename)
 		end
-		end
+	end
 
 
--- 
+--
 -- Finds a valid premake build file in the specified directory
 -- Used by both the main genie process, and include commands
 --
