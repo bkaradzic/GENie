@@ -19,7 +19,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 510 (commit 4ea0cb3872e758e93c43926e16c961b9656f0b1f)
+	version 517 (commit 5c97b942fc0304db91f024984a2221af44b7d928)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -98,6 +98,8 @@ intention to keep it compatible with it.
  - Added MASM support for Visual Studio projects.
  - Added `userincludedirs` for include header with angle brackets and quotes
    search path control.
+ - Detect when generated project files are not changing, and skip writing over
+   existing project files.
 
 Debugging GENie scripts
 -----------------------
