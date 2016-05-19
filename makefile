@@ -42,7 +42,6 @@ projgen:
 	$(GENIE) --to=../build/gmake.linux --os=linux gmake
 	$(GENIE) --to=../build/gmake.darwin --os=macosx --platform=universal32 gmake
 
-
 rebuild:
 	$(SILENT) $(MAKE) -C build/gmake.$(OS) clean all
 
