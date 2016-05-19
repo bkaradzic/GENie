@@ -677,7 +677,7 @@
 				_p(3,');');
 				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
 				_p(3,'shellPath = /bin/sh;');
-				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub("\\","\\\\"):gsub('"', '\\"'))
 				_p(2,'};')
 			end
 		end
