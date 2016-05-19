@@ -654,7 +654,9 @@
 				if #cfgcmds > #prjcmds then
 					table.insert(commands, 'if [ "${CONFIGURATION}" = "' .. xcode.getconfigname(cfg) .. '" ]; then')
 					for i = #prjcmds + 1, #cfgcmds do
-						table.insert(commands, cfgcmds[i])
+						local cmd = cfgcmds[i]
+						cmd = cmd:gsub('\\','\\\\')
+						table.insert(commands, cmd)
 					end
 					table.insert(commands, 'fi')
 				end
