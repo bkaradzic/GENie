@@ -58,25 +58,6 @@ ifeq ($(config),release)
   EXTERNAL_LIBS +=
   LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
-	$(OBJDIR)/src/host/os_chdir.o \
-	$(OBJDIR)/src/host/os_copyfile.o \
-	$(OBJDIR)/src/host/os_getcwd.o \
-	$(OBJDIR)/src/host/os_is64bit.o \
-	$(OBJDIR)/src/host/os_isdir.o \
-	$(OBJDIR)/src/host/os_isfile.o \
-	$(OBJDIR)/src/host/os_match.o \
-	$(OBJDIR)/src/host/os_mkdir.o \
-	$(OBJDIR)/src/host/os_pathsearch.o \
-	$(OBJDIR)/src/host/os_rmdir.o \
-	$(OBJDIR)/src/host/os_stat.o \
-	$(OBJDIR)/src/host/os_ticks.o \
-	$(OBJDIR)/src/host/os_uuid.o \
-	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/premake.o \
-	$(OBJDIR)/src/host/premake_main.o \
-	$(OBJDIR)/src/host/scripts.o \
-	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
@@ -110,6 +91,25 @@ ifeq ($(config),release)
 	$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o \
+	$(OBJDIR)/src/host/os_chdir.o \
+	$(OBJDIR)/src/host/os_copyfile.o \
+	$(OBJDIR)/src/host/os_getcwd.o \
+	$(OBJDIR)/src/host/os_is64bit.o \
+	$(OBJDIR)/src/host/os_isdir.o \
+	$(OBJDIR)/src/host/os_isfile.o \
+	$(OBJDIR)/src/host/os_match.o \
+	$(OBJDIR)/src/host/os_mkdir.o \
+	$(OBJDIR)/src/host/os_pathsearch.o \
+	$(OBJDIR)/src/host/os_rmdir.o \
+	$(OBJDIR)/src/host/os_stat.o \
+	$(OBJDIR)/src/host/os_ticks.o \
+	$(OBJDIR)/src/host/os_uuid.o \
+	$(OBJDIR)/src/host/path_isabsolute.o \
+	$(OBJDIR)/src/host/premake.o \
+	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/scripts.o \
+	$(OBJDIR)/src/host/string_endswith.o \
+	$(OBJDIR)/src/host/string_hash.o \
 
   define PREBUILDCMDS
   endef
@@ -137,25 +137,6 @@ ifeq ($(config),debug)
   EXTERNAL_LIBS +=
   LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
-	$(OBJDIR)/src/host/os_chdir.o \
-	$(OBJDIR)/src/host/os_copyfile.o \
-	$(OBJDIR)/src/host/os_getcwd.o \
-	$(OBJDIR)/src/host/os_is64bit.o \
-	$(OBJDIR)/src/host/os_isdir.o \
-	$(OBJDIR)/src/host/os_isfile.o \
-	$(OBJDIR)/src/host/os_match.o \
-	$(OBJDIR)/src/host/os_mkdir.o \
-	$(OBJDIR)/src/host/os_pathsearch.o \
-	$(OBJDIR)/src/host/os_rmdir.o \
-	$(OBJDIR)/src/host/os_stat.o \
-	$(OBJDIR)/src/host/os_ticks.o \
-	$(OBJDIR)/src/host/os_uuid.o \
-	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/premake.o \
-	$(OBJDIR)/src/host/premake_main.o \
-	$(OBJDIR)/src/host/scripts.o \
-	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/string_hash.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
@@ -189,6 +170,25 @@ ifeq ($(config),debug)
 	$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o \
+	$(OBJDIR)/src/host/os_chdir.o \
+	$(OBJDIR)/src/host/os_copyfile.o \
+	$(OBJDIR)/src/host/os_getcwd.o \
+	$(OBJDIR)/src/host/os_is64bit.o \
+	$(OBJDIR)/src/host/os_isdir.o \
+	$(OBJDIR)/src/host/os_isfile.o \
+	$(OBJDIR)/src/host/os_match.o \
+	$(OBJDIR)/src/host/os_mkdir.o \
+	$(OBJDIR)/src/host/os_pathsearch.o \
+	$(OBJDIR)/src/host/os_rmdir.o \
+	$(OBJDIR)/src/host/os_stat.o \
+	$(OBJDIR)/src/host/os_ticks.o \
+	$(OBJDIR)/src/host/os_uuid.o \
+	$(OBJDIR)/src/host/path_isabsolute.o \
+	$(OBJDIR)/src/host/premake.o \
+	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/scripts.o \
+	$(OBJDIR)/src/host/string_endswith.o \
+	$(OBJDIR)/src/host/string_hash.o \
 
   define PREBUILDCMDS
   endef

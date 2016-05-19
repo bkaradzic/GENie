@@ -302,6 +302,8 @@
 		-- write out libraries, linker flags, and the link command
 		cpp.linker(prj, cfg, cc)
 
+		table.sort(prj.files)
+
 		-- add objects for compilation, and remove any that are excluded per config.
 		_p('  OBJECTS := \\')
 		for _, file in ipairs(prj.files) do
