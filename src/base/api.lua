@@ -188,6 +188,7 @@
 					Unicode = 1,
 					Unsafe = 1,
 					UnsignedChar = 1,
+					UseFullPaths = 1,
 					WinMain = 1,
 				}
 

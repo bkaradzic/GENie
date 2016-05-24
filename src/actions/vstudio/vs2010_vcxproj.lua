@@ -415,6 +415,10 @@
 		if cfg.flags.NoFramePointer then
 			_p(3,'<OmitFramePointers>true</OmitFramePointers>')
 		end
+		
+		if cfg.flags.UseFullPaths then
+			_p(3, '<UseFullPaths>true</UseFullPaths>')
+		end
 
 		compile_language(cfg)
 
