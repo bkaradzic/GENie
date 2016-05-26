@@ -16,13 +16,13 @@
 
 
 --
--- Translation of Premake flags into GCC flags
+-- Translation of Premake flags into Swift flags
 --
 
 local swiftflags =
 {
 	Symbols                   = "-g",                             -- Produce debug information
-	DisableWarnings           = "--suppress-warnings",             -- Disable warnings
+	DisableWarnings           = "--suppress-warnings",            -- Disable warnings
 	FatalWarnings             = "--warnings-as-errors",           -- Treat warnings as fatal
 	Optimize                  = "-O",
 	OptimizeSize              = "-O",
