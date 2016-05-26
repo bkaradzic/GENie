@@ -5,6 +5,7 @@
 --
 
 	premake.xcode = { }
+	premake.xcode.xcode6 = { }
 	
 
 --
@@ -113,13 +114,54 @@
 		end,
 		
 		oncheckproject = checkproject,
+	}
+
+	newaction 
+	{
+		trigger         = "xcode6",
+		shortname       = "Xcode 6",
+		description     = "Generate Apple Xcode 6 project files (experimental)",
+		os              = "macosx",
+
+		valid_kinds     = { "ConsoleApp", "WindowedApp", "SharedLib", "StaticLib" },
+		
+		valid_languages = { "C", "C++", "Swift" },
+		
+		valid_tools     = {
+			cc     = { "gcc" },
+			swift  = { "swift" },
+		},
+
+		valid_platforms = { 
+			Native = "Native", 
+			x32 = "Native 32-bit", 
+			x64 = "Native 64-bit", 
+			Universal32 = "32-bit Universal", 
+			Universal64 = "64-bit Universal", 
+			Universal = "Universal",
+		},
+		
+		default_platform = "Universal",
+		
+		onsolution = function(sln)
+			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", premake.xcode4.workspace_generate)
+		end,
+		
+		onproject = function(prj)
+			local xcode6 = premake.xcode.xcode6
+			premake.generate(prj, "%%.xcodeproj/project.pbxproj", xcode6.project)
+			premake.generate(prj, "%%.xcodeproj/Configs/Project.xcconfig", xcode6.generate_project_config)
 			for cfg in premake.eachconfig(prj) do
-				if last and last ~= cfg.kind then
-					error("Project '" .. prj.name .. "' uses more than one target kind; not supported by Xcode", 0)
-				end
-				last = cfg.kind
+				
 			end
 		end,
+		
+		oncleanproject = function(prj)
+			premake.clean.directory(prj, "%%.xcodeproj")
+			premake.clean.directory(prj, "%%.xcworkspace")
+		end,
+		
+		oncheckproject = checkproject,
 	}
 
 

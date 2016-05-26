@@ -77,6 +77,10 @@
 		-- Xcode4 action
 		"actions/xcode/xcode4_workspace.lua",
 
+		-- Xcode6 action
+		"actions/xcode/xcode6_project.lua",
+		"actions/xcode/xcode6_config.lua",
+
 		-- Clean action
 		"actions/clean/_clean.lua",
 
