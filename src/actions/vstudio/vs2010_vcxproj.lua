@@ -415,7 +415,7 @@
 		if cfg.flags.NoFramePointer then
 			_p(3,'<OmitFramePointers>true</OmitFramePointers>')
 		end
-		
+
 		if cfg.flags.UseFullPaths then
 			_p(3, '<UseFullPaths>true</UseFullPaths>')
 		end
@@ -489,9 +489,9 @@
 		if hasmasmfiles(prj) then
 			_p(2, '<MASM>')
 
-			local includedir = table.join(cfg.userincludedirs, cfg.includedirs)
+			local includedirs = table.join(cfg.userincludedirs, cfg.includedirs)
 
-			if includedirs > 0 then
+			if #includedirs > 0 then
 				_p(3, '<IncludePaths>%s;%%(IncludePaths)</IncludePaths>'
 					, premake.esc(path.translate(table.concat(includedirs, ";"), '\\'))
 					)
