@@ -41,6 +41,7 @@ projgen:
 	$(SILENT) $(GENIE) --to=../build/gmake.windows --os=windows gmake
 	$(SILENT) $(GENIE) --to=../build/gmake.linux --os=linux gmake
 	$(SILENT) $(GENIE) --to=../build/gmake.darwin --os=macosx --platform=universal32 gmake
+	$(SILENT) $(GENIE) --to=../build/gmake.freebsd --os=bsd gmake
 
 rebuild:
 	$(SILENT) $(MAKE) -C build/gmake.$(OS) clean all
