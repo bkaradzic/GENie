@@ -347,6 +347,10 @@ local function binary(prj, cfg, useconfig, bintype, commonbasepath)
 		table.insert(linkeroptions, '/DEF:%s', deffile)
 	end
 
+	if (cfg.flags.Symbols ~= nil) then
+		table.insert(linkeroptions, '/DEBUG')
+	end
+
 	if premake.config.isoptimizedbuild(cfg.flags) then
 		table.insert(linkeroptions, '/OPT:REF')
 		table.insert(linkeroptions, '/OPT:ICF')
