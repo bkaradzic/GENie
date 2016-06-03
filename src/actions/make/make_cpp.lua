@@ -9,20 +9,6 @@
 	local cpp = premake.make.cpp
 	local make = premake.make
 
-	local function pairsByKeys(t, f)
-		local a = {}
-		for n in pairs(t) do table.insert(a, n) end
-		table.sort(a, f)
-		local i = 0      -- iterator variable
-		local iter = function ()   -- iterator function
-			i = i + 1
-			if a[i] == nil then return nil
-			else return a[i], t[a[i]]
-			end
-		end
-		return iter
-	end
-
 	function premake.make_cpp(prj)
 
 		-- create a shortcut to the compiler interface
@@ -58,10 +44,10 @@
 
 		_p('OBJDIRS := \\')
 		_p('\t$(OBJDIR) \\')
-		for dir, _ in pairsByKeys(objdirs) do
+		for dir, _ in iter.sortByKeys(objdirs) do
 			_p('\t$(OBJDIR)/%s \\', dir)
 		end
-		for dir, _ in pairsByKeys(additionalobjdirs) do
+		for dir, _ in iter.sortByKeys(additionalobjdirs) do
 			_p('\t%s \\', dir)
 		end
 		_p('')
