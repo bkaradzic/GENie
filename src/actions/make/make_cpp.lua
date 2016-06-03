@@ -497,7 +497,7 @@
 				_p('$(OBJDIR)/%s.o: %s $(GCH) %s'
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
-                    , _MAKE.getmakefilename(prj, true)
+					, _MAKE.getmakefilename(prj, true)
 					)
 				if (path.isobjcfile(file) and prj.msgcompile_objc) then
 					_p('\t@echo ' .. prj.msgcompile_objc)
