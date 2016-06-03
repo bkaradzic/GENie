@@ -37,6 +37,7 @@
 		"base/validate.lua",
 		"base/help.lua",
 		"base/premake.lua",
+		"base/iter.lua",
 
 		-- CodeBlocks action
 		"actions/codeblocks/_codeblocks.lua",
@@ -84,4 +85,10 @@
 		"actions/fastbuild/_fastbuild.lua",
 		"actions/fastbuild/fastbuild_project.lua",
 		"actions/fastbuild/fastbuild_solution.lua",
+		
+		-- ninja action
+		"actions/ninja/_ninja.lua",
+		"actions/ninja/ninja_base.lua",
+		"actions/ninja/ninja_solution.lua",
+		"actions/ninja/ninja_cpp.lua",
 	}
