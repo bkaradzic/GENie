@@ -53,18 +53,14 @@ function ninja.cfg_location(cfg, relative)
 end
 
 -- return name of build file for configuration
-function ninja.projectCfgFilename(cfg, relative)
+function ninja.projectCfgFilename(cfg, plat, relative)
 	if relative ~= nil then
 		relative = path.getrelative(cfg.solution.location, cfg.location) .. "/"
 	else
 		relative = ""
 	end
 	
-	local ninjapath = relative .. "build_" .. cfg.project.name  .. "_" .. cfg.name
-	
-	if cfg.platform ~= nil then ninjapath = ninjapath .. "_" .. cfg.platform end
-	
-	return ninjapath .. ".ninja"
+	return relative .. cfg.project.name .. "_" .. premake.getconfigname(cfg.name, plat, true) .. ".ninja"
 end
 
 -- check if string starts with string

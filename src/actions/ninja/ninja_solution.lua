@@ -6,10 +6,10 @@ local solution = p.solution
 
 	local generate
 	
-	local function getconfigs(sln, name)
+	local function getconfigs(sln, name, plat)
 		local cfgs = {}
 		for prj in solution.eachproject(sln) do
-			for cfg in p.eachconfig(prj) do
+			for cfg in p.eachconfig(prj, plat) do
 				if cfg.name == name then
 					table.insert(cfgs, cfg)
 				end
@@ -19,18 +19,26 @@ local solution = p.solution
 	end
 
 	function ninja.generate_solution(sln)
-		for _,name in ipairs(sln.configurations) do
-			p.generate(sln, ninja.get_solution_name(sln, name), function(sln)
-				generate(sln, getconfigs(sln, name))
-			end)
+		-- create a shortcut to the compiler interface
+		local cc = premake[_OPTIONS.cc]
+		
+		-- build a list of supported target platforms that also includes a generic build
+		local platforms = premake.filterplatforms(sln, cc.platforms, "Native")
+		
+		for _,plat in ipairs(platforms) do
+			for _,name in ipairs(sln.configurations) do
+				p.generate(sln, ninja.get_solution_name(name, plat), function(sln)
+					generate(sln, plat, getconfigs(sln, name, plat))
+				end)
+			end
 		end
 	end
 	
-	function ninja.get_solution_name(sln, name)
-		return "build_" .. name .. ".ninja"
+	function ninja.get_solution_name(cfg, plat)
+		return premake.getconfigname(cfg, plat, true) .. ".ninja"
 	end
 	
-	function generate(sln, prjs)
+	function generate(sln, plat, prjs)
 		local cfgs          = {}
 		local cfg_first     = nil
 		local cfg_first_lib = nil
@@ -42,9 +50,7 @@ local solution = p.solution
 		_p("# build projects")
 		for _,cfg in ipairs(prjs) do
 			local name = cfg.name
-			local key = cfg.project.name .. "_" .. name
-
-			if cfg.platform ~= nil then key = key .. "_" .. cfg.platform end
+			local key  = cfg.project.name .. "-" .. premake.getconfigname(name, plat, true)
 
 			-- fill list of output files
 			if not cfgs[key] then cfgs[key] = "" end
@@ -62,7 +68,7 @@ local solution = p.solution
 			end
 
 			-- include other ninja file
-			_p("subninja " .. p.esc(ninja.projectCfgFilename(cfg, true)))
+			_p("subninja " .. p.esc(ninja.projectCfgFilename(cfg, plat, true)))
 		end
 		
 		_p("")

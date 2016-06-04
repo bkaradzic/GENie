@@ -6,14 +6,21 @@ local tree  = p.tree
 
 -- generate project + config build file
 	function ninja.generate_cpp(prj)
-		for cfg in p.eachconfig(prj) do
-			p.generate(cfg, ninja.projectCfgFilename(cfg), function(cfg) cpp.generate_config(prj, cfg) end)
+		local tool = premake.gettool(prj)
+		
+		-- build a list of supported target platforms that also includes a generic build
+		local platforms = premake.filterplatforms(prj.solution, tool.platforms, "Native")
+
+		for _, platform in ipairs(platforms) do
+			for cfg in p.eachconfig(prj, platform) do
+				p.generate(cfg, ninja.projectCfgFilename(cfg, platform), function(cfg) cpp.generate_config(prj, cfg) end)
+			end
 		end
 	end
 	
 	function cpp.generate_config(prj, cfg)
 		local tool = premake.gettool(prj)
-
+		
 		_p("# project build file")
 		_p("# generated with GENie ninja")
 		_p("")
@@ -52,7 +59,7 @@ local tree  = p.tree
 		_p("")
 		
 		
-		local link = iif(cfg.language == "C", "cc", "cxx")
+		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
 		_p("  command = " .. link .. " -o $out $in $all_ldflags $libs")
 		_p("  description = link $out")
@@ -125,7 +132,7 @@ local tree  = p.tree
 		if cfg.kind == "StaticLib" then
 			local ar_flags = ninja.list(tool.getarchiveflags(prj, cfg, false))
 			_p("# link static lib")
-			_p("build " .. p.esc(ninja.outputFilename(cfg)) .. ": ar " .. table.concat(p.esc(objfiles), " ") .. " | " .. libs)
+			_p("build " .. p.esc(ninja.outputFilename(cfg)) .. ": ar " .. table.concat(p.esc(objfiles), " ") .. " | " .. lddeps)
 			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(prj, cfg, false)))
 		elseif cfg.kind == "SharedLib" then
 			local output = ninja.outputFilename(cfg)
@@ -134,7 +141,7 @@ local tree  = p.tree
 			writevars()
 		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
 			_p("# link executable")
-			_p("build " .. p.esc(ninja.outputFilename(cfg)) .. ": link " .. table.concat(p.esc(objfiles), " ") .. " | " .. libs)
+			_p("build " .. p.esc(ninja.outputFilename(cfg)) .. ": link " .. table.concat(p.esc(objfiles), " ") .. " | " .. lddeps)
 			writevars()
 		else
 			p.error("ninja action doesn't support this kind of target " .. cfg.kind)
