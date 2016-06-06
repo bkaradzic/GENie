@@ -416,3 +416,34 @@
 
 		return p
 	end
+
+--
+-- Takes a path which is relative to one location and makes it relative
+-- to another location instead.
+--
+
+	function path.rebase(p, oldbase, newbase)
+		p = path.getabsolute(path.join(oldbase, p))
+		p = path.getrelative(newbase, p)
+		return p
+	end
+
+
+
+--
+-- Replace the file extension.
+--
+
+	function path.replaceextension(p, newext)
+		local ext = path.getextension(p)
+
+		if not ext then
+			return p
+		end
+
+		if #newext > 0 and not newext:findlast(".", true) then
+			newext = "."..newext
+		end
+
+		return p:match("^(.*)"..ext.."$")..newext
+	end

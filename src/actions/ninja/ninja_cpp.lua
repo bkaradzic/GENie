@@ -6,14 +6,15 @@ local tree  = p.tree
 
 -- generate project + config build file
 	function ninja.generate_cpp(prj)
+		local pxy = ninja.get_proxy("prj", prj)
 		local tool = premake.gettool(prj)
 		
 		-- build a list of supported target platforms that also includes a generic build
 		local platforms = premake.filterplatforms(prj.solution, tool.platforms, "Native")
 
 		for _, platform in ipairs(platforms) do
-			for cfg in p.eachconfig(prj, platform) do
-				p.generate(cfg, ninja.projectCfgFilename(cfg, platform), function(cfg) cpp.generate_config(prj, cfg) end)
+			for cfg in p.eachconfig(pxy, platform) do
+				p.generate(cfg, cfg:getprojectfilename(), function() cpp.generate_config(prj, cfg) end)
 			end
 		end
 	end
@@ -65,16 +66,13 @@ local tree  = p.tree
 		_p("  description = link $out")
 		_p("")
 
-		cpp.file_rules(prj, cfg, flags)
+		cpp.file_rules(cfg, flags)
 		
 		local objfiles = {}
 		
-		for _, file in ipairs(prj.files) do
+		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
-				-- check if file is excluded.
-				if not table.icontains(cfg.excludes, file) then
-					table.insert(objfiles, cpp.objectname(cfg, file))
-				end
+				table.insert(objfiles, cpp.objectname(cfg, file))
 			end
 		end
 		_p('')
@@ -88,23 +86,21 @@ local tree  = p.tree
 		return path.join(cfg.objectsdir, path.trimdots(path.removeext(file)) .. ".o")
 	end
 
-	function cpp.file_rules(prj, cfg, flags)
-		table.sort(prj.files)
-		
+	function cpp.file_rules(cfg, flags)
 		_p("# build files")
 		
-		for _, file in ipairs(prj.files or {}) do
+		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
 				local objfilename = cpp.objectname(cfg, file)
 				
 				local cflags = "cflags"
 				if path.isobjcfile(file) then
-					_p("build " .. p.esc(objfilename) .. ": cxx " .. p.esc(file))
+					_p("build " .. objfilename .. ": cxx " .. file)
 					cflags = "objcflags"
 				elseif path.iscfile(file) then
-					_p("build " .. p.esc(objfilename) .. ": cc " .. p.esc(file))
+					_p("build " .. objfilename .. ": cc " .. file)
 				else
-					_p("build " .. p.esc(objfilename) .. ": cxx " .. p.esc(file))
+					_p("build " .. objfilename .. ": cxx " .. file)
 					cflags = "cxxflags"
 				end
 				
@@ -121,7 +117,7 @@ local tree  = p.tree
 	
 	function cpp.linker(prj, cfg, objfiles, tool)
 		local all_ldflags = ninja.list(table.join(tool.getlibdirflags(cfg), tool.getldflags(cfg), cfg.linkoptions))
-		local lddeps      = ninja.list(p.esc(premake.getlinks(cfg, "siblings", "fullpath"))) 
+		local lddeps      = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
 		local libs        = lddeps .. " " .. ninja.list(tool.getlinkflags(cfg))
 		
 		local function writevars()
@@ -130,18 +126,18 @@ local tree  = p.tree
 		end
 		
 		if cfg.kind == "StaticLib" then
-			local ar_flags = ninja.list(tool.getarchiveflags(prj, cfg, false))
+			local ar_flags = ninja.list(tool.getarchiveflags(cfg, cfg, false))
 			_p("# link static lib")
-			_p("build " .. p.esc(ninja.outputFilename(cfg)) .. ": ar " .. table.concat(p.esc(objfiles), " ") .. " | " .. lddeps)
-			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(prj, cfg, false)))
+			_p("build " .. cfg:getoutputfilename() .. ": ar " .. table.concat(objfiles, " ") .. " | " .. lddeps)
+			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 		elseif cfg.kind == "SharedLib" then
-			local output = ninja.outputFilename(cfg)
+			local output = cfg:getoutputfilename()
 			_p("# link shared lib")
-			_p("build " .. p.esc(output) .. ": link " .. table.concat(p.esc(objfiles), " ") .. " | " .. libs)
+			_p("build " .. output .. ": link " .. table.concat(objfiles, " ") .. " | " .. libs)
 			writevars()
 		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
 			_p("# link executable")
-			_p("build " .. p.esc(ninja.outputFilename(cfg)) .. ": link " .. table.concat(p.esc(objfiles), " ") .. " | " .. lddeps)
+			_p("build " .. cfg:getoutputfilename() .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps)
 			writevars()
 		else
 			p.error("ninja action doesn't support this kind of target " .. cfg.kind)
