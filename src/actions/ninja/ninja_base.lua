@@ -41,37 +41,6 @@ function ninja.list(value)
 	end
 end
 
--- return name of output binary relative to build folder
-function ninja.outputFilename(cfg)
-	return path.join(cfg.buildtarget.directory, cfg.buildtarget.name)
-end
-
--- return name of build file for configuration
-function ninja.projectCfgFilename(cfg, plat, relative)
-	if relative ~= nil then
-		relative = path.getrelative(cfg.solution.location, cfg.location) .. "/"
-	else
-		relative = ""
-	end
-	
-	return relative .. cfg.project.name .. "_" .. premake.getconfigname(cfg.name, plat, true) .. ".ninja"
-end
-
--- check if string starts with string
-function ninja.startsWith(str, starts)
-	return str:sub(0, starts:len()) == starts
-end
-
--- check if string ends with string
-function ninja.endsWith(str, ends)
-	return str:sub(-ends:len()) == ends
-end
-
--- removes extension from string
-function ninja.noext(str, ext)
-	return str:sub(0, str:len() - ext:len())
-end
-
 -- generate all build files for every project configuration
 function ninja.generate_project(prj)
 	ninja.generate_cpp(prj)
