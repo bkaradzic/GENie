@@ -97,7 +97,7 @@ local tree  = p.tree
 				if path.isobjcfile(file) then
 					_p("build " .. objfilename .. ": cxx " .. file)
 					cflags = "objcflags"
-				elseif path.iscfile(file) then
+				elseif path.iscfile(file) and not cfg.options.ForceCPP then
 					_p("build " .. objfilename .. ": cc " .. file)
 				else
 					_p("build " .. objfilename .. ": cxx " .. file)
