@@ -20,9 +20,11 @@ newaction
 	-- Solution and project generation logic
 	onsolution = function(sln)
 		io.eol    = "\r\n"
-		io.indent = "  "
+		io.indent = "\t"
 		io.escaper(p.ninja.esc)
-		p.ninja.generate_solution(sln)
+		p.generate(sln, "Makefile", p.ninja.generate_solution)
+		io.indent = "  "
+		p.ninja.generate_ninja_builds(sln)
 	end,
 	
 	onproject = function(prj)
