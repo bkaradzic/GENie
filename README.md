@@ -11,6 +11,7 @@ multiple projects easy.
 Supported project generators:
  * FASTBuild (experimental)
  * GNU Makefile
+ * Ninja (experimental)
  * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
  * XCode
 
@@ -19,7 +20,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 539 (commit 713b2a3c16ef5bf05ffc1308cdf63d8b2d75ad32)
+	version 542 (commit 58d43e6e28bca397256c442b582c3c04fbf5adb6)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -100,6 +101,7 @@ intention to keep it compatible with it.
    search path control.
  - Detect when generated project files are not changing, and skip writing over
    existing project files.
+ - Added Ninja project generator.
 
 Debugging GENie scripts
 -----------------------
@@ -162,7 +164,7 @@ derivative of the original Torque Engine.
 	Copyright (c) 2014-2016 Branimir Karadžić, Neil Richardson, Mike Popoloski,
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
 	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld, Alastair
-	Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens.
+	Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
