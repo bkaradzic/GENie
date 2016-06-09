@@ -167,7 +167,6 @@
 			for _, item in ipairs(src) do
 				if not tbl[item] then
 					table.insert(tbl, item)
-					tbl[item] = item
 				end
 			end
 		end
