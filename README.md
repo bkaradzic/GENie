@@ -20,7 +20,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 552 (commit cd0ccd6eff7f54b14d0b9d88d375fd9f76a1bc92)
+	version 554 (commit 842b6b079a5f10c5fe37f5c0e98c3af737df2d84)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -102,6 +102,8 @@ intention to keep it compatible with it.
  - Detect when generated project files are not changing, and skip writing over
    existing project files.
  - Added Ninja project generator.
+ - Added ability to specify MSVC "Old Style" debug info format with
+   `C7DebugInfo`.
 
 Debugging GENie scripts
 -----------------------
