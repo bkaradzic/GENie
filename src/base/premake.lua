@@ -53,8 +53,11 @@
 
 			f:write(new)
 			f:close()
+
+			premake.stats.num_generated = premake.stats.num_generated + 1
 		else
-			printf("Skipping %s as its contents would not change.", filename)
+--			printf("Skipping %s as its contents would not change.", filename)
+			premake.stats.num_skipped = premake.stats.num_skipped + 1
 		end
 	end
 
