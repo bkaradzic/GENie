@@ -15,6 +15,9 @@
 --		Unicode = 1,
 --		Unsafe = 1,
 --		WinMain = 1,
+-- API todo:
+--		custombuildtask
+--		dependency
 
 local function add_trailing_backslash(dir)
 	if dir:len() > 0 and dir:sub(-1) ~= "\\" then
@@ -107,6 +110,10 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 		'/errorReport:prompt',
 		'/FS',
 		}
+
+	if cfg.options.ForceCPP then
+		table.insert(compileroptions, '/TP')
+	end
 
 	if cfg.flags.ExtraWarnings then
 		table.insert(compileroptions, '/W4')
