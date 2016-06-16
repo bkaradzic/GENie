@@ -636,8 +636,10 @@
 				DeploymentContent = {}
 			}
 
+			local files = premake.vstudio.allfiles(prj)
+
 			local foundAppxManifest = false
-			for file in premake.project.eachfile(prj) do
+			for _, file in ipairs(files) do
 				if path.isSourceFileVS(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
 				elseif path.iscppheader(file.name) then
@@ -848,7 +850,10 @@
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
-					if excluded or table.icontains(cfg.excludes, file.name) then
+					local fileincfg = table.icontains(cfg.files, file.name)
+					local cfgexcluded = table.icontains(cfg.excludes, file.name)
+
+					if excluded or not fileincfg or cfgexcluded then
 						_p(3, '<ExcludedFromBuild '
 							.. if_config_and_platform()
 							.. '>true</ExcludedFromBuild>'
@@ -875,8 +880,13 @@
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
-					if excluded or table.icontains(cfg.excludes, file.name) then
-						_p(3, '<ExcludedFromBuild ' .. if_config_and_platform() .. '>true</ExcludedFromBuild>'
+					local fileincfg = table.icontains(cfg.files, file.name)
+					local cfgexcluded = table.icontains(cfg.excludes, file.name)
+
+					if excluded or not fileincfg or cfgexcluded then
+						_p(3, '<ExcludedFromBuild '
+							.. if_config_and_platform()
+							.. '>true</ExcludedFromBuild>'
 							, premake.esc(vsconfig.name)
 							)
 					end
