@@ -183,32 +183,6 @@
 		os.remove(name .. ".exe.manifest")
 	end
 
---
--- Returns a list of all files contained within the project and its configurations.
---
-
-	function vstudio.allfiles(prj)
-		local files = {}
-		local added = {}
-
-		for file in premake.project.eachfile(prj) do
-			added[file.name] = true
-			table.insert(files, file)
-		end
-
-		for platform, _ in pairs(premake.vstudio.platforms) do
-			for cfg in premake.eachconfig(prj, platform) do
-				for file in premake.config.eachfile(cfg) do
-					if not added[file.name] then
-						added[file.name] = true
-						table.insert(files, file)
-					end
-				end
-			end
-		end
-
-		return files
-	end
 
 --
 -- Assemble the project file name.

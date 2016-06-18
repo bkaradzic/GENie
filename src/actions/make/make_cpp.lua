@@ -9,23 +9,6 @@
 	local cpp = premake.make.cpp
 	local make = premake.make
 
-	local function allfiles(prj, cc)
-		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
-		local files = table.join(prj.files)
-
-		for _, platform in ipairs(platforms) do
-			for cfg in premake.eachconfig(prj, platform) do
-				for _, file in ipairs(cfg.files) do
-					if not table.icontains(files, file) then
-						table.insert(files, file)
-					end
-				end
-			end
-		end
-
-		return files
-	end
-
 	function premake.make_cpp(prj)
 
 		-- create a shortcut to the compiler interface
@@ -42,13 +25,12 @@
 			end
 		end
 
-		local files = allfiles(prj, cc)
-		table.sort(files)
+		table.sort(prj.allfiles)
 
 		-- list object directories
 		local objdirs = {}
 		local additionalobjdirs = {}
-		for _, file in ipairs(files) do
+		for _, file in ipairs(prj.allfiles) do
 			if path.isSourceFile(file) then
 				objdirs[_MAKE.esc(path.getdirectory(path.trimdots(file)))] = 1
 			end
@@ -71,7 +53,7 @@
 		_p('')
 
 		_p('RESOURCES := \\')
-		for _, file in ipairs(files) do
+		for _, file in ipairs(prj.allfiles) do
 			if path.isresourcefile(file) then
 				_p('\t$(OBJDIR)/%s.res \\', _MAKE.esc(path.getbasename(file)))
 			end
@@ -508,20 +490,10 @@
 
 	function cpp.fileRules(prj, cc)
 		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
-		local allfiles = table.join(prj.files)
 
-		for _, platform in ipairs(platforms) do
-			for cfg in premake.eachconfig(prj, platform) do
-				for _, file in ipairs(cfg.files) do
-					if not table.icontains(allfiles, file) then
-						table.insert(allfiles, file)
-					end
-				end
-			end
-		end
+		table.sort(prj.allfiles)
 
-		table.sort(allfiles)
-		for _, file in ipairs(allfiles or {}) do
+		for _, file in ipairs(prj.allfiles or {}) do
 			if path.isSourceFile(file) then
 				_p('$(OBJDIR)/%s.o: %s $(GCH) %s'
 					, _MAKE.esc(path.trimdots(path.removeext(file)))

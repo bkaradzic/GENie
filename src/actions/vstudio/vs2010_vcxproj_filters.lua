@@ -17,9 +17,8 @@
 	function vc2010.filteridgroup(prj)
 		local filters = { }
 		local filterfound = false
-		local files = premake.vstudio.allfiles(prj)
 
-		for _, file in ipairs(files) do
+		for file in premake.project.eachfile(prj, true) do
 			-- split the path into its component parts
 			local folders = string.explode(file.vpath, "/", true)
 			local path = ""

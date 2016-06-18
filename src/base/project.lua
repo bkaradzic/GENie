@@ -65,15 +65,16 @@
 -- Iterator for a project's files; returns a file configuration object.
 --
 
-	function premake.project.eachfile(prj)
+	function premake.project.eachfile(prj, allfiles)
 		-- project root config contains the file config list
 		if not prj.project then prj = premake.getconfig(prj) end
 		local i = 0
-		local t = prj.files
+		local t = iif(allfiles, prj.allfiles, prj.files)
+		local c = iif(allfiles, prj.__allfileconfigs, prj.__fileconfigs)
 		return function ()
 			i = i + 1
 			if (i <= #t) then
-				local fcfg = prj.__fileconfigs[t[i]]
+				local fcfg = c[t[i]]
 				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
 				return fcfg
 			end

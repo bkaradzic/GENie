@@ -725,11 +725,13 @@
 	end
 --
 -- Adds values to an array-of-directories field of a solution/project/configuration.
--- `ctype` specifies the container type (see premake.getobject) for the field. All
+-- `fields` is an array of containers/fieldname pairs to add the results to. All
 -- values are converted to absolute paths before being stored.
 --
+-- Only the result of the first field given is returned.
+--
 
-	local function domatchedarray(ctype, fieldname, value, matchfunc)
+	local function domatchedarray(fields, value, matchfunc)
 		local result = { }
 
 		function makeabsolute(value, depth)
@@ -753,15 +755,28 @@
 		end
 
 		makeabsolute(value, 3)
-		return premake.setarray(ctype, fieldname, result)
+
+		local retval = {}
+
+		for index, field in ipairs(fields) do
+			local ctype = field[1]
+			local fieldname = field[2]
+			local array = premake.setarray(ctype, fieldname, result)
+
+			if index == 1 then
+				retval = array
+			end
+		end
+
+		return retval
 	end
 
-	function premake.setdirarray(ctype, fieldname, value)
-		return domatchedarray(ctype, fieldname, value, os.matchdirs)
+	function premake.setdirarray(fields, value)
+		return domatchedarray(fields, value, os.matchdirs)
 	end
 
-	function premake.setfilearray(ctype, fieldname, value)
-		return domatchedarray(ctype, fieldname, value, os.matchfiles)
+	function premake.setfilearray(fields, value)
+		return domatchedarray(fields, value, os.matchfiles)
 	end
 
 
@@ -863,9 +878,21 @@
 		elseif kind == "table" then
 			return premake.settable(container, name, value, allowed)
 		elseif kind == "dirlist" then
-			return premake.setdirarray(container, name, value)
+			return premake.setdirarray({{container, name}}, value)
 		elseif kind == "filelist" or kind == "absolutefilelist" then
-			return premake.setfilearray(container, name, value)
+			-- HACK: If we're adding files, we should also add them to the project's
+			-- `allfiles` field. This is to support files being added per config.
+			local fields = {{container, name}}
+			if name == "files" then
+				local prj, err = premake.getobject("container")
+				if (not prj) then
+					error(err, 2)
+				end
+				-- The first config block for the project is always the project's
+				-- global config. See the `project` function.
+				table.insert(fields, {prj.blocks[1], "allfiles"})
+			end
+			return premake.setfilearray(fields, value)
 		elseif kind == "keyvalue" or kind == "keypath" then
 			return premake.setkeyvalue(scope, name, value)
 		end
