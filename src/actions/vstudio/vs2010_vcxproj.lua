@@ -636,10 +636,8 @@
 				DeploymentContent = {}
 			}
 
-			local files = premake.vstudio.allfiles(prj)
-
 			local foundAppxManifest = false
-			for _, file in ipairs(files) do
+			for file in premake.project.eachfile(prj, true) do
 				if path.isSourceFileVS(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
 				elseif path.iscppheader(file.name) then
