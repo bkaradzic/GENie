@@ -17,7 +17,7 @@
 --    contains a reference back to the original project: prj = tr.project.
 --
 
-	function premake.project.buildsourcetree(prj)
+	function premake.project.buildsourcetree(prj, allfiles)
 		local tr = premake.tree.new(prj.name)
 		tr.project = prj
 
@@ -27,7 +27,7 @@
 			node.isvpath = isvpath
 		end
 
-		for fcfg in premake.project.eachfile(prj) do
+		for fcfg in premake.project.eachfile(prj, allfiles) do
 			isvpath = (fcfg.name ~= fcfg.vpath)
 			local node = premake.tree.add(tr, fcfg.vpath, onadd)
 			node.cfg = fcfg
