@@ -20,7 +20,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 564 (commit 69e70a3d9e3f04752aa8f61d453a7c915b8dea67)
+	version 566 (commit 1353c173ec85c7278298d7b42df0aac4512e558c)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
