@@ -847,10 +847,12 @@
 		end
 
 		for _, file in ipairs(prj.allfiles) do
-			if not table.icontains(cfg.files, file) then
-				add_file(file)
-			else
-				verify_file(file)
+			if not table.icontains(prj.excludes, file) and not table.icontains(cfg.excludes, file) then
+				if not table.icontains(cfg.files, file) then
+					add_file(file)
+				else
+					verify_file(file)
+				end
 			end
 		end
 
