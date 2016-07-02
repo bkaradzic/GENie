@@ -427,10 +427,8 @@ function premake.fastbuild.project(prj)
 	for _, file in ipairs(cppfiles) do
 		commonbasepath = path.getcommonbasedir(commonbasepath..'/', file)
 	end
-	-- These lines will allow fastbuild to keep the object files in the right folder hierarchy
-	-- without including everything underneath.
-	_p(1, ".CompilerInputPath = '%s/'", commonbasepath)
-	_p(1, ".CompilerInputPattern = 'ignoreall'")
+
+	_p(1, ".CompilerInputFilesRoot = '%s/'", commonbasepath)
 	_p(1, '.CompilerInputFiles = {')
 	for _, file in ipairs(cppfiles) do
 		_p(2, "'%s',", file)
