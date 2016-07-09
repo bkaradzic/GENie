@@ -83,9 +83,6 @@
 		-- Xcode4 action
 		"actions/xcode/xcode4_workspace.lua",
 
-		-- Clean action
-		"actions/clean/_clean.lua",
-
 		--FASTBuild action
 		"actions/fastbuild/_fastbuild.lua",
 		"actions/fastbuild/fastbuild_project.lua",
