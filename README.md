@@ -105,6 +105,7 @@ intention to keep it compatible with it.
  - Added ability to specify MSVC "Old Style" debug info format with
    `C7DebugInfo`.
  - Added some support for per-configuration `files` lists.
+ - Removed `clean` action.
 
 Debugging GENie scripts
 -----------------------
