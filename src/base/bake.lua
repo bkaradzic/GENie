@@ -628,6 +628,13 @@
 			end
 			sln.location = sln.location or sln.basedir
 		end
+        
+        -- convert paths for imported projects to be relative to solution location
+		for sln in premake.solution.each() do
+			for _, iprj in ipairs(sln.importedprojects) do
+				iprj.location = path.getrelative(sln.location, iprj.location)
+			end
+		end
 
 		-- collapse configuration blocks, so that there is only one block per build
 		-- configuration/platform pair, filtered to the current operating environment

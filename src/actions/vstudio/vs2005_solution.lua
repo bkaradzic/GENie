@@ -14,6 +14,8 @@
 
 		-- Precompute Visual Studio configurations
 		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		-- Prepare imported projects
+		premake.vstudio.bakeimports(sln)
 
 		-- Mark the file as Unicode
 		_p('\239\187\191')
@@ -29,7 +31,10 @@
 		for prj in premake.solution.eachproject(sln) do
 			sln2005.project(prj)
 		end
-
+        
+		for _,iprj in ipairs(sln.importedprojects) do
+			sln2005.importproject(iprj)
+		end
 		
 		_p('Global')
 		sln2005.platforms(sln)
@@ -103,6 +108,14 @@
 	
 	function sln2005.group(grp)
 		_p('Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "%s", "%s", "{%s}"', grp.name, grp.name, grp.uuid)
+		_p('EndProject')
+	end
+    
+--
+-- Write out an entry for an imported project
+--
+	function sln2005.importproject(iprj)
+		_p('Project("{%s}") = "%s", "%s", "{%s}"', vstudio.tool(iprj), path.getbasename(iprj.location), iprj.location, iprj.uuid)
 		_p('EndProject')
 	end
 
@@ -205,5 +218,11 @@
 			end
 		end
 
+		for _,iprj in ipairs(sln.importedprojects) do
+			if iprj.group ~= nil then
+				_p('\t\t{%s} = {%s}', iprj.uuid, iprj.group.uuid)
+			end
+		end
+        
 		_p('\tEndGlobalSection')
 	end

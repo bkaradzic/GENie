@@ -1171,6 +1171,25 @@
 
 		return premake.CurrentGroup
 	end
+    
+	function importvsproject(location)
+		if string.find(_ACTION, "vs") ~= 1 then
+			error("Only available for visual studio actions")
+		end
+		
+		sln, err = premake.getobject("solution")
+		if not sln then
+			error(err)
+		end
+        
+		local group = creategroupsfrompath(premake.CurrentGroup, sln)
+        
+		local project = {}
+		project.location = location
+		project.group = group
+        
+		table.insert(sln.importedprojects, project)
+    end
 
 
 --
