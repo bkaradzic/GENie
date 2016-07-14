@@ -1187,6 +1187,7 @@
 		local project = {}
 		project.location = location
 		project.group = group
+		project.flags = {}
         
 		table.insert(sln.importedprojects, project)
     end
