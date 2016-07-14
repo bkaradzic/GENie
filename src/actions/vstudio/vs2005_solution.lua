@@ -149,7 +149,43 @@
 		_p('\tEndGlobalSection')
 	end
 
+--
+-- Write the entries for a single project in the ProjectConfigurationPlatforms section, which maps
+-- the configuration/platform pairs into each project of the solution.
+--
 
+	function sln2005.project_platform(prj, sln)
+		for _, cfg in ipairs(sln.vstudio_configs) do
+
+			-- C# .NET projects always map to the "Any CPU" platform (for now, at
+			-- least). C++ .NET projects always map to x64. For native C++,
+			-- "Any CPU" and "Mixed Platforms" map to the first
+			-- C++ compatible target platform in the solution list.
+			local mapped
+			local buildfor
+			if premake.isdotnetproject(prj) then
+				buildfor = "x64"
+				mapped = "Any CPU"
+			elseif prj.flags and prj.flags.managed then
+				mapped = "x64"
+			else
+				if cfg.platform == "Any CPU" or cfg.platform == "Mixed Platforms" then
+					mapped = sln.vstudio_configs[3].platform
+				else
+					mapped = cfg.platform
+				end
+			end
+
+			_p('\t\t{%s}.%s.ActiveCfg = %s|%s', prj.uuid, cfg.name, cfg.buildcfg, mapped)
+			if mapped == cfg.platform or cfg.platform == "Mixed Platforms" or buildfor == cfg.platform then
+				_p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
+			end
+				
+			if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
+				_p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
+			end
+		end
+	end
 
 --
 -- Write out the contents of the ProjectConfigurationPlatforms section, which maps
@@ -159,32 +195,13 @@
 	function sln2005.project_platforms(sln)
 		_p('\tGlobalSection(ProjectConfigurationPlatforms) = postSolution')
 		for prj in premake.solution.eachproject(sln) do
-			for _, cfg in ipairs(sln.vstudio_configs) do
-
-				-- .NET projects always map to the "Any CPU" platform (for now, at
-				-- least). For C++, "Any CPU" and "Mixed Platforms" map to the first
-				-- C++ compatible target platform in the solution list.
-				local mapped
-				if premake.isdotnetproject(prj) then
-					mapped = "Any CPU"
-				else
-					if cfg.platform == "Any CPU" or cfg.platform == "Mixed Platforms" then
-						mapped = sln.vstudio_configs[3].platform
-					else
-						mapped = cfg.platform
-					end
-				end
-
-				_p('\t\t{%s}.%s.ActiveCfg = %s|%s', prj.uuid, cfg.name, cfg.buildcfg, mapped)
-				if mapped == cfg.platform or cfg.platform == "Mixed Platforms" then
-					_p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
-				end
-
-				if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
-					_p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
-				end
-			end
+			sln2005.project_platform(prj, sln)
 		end
+		
+		for _,iprj in ipairs(sln.importedprojects) do
+			sln2005.project_platform(iprj, sln)
+		end
+		
 		_p('\tEndGlobalSection')
 	end
 

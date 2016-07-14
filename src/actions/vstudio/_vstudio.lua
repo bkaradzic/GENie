@@ -169,6 +169,10 @@
                 error("Could not find ProjectGuid element in project " .. iprj.location, 1)
             end
             iprj.uuid = uuid
+			
+			if iprj.language == "C++" and string.find(projcontents, "<CLRSupport>true</CLRSupport>") then
+				iprj.flags.managed = true
+			end
         end
     end
 
