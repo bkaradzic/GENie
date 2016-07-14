@@ -632,7 +632,7 @@
         -- convert paths for imported projects to be relative to solution location
 		for sln in premake.solution.each() do
 			for _, iprj in ipairs(sln.importedprojects) do
-				iprj.location = path.getrelative(sln.location, iprj.location)
+				iprj.location = path.getabsolute(iprj.location)
 			end
 		end
 
