@@ -115,7 +115,7 @@
 -- Write out an entry for an imported project
 --
 	function sln2005.importproject(iprj)
-		_p('Project("{%s}") = "%s", "%s", "{%s}"', vstudio.tool(iprj), path.getbasename(iprj.location), iprj.location, iprj.uuid)
+		_p('Project("{%s}") = "%s", "%s", "{%s}"', vstudio.tool(iprj), path.getbasename(iprj.location), iprj.relpath, iprj.uuid)
 		_p('EndProject')
 	end
 
