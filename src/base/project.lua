@@ -599,6 +599,11 @@
 
 		local fname = path.getname(abspath)
 		local max = abspath:len() - fname:len()
+        
+        -- First check for an exact match from the inverse vpaths
+        if prj.inversevpaths and prj.inversevpaths[abspath] then
+            return path.join(prj.inversevpaths[abspath], fname)
+        end
 
 		-- Look for matching patterns
 		for replacement, patterns in pairs(prj.vpaths or {}) do

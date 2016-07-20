@@ -609,8 +609,25 @@
   			end
   		end
   	end
-
-
+    
+--
+-- Build an inverse dictionary of literal vpaths for fast lookup
+--
+    
+    local function inverseliteralvpaths()
+        for sln in premake.solution.each() do
+            for _,prj in ipairs(sln.projects) do
+                prj.inversevpaths = {}
+                for replacement, patterns in pairs(prj.vpaths or {}) do
+                    for _, pattern in ipairs(patterns) do
+                        if string.find(pattern, "*") == nil then
+                            prj.inversevpaths[pattern] = replacement
+                        end
+                    end
+                end
+            end
+        end
+    end
 --
 -- Main function, controls the process of flattening the configurations.
 --
@@ -636,6 +653,8 @@
 			end
 		end
 
+        inverseliteralvpaths()
+        
 		-- collapse configuration blocks, so that there is only one block per build
 		-- configuration/platform pair, filtered to the current operating environment
 		for sln in premake.solution.each() do
