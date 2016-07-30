@@ -258,6 +258,9 @@
 		_p('  endif')
 		_p('endif')
 		_p('')
+        
+        _p('MAKEFILE = %s', _MAKE.getmakefilename(prj, true))
+        _p('')
 	end
 
 --
@@ -469,7 +472,7 @@
 
 	function cpp.pchrules(prj)
 		_p('ifneq (,$(PCH))')
-		_p('$(GCH): $(PCH) | $(OBJDIR)')
+		_p('$(GCH): $(PCH) $(MAKEFILE) | $(OBJDIR)')
 		if prj.msgprecompile then
 			_p('\t@echo ' .. prj.msgprecompile)
 		else
@@ -495,10 +498,9 @@
 
 		for _, file in ipairs(prj.allfiles or {}) do
 			if path.isSourceFile(file) then
-				_p('$(OBJDIR)/%s.o: %s $(GCH) %s'
+				_p('$(OBJDIR)/%s.o: %s $(GCH) $(MAKEFILE)'
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
-					, _MAKE.getmakefilename(prj, true)
 					)
 				if (path.isobjcfile(file) and prj.msgcompile_objc) then
 					_p('\t@echo ' .. prj.msgcompile_objc)
