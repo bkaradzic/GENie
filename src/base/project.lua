@@ -606,6 +606,7 @@
         end
 
 		-- Look for matching patterns
+        local matches = {}
 		for replacement, patterns in pairs(prj.vpaths or {}) do
 			for _, pattern in ipairs(patterns) do
 				local i = abspath:find(path.wildcards(pattern))
@@ -650,11 +651,16 @@
 						leaf = path.getname(leaf)
 					end
 
-					vpath = path.join(stem, leaf)
-
+					table.insert(matches, path.join(stem, leaf))
 				end
 			end
 		end
+        
+        if #matches > 0 then
+            -- for the sake of determinism, return the first alphabetically
+            table.sort(matches)
+            vpath = matches[1]
+        end
 
 		return path.trimdots(vpath)
 	end
