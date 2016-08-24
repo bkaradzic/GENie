@@ -595,7 +595,12 @@
 			kind = "keypath",
 			scope = "container",
 		},
-
+        
+        vsimportreferences =
+        {
+            kind = "filelist",
+            scope = "container",
+        },
 	}
 
 

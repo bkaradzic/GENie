@@ -972,19 +972,31 @@
 
 	function vc2010.projectReferences(prj)
 		local deps = premake.getdependencies(prj)
-		if #deps > 0 then
-			_p(1,'<ItemGroup>')
-			for _, dep in ipairs(deps) do
-				local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
-				_p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
-				_p(3,'<Project>{%s}</Project>', dep.uuid)
-				if vstudio.iswinrt() then
-					_p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
-				end
-				_p(2,'</ProjectReference>')
-			end
-			_p(1,'</ItemGroup>')
-		end
+        
+		if #deps == 0 and #prj.vsimportreferences == 0 then
+            return
+        end
+        
+        _p(1,'<ItemGroup>')
+        
+        for _, dep in ipairs(deps) do
+            local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
+            _p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
+            _p(3,'<Project>{%s}</Project>', dep.uuid)
+            if vstudio.iswinrt() then
+                _p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
+            end
+            _p(2,'</ProjectReference>')
+        end
+        
+        for _, ref in ipairs(prj.vsimportreferences) do
+            local iprj = premake.vstudio.getimportprj(ref, prj.solution)
+            _p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
+            _p(3,'<Project>{%s}</Project>', iprj.uuid)
+            _p(2,'</ProjectReference>')
+        end
+        
+        _p(1,'</ItemGroup>')
 	end
 
 
