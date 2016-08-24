@@ -177,7 +177,21 @@
             iprj.relpath = path.getrelative(sln.location, iprj.location)
         end
     end
-
+    
+--
+-- Look up a imported project by project path
+--
+    function premake.vstudio.getimportprj(prjpath, sln)
+        for _,iprj in ipairs(sln.importedprojects) do
+            print(iprj.relpath)
+            if prjpath == iprj.relpath then
+                return iprj
+            end
+        end
+        
+        error("Could not find reference import project " .. prjpath, 1)
+    end
+    
 --
 -- Clean Visual Studio files
 --
