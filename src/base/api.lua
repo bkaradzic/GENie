@@ -59,6 +59,12 @@
 			kind  = "list",
 			scope = "config",
 		},
+        
+        clrreferences = 
+        {
+            kind = "list",
+            scope = "container",
+        },
 
 		configurations =
 		{
