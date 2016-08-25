@@ -38,7 +38,8 @@
 		--if prj.flags is required as it is not set at project level for tests???
 		--vs200x generator seems to swap a config for the prj in test setup
 		if prj.flags and prj.flags.Managed then
-			_p(2, '<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
+            local frameworkVersion = prj.framework or "4.0"
+			_p(2, '<TargetFrameworkVersion>v%s</TargetFrameworkVersion>', frameworkVersion)
 			_p(2, '<Keyword>ManagedCProj</Keyword>')
 		elseif vstudio.iswinrt() then
 			_p(2, '<DefaultLanguage>en-US</DefaultLanguage>')
