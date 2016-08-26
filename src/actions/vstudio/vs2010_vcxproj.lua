@@ -222,9 +222,11 @@
 	end
 
 	local function include_dirs(indent,cfg)
-		if #cfg.includedirs > 0 then
+		local includedirs = table.join(cfg.userincludedirs, cfg.includedirs)
+
+		if #includedirs> 0 then
 			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
-					,premake.esc(path.translate(table.concat(cfg.includedirs, ";"), '\\')))
+					,premake.esc(path.translate(table.concat(includedirs, ";"), '\\')))
 		end
 	end
 
@@ -296,12 +298,14 @@
 	--
 		local debug_info = ''
 		if cfg.flags.Symbols then
-			if (action.vstudio.supports64bitEditContinue == false and cfg.platform == "x64")
+			if cfg.flags.C7DebugInfo then
+				debug_info = "OldStyle"
+			elseif (action.vstudio.supports64bitEditContinue == false and cfg.platform == "x64")
 				or cfg.flags.Managed
 				or premake.config.isoptimizedbuild(cfg.flags)
 				or cfg.flags.NoEditAndContinue
 			then
-					debug_info = "ProgramDatabase"
+				debug_info = "ProgramDatabase"
 			else
 				debug_info = "EditAndContinue"
 			end
@@ -414,6 +418,10 @@
 			_p(3,'<OmitFramePointers>true</OmitFramePointers>')
 		end
 
+		if cfg.flags.UseFullPaths then
+			_p(3, '<UseFullPaths>true</UseFullPaths>')
+		end
+
 		compile_language(cfg)
 
 		forcedinclude_files(3,cfg);
@@ -483,9 +491,11 @@
 		if hasmasmfiles(prj) then
 			_p(2, '<MASM>')
 
-			if #cfg.includedirs > 0 then
+			local includedirs = table.join(cfg.userincludedirs, cfg.includedirs)
+
+			if #includedirs > 0 then
 				_p(3, '<IncludePaths>%s;%%(IncludePaths)</IncludePaths>'
-					, premake.esc(path.translate(table.concat(cfg.includedirs, ";"), '\\'))
+					, premake.esc(path.translate(table.concat(includedirs, ";"), '\\'))
 					)
 			end
 
@@ -627,7 +637,7 @@
 			}
 
 			local foundAppxManifest = false
-			for file in premake.project.eachfile(prj) do
+			for file in premake.project.eachfile(prj, true) do
 				if path.isSourceFileVS(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
 				elseif path.iscppheader(file.name) then
@@ -838,7 +848,10 @@
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
-					if excluded or table.icontains(cfg.excludes, file.name) then
+					local fileincfg = table.icontains(cfg.files, file.name)
+					local cfgexcluded = table.icontains(cfg.excludes, file.name)
+
+					if excluded or not fileincfg or cfgexcluded then
 						_p(3, '<ExcludedFromBuild '
 							.. if_config_and_platform()
 							.. '>true</ExcludedFromBuild>'
@@ -865,8 +878,13 @@
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
-					if excluded or table.icontains(cfg.excludes, file.name) then
-						_p(3, '<ExcludedFromBuild ' .. if_config_and_platform() .. '>true</ExcludedFromBuild>'
+					local fileincfg = table.icontains(cfg.files, file.name)
+					local cfgexcluded = table.icontains(cfg.excludes, file.name)
+
+					if excluded or not fileincfg or cfgexcluded then
+						_p(3, '<ExcludedFromBuild '
+							.. if_config_and_platform()
+							.. '>true</ExcludedFromBuild>'
 							, premake.esc(vsconfig.name)
 							)
 					end
@@ -954,19 +972,31 @@
 
 	function vc2010.projectReferences(prj)
 		local deps = premake.getdependencies(prj)
-		if #deps > 0 then
-			_p(1,'<ItemGroup>')
-			for _, dep in ipairs(deps) do
-				local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
-				_p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
-				_p(3,'<Project>{%s}</Project>', dep.uuid)
-				if vstudio.iswinrt() then
-					_p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
-				end
-				_p(2,'</ProjectReference>')
-			end
-			_p(1,'</ItemGroup>')
-		end
+        
+		if #deps == 0 and #prj.vsimportreferences == 0 then
+            return
+        end
+        
+        _p(1,'<ItemGroup>')
+        
+        for _, dep in ipairs(deps) do
+            local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
+            _p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
+            _p(3,'<Project>{%s}</Project>', dep.uuid)
+            if vstudio.iswinrt() then
+                _p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
+            end
+            _p(2,'</ProjectReference>')
+        end
+        
+        for _, ref in ipairs(prj.vsimportreferences) do
+            local iprj = premake.vstudio.getimportprj(ref, prj.solution)
+            _p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
+            _p(3,'<Project>{%s}</Project>', iprj.uuid)
+            _p(2,'</ProjectReference>')
+        end
+        
+        _p(1,'</ItemGroup>')
 	end
 
 

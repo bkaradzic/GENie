@@ -37,6 +37,7 @@
 		"base/validate.lua",
 		"base/help.lua",
 		"base/premake.lua",
+		"base/iter.lua",
 
 		-- CodeBlocks action
 		"actions/codeblocks/_codeblocks.lua",
@@ -47,6 +48,11 @@
 		"actions/codelite/_codelite.lua",
 		"actions/codelite/codelite_workspace.lua",
 		"actions/codelite/codelite_project.lua",
+
+		-- CMake action
+		"actions/cmake/_cmake.lua",
+		"actions/cmake/cmake_workspace.lua",
+		"actions/cmake/cmake_project.lua",
 
 		-- GNU make action
 		"actions/make/_make.lua",
@@ -81,11 +87,14 @@
 		"actions/xcode/xcode6_project.lua",
 		"actions/xcode/xcode6_config.lua",
 
-		-- Clean action
-		"actions/clean/_clean.lua",
-
 		--FASTBuild action
 		"actions/fastbuild/_fastbuild.lua",
 		"actions/fastbuild/fastbuild_project.lua",
 		"actions/fastbuild/fastbuild_solution.lua",
+		
+		-- ninja action
+		"actions/ninja/_ninja.lua",
+		"actions/ninja/ninja_base.lua",
+		"actions/ninja/ninja_solution.lua",
+		"actions/ninja/ninja_cpp.lua",
 	}

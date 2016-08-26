@@ -1,4 +1,8 @@
--- Generates a FASTBuild config file for a project
+-- Generates a FASTBuild config file for a project.
+
+-- Note that table order iteration should be deterministic, so the .bff file content is not
+-- arbitrarily changed each time it's generated. There are several places in this file
+-- where sorts are done for that reason.
 
 -- Remaining flags to handle:
 --		NoImportLib = 1,
@@ -11,6 +15,9 @@
 --		Unicode = 1,
 --		Unsafe = 1,
 --		WinMain = 1,
+-- API todo:
+--		custombuildtask
+--		dependency
 
 local function add_trailing_backslash(dir)
 	if dir:len() > 0 and dir:sub(-1) ~= "\\" then
@@ -19,7 +26,7 @@ local function add_trailing_backslash(dir)
 	return dir
 end
 
-local function compile(indentlevel, prj, cfg)
+local function compile(indentlevel, prj, cfg, commonbasepath)
 
 	local firstflag = true
 	for _, cfgexclude in ipairs(cfg.excludes) do
@@ -47,7 +54,47 @@ local function compile(indentlevel, prj, cfg)
 	end
 
 	_p(indentlevel, ".IncludeDirs = ''")
+	local sortedincdirs = {}
+	for _, includedir in ipairs(cfg.userincludedirs) do
+		if includedir ~= nil then
+			table.insert(sortedincdirs, includedir)
+		end
+	end
 	for _, includedir in ipairs(cfg.includedirs) do
+		if includedir ~= nil then
+			table.insert(sortedincdirs, includedir)
+		end
+	end
+
+	-- Setup for special include dir sort to ensure that 'nearby' dirs get precedence over others.
+	-- Gets the relative path from commonbasepath and counts the steps in that path.
+	local function getpathnodecount(p)
+		local nodefinder = string.gmatch(p, "[^\\/]+")
+		local result = 0
+		local node = nodefinder()
+		while node do
+			result = result + ((node ~= '.' and 1) or 0)
+			node = nodefinder()
+		end
+		return result
+	end
+
+	local stepsfrombase = {}
+
+	for _, includedir in ipairs(sortedincdirs) do
+		stepsfrombase[includedir] = getpathnodecount(path.getrelative(commonbasepath, includedir))
+	end
+
+	local function includesort(a, b)
+		if stepsfrombase[a] == stepsfrombase[b] then
+			return a < b
+		else
+			return stepsfrombase[a] < stepsfrombase[b]
+		end
+	end
+
+	table.sort(sortedincdirs, includesort)
+	for _, includedir in ipairs(sortedincdirs) do
 		_p(indentlevel+1, "+ ' /I\"%s\"'", includedir)
 	end
 
@@ -63,6 +110,10 @@ local function compile(indentlevel, prj, cfg)
 		'/errorReport:prompt',
 		'/FS',
 		}
+
+	if cfg.options.ForceCPP then
+		table.insert(compileroptions, '/TP')
+	end
 
 	if cfg.flags.ExtraWarnings then
 		table.insert(compileroptions, '/W4')
@@ -111,14 +162,18 @@ local function compile(indentlevel, prj, cfg)
 	end
 
 	if cfg.flags.Symbols then
-		if (premake.config.isoptimizedbuild(cfg.flags)
-			or cfg.flags.NoEditAndContinue) then
-			table.insert(compileroptions, '/Zi')
+		if (cfg.flags.C7DebugInfo) then
+			table.insert(compileroptions, '/Z7')
 		else
-			table.insert(compileroptions, '/ZI')
+			if (premake.config.isoptimizedbuild(cfg.flags)
+				or cfg.flags.NoEditAndContinue) then
+				table.insert(compileroptions, '/Zi')
+			else
+				table.insert(compileroptions, '/ZI')
+			end
+			local targetdir = add_trailing_backslash(cfg.buildtarget.directory)
+			table.insert(compileroptions, string.format("/Fd\"%s%s.pdb\"", targetdir, cfg.buildtarget.basename))
 		end
-		local targetdir = add_trailing_backslash(cfg.buildtarget.directory)
-		table.insert(compileroptions, string.format("/Fd\"%s%s.pdb\"", targetdir, cfg.buildtarget.basename))
 	end
 
 	local isoptimised = true
@@ -199,12 +254,12 @@ local function compile(indentlevel, prj, cfg)
 	_p(indentlevel+1, "+ ' /Fo\"%%2\"'") -- make sure the previous property is .CompilerOptions
 end
 
-local function library(prj, cfg, useconfig)
+local function library(prj, cfg, useconfig, commonbasepath)
 	_p(1, "Library('%s-%s-%s')", prj.name, cfg.name, cfg.platform)
 	_p(1, '{')
 
 	useconfig(2)
-	compile(2, prj, cfg)
+	compile(2, prj, cfg, commonbasepath)
 
 	local librarianoptions = {
 		'"%1"',
@@ -229,12 +284,12 @@ local function library(prj, cfg, useconfig)
 	_p('')
 end
 
-local function binary(prj, cfg, useconfig, bintype)
+local function binary(prj, cfg, useconfig, bintype, commonbasepath)
 	_p(1, "ObjectList('%s_obj-%s-%s')", prj.name, cfg.name, cfg.platform)
 	_p(1, '{')
 
 	useconfig(2)
-	compile(2, prj, cfg)
+	compile(2, prj, cfg, commonbasepath)
 
 	_p(1, '}')
 	_p('')
@@ -246,8 +301,13 @@ local function binary(prj, cfg, useconfig, bintype)
 	_p(2, '.Libraries = {')
 	_p(3, "'%s_obj-%s-%s',", prj.name, cfg.name, cfg.platform) -- Refer to the ObjectList
 
+	local sorteddeplibs = {}
 	for _, deplib in ipairs(premake.getlinks(cfg, "dependencies", "basename")) do
-		_p(3, "'%s-%s-%s',", deplib, cfg.name, cfg.platform)
+		table.insert(sorteddeplibs, string.format("'%s-%s-%s',", deplib, cfg.name, cfg.platform))
+	end
+	table.sort(sorteddeplibs)
+	for _, deplib in ipairs(sorteddeplibs) do
+		_p(3, deplib)
 	end
 	_p(3, '}')
 
@@ -298,6 +358,10 @@ local function binary(prj, cfg, useconfig, bintype)
 		table.insert(linkeroptions, '/DEF:%s', deffile)
 	end
 
+	if (cfg.flags.Symbols ~= nil) then
+		table.insert(linkeroptions, '/DEBUG')
+	end
+
 	if premake.config.isoptimizedbuild(cfg.flags) then
 		table.insert(linkeroptions, '/OPT:REF')
 		table.insert(linkeroptions, '/OPT:ICF')
@@ -315,6 +379,8 @@ local function binary(prj, cfg, useconfig, bintype)
 		table.insert(linkeroptions, path.getname(linklib))
 	end
 
+	table.sort(linkeroptions)
+
 	_p(2, ".LinkerOptions = ''")
 	for _, option in ipairs(linkeroptions) do
 		_p(3, "+ ' %s'", option)
@@ -327,12 +393,12 @@ local function binary(prj, cfg, useconfig, bintype)
 	_p('')
 end
 
-local function executable(prj, cfg, useconfig)
-	binary(prj, cfg, useconfig, 'Executable')
+local function executable(prj, cfg, useconfig, commonbasepath)
+	binary(prj, cfg, useconfig, 'Executable', commonbasepath)
 end
 
-local function dll(prj, cfg, useconfig)
-	binary(prj, cfg, useconfig, 'DLL')
+local function dll(prj, cfg, useconfig, commonbasepath)
+	binary(prj, cfg, useconfig, 'DLL', commonbasepath)
 end
 
 local function alias(prj, cfg, target)
@@ -361,10 +427,8 @@ function premake.fastbuild.project(prj)
 	for _, file in ipairs(cppfiles) do
 		commonbasepath = path.getcommonbasedir(commonbasepath..'/', file)
 	end
-	-- These lines will allow fastbuild to keep the object files in the right folder hierarchy
-	-- without including everything underneath.
-	_p(1, ".CompilerInputPath = '%s/'", commonbasepath)
-	_p(1, ".CompilerInputPattern = 'ignoreall'")
+
+	_p(1, ".CompilerInputFilesRoot = '%s/'", commonbasepath)
 	_p(1, '.CompilerInputFiles = {')
 	for _, file in ipairs(cppfiles) do
 		_p(2, "'%s',", file)
@@ -397,7 +461,7 @@ function premake.fastbuild.project(prj)
 			if cfg.platform == 'Native' then
 				alias(prj, cfg, string.format('%s-%s-%s', prj.name, cfg.name, nativeplatform))
 			else
-				targetkindmap[prj.kind](prj, cfg, useconfigmap[cfg.platform])
+				targetkindmap[prj.kind](prj, cfg, useconfigmap[cfg.platform], commonbasepath)
 			end
 		end
 	end

@@ -101,6 +101,7 @@
     * [targetname](#targetnamename)
     * [targetprefix](#targetprefixprefix)
     * [targetsuffix](#targetsuffixsuffix)
+    * [userincludedirs](#userincludedirspaths)
     * [uuid](#uuidprojectuuid)
     * [vpaths](#vpathsgroup--pattern)
 * Additional Information
@@ -370,7 +371,7 @@ Specifies a list of arguments to pas to the application when run under the debug
 
 **Note:** Not implemented for Xcode 3, where it must be configured in a per-user config file.
 
-**Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user). Removing this file (`genie clean`) will restore the default settings.
+**Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
 
 **Scope:** solutions, projects, configurations
 
@@ -390,7 +391,7 @@ Sets the working directory for the integrated debugger.
 
 **Note:** Not implemented for Xcode 3, where it must be configured in a per-user config file.
 
-**Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user). Removing this file (`genie clean`) will restore the default settings.
+**Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
 
 **Scope:** solutions, projects, configurations
 
@@ -547,6 +548,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _Symbols_ - Generate debugging information.
 * _Unicode_ - Enable Unicode strings. If not specified, the default toolset behavior is used.
 * _Unsafe_ - Enable the use of unsafe code in .NET applications.
+* _UseFullPaths_ - Enable absolute paths for `__FILE__`. 
 * _WinMain_ - Use WinMain() as the entry point for Windows applications, rather than main().
 
 **Note:** When not set, options will default to the tool default.
@@ -1274,6 +1276,32 @@ Table of values:
 | mtime | Last modified timestamp |
 | size  | File size in bytes      |
 
+[Back to top](#table-of-contents)
+
+---
+### userincludedirs({_paths_...})
+Specifies the user include file search paths. Multiple calls are concatenated.
+
+For XCode, it maps to setting the USER INCLUDE SEARCH PATH. 
+
+For clang/gcc, it maps to setting the include directory using the iquote option.
+
+On the other build systems, it behaves like [includedirs](#includedirspaths).
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_paths_ - list of user include file search directories, relative to the currently-executing script file.
+
+#### Examples
+Define two include file search paths
+```lua
+userincludedirs { "../lua/include", "../zlib" }
+```
+You can also use [wildcards](#wildcards) to match multiple directories.
+```lua
+userincludedirs { "../includes/**" }
+```
 [Back to top](#table-of-contents)
 
 ---

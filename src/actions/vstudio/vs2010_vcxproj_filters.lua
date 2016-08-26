@@ -18,7 +18,7 @@
 		local filters = { }
 		local filterfound = false
 
-		for file in project.eachfile(prj) do
+		for file in premake.project.eachfile(prj, true) do
 			-- split the path into its component parts
 			local folders = string.explode(file.vpath, "/", true)
 			local path = ""

@@ -9,7 +9,6 @@
 	local cpp = premake.make.cpp
 	local make = premake.make
 
-
 	function premake.make_cpp(prj)
 
 		-- create a shortcut to the compiler interface
@@ -26,10 +25,12 @@
 			end
 		end
 
+		table.sort(prj.allfiles)
+
 		-- list object directories
 		local objdirs = {}
 		local additionalobjdirs = {}
-		for _, file in ipairs(prj.files) do
+		for _, file in ipairs(prj.allfiles) do
 			if path.isSourceFile(file) then
 				objdirs[_MAKE.esc(path.getdirectory(path.trimdots(file)))] = 1
 			end
@@ -43,16 +44,16 @@
 
 		_p('OBJDIRS := \\')
 		_p('\t$(OBJDIR) \\')
-		for dir, _ in pairs(objdirs) do
+		for dir, _ in iter.sortByKeys(objdirs) do
 			_p('\t$(OBJDIR)/%s \\', dir)
 		end
-		for dir, _ in pairs(additionalobjdirs) do
+		for dir, _ in iter.sortByKeys(additionalobjdirs) do
 			_p('\t%s \\', dir)
 		end
 		_p('')
 
 		_p('RESOURCES := \\')
-		for _, file in ipairs(prj.files) do
+		for _, file in ipairs(prj.allfiles) do
 			if path.isresourcefile(file) then
 				_p('\t$(OBJDIR)/%s.res \\', _MAKE.esc(path.getbasename(file)))
 			end
@@ -161,7 +162,7 @@
 		cpp.pchrules(prj)
 
 		-- per-file build rules
-		cpp.fileRules(prj)
+		cpp.fileRules(prj, cc)
 
 		-- per-dependency build rules
 		cpp.dependencyRules(prj)
@@ -257,11 +258,26 @@
 		_p('  endif')
 		_p('endif')
 		_p('')
+        
+        _p('MAKEFILE = %s', _MAKE.getmakefilename(prj, true))
+        _p('')
 	end
 
 --
 -- Write a block of configuration settings.
 --
+
+	local function is_excluded(prj, cfg, file)
+		if table.icontains(prj.excludes, file) then
+			return true
+		end
+
+		if table.icontains(cfg.excludes, file) then
+			return true
+		end
+
+		return false
+	end
 
 	function premake.gmake_cpp_config(prj, cfg, cc)
 
@@ -275,6 +291,8 @@
 		_p('  ' .. (table.contains(premake.make.override,"TARGET") and "override " or "") ..    'TARGET         = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
 		_p('  DEFINES       +=%s', make.list(cc.getdefines(cfg.defines)))
 		_p('  INCLUDES      +=%s', make.list(cc.getincludedirs(cfg.includedirs)))
+		_p('  INCLUDES      +=%s', make.list(cc.getquoteincludedirs(cfg.userincludedirs)))
+
 
 		-- set up precompiled headers
 		cpp.pchconfig(cfg)
@@ -285,12 +303,14 @@
 		-- write out libraries, linker flags, and the link command
 		cpp.linker(prj, cfg, cc)
 
+		table.sort(cfg.files)
+
 		-- add objects for compilation, and remove any that are excluded per config.
 		_p('  OBJECTS := \\')
-		for _, file in ipairs(prj.files) do
+		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
 				-- check if file is excluded.
-				if not table.icontains(cfg.excludes, file) then
+				if not is_excluded(prj, cfg, file) then
 					-- if not excluded, add it.
 					_p('\t$(OBJDIR)/%s.o \\'
 						, _MAKE.esc(path.trimdots(path.removeext(file)))
@@ -452,7 +472,7 @@
 
 	function cpp.pchrules(prj)
 		_p('ifneq (,$(PCH))')
-		_p('$(GCH): $(PCH) | $(OBJDIR)')
+		_p('$(GCH): $(PCH) $(MAKEFILE) | $(OBJDIR)')
 		if prj.msgprecompile then
 			_p('\t@echo ' .. prj.msgprecompile)
 		else
@@ -471,10 +491,14 @@
 -- Build command for a single file.
 --
 
-	function cpp.fileRules(prj)
-		for _, file in ipairs(prj.files or {}) do
+	function cpp.fileRules(prj, cc)
+		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
+
+		table.sort(prj.allfiles)
+
+		for _, file in ipairs(prj.allfiles or {}) do
 			if path.isSourceFile(file) then
-				_p('$(OBJDIR)/%s.o: %s $(GCH)'
+				_p('$(OBJDIR)/%s.o: %s $(GCH) $(MAKEFILE)'
 					, _MAKE.esc(path.trimdots(path.removeext(file)))
 					, _MAKE.esc(file)
 					)

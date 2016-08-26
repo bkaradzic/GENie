@@ -143,8 +143,55 @@
 		return cfgs
 	end
 
+--
+-- Process imported projects and set properties that are needed
+-- for generating the solution.
+--
+    
+    function premake.vstudio.bakeimports(sln)
+        for _,iprj in ipairs(sln.importedprojects) do
+            if string.find(iprj.location, ".csproj") ~= nil then
+                iprj.language = "C#"
+            else
+                iprj.language = "C++"
+            end
+            
+            
+            local f, err = io.open(iprj.location, "r")
+            if (not f) then
+                error(err, 1)
+            end
+            local projcontents = f:read("*all")
+            f:close()
 
-
+            local found, _, uuid = string.find(projcontents, "<ProjectGuid>{([%w%-]+)}</ProjectGuid>")
+            if not found then
+                error("Could not find ProjectGuid element in project " .. iprj.location, 1)
+            end
+            iprj.uuid = uuid
+			
+			if iprj.language == "C++" and string.find(projcontents, "<CLRSupport>true</CLRSupport>") then
+				iprj.flags.managed = true
+			end
+            
+            iprj.relpath = path.getrelative(sln.location, iprj.location)
+        end
+    end
+    
+--
+-- Look up a imported project by project path
+--
+    function premake.vstudio.getimportprj(prjpath, sln)
+        for _,iprj in ipairs(sln.importedprojects) do
+            print(iprj.relpath)
+            if prjpath == iprj.relpath then
+                return iprj
+            end
+        end
+        
+        error("Could not find reference import project " .. prjpath, 1)
+    end
+    
 --
 -- Clean Visual Studio files
 --
@@ -184,7 +231,6 @@
 	end
 
 
-
 --
 -- Assemble the project file name.
 --
@@ -218,7 +264,6 @@
 			return "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942"
 		end
 	end
-
 
 --
 -- Register Visual Studio 2008
