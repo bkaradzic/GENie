@@ -38,7 +38,8 @@
 		--if prj.flags is required as it is not set at project level for tests???
 		--vs200x generator seems to swap a config for the prj in test setup
 		if prj.flags and prj.flags.Managed then
-			_p(2, '<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>')
+            local frameworkVersion = prj.framework or "4.0"
+			_p(2, '<TargetFrameworkVersion>v%s</TargetFrameworkVersion>', frameworkVersion)
 			_p(2, '<Keyword>ManagedCProj</Keyword>')
 		elseif vstudio.iswinrt() then
 			_p(2, '<DefaultLanguage>en-US</DefaultLanguage>')
@@ -951,6 +952,10 @@
 
 			item_definitions(prj)
 
+            if prj.flags.Managed then
+                vc2010.clrReferences(prj)
+            end
+            
 			vc2010.files(prj)
 			vc2010.projectReferences(prj)
 			vc2010.masmfiles(prj)
@@ -964,7 +969,30 @@
 
 		_p('</Project>')
 	end
-
+    
+--
+-- Generate the list of CLR references
+--
+    function vc2010.clrReferences(prj)
+        if #prj.clrreferences == 0 then
+            return
+        end
+        
+        _p(1,'<ItemGroup>')
+        
+        for _, ref in ipairs(prj.clrreferences) do
+            if os.isfile(ref) then
+                local assembly = path.getbasename(ref)
+                _p(2,'<Reference Include="%s">', assembly)
+                _p(3,'<HintPath>%s</HintPath>', path.getrelative(prj.location, ref))
+                _p(2,'</Reference>')
+            else
+                _p(2,'<Reference Include="%s" />', ref)
+            end
+        end
+        
+        _p(1,'</ItemGroup>')
+    end
 
 --
 -- Generate the list of project dependencies.
