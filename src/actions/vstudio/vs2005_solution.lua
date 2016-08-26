@@ -166,7 +166,8 @@
 			if premake.isdotnetproject(prj) then
 				buildfor = "x64"
 				mapped = "Any CPU"
-			elseif prj.flags and prj.flags.managed then
+			elseif prj.flags and prj.flags.Managed then
+                print(prj.location)
 				mapped = "x64"
 			else
 				if cfg.platform == "Any CPU" or cfg.platform == "Mixed Platforms" then
