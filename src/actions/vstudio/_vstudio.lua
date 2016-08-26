@@ -183,7 +183,6 @@
 --
     function premake.vstudio.getimportprj(prjpath, sln)
         for _,iprj in ipairs(sln.importedprojects) do
-            print(iprj.relpath)
             if prjpath == iprj.relpath then
                 return iprj
             end
