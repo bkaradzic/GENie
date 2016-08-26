@@ -59,6 +59,12 @@
 			kind  = "list",
 			scope = "config",
 		},
+        
+        clrreferences = 
+        {
+            kind = "list",
+            scope = "container",
+        },
 
 		configurations =
 		{
@@ -223,6 +229,11 @@
 				"3.5",
 				"4.0",
 				"4.5",
+                "4.5.1",
+                "4.5.2",
+                "4.6",
+                "4.6.1",
+                "4.6.2",
 			}
 		},
 
