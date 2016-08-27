@@ -1,10 +1,15 @@
-premake.ninja.cpp = { }
+--
+-- Generates Ninja project file for Swift
+-- Copyright (c) 2016 Stuart Carnie and the GENie project
+--
+
+premake.ninja.swift = { }
 local ninja = premake.ninja
-local cpp   = premake.ninja.cpp
+local swift = premake.ninja.swift
 local p     = premake
 
 -- generate project + config build file
-	function ninja.generate_cpp(prj)
+	function ninja.generate_swift(prj)
 		local pxy = ninja.get_proxy("prj", prj)
 		local tool = premake.gettool(prj)
 		
@@ -13,21 +18,23 @@ local p     = premake
 
 		for _, platform in ipairs(platforms) do
 			for cfg in p.eachconfig(pxy, platform) do
-				p.generate(cfg, cfg:getprojectfilename(), function() cpp.generate_config(prj, cfg) end)
+				p.generate(cfg, cfg:getprojectfilename(), function() swift.generate_config(prj, cfg) end)
 			end
 		end
 	end
 	
-	function cpp.generate_config(prj, cfg)
+	function swift.generate_config(prj, cfg)
 		local tool = premake.gettool(prj)
 		
-		_p("# project build file")
+		_p("# Swift project build file")
 		_p("# generated with GENie ninja")
 		_p("")
 
 		-- needed for implicit outputs, introduced in 1.7
 		_p("ninja_required_version = 1.7")
 		_p("")
+		
+		_p("target="..cfg.defines)
 		
 		local flags = {
 			defines   = ninja.list(tool.getdefines(cfg.defines)),
@@ -65,32 +72,32 @@ local p     = premake
 		_p("  description = link $out")
 		_p("")
 
-		cpp.file_rules(cfg, flags)
+		swift.file_rules(cfg, flags)
 		
 		local objfiles = {}
 		
 		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
-				table.insert(objfiles, cpp.objectname(cfg, file))
+				table.insert(objfiles, swift.objectname(cfg, file))
 			end
 		end
 		_p('')
 		
-		cpp.linker(prj, cfg, objfiles, tool, flags)
+		swift.linker(prj, cfg, objfiles, tool, flags)
 
 		_p("")
 	end
 	
-	function cpp.objectname(cfg, file)
+	function swift.objectname(cfg, file)
 		return path.join(cfg.objectsdir, path.trimdots(path.removeext(file)) .. ".o")
 	end
 
-	function cpp.file_rules(cfg, flags)
+	function swift.file_rules(cfg, flags)
 		_p("# build files")
 		
 		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
-				local objfilename = cpp.objectname(cfg, file)
+				local objfilename = swift.objectname(cfg, file)
 				
 				local cflags = "cflags"
 				if path.isobjcfile(file) then
@@ -114,7 +121,7 @@ local p     = premake
 		_p("")
 	end
 	
-	function cpp.linker(prj, cfg, objfiles, tool)
+	function swift.linker(prj, cfg, objfiles, tool)
 		local all_ldflags = ninja.list(table.join(tool.getlibdirflags(cfg), tool.getldflags(cfg), cfg.linkoptions))
 		local lddeps      = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
 		local libs        = lddeps .. " " .. ninja.list(tool.getlinkflags(cfg))
@@ -143,5 +150,3 @@ local p     = premake
 		end
 
 	end
-
-

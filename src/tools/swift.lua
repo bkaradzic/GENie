@@ -25,7 +25,7 @@ local swiftflags =
 	DisableWarnings           = "--suppress-warnings",            -- Disable warnings
 	FatalWarnings             = "--warnings-as-errors",           -- Treat warnings as fatal
 	Optimize                  = "-O",
-	OptimizeSize              = "-O",
+	OptimizeSize              = "-Os",
 	OptimizeSpeed             = "-Ounchecked",
 }
 

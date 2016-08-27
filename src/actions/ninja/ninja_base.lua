@@ -43,7 +43,11 @@ end
 
 -- generate all build files for every project configuration
 function ninja.generate_project(prj)
-	ninja.generate_cpp(prj)
+	if prj.language == "Swift" then
+		ninja.generate_swift(prj)
+	else
+		ninja.generate_cpp(prj)
+	end
 end
 
 local function innerget(self, key)

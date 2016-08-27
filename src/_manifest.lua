@@ -34,6 +34,7 @@
 		"tools/ow.lua",
 		"tools/snc.lua",
 		"tools/valac.lua",
+		"tools/swift.lua",
 		"base/validate.lua",
 		"base/help.lua",
 		"base/premake.lua",
@@ -97,4 +98,5 @@
 		"actions/ninja/ninja_base.lua",
 		"actions/ninja/ninja_solution.lua",
 		"actions/ninja/ninja_cpp.lua",
+		"actions/ninja/ninja_swift.lua",
 	}

@@ -12,9 +12,10 @@ newaction
 
 	-- The capabilities of this action
 	valid_kinds     = {"ConsoleApp", "WindowedApp", "SharedLib", "StaticLib"},
-	valid_languages = {"C", "C++"},
+	valid_languages = {"C", "C++", "Swift"},
 	valid_tools     = {
-		cc = { "gcc" }
+		cc    = { "gcc" },
+		swift = { "swift" },
 	},
 
 	-- Solution and project generation logic
