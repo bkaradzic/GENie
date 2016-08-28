@@ -93,11 +93,17 @@
 		"actions/fastbuild/_fastbuild.lua",
 		"actions/fastbuild/fastbuild_project.lua",
 		"actions/fastbuild/fastbuild_solution.lua",
-		
+
 		-- ninja action
 		"actions/ninja/_ninja.lua",
 		"actions/ninja/ninja_base.lua",
 		"actions/ninja/ninja_solution.lua",
 		"actions/ninja/ninja_cpp.lua",
 		"actions/ninja/ninja_swift.lua",
+
+		-- qbs action
+		"actions/qbs/_qbs.lua",
+		"actions/qbs/qbs_base.lua",
+		"actions/qbs/qbs_solution.lua",
+		"actions/qbs/qbs_cpp.lua",
 	}
