@@ -577,6 +577,8 @@
 			return premake.gcc
 		elseif premake.isdotnetproject(cfg) then
 			return premake.dotnet
+		elseif premake.isswiftproject(cfg) then
+			return premake.swift
 		else
 			return premake.valac
 		end

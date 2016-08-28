@@ -34,31 +34,40 @@ local p     = premake
 		_p("ninja_required_version = 1.7")
 		_p("")
 		
-		_p("target="..cfg.defines)
+		_p("target=".."")
+		local sdk = tool.get_sdk_path(cfg)
+		if sdk then
+			_p("toolchain_path = "..tool.get_toolchain_path(cfg))
+			_p("sdk_path = "..sdk)
+			_p("platform_path = "..tool.get_sdk_platform_path(cfg))
+			_p("sdk = -sdk $sdk_path")
+			_p("ld_baseflags = -syslibroot $sdk_path -F $platform_path/Developer/Library/Frameworks -lSystem -L $toolchain_path/usr/lib/swift/macosx -rpath $toolchain_path/usr/lib/swift/macosx -macosx_version_min 10.10.0")
+		else
+			_p("sdk_path =")
+			_p("sdk =")
+			_p("ld_baseflags =")
+		end
+		
+		_p("out_dir = "..cfg.buildtarget.directory)
+		_p("obj_dir = "..path.join(cfg.objectsdir, prj.name .. ".build"))
+		_p("module_name = "..prj.name)
+		_p("flags = -g -Onone")
 		
 		local flags = {
-			defines   = ninja.list(tool.getdefines(cfg.defines)),
-			includes  = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs))),
-			cppflags  = ninja.list(tool.getcppflags(cfg)),
-			cflags    = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)),
-			cxxflags  = ninja.list(table.join(tool.getcflags(cfg), tool.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)),
-			objcflags = ninja.list(table.join(tool.getcflags(cfg), tool.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_objc)),
+			-- defines    = ninja.list(tool.getdefines(cfg.defines)),
+			-- includes   = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs))),
+			swiftflags = ninja.list(tool.getswiftflags(cfg)),
 		}
 
 		_p("")
 			
 		_p("# core rules for " .. cfg.name)
-		_p("rule cc")
-		_p("  command = " .. tool.cc .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in")
-		_p("  description = cc $out")
+		_p("rule swiftc")
+		_p("  command = " .. tool.swiftc .. " -frontend -c -primary-file $in $files $target $sdk -module-cache-path $out_dir/ModuleCache -emit-module-doc-path $obj_dir/$basename~partial.swiftdoc -module-name $module_name $flags -emit-module-path $obj_dir/$basename~partial.swiftmodule -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out ")
+		_p("  description = swiftc $out")
 		_p("  depfile = $out.d")
 		_p("  deps = gcc")
 		_p("")
-		_p("rule cxx")
-		_p("  command = " .. tool.cxx .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in")
-		_p("  description = cxx $out")
-		_p("  depfile = $out.d")
-		_p("  deps = gcc")
 		_p("")
 		_p("rule ar")
 		_p("  command = " .. tool.ar .. " $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
@@ -66,9 +75,9 @@ local p     = premake
 		_p("")
 		
 		
-		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
+		local link = "ld"
 		_p("rule link")
-		_p("  command = " .. link .. " -o $out $in $all_ldflags $libs")
+		_p("  command = " .. tool.ld .. " -o $out $in $ld_baseflags $all_ldflags $libs")
 		_p("  description = link $out")
 		_p("")
 
@@ -89,30 +98,25 @@ local p     = premake
 	end
 	
 	function swift.objectname(cfg, file)
-		return path.join(cfg.objectsdir, path.trimdots(path.removeext(file)) .. ".o")
+		return path.join("$obj_dir", path.getname(file)..".o")
 	end
 
 	function swift.file_rules(cfg, flags)
 		_p("# build files")
+		local sfiles = Set(cfg.files)
 		
 		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
 				local objfilename = swift.objectname(cfg, file)
 				
-				local cflags = "cflags"
-				if path.isobjcfile(file) then
-					_p("build " .. objfilename .. ": cxx " .. file)
-					cflags = "objcflags"
-				elseif path.iscfile(file) and not cfg.options.ForceCPP then
-					_p("build " .. objfilename .. ": cc " .. file)
-				else
-					_p("build " .. objfilename .. ": cxx " .. file)
-					cflags = "cxxflags"
+				if path.isswiftfile(file) then
+					_p("build " .. objfilename .. ": swiftc " .. file)
+					_p(1, "basename = "..path.getbasename(file))
+					_p(1, "files = ".. ninja.list(sfiles - {file}))
+					cflags = "swiftflags"
 				end
 				
 				_p(1, "flags    = " .. flags[cflags])
-				_p(1, "includes = " .. flags.includes)
-				_p(1, "defines  = " .. flags.defines)
 			elseif path.isresourcefile(file) then
 				-- TODO
 			end
