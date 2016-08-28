@@ -63,15 +63,15 @@ local p     = premake
 			
 		_p("# core rules for " .. cfg.name)
 		_p("rule swiftc")
-		_p("  command = " .. tool.swiftc .. " -frontend -c -primary-file $in $files $target $sdk -module-cache-path $out_dir/ModuleCache -emit-module-doc-path $obj_dir/$basename~partial.swiftdoc -module-name $module_name $flags -emit-module-path $obj_dir/$basename~partial.swiftmodule -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out ")
-		_p("  description = swiftc $out")
-		_p("  depfile = $out.d")
-		_p("  deps = gcc")
+		_p(1, "command = " .. tool.swiftc .. " -frontend -c -primary-file $in $files $target $sdk -module-cache-path $out_dir/ModuleCache -emit-module-doc-path $out_doc_name -module-name $module_name $flags -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out ")
+		_p(1, "description = swiftc $out")
 		_p("")
+		_p("rule swiftm")
+		_p(1, "command = swift -frontend -emit-module $in -parse-as-library $target -enable-objc-interop $sdk -I $out_dir -F /Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -enable-testing -g -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out")
 		_p("")
 		_p("rule ar")
-		_p("  command = " .. tool.ar .. " $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
-		_p("  description = ar $out")
+		_p(1, "command = " .. tool.ar .. " cr $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+		_p(1, "description = ar $out")
 		_p("")
 		
 		
@@ -84,21 +84,33 @@ local p     = premake
 		swift.file_rules(cfg, flags)
 		
 		local objfiles = {}
+		local modfiles = {}
+		local docfiles = {}
 		
 		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
 				table.insert(objfiles, swift.objectname(cfg, file))
+				table.insert(modfiles, swift.modulename(cfg, file))
+				table.insert(docfiles, swift.docname(cfg, file))
 			end
 		end
 		_p('')
 		
-		swift.linker(prj, cfg, objfiles, tool, flags)
+		swift.linker(prj, cfg, {objfiles, modfiles, docfiles}, tool, flags)
 
 		_p("")
 	end
 	
 	function swift.objectname(cfg, file)
 		return path.join("$obj_dir", path.getname(file)..".o")
+	end
+	
+	function swift.modulename(cfg, file)
+		return path.join("$obj_dir", path.getname(file)..".o.swiftmodule")
+	end
+	
+	function swift.docname(cfg, file)
+		return path.join("$obj_dir", path.getname(file)..".o.swiftdoc")
 	end
 
 	function swift.file_rules(cfg, flags)
@@ -107,11 +119,14 @@ local p     = premake
 		
 		for _, file in ipairs(cfg.files) do
 			if path.isSourceFile(file) then
-				local objfilename = swift.objectname(cfg, file)
-				
 				if path.isswiftfile(file) then
-					_p("build " .. objfilename .. ": swiftc " .. file)
-					_p(1, "basename = "..path.getbasename(file))
+					local objn = swift.objectname(cfg, file)
+					local modn = swift.modulename(cfg, file)
+					local docn = swift.docname(cfg, file)
+					
+					_p("build %s | %s %s: swiftc %s", objn, modn, docn, file)
+					_p(1, "out_module_name = %s", modn)
+					_p(1, "out_doc_name = %s", docn)
 					_p(1, "files = ".. ninja.list(sfiles - {file}))
 					cflags = "swiftflags"
 				end
@@ -125,7 +140,7 @@ local p     = premake
 		_p("")
 	end
 	
-	function swift.linker(prj, cfg, objfiles, tool)
+	function swift.linker(prj, cfg, depfiles, tool)
 		local all_ldflags = ninja.list(table.join(tool.getlibdirflags(cfg), tool.getldflags(cfg), cfg.linkoptions))
 		local lddeps      = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
 		local libs        = lddeps .. " " .. ninja.list(tool.getlinkflags(cfg))
@@ -135,19 +150,21 @@ local p     = premake
 			_p(1, "libs        = " .. libs)
 		end
 		
+		local objfiles, modfiles, docfiles = table.unpack(depfiles)
+		
+		_p("build $out_dir/$module_name.swiftmodule | $out_dir/$module_name.swiftdoc: swiftm %s | %s", table.concat(modfiles, " "), table.concat(docfiles, " "))
+		_p("")
+		
 		if cfg.kind == "StaticLib" then
 			local ar_flags = ninja.list(tool.getarchiveflags(cfg, cfg, false))
-			_p("# link static lib")
-			_p("build " .. cfg:getoutputfilename() .. ": ar " .. table.concat(objfiles, " ") .. " | " .. lddeps)
-			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(cfg, cfg, false)))
+			_p("build %s: ar %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
+			_p(1, "flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 		elseif cfg.kind == "SharedLib" then
 			local output = cfg:getoutputfilename()
-			_p("# link shared lib")
-			_p("build " .. output .. ": link " .. table.concat(objfiles, " ") .. " | " .. libs)
+			_p("build %s : link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), libs)
 			writevars()
 		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
-			_p("# link executable")
-			_p("build " .. cfg:getoutputfilename() .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps)
+			_p("build %s: link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
 			writevars()
 		else
 			p.error("ninja action doesn't support this kind of target " .. cfg.kind)

@@ -64,3 +64,7 @@ end
 function premake.swift.getlinkflags(cfg)
 	return premake.gcc.getlinkflags(cfg)
 end
+
+function premake.swift.getarchiveflags(cfg)
+	return ""
+end
