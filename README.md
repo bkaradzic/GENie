@@ -12,6 +12,7 @@ Supported project generators:
  * FASTBuild (experimental)
  * GNU Makefile
  * Ninja (experimental)
+ * Qbs / QtCreator (experimental)
  * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
  * XCode
 
@@ -20,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 604 (commit b83e29a64238fa6796d12e7b8a5cf4b294382a5d)
+	version 610 (commit 82f10fbd9953f693061d3098e4b53f63c862b27c)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -106,6 +107,7 @@ intention to keep it compatible with it.
    `C7DebugInfo`.
  - Added some support for per-configuration `files` lists.
  - Removed `clean` action.
+ - Added support for QtCreator via Qbs build tool.
 
 Debugging GENie scripts
 -----------------------
