@@ -39,7 +39,8 @@
 		"base/help.lua",
 		"base/premake.lua",
 		"base/iter.lua",
-
+		"base/set.lua",
+		
 		-- CodeBlocks action
 		"actions/codeblocks/_codeblocks.lua",
 		"actions/codeblocks/codeblocks_workspace.lua",
