@@ -28,6 +28,7 @@ newaction
 		io.indent = "\t"
 		io.escaper(qbs.esc)
 		premake.generate(sln, sln.name .. ".creator.qbs",      qbs.generate_solution)
+		io.indent = " "
 		premake.generate(sln, sln.name .. ".creator.qbs.user", qbs.generate_user)
 	end,
 
