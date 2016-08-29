@@ -115,7 +115,9 @@
 		
 		oncheckproject = checkproject,
 	}
-
+	
+--[[
+TODO
 	newaction 
 	{
 		trigger         = "xcode6",
@@ -163,5 +165,4 @@
 		
 		oncheckproject = checkproject,
 	}
-
-
+--]]
