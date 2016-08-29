@@ -60,7 +60,13 @@ function qbs.generate_user(sln)
 
 	_p(3, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Desktop</value>')
 	_p(3, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Desktop</value>')
-	_p(3, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{a2dfd3b4-6cb0-45f5-af3a-7b006d8b8b27}</value>')
+
+	-- BK - Need to figure out how to extract kit associated profile name/guid...
+	--  ~.config/QtProject/qtcreator/qbs.conf
+	local qbsguid    = "9926e565-8fc0-448d-9d5d-4b0293efd443"
+	local qbsprofile = "qtc_Desktop_1bffddf2"
+
+	_p(3, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{%s}</value>', qbsguid)
 
 	_p(3, '<value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>')
 	_p(3, '<value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>')
@@ -81,7 +87,7 @@ function qbs.generate_user(sln)
 		_p(6, '<value type="bool" key="Qbs.CleanInstallRoot">false</value>')
 		_p(6, '<valuemap type="QVariantMap" key="Qbs.Configuration">')
 		_p(7, '<value type="QString" key="qbs.buildVariant">%s</value>', cfgname:lower())
-		_p(7, '<value type="QString" key="qbs.profile">qtc_Desktop_5f26c5de</value>')
+		_p(7, '<value type="QString" key="qbs.profile">%s</value>', qbsprofile)
 		_p(6, '</valuemap>')
 		_p(5, '</valuemap>')
 		_p(5, '<value type="int" key="ProjectExplorer.BuildStepList.StepsCount">1</value>')
@@ -152,7 +158,7 @@ function qbs.generate_user(sln)
 			_p(4, '<valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>')
 			_p(4, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">%s</value>', prj.name)
 			_p(4, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>')
-			_p(4, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qbs.RunConfiguration:%s.qtc_Desktop_5f26c5de---Qbs.RC.NameSeparator---%s</value>', prj.name, prj.name)
+			_p(4, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qbs.RunConfiguration:%s.%s---Qbs.RC.NameSeparator---%s</value>', prj.name, qbsprofile, prj.name)
 
 			_p(4, '<value type="QString" key="Qbs.RunConfiguration.CommandLineArguments"></value>')
 
