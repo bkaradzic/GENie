@@ -27,7 +27,6 @@ function qbs.generate_project(prj)
 	_p(indent, ' */')
 	_p(indent, '')
 	_p(indent, 'import qbs')
-	_p(indent, 'import qbs.FileInfo')
 	_p(indent, '')
 
 	if prj.kind == "ConsoleApp" then
