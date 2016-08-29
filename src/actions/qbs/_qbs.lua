@@ -27,7 +27,8 @@ newaction
 		io.eol    = "\n"
 		io.indent = "\t"
 		io.escaper(qbs.esc)
-		premake.generate(sln, sln.name .. ".solution.qbs", qbs.generate_solution)
+		premake.generate(sln, sln.name .. ".creator.qbs",      qbs.generate_solution)
+		premake.generate(sln, sln.name .. ".creator.qbs.user", qbs.generate_user)
 	end,
 
 	onproject = function(prj)
