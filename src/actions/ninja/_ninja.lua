@@ -1,3 +1,8 @@
+--
+-- GENie - Project generator tool
+-- https://github.com/bkaradzic/GENie#license
+--
+
 premake.ninja = { }
 
 local p = premake
