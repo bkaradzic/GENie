@@ -171,7 +171,7 @@
             iprj.uuid = uuid
 			
 			if iprj.language == "C++" and string.find(projcontents, "<CLRSupport>true</CLRSupport>") then
-				iprj.flags.managed = true
+				iprj.flags.Managed = true
 			end
             
             iprj.relpath = path.getrelative(sln.location, iprj.location)
