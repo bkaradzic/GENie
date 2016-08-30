@@ -3,9 +3,8 @@
 -- Copyright (c) 2016 Stuart Carnie and the GENie project
 --
 
-premake.ninja.swift2 = { }
 local ninja = premake.ninja
-local swift = premake.ninja.swift2
+local swift = {}
 local p     = premake
 
 -- generate project + config build file
@@ -113,7 +112,6 @@ local p     = premake
 		local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
 		
 		if cfg.kind == "StaticLib" then
-			local ar_flags = ninja.list(tool.getarchiveflags(cfg, cfg, false))
 			_p("build %s: ar %s | %s ", cfg:getoutputfilename(), ninja.list(objfiles), lddeps)
 			_p(1, "flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 		else
