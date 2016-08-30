@@ -44,7 +44,7 @@ function qbs.generate_project(prj)
 	_p(indent, 'name: "' .. prj.name .. '"')
 
 	_p(indent, 'cpp.cxxLanguageVersion: "c++11"')
-	_p(indent, 'cpp.enableReproducibleBuilds: true')
+--	_p(indent, 'cpp.enableReproducibleBuilds: true')
 
 	_p(indent, 'Depends { name: "cpp" }')
 
@@ -194,6 +194,12 @@ function qbs.generate_project(prj)
 					, "cpp.libraryPath"
 					, cfg.libdirs
 				)
+
+				qbs.list(
+					  indent
+					, "linkerFlags"
+					, cfg.linkoptions
+					)
 
 				table.sort(prj.files)
 				if #prj.files > 0 then

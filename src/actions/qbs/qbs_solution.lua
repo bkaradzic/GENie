@@ -102,7 +102,7 @@ function qbs.generate_user(sln)
 						qbsguid = string.sub(line, 1, 36)
 					elseif qbsguid ~= "" then
 						qbsprofile = string.sub(line, 10, 29)
-						print(qbsguid, qbsprofile)
+						--print(qbsguid, qbsprofile)
 						break
 					end
 				end
