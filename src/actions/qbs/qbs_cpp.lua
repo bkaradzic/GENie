@@ -72,10 +72,10 @@ function qbs.generate_project(prj)
 				local arch = ""
 
 				if cfg.platform == "x32" then
-					_p(indent, 'architectures: [ "x86" ]')
+--					_p(indent, 'architectures: [ "x86" ]')
 					arch = '&& qbs.architecture == "x86"'
 				elseif cfg.platform == "x64" then
-					_p(indent, 'architectures: [ "x86_64" ]')
+--					_p(indent, 'architectures: [ "x86_64" ]')
 					arch = '&& qbs.architecture == "x86_64"'
 				end
 
