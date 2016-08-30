@@ -85,6 +85,29 @@ function qbs.generate_user(sln)
 				end
 			end
 			io.close(file)
+		else
+			-- ~/.config/QtProject/qtcreator/qbs/1.6.0/qbs.conf
+			--
+			-- <key>org.qt-project.qbs.preferences.qtcreator.kit.{d67ae030-7a33-43e0-850a-afe9e47fe5e1}</key>
+			-- <string>qtc_Desktop_ee88281c</string>
+
+			file = io.open(path.join(os.getenv("HOME"), ".config/QtProject/qtcreator/qbs/1.6.0/qbs.conf"))
+
+			if file ~= nil then
+				local str = '\t<key>org.qt-project.qbs.preferences.qtcreator.kit.'
+				local index = string.len(str)+1
+				for line in file:lines() do
+					if qbsguid == "" and index == string.find(line, '{', index) then
+						line = string.sub(line, index+1)
+						qbsguid = string.sub(line, 1, 36)
+					elseif qbsguid ~= "" then
+						qbsprofile = string.sub(line, 10, 29)
+						print(qbsguid, qbsprofile)
+						break
+					end
+				end
+				io.close(file)
+			end
 		end
 	end
 
