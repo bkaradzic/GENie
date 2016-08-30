@@ -619,7 +619,19 @@
 		{
 			kind  = "filelist",
 			scope = "config",
-		}
+		},
+		
+		buildoptions_swiftc =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
+		linkoptions_swift =
+		{
+			kind  = "list",
+			scope = "config",
+		},
 	}
 
 

@@ -26,6 +26,11 @@ local p     = premake
 	function swift.generate_config(prj, cfg)
 		local tool = premake.gettool(prj)
 		
+		local flags = {
+			swiftcflags = ninja.list(table.join(tool.getswiftcflags(cfg), cfg.buildoptions_swiftc)),
+		}
+
+		
 		_p("# Swift project build file")
 		_p("# generated with GENie ninja")
 		_p("")
@@ -39,6 +44,7 @@ local p     = premake
 		_p("obj_dir = "..path.join(cfg.objectsdir, prj.name .. ".build"))
 		_p("module_name = "..prj.name)
 		_p("module_maps = %s", ninja.list(tool.getmodulemaps(cfg)))
+		_p("flags = %s", flags.swiftcflags)
 		
 		if (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
 			_p("parse_as_library = ")
@@ -58,24 +64,22 @@ local p     = premake
 			_p("sdk =")
 			_p("ld_baseflags =")
 		end
-				
-		local flags = {
-			-- defines    = ninja.list(tool.getdefines(cfg.defines)),
-			-- includes   = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs))),
-			swiftflags = ninja.list(tool.getswiftflags(cfg)),
-		}
-
 		_p("")
-			
+		
 		_p("# core rules for " .. cfg.name)
 		_p("rule swiftc")
-		_p(1, "command = " .. tool.swiftc .. " -frontend -c -primary-file $in $files $target -enable-objc-interop $sdk -I $out_dir -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_doc_name $flags $parse_as_library -module-name $module_name -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out")
+		_p(1, "command = %s -frontend -c -primary-file $in $files $target -enable-objc-interop $sdk -I $out_dir -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_doc_name $flags $parse_as_library -module-name $module_name -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out", tool.swiftc)
 		_p(1, "description = compile $out")
 		_p("")
 		
 		_p("rule swiftm")
-		_p(1, "command = swift -frontend -emit-module $in $parse_as_library $target -enable-objc-interop $sdk -I $out_dir -F $platform_path/Developer/Library/Frameworks -enable-testing $flags -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out")
+		_p(1, "command = swift -frontend -emit-module $in $parse_as_library $flags $target -enable-objc-interop $sdk -I $out_dir -F $platform_path/Developer/Library/Frameworks -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out")
 		_p(1, "description = generate module")
+		_p("")
+		
+		_p("rule swiftlink")
+		_p(1, "command = swiftc $target $sdk $linkoptions_swift $flags -L $out_dir -o $out_dir/$module_name -F $platform_path/Developer/Library/Frameworks -emit-executable $in")
+		_p(1, "description = create executable")
 		_p("")
 		
 		_p("rule ar")
@@ -102,7 +106,7 @@ local p     = premake
 				table.insert(docfiles, swift.docname(cfg, file))
 			end
 		end
-		_p('')
+		_p("")
 		
 		swift.linker(prj, cfg, {objfiles, modfiles, docfiles}, tool, flags)
 
@@ -136,10 +140,10 @@ local p     = premake
 					_p(1, "out_module_name = %s", modn)
 					_p(1, "out_doc_name = %s", docn)
 					_p(1, "files = ".. ninja.list(sfiles - {file}))
-					cflags = "swiftflags"
+					build_flags = "swiftcflags"
 				end
 				
-				_p(1, "flags    = " .. flags[cflags])
+				_p(1, "flags    = " .. flags[build_flags])
 			elseif path.isresourcefile(file) then
 				-- TODO
 			end
@@ -172,8 +176,11 @@ local p     = premake
 			_p("build %s : link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), libs)
 			writevars()
 		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
-			_p("build %s: link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
-			writevars()
+			--_p("build %s: link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
+			--writevars()
+			_p("build %s: swiftlink %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
+			_p(1, "linkoptions_swift = %s", ninja.list(cfg.linkoptions_swift))
+
 		else
 			p.error("ninja action doesn't support this kind of target " .. cfg.kind)
 		end

@@ -12,6 +12,7 @@
 --
 
 	premake.swift.swiftc = "swiftc"
+	premake.swift.swift  = "swift"
 	premake.swift.cc     = "gcc"
 	premake.swift.ar     = "ar"
 	premake.swift.ld     = "ld"
@@ -21,17 +22,35 @@
 -- Translation of Premake flags into Swift flags
 --
 
-local swiftflags =
+local swiftcflags =
 {
 	Symbols                   = "-g",                             -- Produce debug information
 	DisableWarnings           = "--suppress-warnings",            -- Disable warnings
 	FatalWarnings             = "--warnings-as-errors",           -- Treat warnings as fatal
-	Optimize                  = "-O",
-	OptimizeSize              = "-O",
-	OptimizeSpeed             = "-Ounchecked",
+	Optimize                  = "-O -whole-module-optimization",
+	OptimizeSize              = "-O -whole-module-optimization",
+	OptimizeSpeed             = "-Ounchecked -whole-module-optimization",
+	MinimumWarnings           = "-minimum-warnings",
 }
 
-premake.swift.platforms = {}
+local swiftlinkflags = {
+	StaticRuntime             = "-static-stdlib",
+}
+
+premake.swift.platforms = {
+	Native = {
+		swiftcflags    = "",
+		swiftlinkflags = "",
+		ldflags        = "-arch x86_64",
+	},
+	x64 = {
+		swiftcflags    = "",
+		swiftlinkflags = "",
+		ldflags        = "-arch x86_64",
+	}
+}
+
+local platforms = premake.swift.platforms
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
@@ -49,8 +68,20 @@ function premake.swift.get_toolchain_path(cfg)
 	return string.trim(os.outputof("xcode-select -p")) .. "/Toolchains/XcodeDefault.xctoolchain"
 end
 
-function premake.swift.getswiftflags(cfg)
-	return table.translate(cfg.flags, swiftflags)
+function premake.swift.gettarget(cfg)
+	return "-target x86_64-apple-macosx10.11"
+end
+
+function premake.swift.getswiftcflags(cfg)
+	local result = table.translate(cfg.flags, swiftcflags)
+	table.insert(result, platforms[cfg.platform].swiftcflags)
+	return result
+end
+
+function premake.swift.getswiftlinkflags(cfg)
+	local result = table.translate(cfg.flags, swiftlinkflags)
+	table.insert(result, platforms[cfg.platform].swiftlinkflags)
+	return result
 end
 
 function premake.swift.getmodulemaps(cfg)
@@ -68,7 +99,8 @@ function premake.swift.getlibdirflags(cfg)
 end
 
 function premake.swift.getldflags(cfg)
-	return premake.gcc.getldflags(cfg)
+	local result = { platforms[cfg.platform].ldflags }
+	return result
 end
 
 function premake.swift.getlinkflags(cfg)
