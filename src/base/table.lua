@@ -212,5 +212,17 @@
 		end
 		return result
 	end
+	
+	
+	--
+	-- reverse table order
+	--
+	
+	function table.reverse(arr)
+		for i=1, math.floor(#arr / 2) do
+			arr[i], arr[#arr - i + 1] = arr[#arr - i + 1], arr[i]
+		end
+		return arr
+	end
 
 
