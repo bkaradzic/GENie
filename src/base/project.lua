@@ -327,6 +327,8 @@
 				return premake.iscppproject(target)
 			elseif premake.isdotnetproject(source) then
 				return premake.isdotnetproject(target)
+			elseif premake.isswiftproject(source) then
+				return premake.isswiftproject(source) or premake.iscppproject(source)
 			end
 		end
 

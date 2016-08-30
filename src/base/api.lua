@@ -615,7 +615,11 @@
 		},
 		
 		-- swift options
-		
+		swiftmodulemaps = 
+		{
+			kind  = "filelist",
+			scope = "config",
+		}
 	}
 
 

@@ -53,6 +53,16 @@ function premake.swift.getswiftflags(cfg)
 	return table.translate(cfg.flags, swiftflags)
 end
 
+function premake.swift.getmodulemaps(cfg)
+	local maps = {}
+	if next(cfg.swiftmodulemaps) then
+		for _, mod in ipairs(cfg.swiftmodulemaps) do
+			table.insert(maps, string.format("-Xcc -fmodule-map-file=%s", mod))
+		end
+	end
+	return maps
+end
+
 function premake.swift.getlibdirflags(cfg)
 	return premake.gcc.getlibdirflags(cfg)
 end

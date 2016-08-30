@@ -35,24 +35,30 @@ local p     = premake
 		_p("")
 		
 		_p("target=".."")
+		_p("out_dir = "..cfg.buildtarget.directory)
+		_p("obj_dir = "..path.join(cfg.objectsdir, prj.name .. ".build"))
+		_p("module_name = "..prj.name)
+		_p("module_maps = %s", ninja.list(tool.getmodulemaps(cfg)))
+		
+		if (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
+			_p("parse_as_library = ")
+		else
+			_p("parse_as_library = -parse-as-library")
+		end
+
 		local sdk = tool.get_sdk_path(cfg)
 		if sdk then
 			_p("toolchain_path = "..tool.get_toolchain_path(cfg))
 			_p("sdk_path = "..sdk)
 			_p("platform_path = "..tool.get_sdk_platform_path(cfg))
 			_p("sdk = -sdk $sdk_path")
-			_p("ld_baseflags = -syslibroot $sdk_path -F $platform_path/Developer/Library/Frameworks -lSystem -L $toolchain_path/usr/lib/swift/macosx -rpath $toolchain_path/usr/lib/swift/macosx -macosx_version_min 10.10.0")
+			_p("ld_baseflags = -force_load $toolchain_path/usr/lib/arc/libarclite_macosx.a -L $out_dir -F $platform_path/Developer/Library/Frameworks -syslibroot $sdk_path -lobjc -lSystem -L $toolchain_path/usr/lib/swift/macosx -rpath $toolchain_path/usr/lib/swift/macosx -macosx_version_min 10.10.0 -no_objc_category_merging")
 		else
 			_p("sdk_path =")
 			_p("sdk =")
 			_p("ld_baseflags =")
 		end
-		
-		_p("out_dir = "..cfg.buildtarget.directory)
-		_p("obj_dir = "..path.join(cfg.objectsdir, prj.name .. ".build"))
-		_p("module_name = "..prj.name)
-		_p("flags = -g -Onone")
-		
+				
 		local flags = {
 			-- defines    = ninja.list(tool.getdefines(cfg.defines)),
 			-- includes   = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs))),
@@ -63,21 +69,23 @@ local p     = premake
 			
 		_p("# core rules for " .. cfg.name)
 		_p("rule swiftc")
-		_p(1, "command = " .. tool.swiftc .. " -frontend -c -primary-file $in $files $target $sdk -module-cache-path $out_dir/ModuleCache -emit-module-doc-path $out_doc_name -module-name $module_name $flags -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out ")
-		_p(1, "description = swiftc $out")
+		_p(1, "command = " .. tool.swiftc .. " -frontend -c -primary-file $in $files $target -enable-objc-interop $sdk -I $out_dir -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_doc_name $flags $parse_as_library -module-name $module_name -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out")
+		_p(1, "description = compile $out")
 		_p("")
+		
 		_p("rule swiftm")
-		_p(1, "command = swift -frontend -emit-module $in -parse-as-library $target -enable-objc-interop $sdk -I $out_dir -F /Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -enable-testing -g -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out")
+		_p(1, "command = swift -frontend -emit-module $in $parse_as_library $target -enable-objc-interop $sdk -I $out_dir -F $platform_path/Developer/Library/Frameworks -enable-testing $flags -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out")
+		_p(1, "description = generate module")
 		_p("")
+		
 		_p("rule ar")
 		_p(1, "command = " .. tool.ar .. " cr $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 		_p(1, "description = ar $out")
 		_p("")
 		
-		
 		local link = "ld"
 		_p("rule link")
-		_p("  command = " .. tool.ld .. " -o $out $in $ld_baseflags $all_ldflags $libs")
+		_p("  command = %s $in $ld_baseflags $all_ldflags $libs -o $out", tool.ld)
 		_p("  description = link $out")
 		_p("")
 
