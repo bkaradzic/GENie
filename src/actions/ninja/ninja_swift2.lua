@@ -39,9 +39,9 @@ local p     = premake
 		_p("")
 		
 		_p("target = %s", tool.gettarget(cfg))
-		_p("out_dir = "..cfg.buildtarget.directory)
-		_p("obj_dir = "..path.join(cfg.objectsdir, prj.name .. ".build"))
-		_p("module_name = "..prj.name)
+		_p("out_dir = %s", cfg.buildtarget.directory)
+		_p("obj_dir = %s", path.join(cfg.objectsdir, prj.name .. ".build"))
+		_p("module_name = %s", prj.name)
 		_p("module_maps = %s", ninja.list(tool.getmodulemaps(cfg)))
 		_p("flags = %s", flags.swiftcflags)
 		
@@ -59,9 +59,9 @@ local p     = premake
 
 		local sdk = tool.get_sdk_path(cfg)
 		if sdk then
-			_p("toolchain_path = "..tool.get_toolchain_path(cfg))
-			_p("sdk_path = "..sdk)
-			_p("platform_path = "..tool.get_sdk_platform_path(cfg))
+			_p("toolchain_path = %s", tool.get_toolchain_path(cfg))
+			_p("sdk_path = %s", sdk)
+			_p("platform_path = %s", tool.get_sdk_platform_path(cfg))
 			_p("sdk = -sdk $sdk_path")
 		else
 			_p("sdk_path =")
@@ -69,7 +69,7 @@ local p     = premake
 		end
 		_p("")
 		
-		_p("# core rules for " .. cfg.name)
+		_p("# core rules for %s", cfg.name)
 		_p("rule swiftc")
 		_p(1, "command = %s -frontend -c $in $target -enable-objc-interop $sdk -I $out_dir $flags -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -emit-module-path $out_dir/$module_name.swiftmodule -num-threads 8 $obj_files", tool.swift)
 		_p(1, "description = compile $out")
@@ -81,7 +81,7 @@ local p     = premake
 		_p("")
 		
 		_p("rule ar")
-		_p(1, "command = " .. tool.ar .. " cr $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+		_p(1, "command = %s cr $flags $out $in $libs %s", tool.ar, (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 		_p(1, "description = ar $out")
 		_p("")
 		
