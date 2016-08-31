@@ -48,3 +48,11 @@
 	function string.startswith(haystack, needle)
 		return (haystack:find(needle, 1, true) == 1)
 	end
+
+	--
+	-- remove leading and trailing whitespace from string.
+	--
+	
+	function string.trim(s)
+		return (s:gsub("^%s*(.-)%s*$", "%1"))
+	end
