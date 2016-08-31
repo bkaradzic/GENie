@@ -26,9 +26,9 @@ local p     = premake
 		local tool = premake.gettool(prj)
 		
 		local flags = {
-			swiftcflags = ninja.list(table.join(tool.getswiftcflags(cfg), cfg.buildoptions_swiftc)),
+			swiftcflags    = ninja.list(tool.getswiftcflags(cfg)),
+			swiftlinkflags = ninja.list(tool.getswiftlinkflags(cfg)),
 		}
-
 		
 		_p("# Swift project build file")
 		_p("# generated with GENie ninja")
@@ -38,24 +38,13 @@ local p     = premake
 		_p("ninja_required_version = 1.7")
 		_p("")
 		
-		_p("target = %s", tool.gettarget(cfg))
 		_p("out_dir = %s", cfg.buildtarget.directory)
 		_p("obj_dir = %s", path.join(cfg.objectsdir, prj.name .. ".build"))
 		_p("module_name = %s", prj.name)
 		_p("module_maps = %s", ninja.list(tool.getmodulemaps(cfg)))
-		_p("flags = %s", flags.swiftcflags)
-		
-		if (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
-			_p("swiftc_flags = ")
-			_p("swiftlink_flags = -emit-executable %s", ninja.list(tool.getswiftlinkflags(cfg)))
-			_p("parse_as_library = ")
-		elseif cfg.kind == "DynamicLib" then
-			_p("swiftc_flags = -parse-as-library")
-			_p("swiftlink_flags = -emit-library %s", ninja.list(tool.getswiftlinkflags(cfg)))
-		else
-			_p("swiftc_flags = -parse-as-library")
-			_p("parse_as_library = -parse-as-library")
-		end
+		_p("swiftc_flags = %s", flags.swiftcflags)
+		_p("swiftlink_flags = %s", flags.swiftlinkflags)
+		_p("ar_flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 
 		local sdk = tool.get_sdk_path(cfg)
 		if sdk then
@@ -71,17 +60,17 @@ local p     = premake
 		
 		_p("# core rules for %s", cfg.name)
 		_p("rule swiftc")
-		_p(1, "command = %s -frontend -c $in $target -enable-objc-interop $sdk -I $out_dir $flags -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -emit-module-path $out_dir/$module_name.swiftmodule -num-threads 8 $obj_files", tool.swift)
+		_p(1, "command = %s -frontend -c $in -enable-objc-interop $sdk -I $out_dir $swiftc_flags -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -emit-module-path $out_dir/$module_name.swiftmodule -num-threads 8 $obj_files", tool.swift)
 		_p(1, "description = compile $out")
 		_p("")
 		
 		_p("rule swiftlink")
-		_p(1, "command = %s $target $sdk -L $out_dir -o $out $swiftlink_flags $linkoptions_swift $in", tool.swiftc)
+		_p(1, "command = %s $sdk -L $out_dir -o $out $swiftlink_flags $in", tool.swiftc)
 		_p(1, "description = create executable")
 		_p("")
 		
 		_p("rule ar")
-		_p(1, "command = %s cr $flags $out $in $libs %s", tool.ar, (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+		_p(1, "command = %s cr $ar_flags $out $in $libs %s", tool.ar, (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 		_p(1, "description = ar $out")
 		_p("")
 		
@@ -113,7 +102,6 @@ local p     = premake
 		
 		if cfg.kind == "StaticLib" then
 			_p("build %s: ar %s | %s ", cfg:getoutputfilename(), ninja.list(objfiles), lddeps)
-			_p(1, "flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 		else
 			local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath"))
 			_p("build $out_dir/$module_name: swiftlink %s | %s", ninja.list(objfiles), lddeps)

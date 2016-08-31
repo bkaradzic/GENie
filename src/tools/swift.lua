@@ -75,12 +75,32 @@ end
 function premake.swift.getswiftcflags(cfg)
 	local result = table.translate(cfg.flags, swiftcflags)
 	table.insert(result, platforms[cfg.platform].swiftcflags)
+	
+	result = table.join(result, cfg.buildoptions_swift)
+	
+	if cfg.kind == "DynamicLib" or cfg.kind == "StaticLib" then
+		table.insert(result, "-parse-as-library")
+	end
+	
+	table.insert(result, premake.swift.gettarget(cfg))
+	
 	return result
 end
 
 function premake.swift.getswiftlinkflags(cfg)
 	local result = table.translate(cfg.flags, swiftlinkflags)
 	table.insert(result, platforms[cfg.platform].swiftlinkflags)
+	
+	result = table.join(result, cfg.linkoptions_swift)
+	
+	if cfg.kind == "DynamicLib" or cfg.kind == "StaticLib" then
+		table.insert(result, "-emit-as-library")
+	else
+		table.insert(result, "-emit-executable")
+	end
+	
+	table.insert(result, premake.swift.gettarget(cfg))
+	
 	return result
 end
 

@@ -621,7 +621,7 @@
 			scope = "config",
 		},
 		
-		buildoptions_swiftc =
+		buildoptions_swift =
 		{
 			kind  = "list",
 			scope = "config",
