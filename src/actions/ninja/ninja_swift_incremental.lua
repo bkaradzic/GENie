@@ -38,24 +38,19 @@ function swift.generate_config(prj, cfg)
 	_p("ninja_required_version = 1.7")
 	_p("")
 
-	_p("target=".."")
-	_p("out_dir = "..cfg.buildtarget.directory)
-	_p("obj_dir = "..path.join(cfg.objectsdir, prj.name .. ".build"))
-	_p("module_name = "..prj.name)
+	_p("out_dir = %s", cfg.buildtarget.directory)
+	_p("obj_dir = %s", path.join(cfg.objectsdir, prj.name .. ".build"))
+	_p("module_name = %s", prj.name)
 	_p("module_maps = %s", ninja.list(tool.getmodulemaps(cfg)))
-	_p("flags = %s", flags.swiftcflags)
-
-	if (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
-		_p("parse_as_library = ")
-	else
-		_p("parse_as_library = -parse-as-library")
-	end
+	_p("swiftc_flags = %s", flags.swiftcflags)
+	_p("swiftlink_flags = %s", flags.swiftlinkflags)
+	_p("ar_flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 
 	local sdk = tool.get_sdk_path(cfg)
 	if sdk then
-		_p("toolchain_path = "..tool.get_toolchain_path(cfg))
-		_p("sdk_path = "..sdk)
-		_p("platform_path = "..tool.get_sdk_platform_path(cfg))
+		_p("toolchain_path = %s", tool.get_toolchain_path(cfg))
+		_p("sdk_path = %s", sdk)
+		_p("platform_path = %s", tool.get_sdk_platform_path(cfg))
 		_p("sdk = -sdk $sdk_path")
 		_p("ld_baseflags = -force_load $toolchain_path/usr/lib/arc/libarclite_macosx.a -L $out_dir -F $platform_path/Developer/Library/Frameworks -syslibroot $sdk_path -lobjc -lSystem -L $toolchain_path/usr/lib/swift/macosx -rpath $toolchain_path/usr/lib/swift/macosx -macosx_version_min 10.10.0 -no_objc_category_merging")
 	else
@@ -65,24 +60,24 @@ function swift.generate_config(prj, cfg)
 	end
 	_p("")
 
-	_p("# core rules for " .. cfg.name)
+	_p("# core rules for %s", cfg.name)
 	_p("rule swiftc")
-	_p(1, "command = %s -frontend -c -primary-file $in $files $target -enable-objc-interop $sdk -I $out_dir -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_doc_name $flags $parse_as_library -module-name $module_name -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out", tool.swiftc)
+	_p(1, "command = %s -frontend -c -primary-file $in $files $target -enable-objc-interop $sdk -I $out_dir -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_doc_name swiftc_flags -module-name $module_name -emit-module-path $out_module_name -emit-dependencies-path $out.d -emit-reference-dependencies-path $obj_dir/$basename.swiftdeps -o $out", tool.swiftc)
 	_p(1, "description = compile $out")
 	_p("")
 
 	_p("rule swiftm")
-	_p(1, "command = swift -frontend -emit-module $in $parse_as_library $flags $target -enable-objc-interop $sdk -I $out_dir -F $platform_path/Developer/Library/Frameworks -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out")
+	_p(1, "command = %s -frontend -emit-module $in $parse_as_library swiftc_flags $target -enable-objc-interop $sdk -I $out_dir -F $platform_path/Developer/Library/Frameworks -enable-testing -module-cache-path $out_dir/ModuleCache -D SWIFT_PACKAGE $module_maps -emit-module-doc-path $out_dir/$module_name.swiftdoc -module-name $module_name -o $out", tool.swift)
 	_p(1, "description = generate module")
 	_p("")
 
 	_p("rule swiftlink")
-	_p(1, "command = swiftc $target $sdk $linkoptions_swift $flags -L $out_dir -o $out_dir/$module_name -F $platform_path/Developer/Library/Frameworks -emit-executable $in")
-	_p(1, "description = create executable")
+	_p(1, "command = %s $target $sdk $swiftlink_flags -L $out_dir -o $out_dir/$module_name -F $platform_path/Developer/Library/Frameworks $in", tool.swiftc)
+	_p(1, "description = linking $target")
 	_p("")
 
 	_p("rule ar")
-	_p(1, "command = " .. tool.ar .. " cr $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+	_p(1, "command = %s cr $ar_flags $out $in $libs %s", tool.ar, (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 	_p(1, "description = ar $out")
 	_p("")
 
@@ -164,21 +159,20 @@ function swift.linker(prj, cfg, depfiles, tool)
 
 	_p("build $out_dir/$module_name.swiftmodule | $out_dir/$module_name.swiftdoc: swiftm %s | %s", table.concat(modfiles, " "), table.concat(docfiles, " "))
 	_p("")
+		
+	local output = cfg:getoutputfilename()
 
 	if cfg.kind == "StaticLib" then
 		local ar_flags = ninja.list(tool.getarchiveflags(cfg, cfg, false))
-		_p("build %s: ar %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
+		_p("build %s: ar %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), lddeps)
 		_p(1, "flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 	elseif cfg.kind == "SharedLib" then
-		local output = cfg:getoutputfilename()
-		_p("build %s : link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), libs)
+		_p("build %s : swiftlink %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), libs)
 		writevars()
 	elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
 		--_p("build %s: link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
 		--writevars()
-		_p("build %s: swiftlink %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
-		_p(1, "linkoptions_swift = %s", ninja.list(cfg.linkoptions_swift))
-
+		_p("build %s: swiftlink %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), lddeps)
 	else
 		p.error("ninja action doesn't support this kind of target " .. cfg.kind)
 	end
