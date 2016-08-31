@@ -225,4 +225,18 @@
 		return arr
 	end
 
+	--
+	-- reverse table order
+	--
 
+	function table.arglist(arg, value)
+		if #value > 0 then
+			local args = {}
+			for _, val in ipairs(value) do
+				table.insert(args, string.format("%s %s", arg, val))
+			end
+			return table.concat(args, " ")
+		else
+			return ""
+		end
+	end

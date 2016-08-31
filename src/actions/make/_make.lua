@@ -140,7 +140,7 @@
 			cc     = { "gcc", "ghs" },
 			dotnet = { "mono", "msnet", "pnet" },
 			valac  = { "valac" },
-			swift  = { "swiftc" },
+			swift  = { "swift" },
 		},
 
 		onsolution = function(sln)
