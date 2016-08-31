@@ -26,7 +26,7 @@ function qbs.generate_project(prj)
 	_p(indent, ' * https://github.com/bkaradzic/GENie')
 	_p(indent, ' */')
 	_p(indent, '')
-	_p(indent, 'import qbs')
+	_p(indent, 'import qbs 1.0')
 	_p(indent, '')
 
 	if prj.kind == "ConsoleApp" then
@@ -59,24 +59,25 @@ function qbs.generate_project(prj)
 	local cc = premake.gettool(prj)
 	local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
 
-	_p('');
 	for _, platform in ipairs(platforms) do
 		for cfg in premake.eachconfig(prj, platform) do
 
 			if cfg.platform ~= "Native" then
 
+				_p('');
 				_p(indent, 'Properties { /* %s */', premake.getconfigname(cfg.name, cfg.platform, true))
 
 				indent = indent + 1
 
 				local arch = ""
+				local linkerFlags = cfg.linkoptions
 
 				if cfg.platform == "x32" then
---					_p(indent, 'architectures: [ "x86" ]')
 					arch = '&& qbs.architecture == "x86"'
+--					table.insert(linkerFlags, "-m32")
 				elseif cfg.platform == "x64" then
---					_p(indent, 'architectures: [ "x86_64" ]')
 					arch = '&& qbs.architecture == "x86_64"'
+--					table.insert(linkerFlags, "-m64")
 				end
 
 				if cfg.name == "Debug" then
@@ -85,7 +86,7 @@ function qbs.generate_project(prj)
 					_p(indent, 'condition: qbs.buildVariant == "release" %s', arch)
 				end
 
-				_p(indent, 'targetName: "%s"', cfg.buildtarget.name)
+				_p(indent, 'targetName: "%s"', cfg.buildtarget.basename)
 --				_p(indent, 'fileTagsFilter: "application"')
 --				_p(indent, 'qbs.install: true')
 --				_p(indent, 'qbs.installDir: "%s"', cfg.buildtarget.directory)
@@ -135,6 +136,8 @@ function qbs.generate_project(prj)
 
 				if cfg.flags.ExtraWarnings then
 					_p(indent, 'cpp.warningLevel: "all"')
+				else
+					_p(indent, 'cpp.warningLevel: "default"')
 				end
 
 				if cfg.flags.FatalWarnings then
@@ -143,10 +146,24 @@ function qbs.generate_project(prj)
 
 				if cfg.flags.NoRTTI then
 					_p(indent, 'cpp.enableRtti: false')
+				else
+					_p(indent, 'cpp.enableRtti: true')
+				end
+
+				if cfg.flags.NoExceptions then
+					_p(indent, 'cpp.enableExceptions: false')
+				else
+					_p(indent, 'cpp.enableExceptions: true')
 				end
 
 				if cfg.flags.Symbols then
 					_p(indent, 'cpp.debugInformation: true')
+				end
+
+				if cfg.flags.Unicode then
+					_p(indent, 'cpp.windowsApiCharacterSet: "unicode"')
+				else
+					_p(indent, 'cpp.windowsApiCharacterSet: ""')
 				end
 
 				for _, value in ipairs(cfg.flags) do
@@ -191,21 +208,24 @@ function qbs.generate_project(prj)
 
 				qbs.list(
 					  indent
-					, "cpp.libraryPath"
+					, "cpp.libraryPaths"
 					, cfg.libdirs
 				)
 
 				qbs.list(
 					  indent
 					, "linkerFlags"
-					, cfg.linkoptions
+					, linkerFlags
 					)
 
 				table.sort(prj.files)
 				if #prj.files > 0 then
 					_p(indent, 'files: [')
 					for _, file in ipairs(prj.files) do
-						if path.isSourceFile(file) then
+						if path.iscfile(file)
+						or path.iscppfile(file)
+						or path.isobjcfile(file)
+						or path.iscppheader(file) then
 							if not is_excluded(prj, cfg, file) then
 								_p(indent+1, '"%s",', file)
 							end
