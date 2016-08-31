@@ -51,6 +51,7 @@ function premake.make_swift(prj)
 
 	_p('SWIFTC = %s', tool.swift)
 	_p('SWIFTLINK = %s', tool.swiftc)
+	_p('DSYMUTIL = %s', tool.dsymutil)
 	_p('AR = %s', tool.ar)
 	_p('')
 
@@ -113,6 +114,9 @@ function swift.linker(prj, ctool)
 	else
 		_p("$(TARGET): objects $(LDDEPS)", lddeps)
 		_p(1, "$(SILENT) $(SWIFTLINK) $(sdk) -L $(out_dir) -o $@ $(swiftlink_flags) $(OBJECTS)")
+		_p("ifdef symbol_file")
+		_p(1, "$(SILENT) $(DSYMUTIL) $(TARGET) -o $(symbol_file)")
+		_p("endif")
 	end
 end
 
@@ -129,6 +133,9 @@ function swift.generate_config(prj, cfg, tool)
 	_p(1, "swiftlink_flags = %s", make.list(tool.getswiftlinkflags(cfg)))
 	_p(1, "ar_flags = %s", make.list(tool.getarchiveflags(cfg, cfg, false)))
 	_p(1, "LDDEPS = %s", make.list(premake.getlinks(cfg, "siblings", "fullpath")))
+	if cfg.flags.Symbols then
+		_p(1, "symbol_file = $(TARGET).dSYM")
+	end
 
 	local sdk = tool.get_sdk_path(cfg)
 	if sdk then

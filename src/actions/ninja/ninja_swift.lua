@@ -40,11 +40,20 @@ local p     = premake
 		
 		_p("out_dir = %s", cfg.buildtarget.directory)
 		_p("obj_dir = %s", path.join(cfg.objectsdir, prj.name .. ".build"))
+		_p("target = $out_dir/%s", cfg.buildtarget.name)
 		_p("module_name = %s", prj.name)
 		_p("module_maps = %s", ninja.list(tool.getmodulemaps(cfg)))
 		_p("swiftc_flags = %s", flags.swiftcflags)
 		_p("swiftlink_flags = %s", flags.swiftlinkflags)
 		_p("ar_flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
+		
+		if cfg.flags.Symbols then
+			_p("symbol_file = $target.dSYM")
+			symbols_command = string.format("&& %s $target -o $symbol_file", tool.dsymutil)
+		else
+			_p("symbol_file = ")
+			symbols_command = ""
+		end
 
 		local sdk = tool.get_sdk_path(cfg)
 		if sdk then
@@ -65,7 +74,7 @@ local p     = premake
 		_p("")
 		
 		_p("rule swiftlink")
-		_p(1, "command = %s $sdk -L $out_dir -o $out $swiftlink_flags $in", tool.swiftc)
+		_p(1, "command = %s $sdk -L $out_dir -o $out $swiftlink_flags $in %s", tool.swiftc, symbols_command)
 		_p(1, "description = create executable")
 		_p("")
 		
@@ -101,9 +110,9 @@ local p     = premake
 		local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
 		
 		if cfg.kind == "StaticLib" then
-			_p("build %s: ar %s | %s ", cfg:getoutputfilename(), ninja.list(objfiles), lddeps)
+			_p("build $target: ar %s | %s ", ninja.list(objfiles), lddeps)
 		else
 			local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath"))
-			_p("build $out_dir/$module_name: swiftlink %s | %s", ninja.list(objfiles), lddeps)
+			_p("build $target: swiftlink %s | %s", ninja.list(objfiles), lddeps)
 		end
 	end
