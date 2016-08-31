@@ -11,11 +11,12 @@
 -- Set default tools
 --
 
-	premake.swift.swiftc = "swiftc"
-	premake.swift.swift  = "swift"
-	premake.swift.cc     = "gcc"
-	premake.swift.ar     = "ar"
-	premake.swift.ld     = "ld"
+	premake.swift.swiftc   = "swiftc"
+	premake.swift.swift    = "swift"
+	premake.swift.cc       = "gcc"
+	premake.swift.ar       = "ar"
+	premake.swift.ld       = "ld"
+	premake.swift.dsymutil = "dsymutil"
 
 
 --
