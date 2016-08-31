@@ -280,7 +280,7 @@
 	end
 
 	function path.isSourceFile(fname)
-		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm", ".vala" })
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm", ".vala", ".swift" })
 	end
 
 	function path.isSourceFileVS(fname)
@@ -290,6 +290,10 @@
 
 	function path.isasmfile(fname)
 		return path.hasextension(fname, ".asm")
+	end
+	
+	function path.isswiftfile(fname)
+		return path.hasextension(fname, ".swift")
 	end
 
 --
