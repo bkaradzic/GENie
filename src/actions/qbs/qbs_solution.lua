@@ -75,50 +75,51 @@ function qbs.generate_user(sln)
 	local file = io.open(path.join(qtcreatordir, "qbs.conf"))
 	if file == nil then
 		file = io.open(path.join(qtcreatordir, "qbs/1.6.0/qbs.conf"))
-		if file ~= nil then
-			for line in file:lines() do
-				if line == "[org]" then
-					-- BK - Need to figure out how to extract kit associated profile name/guid...
-					--  ~.config/QtProject/qtcreator/qbs.conf
-					--
-					-- [org]
-					-- qt-project\qbs\preferences\qtcreator\kit\%7B9926e565-8fc0-448d-9d5d-4b0293efd443%7D=qtc_Desktop_1bffddf2
-					--
-					local str = 'qt-project\\qbs\\preferences\\qtcreator\\kit\\%'
-					local index = string.len(str)+1
-					for line in file:lines() do
-						if index == string.find(line, '7B', index) then
-							line = string.sub(line, index+2)
-							qbsguid    = string.sub(line, 1, 36)
-							qbsprofile = string.sub(line, 41)
-							--print(qbsguid, qbsprofile)
-							break
-						end
-					end
-				else
-					-- ~/.config/QtProject/qtcreator/qbs/1.6.0/qbs.conf
-					--
-					-- <key>org.qt-project.qbs.preferences.qtcreator.kit.{d67ae030-7a33-43e0-850a-afe9e47fe5e1}</key>
-					-- <string>qtc_Desktop_ee88281c</string>
+	end
 
-					local str = '\t<key>org.qt-project.qbs.preferences.qtcreator.kit.'
-					local index = string.len(str)+1
-					for line in file:lines() do
-						if qbsguid == "" and index == string.find(line, '{', index) then
-							line = string.sub(line, index+1)
-							qbsguid = string.sub(line, 1, 36)
-						elseif qbsguid ~= "" then
-							qbsprofile = string.sub(line, 10, 29)
-							--print(qbsguid, qbsprofile)
-							break
-						end
+	if file ~= nil then
+		for line in file:lines() do
+			if line == "[org]" then
+				-- BK - Need to figure out how to extract kit associated profile name/guid...
+				--  ~.config/QtProject/qtcreator/qbs.conf
+				--
+				-- [org]
+				-- qt-project\qbs\preferences\qtcreator\kit\%7B9926e565-8fc0-448d-9d5d-4b0293efd443%7D=qtc_Desktop_1bffddf2
+				--
+				local str = 'qt-project\\qbs\\preferences\\qtcreator\\kit\\%'
+				local index = string.len(str)+1
+				for line in file:lines() do
+					if index == string.find(line, '7B', index) then
+						line = string.sub(line, index+2)
+						qbsguid    = string.sub(line, 1, 36)
+						qbsprofile = string.sub(line, 41)
+						--print(qbsguid, qbsprofile)
+						break
 					end
 				end
+			else
+				-- ~/.config/QtProject/qtcreator/qbs/1.6.0/qbs.conf
+				--
+				-- <key>org.qt-project.qbs.preferences.qtcreator.kit.{d67ae030-7a33-43e0-850a-afe9e47fe5e1}</key>
+				-- <string>qtc_Desktop_ee88281c</string>
 
-				break
+				local str = '\t<key>org.qt-project.qbs.preferences.qtcreator.kit.'
+				local index = string.len(str)+1
+				for line in file:lines() do
+					if qbsguid == "" and index == string.find(line, '{', index) then
+						line = string.sub(line, index+1)
+						qbsguid = string.sub(line, 1, 36)
+					elseif qbsguid ~= "" then
+						qbsprofile = string.sub(line, 10, 29)
+						--print(qbsguid, qbsprofile)
+						break
+					end
+				end
 			end
-			io.close(file)
+
+			break
 		end
+		io.close(file)
 	end
 
 	_p(3, '<value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{%s}</value>', qbsguid)
