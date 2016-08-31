@@ -7,7 +7,6 @@ premake.ninja.cpp = { }
 local ninja = premake.ninja
 local cpp   = premake.ninja.cpp
 local p     = premake
-local tree  = p.tree
 
 -- generate project + config build file
 	function ninja.generate_cpp(prj)
@@ -150,5 +149,5 @@ local tree  = p.tree
 
 	end
 
-
+	
 
