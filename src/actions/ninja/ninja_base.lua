@@ -56,7 +56,7 @@ end
 -- generate all build files for every project configuration
 function ninja.generate_project(prj)
 	if prj.language == "Swift" then
-		ninja.generate_swift2(prj)
+		ninja.generate_swift(prj)
 	else
 		ninja.generate_cpp(prj)
 	end

@@ -101,7 +101,7 @@
 		"actions/ninja/ninja_solution.lua",
 		"actions/ninja/ninja_cpp.lua",
 		"actions/ninja/ninja_swift.lua",
-		"actions/ninja/ninja_swift2.lua",
+		"actions/ninja/ninja_swift_incremental.lua",
 
 		-- qbs action
 		"actions/qbs/_qbs.lua",
