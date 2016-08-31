@@ -36,6 +36,7 @@
 			[".wav"] = "Resources",
 			[".xcassets"]  = "Resources",
 			[".xcdatamodeld"] = "Sources",
+			[".swift"] = "Sources",
 		}
 		return categories[path.getextension(node.name)]
 	end
@@ -96,6 +97,7 @@
 			[".wav"]       = "audio.wav",
 			[".xcassets"]  = "folder.assetcatalog",
 			[".xcdatamodeld"] = "wrapper.xcdatamodeld",
+			[".swift"]     = "sourcecode.swift",
 		}
 		return types[path.getextension(node.path)] or "text"
 	end
@@ -135,6 +137,7 @@
 			[".wav"]       = "audio.wav",
 			[".xcassets"]  = "folder.assetcatalog",
 			[".xcdatamodeld"] = "wrapper.xcdatamodeld",
+			[".swift"]     = "sourcecode.swift",
 		}
 		return types[path.getextension(node.path)] or "text"
 	end
@@ -569,7 +572,7 @@
 
 	function xcode.PBXProject(tr)
 		_p('/* Begin PBXProject section */')
-		_p(2,'08FB7793FE84155DC02AAC07 /* Project object */ = {')
+		_p(2,'__RootObject_ /* Project object */ = {')
 		_p(3,'isa = PBXProject;')
 		_p(3,'buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "%s" */;', tr.name)
 		_p(3,'compatibilityVersion = "Xcode 3.2";')
@@ -1053,6 +1056,6 @@
 
 	function xcode.Footer()
 		_p(1,'};')
-		_p('\trootObject = 08FB7793FE84155DC02AAC07 /* Project object */;')
+		_p('\trootObject = __RootObject_ /* Project object */;')
 		_p('}')
 	end

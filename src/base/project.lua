@@ -327,6 +327,8 @@
 				return premake.iscppproject(target)
 			elseif premake.isdotnetproject(source) then
 				return premake.isdotnetproject(target)
+			elseif premake.isswiftproject(source) then
+				return premake.isswiftproject(source) or premake.iscppproject(source)
 			end
 		end
 
@@ -577,6 +579,8 @@
 			return premake.gcc
 		elseif premake.isdotnetproject(cfg) then
 			return premake.dotnet
+		elseif premake.isswiftproject(cfg) then
+			return premake.swift
 		else
 			return premake.valac
 		end
@@ -727,4 +731,12 @@
 
 	function premake.isvalaproject(prj)
 		return (prj.language == "Vala")
+	end
+
+--
+-- Returns true if the project uses the Swift language.
+--
+
+	function premake.isswiftproject(prj)
+		return (prj.language == "Swift")
 	end
