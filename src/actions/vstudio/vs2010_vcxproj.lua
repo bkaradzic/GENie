@@ -633,6 +633,7 @@
 				None = {},
 				ResourceCompile = {},
 				AppxManifest = {},
+				Natvis = {},
 				Image = {},
 				DeploymentContent = {}
 			}
@@ -650,6 +651,8 @@
 				elseif path.isappxmanifest(file.name) then
 					foundAppxManifest = true
 					table.insert(sortedfiles.AppxManifest, file)
+				elseif path.isnatvis(file.name) then
+					table.insert(sortedfiles.Natvis, file)
 				elseif path.isasmfile(file.name) then
 					table.insert(sortedfiles.MASM, file)
 				elseif file.flags and table.icontains(file.flags, "DeploymentContent") then
@@ -709,6 +712,7 @@
 		vc2010.customtaskgroup(prj)
 		vc2010.simplefilesgroup(prj, "ResourceCompile")
 		vc2010.simplefilesgroup(prj, "AppxManifest")
+		vc2010.simplefilesgroup(prj, "Natvis")
 		vc2010.deploymentcontentgroup(prj, "Image")
 		vc2010.deploymentcontentgroup(prj, "DeploymentContent", "None")
 	end
@@ -955,7 +959,7 @@
             if prj.flags.Managed then
                 vc2010.clrReferences(prj)
             end
-            
+
 			vc2010.files(prj)
 			vc2010.projectReferences(prj)
 			vc2010.masmfiles(prj)
@@ -969,7 +973,7 @@
 
 		_p('</Project>')
 	end
-    
+
 --
 -- Generate the list of CLR references
 --
@@ -977,9 +981,9 @@
         if #prj.clrreferences == 0 then
             return
         end
-        
+
         _p(1,'<ItemGroup>')
-        
+
         for _, ref in ipairs(prj.clrreferences) do
             if os.isfile(ref) then
                 local assembly = path.getbasename(ref)
@@ -990,7 +994,7 @@
                 _p(2,'<Reference Include="%s" />', ref)
             end
         end
-        
+
         _p(1,'</ItemGroup>')
     end
 
@@ -1000,13 +1004,13 @@
 
 	function vc2010.projectReferences(prj)
 		local deps = premake.getdependencies(prj)
-        
+
 		if #deps == 0 and #prj.vsimportreferences == 0 then
             return
         end
-        
+
         _p(1,'<ItemGroup>')
-        
+
         for _, dep in ipairs(deps) do
             local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
             _p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
@@ -1016,14 +1020,14 @@
             end
             _p(2,'</ProjectReference>')
         end
-        
+
         for _, ref in ipairs(prj.vsimportreferences) do
             local iprj = premake.vstudio.getimportprj(ref, prj.solution)
             _p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
             _p(3,'<Project>{%s}</Project>', iprj.uuid)
             _p(2,'</ProjectReference>')
         end
-        
+
         _p(1,'</ItemGroup>')
 	end
 

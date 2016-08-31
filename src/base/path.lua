@@ -220,7 +220,7 @@
 		end
 		return result
 	end
-	
+
 
 --
 -- Returns true if the filename has a particular extension.
@@ -254,7 +254,7 @@
 	function path.iscfile(fname)
 		return path.hasextension(fname, { ".c", ".s", ".m" })
 	end
-	
+
 	function path.iscppfile(fname)
 		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm" })
 	end
@@ -273,6 +273,10 @@
 
 	function path.isappxmanifest(fname)
 		return path.hasextension(fname, ".appxmanifest")
+	end
+
+	function path.isnatvis(fname)
+		return path.hasextension(fname, ".natvis")
 	end
 
 	function path.isSourceFile(fname)

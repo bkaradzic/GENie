@@ -136,6 +136,7 @@
 			vc2010.filefiltergroup(prj, "ResourceCompile")
 			vc2010.filefiltergroup(prj, "CustomBuild")
 			vc2010.filefiltergroup(prj, "AppxManifest")
+			vc2010.filefiltergroup(prj, "Natvis")
 			vc2010.filefiltergroup(prj, "Image")
 			vc2010.filefiltergroup(prj, "DeploymentContent", "None")
 			vc2010.filefiltergroup(prj, "MASM")
