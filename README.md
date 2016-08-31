@@ -108,6 +108,7 @@ intention to keep it compatible with it.
  - Added some support for per-configuration `files` lists.
  - Removed `clean` action.
  - Added support for QtCreator via Qbs build tool.
+ - Added .natvis file type support for Visual Studio.
 
 Debugging GENie scripts
 -----------------------
