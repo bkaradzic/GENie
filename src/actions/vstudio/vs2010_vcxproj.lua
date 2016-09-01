@@ -864,6 +864,16 @@
 							)
 					end
 				end
+                
+                if prj.flags and prj.flags.Managed then
+                    local prjforcenative = table.icontains(prj.forcenative, file.name)
+                    for _,vsconfig in ipairs(configs) do
+                        local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+                        if prjforcenative or table.icontains(cfg.forcenative, file.name) then
+                            _p(3, '<CompileAsManaged ' .. if_config_and_platform() .. '>false</CompileAsManaged>', premake.esc(vsconfig.name))
+                        end
+                    end
+                end
 
 				_p(2,'</ClCompile>')
 			end

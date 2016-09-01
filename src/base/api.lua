@@ -120,6 +120,12 @@
 			kind  = "filelist",
 			scope = "config",
 		},
+        
+        forcenative =
+        {
+            kind = "filelist",
+            scope = "config",
+        },
 
 		nopch =
 		{
