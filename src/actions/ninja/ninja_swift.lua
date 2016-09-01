@@ -46,6 +46,8 @@ local p     = premake
 		_p("swiftc_flags = %s", flags.swiftcflags)
 		_p("swiftlink_flags = %s", flags.swiftlinkflags)
 		_p("ar_flags = %s", ninja.list(tool.getarchiveflags(cfg, cfg, false)))
+		--_p("lib_dir_flags = %s", ninja.list(tool.getlibdirflags(cfg)))
+		_p("ld_flags = %s", ninja.list(tool.getldflags(cfg)))
 		
 		if cfg.flags.Symbols then
 			_p("symbol_file = $target.dSYM")
@@ -74,12 +76,12 @@ local p     = premake
 		_p("")
 		
 		_p("rule swiftlink")
-		_p(1, "command = %s $sdk -L $out_dir -o $out $swiftlink_flags $in %s", tool.swiftc, symbols_command)
+		_p(1, "command = %s $sdk -L $out_dir -o $out $swiftlink_flags $ld_flags $in %s", tool.swiftc, symbols_command)
 		_p(1, "description = create executable")
 		_p("")
 		
 		_p("rule ar")
-		_p(1, "command = %s cr $ar_flags $out $in $libs %s", tool.ar, (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+		_p(1, "command = %s cr $ar_flags $out $in %s", tool.ar, (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 		_p(1, "description = ar $out")
 		_p("")
 		
