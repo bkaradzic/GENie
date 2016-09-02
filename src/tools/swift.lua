@@ -42,12 +42,10 @@ premake.swift.platforms = {
 	Native = {
 		swiftcflags    = "",
 		swiftlinkflags = "",
-		ldflags        = "-arch x86_64",
 	},
 	x64 = {
 		swiftcflags    = "",
 		swiftlinkflags = "",
-		ldflags        = "-arch x86_64",
 	}
 }
 
@@ -121,6 +119,16 @@ end
 
 function premake.swift.getldflags(cfg)
 	local result = { platforms[cfg.platform].ldflags }
+	
+	local links = premake.getlinks(cfg, "siblings", "basename")
+	for _,v in ipairs(links) do
+		if path.getextension(v) == ".framework" then
+			table.insert(result, "-framework "..v)
+		else
+			table.insert(result, "-l"..v)
+		end
+	end
+	
 	return result
 end
 
