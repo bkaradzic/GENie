@@ -50,10 +50,10 @@ local p     = premake
 		_p("ld_flags = %s", ninja.list(tool.getldflags(cfg)))
 		
 		if cfg.flags.Symbols then
-			_p("symbol_file = $target.dSYM")
-			symbols_command = string.format("&& %s $target -o $symbol_file", tool.dsymutil)
+			_p("symbols = $target.dSYM")
+			symbols_command = string.format("&& %s $target -o $symbols", tool.dsymutil)
 		else
-			_p("symbol_file = ")
+			_p("symbols = ")
 			symbols_command = ""
 		end
 
