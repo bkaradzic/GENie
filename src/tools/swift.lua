@@ -77,7 +77,7 @@ function premake.swift.getswiftcflags(cfg)
 	
 	result = table.join(result, cfg.buildoptions_swift)
 	
-	if cfg.kind == "DynamicLib" or cfg.kind == "StaticLib" then
+	if cfg.kind == "SharedLib" or cfg.kind == "StaticLib" then
 		table.insert(result, "-parse-as-library")
 	end
 	
@@ -92,8 +92,8 @@ function premake.swift.getswiftlinkflags(cfg)
 	
 	result = table.join(result, cfg.linkoptions_swift)
 	
-	if cfg.kind == "DynamicLib" or cfg.kind == "StaticLib" then
-		table.insert(result, "-emit-as-library")
+	if cfg.kind == "SharedLib" or cfg.kind == "StaticLib" then
+		table.insert(result, "-emit-library")
 	else
 		table.insert(result, "-emit-executable")
 	end
