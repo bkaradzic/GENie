@@ -60,7 +60,7 @@
 			scope = "config",
 		},
 
-		clrreferences = 
+		clrreferences =
 		{
 			kind = "list",
 			scope = "container",
@@ -120,12 +120,12 @@
 			kind  = "filelist",
 			scope = "config",
 		},
-        
-        forcenative =
-        {
-            kind = "filelist",
-            scope = "config",
-        },
+
+		forcenative =
+		{
+			kind = "filelist",
+			scope = "config",
+		},
 
 		nopch =
 		{
@@ -619,20 +619,20 @@
 			kind = "filelist",
 			scope = "container",
 		},
-		
+
 		-- swift options
-		swiftmodulemaps = 
+		swiftmodulemaps =
 		{
 			kind  = "filelist",
 			scope = "config",
 		},
-		
+
 		buildoptions_swift =
 		{
 			kind  = "list",
 			scope = "config",
 		},
-		
+
 		linkoptions_swift =
 		{
 			kind  = "list",
@@ -1213,24 +1213,24 @@
 
 		return premake.CurrentGroup
 	end
-    
+
 	function importvsproject(location)
 		if string.find(_ACTION, "vs") ~= 1 then
 			error("Only available for visual studio actions")
 		end
-		
+
 		sln, err = premake.getobject("solution")
 		if not sln then
 			error(err)
 		end
-        
+
 		local group = creategroupsfrompath(premake.CurrentGroup, sln)
-        
+
 		local project = {}
 		project.location = location
 		project.group = group
 		project.flags = {}
-        
+
 		table.insert(sln.importedprojects, project)
     end
 

@@ -142,6 +142,8 @@ function qbs.generate_project(prj)
 
 				if cfg.flags.FatalWarnings then
 					_p(indent, 'cpp.treatWarningsAsErrors: true')
+				else
+					_p(indent, 'cpp.treatWarningsAsErrors: false')
 				end
 
 				if cfg.flags.NoRTTI then
@@ -158,12 +160,25 @@ function qbs.generate_project(prj)
 
 				if cfg.flags.Symbols then
 					_p(indent, 'cpp.debugInformation: true')
+				else
+					_p(indent, 'cpp.debugInformation: false')
 				end
 
 				if cfg.flags.Unicode then
 					_p(indent, 'cpp.windowsApiCharacterSet: "unicode"')
 				else
 					_p(indent, 'cpp.windowsApiCharacterSet: ""')
+				end
+
+				if not cfg.pchheader or cfg.flags.NoPCH then
+					_p(indent, 'cpp.usePrecompiledHeader: false')
+				else
+					_p(indent, 'cpp.usePrecompiledHeader: true')
+					_p(indent, 'Group {')
+					_p(indent+1, 'name: "PCH"')
+					_p(indent+1, 'files: ["' .. cfg.pchheader .. '"]')
+					_p(indent+1, 'fileTags: ["cpp_pch_src"]')
+					_p(indent, '}')
 				end
 
 				for _, value in ipairs(cfg.flags) do
@@ -214,7 +229,7 @@ function qbs.generate_project(prj)
 
 				qbs.list(
 					  indent
-					, "linkerFlags"
+					, "cpp.linkerFlags"
 					, linkerFlags
 					)
 
