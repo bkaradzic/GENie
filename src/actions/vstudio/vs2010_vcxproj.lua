@@ -344,7 +344,7 @@
 		_p(2,'<ClCompile>')
 
 		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
-			, table.concat(premake.esc(cfg.buildoptions), " ")
+			, table.concat(premake.esc(table.join(cfg.buildoptions, cfg.buildoptions_cpp)), " ")
 			, iif(cfg.flags.UnsignedChar, "/J ", " ")
 			)
 
@@ -864,16 +864,16 @@
 							)
 					end
 				end
-                
-                if prj.flags and prj.flags.Managed then
-                    local prjforcenative = table.icontains(prj.forcenative, file.name)
-                    for _,vsconfig in ipairs(configs) do
-                        local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
-                        if prjforcenative or table.icontains(cfg.forcenative, file.name) then
-                            _p(3, '<CompileAsManaged ' .. if_config_and_platform() .. '>false</CompileAsManaged>', premake.esc(vsconfig.name))
-                        end
-                    end
-                end
+
+				if prj.flags and prj.flags.Managed then
+					local prjforcenative = table.icontains(prj.forcenative, file.name)
+					for _,vsconfig in ipairs(configs) do
+						local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+						if prjforcenative or table.icontains(cfg.forcenative, file.name) then
+							_p(3, '<CompileAsManaged ' .. if_config_and_platform() .. '>false</CompileAsManaged>', premake.esc(vsconfig.name))
+						end
+					end
+				end
 
 				_p(2,'</ClCompile>')
 			end
@@ -966,9 +966,9 @@
 
 			item_definitions(prj)
 
-            if prj.flags.Managed then
-                vc2010.clrReferences(prj)
-            end
+			if prj.flags.Managed then
+				vc2010.clrReferences(prj)
+			end
 
 			vc2010.files(prj)
 			vc2010.projectReferences(prj)
@@ -987,26 +987,26 @@
 --
 -- Generate the list of CLR references
 --
-    function vc2010.clrReferences(prj)
-        if #prj.clrreferences == 0 then
-            return
-        end
+	function vc2010.clrReferences(prj)
+		if #prj.clrreferences == 0 then
+			return
+		end
 
-        _p(1,'<ItemGroup>')
+		_p(1,'<ItemGroup>')
 
-        for _, ref in ipairs(prj.clrreferences) do
-            if os.isfile(ref) then
-                local assembly = path.getbasename(ref)
-                _p(2,'<Reference Include="%s">', assembly)
-                _p(3,'<HintPath>%s</HintPath>', path.getrelative(prj.location, ref))
-                _p(2,'</Reference>')
-            else
-                _p(2,'<Reference Include="%s" />', ref)
-            end
-        end
+		for _, ref in ipairs(prj.clrreferences) do
+			if os.isfile(ref) then
+				local assembly = path.getbasename(ref)
+				_p(2,'<Reference Include="%s">', assembly)
+				_p(3,'<HintPath>%s</HintPath>', path.getrelative(prj.location, ref))
+				_p(2,'</Reference>')
+			else
+				_p(2,'<Reference Include="%s" />', ref)
+			end
+		end
 
-        _p(1,'</ItemGroup>')
-    end
+		_p(1,'</ItemGroup>')
+	end
 
 --
 -- Generate the list of project dependencies.
@@ -1016,29 +1016,29 @@
 		local deps = premake.getdependencies(prj)
 
 		if #deps == 0 and #prj.vsimportreferences == 0 then
-            return
-        end
+			return
+		end
 
-        _p(1,'<ItemGroup>')
+		_p(1,'<ItemGroup>')
 
-        for _, dep in ipairs(deps) do
-            local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
-            _p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
-            _p(3,'<Project>{%s}</Project>', dep.uuid)
-            if vstudio.iswinrt() then
-                _p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
-            end
-            _p(2,'</ProjectReference>')
-        end
+		for _, dep in ipairs(deps) do
+			local deppath = path.getrelative(prj.location, vstudio.projectfile(dep))
+			_p(2,'<ProjectReference Include=\"%s\">', path.translate(deppath, "\\"))
+			_p(3,'<Project>{%s}</Project>', dep.uuid)
+			if vstudio.iswinrt() then
+				_p(3,'<ReferenceOutputAssembly>false</ReferenceOutputAssembly>')
+			end
+			_p(2,'</ProjectReference>')
+		end
 
-        for _, ref in ipairs(prj.vsimportreferences) do
-            local iprj = premake.vstudio.getimportprj(ref, prj.solution)
-            _p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
-            _p(3,'<Project>{%s}</Project>', iprj.uuid)
-            _p(2,'</ProjectReference>')
-        end
+		for _, ref in ipairs(prj.vsimportreferences) do
+			local iprj = premake.vstudio.getimportprj(ref, prj.solution)
+			_p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
+			_p(3,'<Project>{%s}</Project>', iprj.uuid)
+			_p(2,'</ProjectReference>')
+		end
 
-        _p(1,'</ItemGroup>')
+		_p(1,'</ItemGroup>')
 	end
 
 
