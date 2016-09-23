@@ -43,22 +43,22 @@ endif
 MAKEFILE = genie.make
 
 ifeq ($(config),release)
-  OBJDIR         = obj/Release
-  TARGETDIR      = ../../bin/darwin
-  override TARGET         = $(TARGETDIR)/genie
-  DEFINES       += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
-  INCLUDES      += -I../../src/host/lua-5.3.0/src
-  INCLUDES      +=
-  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
-  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
-  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -mmacosx-version-min=10.4
-  LDDEPS        +=
-  LIBS          += $(LDDEPS) -framework CoreServices
-  EXTERNAL_LIBS +=
-  LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJDIR              = obj/Release
+  TARGETDIR           = ../../bin/darwin
+  override TARGET              = $(TARGETDIR)/genie
+  DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
+  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           +=
+  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
+  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS        += $(LDFLAGS) -L. -mmacosx-version-min=10.4
+  LDDEPS             +=
+  LIBS               += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS      +=
+  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -122,22 +122,22 @@ ifeq ($(config),release)
 endif
 
 ifeq ($(config),debug)
-  OBJDIR         = obj/Debug
-  TARGETDIR      = ../../bin/darwin
-  override TARGET         = $(TARGETDIR)/genie
-  DEFINES       += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
-  INCLUDES      += -I../../src/host/lua-5.3.0/src
-  INCLUDES      +=
-  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
-  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
-  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -mmacosx-version-min=10.4
-  LDDEPS        +=
-  LIBS          += $(LDDEPS) -framework CoreServices
-  EXTERNAL_LIBS +=
-  LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJDIR              = obj/Debug
+  TARGETDIR           = ../../bin/darwin
+  override TARGET              = $(TARGETDIR)/genie
+  DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
+  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           +=
+  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
+  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS        += $(LDFLAGS) -L. -mmacosx-version-min=10.4
+  LDDEPS             +=
+  LIBS               += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS      +=
+  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -202,22 +202,22 @@ endif
 
 ifeq ($(config),releaseuniv32)
   AR         = libtool
-  OBJDIR         = obj/Universal32/Release
-  TARGETDIR      = ../../bin/darwin
-  override TARGET         = $(TARGETDIR)/genie
-  DEFINES       += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
-  INCLUDES      += -I../../src/host/lua-5.3.0/src
-  INCLUDES      +=
-  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
-  LDDEPS        +=
-  LIBS          += $(LDDEPS) -framework CoreServices
-  EXTERNAL_LIBS +=
-  LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJDIR              = obj/Universal32/Release
+  TARGETDIR           = ../../bin/darwin
+  override TARGET              = $(TARGETDIR)/genie
+  DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
+  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           +=
+  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS        += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
+  LDDEPS             +=
+  LIBS               += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS      +=
+  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -282,22 +282,22 @@ endif
 
 ifeq ($(config),debuguniv32)
   AR         = libtool
-  OBJDIR         = obj/Universal32/Debug
-  TARGETDIR      = ../../bin/darwin
-  override TARGET         = $(TARGETDIR)/genie
-  DEFINES       += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
-  INCLUDES      += -I../../src/host/lua-5.3.0/src
-  INCLUDES      +=
-  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
-  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
-  LDDEPS        +=
-  LIBS          += $(LDDEPS) -framework CoreServices
-  EXTERNAL_LIBS +=
-  LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJDIR              = obj/Universal32/Debug
+  TARGETDIR           = ../../bin/darwin
+  override TARGET              = $(TARGETDIR)/genie
+  DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
+  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           +=
+  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
+  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS        += $(LDFLAGS) -L. -arch i386 -arch ppc -mmacosx-version-min=10.4
+  LDDEPS             +=
+  LIBS               += $(LDDEPS) -framework CoreServices
+  EXTERNAL_LIBS      +=
+  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -405,6 +405,10 @@ ifneq (,$(PCH))
 $(GCH): $(PCH) $(MAKEFILE) | $(OBJDIR)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) -x c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
+
+$(GCH_OBJC): $(PCH) $(MAKEFILE) | $(OBJDIR)
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) -x objective-c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
 endif
 
 $(OBJDIR)/src/host/lua-5.3.0/src/lapi.o: ../../src/host/lua-5.3.0/src/lapi.c $(GCH) $(MAKEFILE)

@@ -43,22 +43,22 @@ endif
 MAKEFILE = genie.make
 
 ifeq ($(config),release)
-  OBJDIR         = obj/Release
-  TARGETDIR      = ../../bin/windows
-  override TARGET         = $(TARGETDIR)/genie.exe
-  DEFINES       += -DNDEBUG -DLUA_COMPAT_MODULE
-  INCLUDES      += -I../../src/host/lua-5.3.0/src
-  INCLUDES      +=
-  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L. -s
-  LDDEPS        +=
-  LIBS          += $(LDDEPS) -lole32
-  EXTERNAL_LIBS +=
-  LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJDIR              = obj/Release
+  TARGETDIR           = ../../bin/windows
+  override TARGET              = $(TARGETDIR)/genie.exe
+  DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE
+  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           +=
+  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
+  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
+  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS        += $(LDFLAGS) -L. -s
+  LDDEPS             +=
+  LIBS               += $(LDDEPS) -lole32
+  EXTERNAL_LIBS      +=
+  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -122,22 +122,22 @@ ifeq ($(config),release)
 endif
 
 ifeq ($(config),debug)
-  OBJDIR         = obj/Debug
-  TARGETDIR      = ../../bin/windows
-  override TARGET         = $(TARGETDIR)/genie.exe
-  DEFINES       += -D_DEBUG -DLUA_COMPAT_MODULE
-  INCLUDES      += -I../../src/host/lua-5.3.0/src
-  INCLUDES      +=
-  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_CXXFLAGS  += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_OBJCFLAGS += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS   += $(LDFLAGS) -L.
-  LDDEPS        +=
-  LIBS          += $(LDDEPS) -lole32
-  EXTERNAL_LIBS +=
-  LINKCMD        = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJDIR              = obj/Debug
+  TARGETDIR           = ../../bin/windows
+  override TARGET              = $(TARGETDIR)/genie.exe
+  DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE
+  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           +=
+  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
+  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
+  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS        += $(LDFLAGS) -L.
+  LDDEPS             +=
+  LIBS               += $(LDDEPS) -lole32
+  EXTERNAL_LIBS      +=
+  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -245,6 +245,10 @@ ifneq (,$(PCH))
 $(GCH): $(PCH) $(MAKEFILE) | $(OBJDIR)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) -x c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
+
+$(GCH_OBJC): $(PCH) $(MAKEFILE) | $(OBJDIR)
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) -x objective-c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
 endif
 
 $(OBJDIR)/src/host/lua-5.3.0/src/lapi.o: ../../src/host/lua-5.3.0/src/lapi.c $(GCH) $(MAKEFILE)
