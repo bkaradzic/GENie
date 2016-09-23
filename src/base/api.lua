@@ -60,6 +60,12 @@
 			scope = "config",
 		},
 
+		buildoptions_objcpp =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
 		clrreferences =
 		{
 			kind = "list",

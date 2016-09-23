@@ -387,7 +387,8 @@
 
 		_p('  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
 		_p('  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
-		_p('  ALL_OBJCFLAGS      += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_objc)))
+		_p('  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_objc)))
+		_p('  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)%s', make.list(table.join(cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_objcpp)))
 
 		_p('  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)%s',
 		        make.list(table.join(cc.getdefines(cfg.resdefines),
@@ -493,7 +494,7 @@
 			_p('\t@echo $(notdir $<)')
 		end
 
-		local cmd = iif(prj.language == "C", "$(CC) $(ALL_CFLAGS) -x objective-c-header", "$(CXX) $(ALL_CXXFLAGS) -x objective-c++-header")
+		local cmd = iif(prj.language == "C", "$(CC) $(ALL_OBJCFLAGS) -x objective-c-header", "$(CXX) $(ALL_OBJCPPFLAGS) -x objective-c++-header")
 		_p('\t$(SILENT) %s $(DEFINES) $(INCLUDES) -o "$@" -c "$<"', cmd)
 
 		_p('endif')
@@ -531,7 +532,11 @@
 					_p('\t@echo $(notdir $<)')
 				end
 				if (path.isobjcfile(file)) then
-					_p('\t$(SILENT) $(CXX) $(ALL_OBJCFLAGS) $(FORCE_INCLUDE_OBJC) -o "$@" -c "$<"')
+					if (path.iscfile(file)) then
+						_p('\t$(SILENT) $(CXX) $(ALL_OBJCFLAGS) $(FORCE_INCLUDE_OBJC) -o "$@" -c "$<"')
+					else
+						_p('\t$(SILENT) $(CXX) $(ALL_OBJCPPFLAGS) $(FORCE_INCLUDE_OBJC) -o "$@" -c "$<"')
+					end
 				else
 					cpp.buildcommand(path.iscfile(file) and not prj.options.ForceCPP, "o")
 				end
