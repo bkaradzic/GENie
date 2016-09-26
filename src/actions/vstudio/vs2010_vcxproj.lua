@@ -499,6 +499,10 @@
 		if hasmasmfiles(prj) then
 			_p(2, '<MASM>')
 
+			_p(3,'<AdditionalOptions>%s %%(AdditionalOptions)</AdditionalOptions>'
+				, table.concat(premake.esc(table.join(cfg.buildoptions, cfg.buildoptions_asm)), " ")
+				)
+
 			local includedirs = table.join(cfg.userincludedirs, cfg.includedirs)
 
 			if #includedirs > 0 then
