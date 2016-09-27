@@ -343,9 +343,16 @@
 	local function vs10_clcompile(cfg)
 		_p(2,'<ClCompile>')
 
+		local unsignedChar = "/J "
+
+		if cfg.platform == "Orbis" then
+			unsignedChar = "-funsigned-char ";
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+		end
+
 		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
 			, table.concat(premake.esc(table.join(cfg.buildoptions, cfg.buildoptions_cpp)), " ")
-			, iif(cfg.flags.UnsignedChar, "/J ", " ")
+			, iif(cfg.flags.UnsignedChar, unsignedChar, " ")
 			)
 
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
@@ -573,9 +580,9 @@
 			link_target_machine(3,cfg)
 			additional_options(3,cfg)
 
-            if cfg.flags.NoWinMD and vstudio.iswinrt() and prj.kind == "WindowedApp" then
+			if cfg.flags.NoWinMD and vstudio.iswinrt() and prj.kind == "WindowedApp" then
 				_p(3,'<GenerateWindowsMetadata>false</GenerateWindowsMetadata>' )
-            end
+			end
 		end
 
 		_p(2,'</Link>')
@@ -591,8 +598,17 @@
 	function vc2010.additionalDependencies(tab,cfg)
 		local links = premake.getlinks(cfg, "system", "fullpath")
 		if #links > 0 then
-			_p(tab,'<AdditionalDependencies>%s;%s</AdditionalDependencies>'
-				, table.concat(links, ";")
+			local deps = ""
+			if cfg.platform == "Orbis" then
+				for _, v in ipairs(links) do
+					deps = deps .. "-l" .. v .. ";"
+				end
+			else
+				deps = table.concat(links, ";")
+			end
+
+			_p(tab, '<AdditionalDependencies>%s;%s</AdditionalDependencies>'
+				, deps
 				, iif(cfg.platform == "Durango"
 					, '$(XboxExtensionsDependencies)'
 					, '%(AdditionalDependencies)'
