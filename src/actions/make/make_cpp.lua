@@ -87,7 +87,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
+		_p('$(TARGET): $(GCH) $(GCH_OBJC) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
@@ -198,6 +198,7 @@
 		_p('-include $(OBJECTS:%%.o=%%.d)')
 		_p('ifneq (,$(PCH))')
 			_p('  -include $(OBJDIR)/$(notdir $(PCH)).d')
+			_p('  -include $(OBJDIR)/$(notdir $(PCH))_objc.d')
 		_p('endif')
 	end
 
