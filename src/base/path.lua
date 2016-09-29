@@ -252,11 +252,11 @@
 --
 
 	function path.iscfile(fname)
-		return path.hasextension(fname, { ".c", ".s", ".m" })
+		return path.hasextension(fname, { ".c", ".m" })
 	end
 
 	function path.iscppfile(fname)
-		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm" })
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".m", ".mm" })
 	end
 
 	function path.iscxfile(fname)
@@ -289,9 +289,9 @@
 	end
 
 	function path.isasmfile(fname)
-		return path.hasextension(fname, ".asm")
+		return path.hasextension(fname, { ".asm", ".s" })
 	end
-	
+
 	function path.isswiftfile(fname)
 		return path.hasextension(fname, ".swift")
 	end

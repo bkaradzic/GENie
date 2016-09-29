@@ -42,6 +42,12 @@
 			scope = "config",
 		},
 
+		buildoptions_asm =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
 		buildoptions_c =
 		{
 			kind  = "list",

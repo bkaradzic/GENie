@@ -38,6 +38,7 @@ local p     = premake
 			defines   = ninja.list(tool.getdefines(cfg.defines)),
 			includes  = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs))),
 			cppflags  = ninja.list(tool.getcppflags(cfg)),
+			asmflags  = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_asm)),
 			cflags    = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)),
 			cxxflags  = ninja.list(table.join(tool.getcflags(cfg), tool.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)),
 			objcflags = ninja.list(table.join(tool.getcflags(cfg), tool.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_objc)),
@@ -101,6 +102,9 @@ local p     = premake
 				if path.isobjcfile(file) then
 					_p("build " .. objfilename .. ": cxx " .. file)
 					cflags = "objcflags"
+				elseif path.isasmfile(file) then
+					_p("build " .. objfilename .. ": cc " .. file)
+					cflags = "asmflags"
 				elseif path.iscfile(file) and not cfg.options.ForceCPP then
 					_p("build " .. objfilename .. ": cc " .. file)
 				else
