@@ -38,7 +38,7 @@
 		PS3     = "PS3",
 		Xbox360 = "Xbox 360",
 		ARM     = "ARM",
-		Orbis	= "Orbis",
+		Orbis   = "ORBIS",
 		Durango = "Durango",
 	}
 
@@ -147,7 +147,7 @@
 -- Process imported projects and set properties that are needed
 -- for generating the solution.
 --
-    
+
     function premake.vstudio.bakeimports(sln)
         for _,iprj in ipairs(sln.importedprojects) do
             if string.find(iprj.location, ".csproj") ~= nil then
@@ -155,8 +155,8 @@
             else
                 iprj.language = "C++"
             end
-            
-            
+
+
             local f, err = io.open(iprj.location, "r")
             if (not f) then
                 error(err, 1)
@@ -169,15 +169,15 @@
                 error("Could not find ProjectGuid element in project " .. iprj.location, 1)
             end
             iprj.uuid = uuid
-			
+
 			if iprj.language == "C++" and string.find(projcontents, "<CLRSupport>true</CLRSupport>") then
 				iprj.flags.Managed = true
 			end
-            
+
             iprj.relpath = path.getrelative(sln.location, iprj.location)
         end
     end
-    
+
 --
 -- Look up a imported project by project path
 --
@@ -187,10 +187,10 @@
                 return iprj
             end
         end
-        
+
         error("Could not find reference import project " .. prjpath, 1)
     end
-    
+
 --
 -- Clean Visual Studio files
 --
