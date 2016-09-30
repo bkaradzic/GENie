@@ -87,7 +87,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(GCH) $(GCH_OBJC) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
+		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
