@@ -81,7 +81,8 @@ intention to keep it compatible with it.
  - Added `msgcompile`, `msgresource`, `msglinking` and `msgarchiving` as
    overrides for make messages.
  - Added `messageskip` list to disable some of compiler messages.
- - Added `buildoptions_c`, `buildoptions_cpp`, `buildoptions_objc` for
+ - Added `buildoptions_c`, `buildoptions_cpp`, `buildoptions_objc`,
+   `buildoptions_objcpp`, `buildoptions_asm`, `buildoptions_swift` for
    configuring language specific build options.
  - Split functionality of `excludes` in `removefiles` and `excludes`. With VS
    `excludes` will exclude files from build but files will be added to project
