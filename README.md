@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 675 (commit e83c10002f08bf70388b9f08c5ee064a1467b56c)
+	version 681 (commit 20d21525c0ff27e380c0c1a60a4e04aebed21544)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -173,8 +173,9 @@ derivative of the original Torque Engine.
 	GENie
 	Copyright (c) 2014-2016 Branimir Karadžić, Neil Richardson, Mike Popoloski,
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
-	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld, Alastair
-	Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie.
+	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld,
+	Alastair Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie,
+	Nikolay Aleksiev.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
