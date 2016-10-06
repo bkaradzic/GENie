@@ -87,6 +87,7 @@ function qbs.generate_project(prj)
 				end
 
 				_p(indent, 'targetName: "%s"', cfg.buildtarget.basename)
+				_p(indent, 'destinationDirectory: "%s"', path.getabsolute('projects/qbs/' .. cfg.buildtarget.directory) .. '/')
 --				_p(indent, 'fileTagsFilter: "application"')
 --				_p(indent, 'qbs.install: true')
 --				_p(indent, 'qbs.installDir: "%s"', cfg.buildtarget.directory)
