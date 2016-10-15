@@ -344,14 +344,21 @@
 		_p(2,'<ClCompile>')
 
 		local unsignedChar = "/J "
+		local buildoptions = cfg.buildoptions
 
 		if cfg.platform == "Orbis" then
 			unsignedChar = "-funsigned-char ";
 			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 		end
 
+		if cfg.language == "C" and not cfg.options.ForceCPP then
+			buildoptions = table.join(buildoptions, cfg.buildoptions_c)
+		else
+			buildoptions = table.join(buildoptions, cfg.buildoptions_cpp)
+		end
+
 		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
-			, table.concat(premake.esc(table.join(cfg.buildoptions, cfg.buildoptions_cpp)), " ")
+			, table.concat(premake.esc(buildoptions), " ")
 			, iif(cfg.flags.UnsignedChar, unsignedChar, " ")
 			)
 
