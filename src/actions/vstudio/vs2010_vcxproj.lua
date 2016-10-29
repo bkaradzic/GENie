@@ -384,9 +384,7 @@
 			_p(3, '<CompileAsWinRT>false</CompileAsWinRT>')
 		end
 
-		if cfg.platform ~= "Durango" then
-			_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
-		end
+		_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 
 		if cfg.flags.NoBufferSecurityCheck then
 			_p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
