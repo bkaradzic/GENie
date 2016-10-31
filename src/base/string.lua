@@ -8,7 +8,7 @@
 --
 -- Returns an array of strings, each of which is a substring of s
 -- formed by splitting on boundaries formed by `pattern`.
--- 
+--
 
 	function string.explode(s, pattern, plain)
 		if (pattern == '') then return false end
@@ -21,7 +21,7 @@
 		table.insert(arr, s:sub(pos))
 		return arr
 	end
-	
+
 
 
 --
@@ -36,7 +36,7 @@
 		until (not next)
 		if (curr > 0) then
 			return curr
-		end	
+		end
 	end
 
 
@@ -52,7 +52,7 @@
 	--
 	-- remove leading and trailing whitespace from string.
 	--
-	
+
 	function string.trim(s)
 		return (s:gsub("^%s*(.-)%s*$", "%1"))
 	end
