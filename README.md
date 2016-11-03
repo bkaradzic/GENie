@@ -112,6 +112,7 @@ intention to keep it compatible with it.
  - Added support for QtCreator via Qbs build tool.
  - Added .natvis file type support for Visual Studio.
  - Added Swift language support for make and ninja build generators.
+ - Removed CodeBlocks and CodeLite support.
 
 Debugging GENie scripts
 -----------------------
