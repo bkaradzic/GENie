@@ -41,11 +41,6 @@
 		"base/iter.lua",
 		"base/set.lua",
 
-		-- CodeBlocks action
-		"actions/codeblocks/_codeblocks.lua",
-		"actions/codeblocks/codeblocks_workspace.lua",
-		"actions/codeblocks/codeblocks_cbp.lua",
-
 		-- CMake action
 		"actions/cmake/_cmake.lua",
 		"actions/cmake/cmake_workspace.lua",
