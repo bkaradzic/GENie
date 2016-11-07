@@ -274,7 +274,7 @@
 		description     = "Generate Microsoft Visual Studio 2008 project files",
 		os              = "windows",
 
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib" },
+		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
 
 		valid_languages = { "C", "C++", "C#" },
 
@@ -321,7 +321,7 @@
 		description     = "Generate Microsoft Visual Studio 2010 project files",
 		os              = "windows",
 
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib" },
+		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
 
 		valid_languages = { "C", "C++", "C#"},
 
