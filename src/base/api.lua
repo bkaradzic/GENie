@@ -279,13 +279,6 @@
 			usagecopy = true,
 		},
 
-		referencedirs =
-		{
-			kind  = "dirlist",
-			scope = "config",
-			usagecopy = true,
-		},
-
 		kind =
 		{
 			kind  = "string",
@@ -307,6 +300,12 @@
 				"C++",
 				"C#"
 			}
+		},
+
+		layoutdir =
+		{
+			kind  = "path",
+			scope = "config",
 		},
 
 		libdirs =

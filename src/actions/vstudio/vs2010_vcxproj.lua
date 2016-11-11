@@ -171,8 +171,17 @@
 					_p(2,'<GenerateManifest>false</GenerateManifest>')
 				end
 
-				if #cfg.referencedirs > 0 then
-					_p(2,'<ReferencePath>%s</ReferencePath>', premake.esc(path.translate(table.concat(cfg.referencedirs, ";"), '\\')))
+				if cfg.platform == "Durango" then
+					_p(2,'<ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>')
+					_p(2,'<LibraryPath>$(Console_SdkLibPath)</LibraryPath>')
+					_p(2,'<LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>')
+					_p(2,'<IncludePath>$(Console_SdkIncludeRoot)</IncludePath>')
+					_p(2,'<ExecutablePath>$(Console_SdkRoot)bin;$(VCInstallDir)bin\\x86_amd64;</ExecutablePath>')
+				end
+
+				if cfg.layoutdir ~= nil then
+					local layoutdir = add_trailing_backslash(cfg.layoutdir)
+					_p(2,'<LayoutDir>%s</LayoutDir>', premake.esc(layoutdir))
 				end
 
 				_p(1,'</PropertyGroup>')
@@ -287,7 +296,7 @@
 	--
 		local debug_info = ''
 		if cfg.flags.Symbols then
-			if cfg.platform == "x64"
+			if cfg.platform == "x64" or cfg.platform == "Durango"
 				or cfg.flags.Managed
 				or premake.config.isoptimizedbuild(cfg.flags)
 				or cfg.flags.NoEditAndContinue
@@ -510,9 +519,16 @@
 
 	function vc2010.additionalDependencies(cfg)
 		local links = premake.getlinks(cfg, "system", "fullpath")
-		if #links > 0 then
-			_p(3,'<AdditionalDependencies>%s;%%(AdditionalDependencies)</AdditionalDependencies>',
-						table.concat(links, ";"))
+		if cfg.platform == "Durango" then
+			if #links > 0 then
+				_p(3,'<AdditionalDependencies>%s</AdditionalDependencies>', table.concat(links, ";"))
+			else
+				_p(3,'<AdditionalDependencies></AdditionalDependencies>')
+			end
+		else
+			if #links > 0 then
+				_p(3,'<AdditionalDependencies>%s;%%(AdditionalDependencies)</AdditionalDependencies>', table.concat(links, ";"))
+			end
 		end
 	end
 
@@ -559,6 +575,8 @@
 					end
 				elseif path.isresourcefile(file.name) then
 					table.insert(sortedfiles.ResourceCompile, file)
+				elseif path.isimagefile(file.name) then
+					table.insert(sortedfiles.Image, file)
 				else
 					local ext = path.getextension(file.name):lower()
 					if ext == ".appxmanifest" then
