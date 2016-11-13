@@ -473,6 +473,12 @@
 			kind  = "list",
 			scope = "config",
 		},
+		
+		pullmappingfile =
+		{
+			kind  = "path",
+			scope = "config",
+		},
 
 		resdefines =
 		{

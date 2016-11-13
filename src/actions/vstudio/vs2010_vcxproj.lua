@@ -184,6 +184,10 @@
 					_p(2,'<LayoutDir>%s</LayoutDir>', premake.esc(layoutdir))
 				end
 
+				if cfg.pullmappingfile ~= nil then
+					_p(2,'<PullMappingFile>%s</PullMappingFile>', premake.esc(cfg.pullmappingfile))
+				end
+				
 				_p(1,'</PropertyGroup>')
 			end
 
