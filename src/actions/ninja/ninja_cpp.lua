@@ -64,12 +64,15 @@ local p     = premake
 		_p("  description = ar $out")
 		_p("")
 
-
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
 		_p("  command = " .. link .. " -o $out $in $all_ldflags $libs")
 		_p("  description = link $out")
 		_p("")
+
+		cpp.custombuildtask(prj)
+
+		cpp.dependencyRules(prj)
 
 		cpp.file_rules(cfg, flags)
 
@@ -85,6 +88,92 @@ local p     = premake
 		cpp.linker(prj, cfg, objfiles, tool, flags)
 
 		_p("")
+	end
+
+	function cpp.custombuildtask(prj)
+		local cmd_index = 1
+		local seen_commands = {}
+		local command_by_name = {}
+		local command_files = {}
+
+		for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
+			for _, buildtask in ipairs(custombuildtask or {}) do
+				for _, cmd in ipairs(buildtask[4] or {}) do
+					local num = 1
+
+					-- replace dependencies in the command with actual file paths
+					for _, depdata in ipairs(buildtask[3] or {}) do
+						cmd = string.gsub(cmd,"%$%(" .. num .."%)", string.format("%s ", path.getrelative(prj.location, depdata)))
+						num = num + 1
+					end
+
+					-- replace $(<) and $(@) with $in and $out
+					cmd = string.gsub(cmd, '%$%(<%)', '$in')
+					cmd = string.gsub(cmd, '%$%(@%)', '$out')
+
+					local cmd_name -- shortened command name
+
+					-- generate shortened rule names for the command, may be nonsensical
+					-- in some cases but it will at least be unique.
+					if seen_commands[cmd] == nil then
+						local _, _, name = string.find(cmd, '([.%w]+)%s')
+						name = 'cmd' .. cmd_index .. '_' .. string.gsub(name, '[^%w]', '_')
+
+						seen_commands[cmd] = {
+							name = name,
+							index = cmd_index,
+						}
+
+						cmd_index = cmd_index + 1
+						cmd_name = name
+					else
+						cmd_name = seen_commands[cmd].name
+					end
+
+					local index = seen_commands[cmd].index
+
+					if command_files[index] == nil then
+						command_files[index] = {}
+					end
+
+					local cmd_set = command_files[index]
+
+					table.insert(cmd_set, {
+						buildtask[1],
+						buildtask[2],
+						buildtask[3],
+						seen_commands[cmd].name,
+					})
+
+					command_files[index] = cmd_set
+
+					command_by_name[cmd_name] = cmd
+				end
+			end
+		end
+
+		_p("# custom build rules")
+		for command, details in pairs(seen_commands) do
+			_p("rule " .. details.name)
+			_p(1, "command     = " .. command)
+		end
+
+		for cmd_index, cmdsets in ipairs(command_files) do
+			for _, cmdset in ipairs(cmdsets) do
+				local file_in = path.getrelative(prj.location, cmdset[1])
+				local file_out = path.getrelative(prj.location, cmdset[2])
+				local deps = ''
+				for i, dep in ipairs(cmdset[3]) do
+					deps = deps .. path.getrelative(prj.location, dep) .. ' '
+				end
+				_p("build " .. file_out .. ': ' .. cmdset[4] .. ' ' .. file_in .. ' | ' .. deps)
+				_p("")
+			end
+		end
+	end
+
+	function cpp.dependencyRules(prj)
+		-- TODO
 	end
 
 	function cpp.objectname(cfg, file)
