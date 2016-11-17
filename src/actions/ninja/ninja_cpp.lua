@@ -70,9 +70,9 @@ local p     = premake
 		_p("  description = link $out")
 		_p("")
 
-		cpp.custombuildtask(prj)
+		cpp.custombuildtask(prj, cfg)
 
-		cpp.dependencyRules(prj)
+		cpp.dependencyRules(prj, cfg)
 
 		cpp.file_rules(cfg, flags)
 
@@ -90,7 +90,7 @@ local p     = premake
 		_p("")
 	end
 
-	function cpp.custombuildtask(prj)
+	function cpp.custombuildtask(prj, cfg)
 		local cmd_index = 1
 		local seen_commands = {}
 		local command_by_name = {}
@@ -103,7 +103,7 @@ local p     = premake
 
 					-- replace dependencies in the command with actual file paths
 					for _, depdata in ipairs(buildtask[3] or {}) do
-						cmd = string.gsub(cmd,"%$%(" .. num .."%)", string.format("%s ", path.getrelative(prj.location, depdata)))
+						cmd = string.gsub(cmd,"%$%(" .. num .."%)", string.format("%s ", path.getrelative(cfg.location, depdata)))
 						num = num + 1
 					end
 
@@ -146,7 +146,6 @@ local p     = premake
 					})
 
 					command_files[index] = cmd_set
-
 					command_by_name[cmd_name] = cmd
 				end
 			end
@@ -155,16 +154,16 @@ local p     = premake
 		_p("# custom build rules")
 		for command, details in pairs(seen_commands) do
 			_p("rule " .. details.name)
-			_p(1, "command     = " .. command)
+			_p(1, "command = " .. command)
 		end
 
 		for cmd_index, cmdsets in ipairs(command_files) do
 			for _, cmdset in ipairs(cmdsets) do
-				local file_in = path.getrelative(prj.location, cmdset[1])
-				local file_out = path.getrelative(prj.location, cmdset[2])
+				local file_in = path.getrelative(cfg.location, cmdset[1])
+				local file_out = path.getrelative(cfg.location, cmdset[2])
 				local deps = ''
 				for i, dep in ipairs(cmdset[3]) do
-					deps = deps .. path.getrelative(prj.location, dep) .. ' '
+					deps = deps .. path.getrelative(cfg.location, dep) .. ' '
 				end
 				_p("build " .. file_out .. ': ' .. cmdset[4] .. ' ' .. file_in .. ' | ' .. deps)
 				_p("")
@@ -172,8 +171,26 @@ local p     = premake
 		end
 	end
 
-	function cpp.dependencyRules(prj)
-		-- TODO
+	function cpp.dependencyRules(prj, cfg)
+		local extra_deps = {}
+
+		for _, dependency in ipairs(prj.dependency or {}) do
+			for _, dep in ipairs(dependency or {}) do
+				-- This is assuming that the depending object is (going to be) an .o file
+				local objfilename = cpp.objectname(cfg, path.getrelative(prj.location, dep[1]))
+				local dependency = path.getrelative(cfg.location, dep[2])
+
+				-- ensure a table exists for the dependent object file
+				if extra_deps[objfilename] == nil then
+					extra_deps[objfilename] = {}
+				end
+
+				table.insert(extra_deps[objfilename], dependency)
+			end
+		end
+
+		-- store prepared deps for file_rules() phase
+		cfg.extra_deps = extra_deps
 	end
 
 	function cpp.objectname(cfg, file)
@@ -184,20 +201,22 @@ local p     = premake
 		_p("# build files")
 
 		for _, file in ipairs(cfg.files) do
+			_p("# FILE: " .. file)
 			if path.isSourceFile(file) then
 				local objfilename = cpp.objectname(cfg, file)
+				local extra_deps = #cfg.extra_deps and '| ' .. table.concat(cfg.extra_deps[objfilename] or {}, ' ') or ''
 
 				local cflags = "cflags"
 				if path.isobjcfile(file) then
-					_p("build " .. objfilename .. ": cxx " .. file)
+					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps)
 					cflags = "objcflags"
 				elseif path.isasmfile(file) then
-					_p("build " .. objfilename .. ": cc " .. file)
+					_p("build " .. objfilename .. ": cc " .. file .. extra_deps)
 					cflags = "asmflags"
 				elseif path.iscfile(file) and not cfg.options.ForceCPP then
-					_p("build " .. objfilename .. ": cc " .. file)
+					_p("build " .. objfilename .. ": cc " .. file .. extra_deps)
 				else
-					_p("build " .. objfilename .. ": cxx " .. file)
+					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps)
 					cflags = "cxxflags"
 				end
 
