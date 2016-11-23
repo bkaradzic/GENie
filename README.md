@@ -13,7 +13,7 @@ Supported project generators:
  * GNU Makefile
  * Ninja (experimental)
  * Qbs / QtCreator (experimental)
- * Visual Studio 2008, 2010, 2012, 2013, 2015, 15
+ * Visual Studio 2008, 2010, 2012, 2013, 2015, 2017
  * XCode
 
 Download (stable)
