@@ -809,6 +809,7 @@
 
 			vc2010.files(prj)
 			vc2010.projectReferences(prj)
+			vc2010.sdkReferences(prj)
 
 			_p(1,'<Import Project="$(VCTargetsPath)\\Microsoft.Cpp.targets" />')
 			_p(1,'<ImportGroup Label="ExtensionTargets">')
@@ -839,6 +840,20 @@
 		end
 	end
 
+--
+-- Generate the list of SDK references
+--
+
+	function vc2010.sdkReferences(prj)
+		local refs = prj.sdkreferences
+		if #refs > 0 then
+			_p(1,'<ItemGroup>')
+			for _, ref in ipairs(refs) do
+				_p(2,'<SDKReference Include=\"%s\" />', ref)
+			end
+			_p(1,'</ItemGroup>')
+		end
+	end
 
 --
 -- Generate the .vcxproj.user file
@@ -851,6 +866,9 @@
 		end
 		if cfg.debugargs then
 			_p('    <LocalDebuggerCommandArguments>%s</LocalDebuggerCommandArguments>', table.concat(cfg.debugargs, " "))
+		end
+		if cfg.deploymode then
+			_p('    <DeployMode>%s</DeployMode>', cfg.deploymode)
 		end
 	end
 

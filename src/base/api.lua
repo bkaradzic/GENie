@@ -109,6 +109,12 @@
 			scope = "config",
 		},
 
+		deploymode =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
 		excludes =
 		{
 			kind  = "filelist",
@@ -493,6 +499,12 @@
 		},
 
 		resoptions =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
+		sdkreferences =
 		{
 			kind  = "list",
 			scope = "config",
