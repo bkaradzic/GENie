@@ -479,6 +479,12 @@
 			kind  = "list",
 			scope = "config",
 		},
+
+		propertysheets =
+		{
+			kind  = "dirlist",
+			scope = "config",
+		},
 		
 		pullmappingfile =
 		{

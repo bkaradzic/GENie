@@ -128,6 +128,14 @@
 			_p(1,'<ImportGroup '..if_config_and_platform() ..' Label="PropertySheets">'
 					,premake.esc(cfginfo.name))
 				_p(2,'<Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists(\'$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\')" Label="LocalAppDataPlatform" />')
+
+			if #cfg.propertysheets > 0 then
+				local dirs = cfg.propertysheets
+				for _, dir in ipairs(dirs) do
+					_p(2,'<Import Project="%s" />', path.translate(dir))
+				end
+			end
+
 			_p(1,'</ImportGroup>')
 		end
 	end
