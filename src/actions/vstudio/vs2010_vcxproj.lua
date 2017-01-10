@@ -176,7 +176,11 @@
 				_p(2, '<LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>')
 				_p(2, '<IncludePath>$(Console_SdkIncludeRoot)</IncludePath>')
 				_p(2, '<ExecutablePath>$(Console_SdkRoot)bin;$(VCInstallDir)bin\\x86_amd64;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\\Tools\\bin;$(VSInstallDir)Common7\\tools;$(VSInstallDir)Common7\\ide;$(ProgramFiles)\\HTML Help Workshop;$(MSBuildToolsPath32);$(FxCopDir);$(PATH);</ExecutablePath>')
-				_p(2, '<LayoutDir>%s</LayoutDir>', prj.name)
+                if cfg.imagepath then
+                    _p(2, '<LayoutDir>%s</LayoutDir>', cfg.imagepath)
+                else
+                    _p(2, '<LayoutDir>%s</LayoutDir>', prj.name)
+                end
 				_p(2, '<LayoutExtensionFilter>*.pdb;*.ilk;*.exp;*.lib;*.winmd;*.appxrecipe;*.pri;*.idb</LayoutExtensionFilter>')
 				_p(2, '<IsolateConfigurationsOnDeploy>true</IsolateConfigurationsOnDeploy>')
 			end
