@@ -1553,7 +1553,12 @@ _identifiers_ - list of hardware platform specifiers from this list:
 * _Universal32_ - like _Universal_ above, but targeting only 32-bit platforms
 * _Universal64_ - like _Universal_ above, but targeting only 64-bit platforms
 * _PS3_ - Playstation 3
+* _WiiDev_ - Wii
 * _Xbox360_ - Xbox 360 compiler and linker under Visual Studio
+* _PowerPC_ - PowerPC processors
+* _ARM_ - ARM-based processors
+* _Orbis_ - Playstation 4
+* _Durango_ - Xbox One
 
 #### Return Value
 Current list of target platforms for the active solution
