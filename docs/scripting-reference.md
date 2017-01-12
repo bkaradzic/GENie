@@ -1774,7 +1774,7 @@ configuration { "linux", "gmake" }
 
 ---
 ### solution(_name_)
-Creates a new solution and makes it active. Solutions are the top-level opjects in a GENie build script, and are synonymous with a Visual Studio solution. Each solution contains one or more projects, which in turn contain the settings to generate a single binary target.
+Creates a new solution and makes it active. Solutions are the top-level objects in a GENie build script, and are synonymous with a Visual Studio solution. Each solution contains one or more projects, which in turn contain the settings to generate a single binary target.
 
 #### Arguments
 _name_ - unique name for the solution. If a solution with the given name already exists, it is made active and returned. This value will be used as the file name of the generated solution file.
