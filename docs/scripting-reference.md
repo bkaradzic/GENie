@@ -376,7 +376,7 @@ Specifies a list of arguments to pas to the application when run under the debug
 **Scope:** solutions, projects, configurations
 
 #### Arguments
-_args_ - list of arguments to pas to the executable while debugging
+_args_ - list of arguments to pass to the executable while debugging
 
 #### Examples
 ```lua
