@@ -858,7 +858,7 @@ configuration "macosx"
 --- OS X frameworks need the extension to be handled properly
     links { "Cocoa.framework", "png" }
 ```
-In a solution with two projects, link the library into the executable. Note that the project name is used to specify the link. GENie will automatically figure out the correect library file name and directory and create a project dependency.
+In a solution with two projects, link the library into the executable. Note that the project name is used to specify the link. GENie will automatically figure out the correct library file name and directory and create a project dependency.
 ```lua
 solution "MySolution"
     configurations { "Debug", "Release" }
@@ -907,7 +907,7 @@ _path_ - directory into which files should be generated, relative to the current
 solution "MySolution"
     location "../build"
 ```
-If you plan to build with multiple tools from the same source tree, you might want to split up the project files by toolset. The _ACTION global variable contains the current toolset identifier, as specified on the command line. Note that Lua sytax requires parentheses around the function parameters in this case.
+If you plan to build with multiple tools from the same source tree, you might want to split up the project files by toolset. The _ACTION global variable contains the current toolset identifier, as specified on the command line. Note that Lua syntax requires parentheses around the function parameters in this case.
 ```lua
 location ("../build/" .. _ACTION)
 ```
@@ -1115,7 +1115,7 @@ _id_ - one of "bsd", "linux", "macosx", "solaris", or "windows"
 **Note:** This function returns the OS being targeted, which is not necessarily the same as the OS on which GENie is being run.
 
 #### Return Value
-`true` if the supplied _id_ matches the current operating system identifer, `false` otherwise.
+`true` if the supplied _id_ matches the current operating system identifier, `false` otherwise.
 
 [Back to top](#table-of-contents)
 
@@ -2040,7 +2040,7 @@ It is also possible to include the file's path in the virtual group. Using this 
 vpaths { ["Headers/*"] = "**.h" }
 ```
 
-Any directory information explicitly provided in the pattern will be remvoed from the replacement. Using this rule, "src/lua/lua.h" will appear in the IDE as "Headers/lua/lua.h".
+Any directory information explicitly provided in the pattern will be removed from the replacement. Using this rule, "src/lua/lua.h" will appear in the IDE as "Headers/lua/lua.h".
 ```lua
 vpaths { ["Headers/*"] = "src/**.h" }
 ```
