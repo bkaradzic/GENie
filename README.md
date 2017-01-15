@@ -179,7 +179,7 @@ PS3.
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
 	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld,
 	Alastair Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie,
-	Nikolay Aleksiev.
+	Nikolay Aleksiev, Jon Olson.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
