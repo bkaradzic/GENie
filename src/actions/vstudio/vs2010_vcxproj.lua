@@ -1076,22 +1076,29 @@
 --
 
 	function vc2010.debugdir(cfg)
-		if cfg.debugdir and not vstudio.iswinrt() then
-			_p('    <LocalDebuggerWorkingDirectory>%s</LocalDebuggerWorkingDirectory>', path.translate(cfg.debugdir, '\\'))
-			_p('    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>')
-		end
-		if cfg.debugargs then
-			_p('    <LocalDebuggerCommandArguments>%s</LocalDebuggerCommandArguments>', table.concat(cfg.debugargs, " "))
-		end
-	end
+		_p(2, '<DebuggerFlavor>%s</DebuggerFlavor>'
+			, iif(cfg.platform == "Orbis", 'ORBISDebugger', 'WindowsLocalDebugger')
+			)
 
-	function vc2010.debugenvs(cfg)
+		if cfg.debugdir and not vstudio.iswinrt() then
+			_p(2, '<LocalDebuggerWorkingDirectory>%s</LocalDebuggerWorkingDirectory>'
+				, path.translate(cfg.debugdir, '\\')
+				)
+		end
+
+		if cfg.debugargs then
+			_p(2, '<LocalDebuggerCommandArguments>%s</LocalDebuggerCommandArguments>'
+				, table.concat(cfg.debugargs, " ")
+				)
+		end
+
 		if cfg.debugenvs and #cfg.debugenvs > 0 then
-			_p(2,'<LocalDebuggerEnvironment>%s%s</LocalDebuggerEnvironment>',table.concat(cfg.debugenvs, "\n")
-					,iif(cfg.flags.DebugEnvsInherit,'\n$(LocalDebuggerEnvironment)','')
+			_p(2, '<LocalDebuggerEnvironment>%s%s</LocalDebuggerEnvironment>'
+				, table.concat(cfg.debugenvs, "\n")
+				, iif(cfg.flags.DebugEnvsInherit,'\n$(LocalDebuggerEnvironment)', '')
 				)
 			if cfg.flags.DebugEnvsDontMerge then
-				_p(2,'<LocalDebuggerMergeEnvironment>false</LocalDebuggerMergeEnvironment>')
+				_p(2, '<LocalDebuggerMergeEnvironment>false</LocalDebuggerMergeEnvironment>')
 			end
 		end
 	end
@@ -1103,7 +1110,6 @@
 			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 			_p('  <PropertyGroup '.. if_config_and_platform() ..'>', premake.esc(cfginfo.name))
 			vc2010.debugdir(cfg)
-			vc2010.debugenvs(cfg)
 			_p('  </PropertyGroup>')
 		end
 		_p('</Project>')
