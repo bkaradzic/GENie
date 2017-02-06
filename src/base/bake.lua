@@ -182,10 +182,10 @@
 		for k, v in pairs(tbl) do
 			for _, pattern in ipairs(removes) do
 				if pattern == tbl[k] then
-					if type(k) == "number" then 
-						table.remove(tbl, k) 
-					else 
-						tbl[k] = nil 
+					if type(k) == "number" then
+						table.remove(tbl, k)
+					else
+						tbl[k] = nil
 					end
 					break
 				end
@@ -609,11 +609,11 @@
   			end
   		end
   	end
-    
+
 --
 -- Build an inverse dictionary of literal vpaths for fast lookup
 --
-    
+
     local function inverseliteralvpaths()
         for sln in premake.solution.each() do
             for _,prj in ipairs(sln.projects) do
@@ -645,7 +645,7 @@
 			end
 			sln.location = sln.location or sln.basedir
 		end
-        
+
         -- convert paths for imported projects to be relative to solution location
 		for sln in premake.solution.each() do
 			for _, iprj in ipairs(sln.importedprojects) do
@@ -654,7 +654,7 @@
 		end
 
         inverseliteralvpaths()
-        
+
 		-- collapse configuration blocks, so that there is only one block per build
 		-- configuration/platform pair, filtered to the current operating environment
 		for sln in premake.solution.each() do
@@ -739,25 +739,34 @@
 			cfg.kind = "StaticLib"
 		end
 
-		-- remove excluded files from the file list
 		local removefiles = cfg.removefiles
 		if _ACTION == 'gmake' or _ACTION == 'ninja' then
 			removefiles = table.join(removefiles, cfg.excludes)
 		end
+
+		-- build a table of removed files, indexed by file name
+		local removefilesDict = {}
+		for _, fname in ipairs(removefiles) do
+			removefilesDict[fname] = true
+		end
+
+		-- remove excluded files from the file list
 		local files = {}
 		for _, fname in ipairs(cfg.files) do
-			if not table.icontains(removefiles, fname) then
+			if removefilesDict[fname] == nil then
 				table.insert(files, fname)
 			end
 		end
 		cfg.files = files
 
-		-- remove excluded files from the project's allfiles list, and un-duplify
-		-- it
+		-- remove excluded files from the project's allfiles list, and
+		-- un-duplify it
 		local allfiles = {}
+		local allfilesDict = {}
 		for _, fname in ipairs(cfg.allfiles) do
-			if not table.icontains(allfiles, fname) then
-				if not table.icontains(removefiles, fname) then
+			if allfilesDict[fname] == nil then
+				if removefilesDict[fname] == nil then
+					allfilesDict[fname] = true
 					table.insert(allfiles, fname)
 				end
 			end
