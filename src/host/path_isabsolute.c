@@ -13,7 +13,6 @@ int path_isabsolute(lua_State* L)
 		lua_pushboolean(L, 1);
 		return 1;
 	}
-	else {
-		return 0;
-	}
+
+	return 0;
 }

@@ -6,32 +6,37 @@
 #include "premake.h"
 #include <string.h>
 
-#if PLATFORM_WINDOWS
-#    define USE_DRIVE_LETTERS 1
-#endif
+#define USE_DRIVE_LETTERS PLATFORM_WINDOWS
 
-#if USE_DRIVE_LETTERS
 static int has_drive_letter(const char * path)
 {
+#if USE_DRIVE_LETTERS
 	char ch = path[0];
 	if (((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) && path[1] == ':')
 		return 1;
-	else
-		return 0;
+#endif // USE_DRIVE_LETTERS
+
+	return 0;
 }
-#endif
 
 int is_absolute_path(const char * path)
 {
 	char ch = path[0];
 	if (ch == '\0')
+	{
 		return 0;
+	}
+
 	if (ch == '/' || ch == '\\' || ch == '$')
+	{
 		return 1;
-#if USE_DRIVE_LETTERS
+	}
+
 	if (has_drive_letter(path))
+	{
 		return 1;
-#endif
+	}
+
 	return 0;
 }
 
@@ -112,12 +117,15 @@ char *get_absolute_path(const char path[], char *buffer, int bufsize)
 
 	// If the path started as relative, prepend the current working directory
 	if (!is_absolute_path(path))
+	{
 		dst = copy_current_directory(buffer, bufsize);
-
+	}
 #if USE_DRIVE_LETTERS
 	// Add drive letter to absolute paths without one
-	else if (!has_drive_letter(path))
+	else if (!has_drive_letter(path) && path[0] != '$')
+	{
 		dst = copy_current_drive_letter(buffer, bufsize);
+	}
 #endif
 
 	// Process the path one segment at a time.
