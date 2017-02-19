@@ -79,7 +79,7 @@ local p     = premake
 		local objfiles = {}
 
 		for _, file in ipairs(cfg.files) do
-			if path.isSourceFile(file) then
+			if path.issourcefile(file) then
 				table.insert(objfiles, cpp.objectname(cfg, file))
 			end
 		end
@@ -202,7 +202,7 @@ local p     = premake
 
 		for _, file in ipairs(cfg.files) do
 			_p("# FILE: " .. file)
-			if path.isSourceFile(file) then
+			if path.issourcefile(file) then
 				local objfilename = cpp.objectname(cfg, file)
 				local extra_deps = #cfg.extra_deps and '| ' .. table.concat(cfg.extra_deps[objfilename] or {}, ' ') or ''
 

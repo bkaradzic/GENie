@@ -669,7 +669,7 @@
 
 			local foundAppxManifest = false
 			for file in premake.project.eachfile(prj, true) do
-				if path.isSourceFileVS(file.name) then
+				if path.issourcefilevs(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
 				elseif path.iscppheader(file.name) then
 					if not table.icontains(prj.removefiles, file) then

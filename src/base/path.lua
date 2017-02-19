@@ -180,21 +180,30 @@
 		return path.hasextension(fname, ".natvis")
 	end
 
-	function path.isSourceFile(fname)
-		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm", ".vala", ".swift" })
-	end
-
-	function path.isSourceFileVS(fname)
-		return path.isSourceFile(fname)
-			or path.iscxfile(fname)
-	end
-
 	function path.isasmfile(fname)
-		return path.hasextension(fname, { ".asm", ".s" })
+		return path.hasextension(fname, { ".asm", ".s", ".S" })
+	end
+
+	function path.isvalafile(fname)
+		return path.hasextension(fname, ".vala")
 	end
 
 	function path.isswiftfile(fname)
 		return path.hasextension(fname, ".swift")
+	end
+
+	function path.issourcefile(fname)
+		return path.iscfile(fname)
+			or path.iscppfile(fname)
+			or path.iscxfile(fname)
+			or path.isasmfile(fname)
+			or path.isvalafile(fname)
+			or path.isswiftfile(fname)
+	end
+
+	function path.issourcefilevs(fname)
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c" })
+			or path.iscxfile(fname)
 	end
 
 --
