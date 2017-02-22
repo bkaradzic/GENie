@@ -44,7 +44,8 @@ static char *copy_current_directory(char * buffer, int bufsize)
 {
 #if PLATFORM_WINDOWS
 	int len = GetCurrentDirectory(bufsize, buffer);
-	for (int i = 0; i < len; i++)
+	int i;
+	for (i = 0; i < len; i++)
 		buffer[i] = (buffer[i] == '\\' ? '/' : buffer[i]);
 	return buffer + len;
 #else
