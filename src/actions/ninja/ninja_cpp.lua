@@ -66,7 +66,9 @@ local p     = premake
 
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
-		_p("  command = " .. link .. " -o $out $in $all_ldflags $libs")
+		_p("  command = " .. link .. " -o $out @$out.rsp $all_ldflags $libs")
+		_p("  rspfile = $out.rsp")
+  		_p("  rspfile_content = $all_outputfiles")
 		_p("  description = link $out")
 		_p("")
 
@@ -239,6 +241,7 @@ local p     = premake
 		local function writevars()
 			_p(1, "all_ldflags = " .. all_ldflags)
 			_p(1, "libs        = " .. libs)
+			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
 		end
 
 		if cfg.kind == "StaticLib" then
@@ -246,6 +249,7 @@ local p     = premake
 			_p("# link static lib")
 			_p("build " .. cfg:getoutputfilename() .. ": ar " .. table.concat(objfiles, " ") .. " | " .. lddeps)
 			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(cfg, cfg, false)))
+			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
 		elseif cfg.kind == "SharedLib" then
 			local output = cfg:getoutputfilename()
 			_p("# link shared lib")
@@ -261,5 +265,5 @@ local p     = premake
 
 	end
 
-	
+
 
