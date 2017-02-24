@@ -12,7 +12,7 @@
 
 /* Identify the current platform I'm not sure how to reliably detect
  * Windows but since it is the most common I use it as the default */
-#if defined(__linux__)
+#if defined(__linux__) || defined(__GNU__)
 #define PLATFORM_LINUX    (1)
 #define PLATFORM_STRING   "linux"
 #elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
@@ -24,6 +24,9 @@
 #elif defined(__APPLE__) && defined(__MACH__)
 #define PLATFORM_MACOSX   (1)
 #define PLATFORM_STRING   "macosx"
+#elif defined(__OS2__)
+#define PLATFORM_OS2      (1)
+#define PLATFORM_STRING   "os2"
 #else
 #define PLATFORM_WINDOWS  (1)
 #define PLATFORM_STRING   "windows"
