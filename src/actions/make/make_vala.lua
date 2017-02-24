@@ -64,7 +64,7 @@
 		-- list sources
 		_p('SOURCES := \\')
 		for _, file in ipairs(prj.files) do
-			if path.isSourceFile(file) then
+			if path.issourcefile(file) then
 				-- check if file is excluded.
 				if not table.icontains(prj.excludes, file) then
 					-- if not excluded, add it.
