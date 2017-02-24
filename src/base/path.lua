@@ -6,43 +6,6 @@
 
 
 --
--- Get the absolute file path from a relative path. The requested
--- file path doesn't actually need to exist.
---
-	
-	function path.getabsolute(p)
-		-- normalize the target path
-		p = path.translate(p, "/")
-		if (p == "") then p = "." end
-		
-		-- if the directory is already absolute I don't need to do anything
-		local result = iif (path.isabsolute(p), nil, os.getcwd())
-
-		-- split up the supplied relative path and tackle it bit by bit
-		for n, part in ipairs(p:explode("/", true)) do
-			if (part == "" and n == 1) then
-				result = "/"
-			elseif (part == "..") then
-				result = path.getdirectory(result)
-			elseif (part ~= ".") then
-				-- Environment variables embedded in the path need to be treated
-				-- as relative paths; path.join() makes them absolute
-				if (part:startswith("$") and n > 1) then
-					result = result .. "/" .. part
-				else
-					result = path.join(result, part)
-				end
-			end
-		end
-		
-		-- if I end up with a trailing slash remove it
-		result = iif(result:endswith("/"), result:sub(1, -2), result)
-		
-		return result
-	end
-	
-
---
 -- Retrieve the filename portion of a path, without any extension.
 --
 
@@ -70,7 +33,7 @@
 	end
 
 --
--- Retrieve the directory portion of a path, or an empty string if 
+-- Retrieve the directory portion of a path, or an empty string if
 -- the path does not include a directory.
 --
 
@@ -111,9 +74,9 @@
 			return ""
 		end
 	end
-	
-	
-	
+
+
+
 --
 -- Retrieve the filename portion of a path.
 --
@@ -126,37 +89,23 @@
 			return p
 		end
 	end
-	
-	
+
+
+
 --
--- Returns the relative path from src to dest.
+-- Returns the common base directory of two paths.
 --
 
-	function path.getrelative(src, dst)
-		-- normalize the two paths
-		src = path.getabsolute(src)
-		dst = path.getabsolute(dst)
-
-		-- same directory?
-		if (src == dst) then
-			return "."
-		end
-		
-		-- dollar macro? Can't tell what the real path is; use absolute
-		-- This enables paths like $(SDK_ROOT)/include to work correctly.
-		if dst:startswith("$") then
-			return dst
-		end
-		
-		src = src .. "/"
-		dst = dst .. "/"
+	function path.getcommonbasedir(a, b)
+		a = path.getdirectory(a)..'/'
+		b = path.getdirectory(b)..'/'
 
 		-- find the common leading directories
 		local idx = 0
 		while (true) do
-			local tst = src:find("/", idx + 1, true)
+			local tst = a:find('/', idx + 1, true)
 			if tst then
-				if src:sub(1,tst) == dst:sub(1,tst) then
+				if a:sub(1,tst) == b:sub(1,tst) then
 					idx = tst
 				else
 					break
@@ -165,32 +114,37 @@
 				break
 			end
 		end
-		
-		-- if they have nothing in common return absolute path
-		local first = src:find("/", 0, true)
-		if idx <= first then
-			return dst:sub(1, -2)
+		-- idx is the index of the last sep before path string 'a' ran out or didn't match.
+		local result = ''
+		if idx > 1 then
+			result = a:sub(1, idx - 1)	-- Remove the trailing slash to be consistent with other functions.
 		end
-		
-		-- trim off the common directories from the front 
-		src = src:sub(idx + 1)
-		dst = dst:sub(idx + 1)
-		
-		-- back up from dst to get to this common parent
-		local result = ""		
-		idx = src:find("/")
-		while (idx) do
-			result = result .. "../"
-			idx = src:find("/", idx + 1)
-		end
-
-		-- tack on the path down to the dst from here
-		result = result .. dst
-
-		-- remove the trailing slash
-		return result:sub(1, -2)
+		return result
 	end
-	
+
+
+--
+-- Returns true if the filename has a particular extension.
+--
+-- @param fname
+--    The file name to test.
+-- @param extensions
+--    The extension(s) to test. Maybe be a string or table.
+--
+
+	function path.hasextension(fname, extensions)
+		local fext = path.getextension(fname):lower()
+		if type(extensions) == "table" then
+			for _, extension in pairs(extensions) do
+				if fext == extension then
+					return true
+				end
+			end
+			return false
+		else
+			return (fext == extensions)
+		end
+	end
 
 --
 -- Returns true if the filename represents a C/C++ source code file. This check
@@ -199,30 +153,58 @@
 --
 
 	function path.iscfile(fname)
-		local extensions = { ".c", ".s", ".m" }
-		local ext = path.getextension(fname):lower()
-		return table.contains(extensions, ext)
+		return path.hasextension(fname, { ".c", ".m" })
 	end
-	
+
 	function path.iscppfile(fname)
-		local extensions = { ".cc", ".cpp", ".cxx", ".c", ".s", ".m", ".mm" }
-		local ext = path.getextension(fname):lower()
-		return table.contains(extensions, ext)
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".m", ".mm" })
 	end
-	
+
+	function path.iscxfile(fname)
+		return path.hasextension(fname, ".cx")
+	end
+
 	function path.isobjcfile(fname)
-		local extensions = { ".m", ".mm" }
-		local ext = path.getextension(fname):lower()
-		return table.contains(extensions, ext)
+		return path.hasextension(fname, { ".m", ".mm" })
 	end
 
 	function path.iscppheader(fname)
-		local extensions = { ".h", ".hh", ".hpp", ".hxx" }
-		local ext = path.getextension(fname):lower()
-		return table.contains(extensions, ext)
+		return path.hasextension(fname, { ".h", ".hh", ".hpp", ".hxx" })
 	end
 
+	function path.isappxmanifest(fname)
+		return path.hasextension(fname, ".appxmanifest")
+	end
 
+	function path.isnatvis(fname)
+		return path.hasextension(fname, ".natvis")
+	end
+
+	function path.isasmfile(fname)
+		return path.hasextension(fname, { ".asm", ".s", ".S" })
+	end
+
+	function path.isvalafile(fname)
+		return path.hasextension(fname, ".vala")
+	end
+
+	function path.isswiftfile(fname)
+		return path.hasextension(fname, ".swift")
+	end
+
+	function path.issourcefile(fname)
+		return path.iscfile(fname)
+			or path.iscppfile(fname)
+			or path.iscxfile(fname)
+			or path.isasmfile(fname)
+			or path.isvalafile(fname)
+			or path.isswiftfile(fname)
+	end
+
+	function path.issourcefilevs(fname)
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c" })
+			or path.iscxfile(fname)
+	end
 
 --
 -- Returns true if the filename represents a Windows resource file. This check
@@ -230,10 +212,9 @@
 --
 
 	function path.isresourcefile(fname)
-		local extensions = { ".rc" }
-		local ext = path.getextension(fname):lower()
-		return table.contains(extensions, ext)
+		return path.hasextension(fname, ".rc")
 	end
+
 
 --
 -- Returns true if the filename represents a Windows image file. 
@@ -247,7 +228,7 @@
 
 --
 -- Join one or more pieces of a path together into a single path.
--- 
+--
 -- @param ...
 --    One or more path strings.
 -- @return
@@ -260,7 +241,7 @@
 		if numargs == 0 then
 			return "";
 		end
-		
+
 		local allparts = {}
 		for i = numargs, 1, -1 do
 			local part = select(i, ...)
@@ -269,14 +250,14 @@
 				while part:endswith("/") do
 					part = part:sub(1, -2)
 				end
-				
+
 				table.insert(allparts, 1, part)
 				if path.isabsolute(part) then
 					break
 				end
 			end
 		end
-		
+
 		return table.concat(allparts, "/")
 	end
 
@@ -291,8 +272,8 @@
 		p = path.getrelative(newbase, p)
 		return p
 	end
-	
-	
+
+
 --
 -- Convert the separators in a path from one form to another. If `sep`
 -- is nil, then a platform-specific separator is used.
@@ -337,11 +318,11 @@
 		-- have competing star replacements to worry about
 		pattern = pattern:gsub("%*%*", "\001")
 		pattern = pattern:gsub("%*", "\002")
-		
+
 		-- Replace the placeholders with their Lua patterns
 		pattern = pattern:gsub("\001", ".*")
 		pattern = pattern:gsub("\002", "[^/]*")
-		
+
 		return pattern
 	end
 
@@ -362,4 +343,35 @@
 		until not changed
 
 		return p
+	end
+
+--
+-- Takes a path which is relative to one location and makes it relative
+-- to another location instead.
+--
+
+	function path.rebase(p, oldbase, newbase)
+		p = path.getabsolute(path.join(oldbase, p))
+		p = path.getrelative(newbase, p)
+		return p
+	end
+
+
+
+--
+-- Replace the file extension.
+--
+
+	function path.replaceextension(p, newext)
+		local ext = path.getextension(p)
+
+		if not ext then
+			return p
+		end
+
+		if #newext > 0 and not newext:findlast(".", true) then
+			newext = "."..newext
+		end
+
+		return p:match("^(.*)"..ext.."$")..newext
 	end
