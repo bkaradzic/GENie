@@ -368,12 +368,6 @@
 			}
 		},
 
-		layoutdir =
-		{
-			kind  = "path",
-			scope = "config",
-		},
-
 		libdirs =
 		{
 			kind  = "dirlist",
@@ -1306,7 +1300,6 @@
 
 	function newoption(opt)
 		premake.option.add(opt)
-	end
 	end
 
 

@@ -57,12 +57,6 @@
 			iscrosscompiler = true,
 			namestyle       = "windows",
 		},
-		Durango = 
-		{ 
-			cfgsuffix       = "durango",
-			iscrosscompiler = true,
-			namestyle       = "windows",
-		},
 		PowerPC =
 		{
 			cfgsuffix       = "ppc",

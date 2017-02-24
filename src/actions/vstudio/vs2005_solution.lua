@@ -185,7 +185,7 @@
 				_p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 			end
 				
-			if (premake.vstudio.iswinrt() and prj.kind == "WindowedApp") or (cfg.platform == "Durango") then
+			if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
 				_p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 			end
 		end

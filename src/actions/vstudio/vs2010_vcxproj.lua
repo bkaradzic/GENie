@@ -1128,11 +1128,6 @@
 				)
 		end
 
-		if cfg.deploymode then
-			_p('    <DeployMode>%s</DeployMode>', cfg.deploymode)
-		end
-	end
-
 		if cfg.debugenvs and #cfg.debugenvs > 0 then
 			_p(2, '<LocalDebuggerEnvironment>%s%s</LocalDebuggerEnvironment>'
 				, table.concat(cfg.debugenvs, "\n")
@@ -1141,6 +1136,10 @@
 			if cfg.flags.DebugEnvsDontMerge then
 				_p(2, '<LocalDebuggerMergeEnvironment>false</LocalDebuggerMergeEnvironment>')
 			end
+		end
+
+		if cfg.deploymode then
+			_p('    <DeployMode>%s</DeployMode>', cfg.deploymode)
 		end
 	end
 
