@@ -149,7 +149,29 @@
 		end
 	end
 
+	local function removevalue(tbl, remove)
+		for index, item in ipairs(tbl) do
+			if item == remove then
+				table.remove(tbl, index)
+				break
+			end
+		end
+	end
 
+	local function removevalues(tbl, removes)
+		for k, v in pairs(tbl) do
+			for _, pattern in ipairs(removes) do
+				if pattern == tbl[k] then
+					if type(k) == "number" then
+						table.remove(tbl, k)
+					else
+						tbl[k] = nil
+					end
+					break
+				end
+			end
+		end
+	end
 
 --
 -- Merge all of the fields from one object into another. String values are overwritten,
@@ -169,28 +191,14 @@
 			end
 		else
 			for _, item in ipairs(src) do
-				if not tbl[item] then
-					table.insert(tbl, item)
-					tbl[item] = item
+				if tbl[item] then
+					removevalue(tbl, item)
 				end
+				table.insert(tbl, item)
+				tbl[item] = item
 			end
 		end
 		return tbl
-	end
-
-	local function removevalues(tbl, removes)
-		for k, v in pairs(tbl) do
-			for _, pattern in ipairs(removes) do
-				if pattern == tbl[k] then
-					if type(k) == "number" then
-						table.remove(tbl, k)
-					else
-						tbl[k] = nil
-					end
-					break
-				end
-			end
-		end
 	end
 
 	local function mergeobject(dest, src)
