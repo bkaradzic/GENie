@@ -380,6 +380,7 @@
 				return value
 			end,
 			linkagecopy = true,
+			mergecopiestotail = true,
 		},
 
 		location =
