@@ -149,33 +149,13 @@
 		end
 	end
 
-
-
---
--- Merge all of the fields from one object into another. String values are overwritten,
--- while list values are merged. Fields listed in premake.nocopy are skipped.
---
--- @param dest
---    The destination object, to contain the merged settings.
--- @param src
---    The source object, containing the settings to added to the destination.
---
-
-	local function mergefield(kind, dest, src)
-		local tbl = dest or { }
-		if kind == "keyvalue" or kind == "keypath" then
-			for key, value in pairs(src) do
-				tbl[key] = mergefield("list", tbl[key], value)
-			end
-		else
-			for _, item in ipairs(src) do
-				if not tbl[item] then
-					table.insert(tbl, item)
-					tbl[item] = item
-				end
+	local function removevalue(tbl, remove)
+		for index, item in ipairs(tbl) do
+			if item == remove then
+				table.remove(tbl, index)
+				break
 			end
 		end
-		return tbl
 	end
 
 	local function removevalues(tbl, removes)
@@ -193,6 +173,39 @@
 		end
 	end
 
+--
+-- Merge all of the fields from one object into another. String values are overwritten,
+-- while list values are merged. Fields listed in premake.nocopy are skipped.
+--
+-- @param dest
+--    The destination object, to contain the merged settings.
+-- @param src
+--    The source object, containing the settings to added to the destination.
+--
+
+	local function mergefield(kind, dest, src, mergecopiestotail)
+		local tbl = dest or { }
+		if kind == "keyvalue" or kind == "keypath" then
+			for key, value in pairs(src) do
+				tbl[key] = mergefield("list", tbl[key], value, mergecopiestotail)
+			end
+		else
+			for _, item in ipairs(src) do
+				if tbl[item] then
+					if mergecopiestotail then
+						removevalue(tbl, item)
+						table.insert(tbl, item)
+						tbl[item] = item
+					end
+				else
+					table.insert(tbl, item)
+					tbl[item] = item
+				end
+			end
+		end
+		return tbl
+	end
+
 	local function mergeobject(dest, src)
 		-- if there's nothing to add, quick out
 		if not src then
@@ -205,7 +218,7 @@
 				local field = premake.fields[fieldname]
 				if field then
 					if type(value) == "table" then
-						dest[fieldname] = mergefield(field.kind, dest[fieldname], value)
+						dest[fieldname] = mergefield(field.kind, dest[fieldname], value, field.mergecopiestotail)
 						if src.removes then
 							removes = src.removes[fieldname]
 							if removes then

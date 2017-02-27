@@ -14,6 +14,8 @@ static int has_drive_letter(const char * path)
 	char ch = path[0];
 	if (((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) && path[1] == ':')
 		return 1;
+#else
+	(void)path;
 #endif // USE_DRIVE_LETTERS
 
 	return 0;
