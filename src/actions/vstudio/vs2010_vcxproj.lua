@@ -642,10 +642,12 @@
 			_p(tab, '<AdditionalDependencies>%s;%s</AdditionalDependencies>'
 				, deps
 				, iif(cfg.platform == "Durango"
-					, '$(XboxExtensionsDependencies)'
+					, '%(XboxExtensionsDependencies)'
 					, '%(AdditionalDependencies)'
 					)
 				)
+		elseif cfg.platform == "Durango" then
+			_p(tab, '<AdditionalDependencies>%%(XboxExtensionsDependencies)</AdditionalDependencies>')
 		end
 	end
 
