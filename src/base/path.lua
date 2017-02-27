@@ -217,6 +217,16 @@
 
 
 --
+-- Returns true if the filename represents a Windows image file. 
+--
+
+	function path.isimagefile(fname)
+		local extensions = { ".png" }
+		local ext = path.getextension(fname):lower()
+		return table.contains(extensions, ext)
+	end
+
+--
 -- Join one or more pieces of a path together into a single path.
 --
 -- @param ...

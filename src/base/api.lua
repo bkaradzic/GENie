@@ -127,6 +127,12 @@
 			scope = "config",
 		},
 
+		deploymode =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
 		excludes =
 		{
 			kind  = "filelist",
@@ -323,6 +329,13 @@
 		},
 
 		userincludedirs =
+		{
+			kind  = "dirlist",
+			scope = "config",
+			usagecopy = true,
+		},
+
+		usingdirs =
 		{
 			kind  = "dirlist",
 			scope = "config",
@@ -528,6 +541,18 @@
 			scope = "config",
 		},
 
+		propertysheets =
+		{
+			kind  = "dirlist",
+			scope = "config",
+		},
+		
+		pullmappingfile =
+		{
+			kind  = "path",
+			scope = "config",
+		},
+
 		resdefines =
 		{
 			kind  = "list",
@@ -541,6 +566,12 @@
 		},
 
 		resoptions =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+		
+		sdkreferences =
 		{
 			kind  = "list",
 			scope = "config",

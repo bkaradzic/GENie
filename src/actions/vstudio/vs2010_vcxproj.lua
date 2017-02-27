@@ -135,6 +135,14 @@
 			_p(1,'<ImportGroup '..if_config_and_platform() ..' Label="PropertySheets">'
 					,premake.esc(cfginfo.name))
 				_p(2,'<Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists(\'$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\')" Label="LocalAppDataPlatform" />')
+
+			if #cfg.propertysheets > 0 then
+				local dirs = cfg.propertysheets
+				for _, dir in ipairs(dirs) do
+					_p(2,'<Import Project="%s" />', path.translate(dir))
+				end
+			end
+
 			_p(1,'</ImportGroup>')
 		end
 	end
@@ -181,6 +189,9 @@
                 else
                     _p(2, '<LayoutDir>%s</LayoutDir>', prj.name)
                 end
+				if cfg.pullmappingfile ~= nil then
+					_p(2,'<PullMappingFile>%s</PullMappingFile>', premake.esc(cfg.pullmappingfile))
+				end
 				_p(2, '<LayoutExtensionFilter>*.pdb;*.ilk;*.exp;*.lib;*.winmd;*.appxrecipe;*.pri;*.idb</LayoutExtensionFilter>')
 				_p(2, '<IsolateConfigurationsOnDeploy>true</IsolateConfigurationsOnDeploy>')
 			end
@@ -232,6 +243,13 @@
 		if #includedirs> 0 then
 			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
 					,premake.esc(path.translate(table.concat(includedirs, ";"), '\\')))
+		end
+	end
+
+	local function using_dirs(indent,cfg)
+		if #cfg.usingdirs > 0 then
+			_p(indent,'<AdditionalUsingDirectories>%s;%%(AdditionalUsingDirectories)</AdditionalUsingDirectories>'
+					,premake.esc(path.translate(table.concat(cfg.usingdirs, ";"), '\\')))
 		end
 	end
 
@@ -369,6 +387,7 @@
 		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
 
 		include_dirs(3, cfg)
+		using_dirs(3, cfg)
 		preprocessor(3, cfg)
 		minimal_build(cfg)
 
@@ -623,10 +642,12 @@
 			_p(tab, '<AdditionalDependencies>%s;%s</AdditionalDependencies>'
 				, deps
 				, iif(cfg.platform == "Durango"
-					, '$(XboxExtensionsDependencies)'
+					, '%(XboxExtensionsDependencies)'
 					, '%(AdditionalDependencies)'
 					)
 				)
+		elseif cfg.platform == "Durango" then
+			_p(tab, '<AdditionalDependencies>%%(XboxExtensionsDependencies)</AdditionalDependencies>')
 		end
 	end
 
@@ -677,6 +698,8 @@
 					end
 				elseif path.isresourcefile(file.name) then
 					table.insert(sortedfiles.ResourceCompile, file)
+				elseif path.isimagefile(file.name) then
+					table.insert(sortedfiles.Image, file)
 				elseif path.isappxmanifest(file.name) then
 					foundAppxManifest = true
 					table.insert(sortedfiles.AppxManifest, file)
@@ -1001,6 +1024,7 @@
 
 			vc2010.files(prj)
 			vc2010.projectReferences(prj)
+			vc2010.sdkReferences(prj)
 			vc2010.masmfiles(prj)
 
 			_p(1,'<Import Project="$(VCTargetsPath)\\Microsoft.Cpp.targets" />')
@@ -1070,6 +1094,20 @@
 		_p(1,'</ItemGroup>')
 	end
 
+--
+-- Generate the list of SDK references
+--
+
+	function vc2010.sdkReferences(prj)
+		local refs = prj.sdkreferences
+		if #refs > 0 then
+			_p(1,'<ItemGroup>')
+			for _, ref in ipairs(refs) do
+				_p(2,'<SDKReference Include=\"%s\" />', ref)
+			end
+			_p(1,'</ItemGroup>')
+		end
+	end
 
 --
 -- Generate the .vcxproj.user file
@@ -1100,6 +1138,10 @@
 			if cfg.flags.DebugEnvsDontMerge then
 				_p(2, '<LocalDebuggerMergeEnvironment>false</LocalDebuggerMergeEnvironment>')
 			end
+		end
+
+		if cfg.deploymode then
+			_p('    <DeployMode>%s</DeployMode>', cfg.deploymode)
 		end
 	end
 
