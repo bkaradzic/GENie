@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 789 (commit 66e63dbda788c07969a48e99d450acd6d0e114cb)
+	version 793 (commit b940cef5952a816a4ec094492e7bb203a185c7b8)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -113,6 +113,7 @@ intention to keep it compatible with it.
  - Added Swift language support for make and ninja build generators.
  - Removed CodeBlocks and CodeLite support.
  - Added vs2017 support.
+ - Removed vs2008 support.
 
 Debugging GENie scripts
 -----------------------
