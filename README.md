@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 793 (commit b940cef5952a816a4ec094492e7bb203a185c7b8)
+	version 797 (commit 6079007677e1d33dcfd6e4c689fdc391a80d8cf2)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -114,6 +114,7 @@ intention to keep it compatible with it.
  - Removed CodeBlocks and CodeLite support.
  - Added vs2017 support.
  - Removed vs2008 support.
+ - Added `removeplatforms` that removes VS build target platforms.
 
 Debugging GENie scripts
 -----------------------
