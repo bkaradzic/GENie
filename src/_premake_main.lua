@@ -46,11 +46,6 @@
 
 	function _premake_main(scriptpath)
 
-		local profiler = newProfiler()
-		if (nil ~= _OPTIONS["debug-profiler"]) then
-			profiler:start()
-		end
-
 		-- if running off the disk (in debug mode), load everything
 		-- listed in _manifest.lua; the list divisions make sure
 		-- everything gets initialized in the proper order.
@@ -59,6 +54,11 @@
 			for _,v in ipairs(scripts) do
 				dofile(scriptpath .. "/" .. v)
 			end
+		end
+
+		local profiler = newProfiler()
+		if (nil ~= _OPTIONS["debug-profiler"]) then
+			profiler:start()
 		end
 
 		-- Now that the scripts are loaded, I can use path.getabsolute() to properly
