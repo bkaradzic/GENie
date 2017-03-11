@@ -305,5 +305,6 @@
 			targetFramework = "4.0",
 			toolsVersion    = "4.0",
 			supports64bitEditContinue = false,
+			intDirAbsolute  = false,
 		}
 	}

@@ -159,7 +159,12 @@
 			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 			local target = cfg.buildtarget
 			local outdir = add_trailing_backslash(target.directory)
-			local intdir = add_trailing_backslash(cfg.objectsdir)
+			local intdir = add_trailing_backslash(iif(action.vstudio.intDirAbsolute
+							, path.translate(
+								  path.join(prj.solution.location, cfg.objectsdir)
+								, '\\')
+							, cfg.objectsdir
+							))
 
 			_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
 
