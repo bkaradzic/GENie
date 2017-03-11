@@ -180,17 +180,13 @@
 				end
 			end
 
-            local pcfg = premake.getconfig(prj, cfg.src_buildcfg, cfg.src_platform)
-
 			_p('\t\t{%s}.%s.ActiveCfg = %s|%s', prj.uuid, cfg.name, cfg.buildcfg, mapped)
-			if pcfg.build then
-			    if mapped == cfg.platform or cfg.platform == "Mixed Platforms" or buildfor == cfg.platform then
-				    _p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
-			    end
+			if mapped == cfg.platform or cfg.platform == "Mixed Platforms" or buildfor == cfg.platform then
+				_p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
+			end
 				
-			    if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
-   				    _p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
-			    end
+			if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
+				_p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 			end
 		end
 	end

@@ -694,29 +694,6 @@
 			end
 		end
 
-		-- mark all configurations that have been removed via their removes table.
-		for sln in premake.solution.each() do
-			for prjIx, prj in ipairs(sln.projects) do
-				for cfgName, cfg in pairs(prj.__configs) do
-					cfg.build = true
-
-					local removes = nil
-
-					if cfg.removes ~= nil then
-						removes = cfg.removes["platforms"];
-					end
-
-					if removes ~= nil  then
-						for _,p in ipairs(removes) do
-							if p == cfg.platform then
-								cfg.build = false
-							end
-						end
-					end
-				end
-			end
-		end
-
 		-- Remove all usage projects.
 		for sln in premake.solution.each() do
 			local removeList = {};
