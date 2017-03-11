@@ -446,7 +446,7 @@
 		debug_info(cfg)
 
 		if cfg.flags.Symbols then
-			_p(3,'<ProgramDataBaseFileName>$(OutDir)%s_compiler.pdb</ProgramDataBaseFileName>'
+			_p(3,'<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
 				, path.getbasename(cfg.buildtarget.name))
 		end
 
