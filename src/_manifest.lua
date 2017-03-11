@@ -56,9 +56,10 @@
 
 		-- Visual Studio actions
 		"actions/vstudio/_vstudio.lua",
-		"actions/vstudio/vs2005_solution.lua",
-		"actions/vstudio/vs2010_vcxproj.lua",
-		"actions/vstudio/vs2010_vcxproj_filters.lua",
+		"actions/vstudio/vstudio_solution.lua",
+		"actions/vstudio/vstudio_vcxproj.lua",
+		"actions/vstudio/vstudio_vcxproj_filters.lua",
+		"actions/vstudio/vs2010.lua",
 		"actions/vstudio/vs2012.lua",
 		"actions/vstudio/vs2013.lua",
 		"actions/vstudio/vs2015.lua",
