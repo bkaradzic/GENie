@@ -38,7 +38,7 @@
 		--if prj.flags is required as it is not set at project level for tests???
 		--vs200x generator seems to swap a config for the prj in test setup
 		if prj.flags and prj.flags.Managed then
-            local frameworkVersion = prj.framework or "4.0"
+			local frameworkVersion = prj.framework or "4.0"
 			_p(2, '<TargetFrameworkVersion>v%s</TargetFrameworkVersion>', frameworkVersion)
 			_p(2, '<Keyword>ManagedCProj</Keyword>')
 		elseif vstudio.iswinrt() then
@@ -189,14 +189,17 @@
 				_p(2, '<LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>')
 				_p(2, '<IncludePath>$(Console_SdkIncludeRoot)</IncludePath>')
 				_p(2, '<ExecutablePath>$(Console_SdkRoot)bin;$(VCInstallDir)bin\\x86_amd64;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\\Tools\\bin;$(VSInstallDir)Common7\\tools;$(VSInstallDir)Common7\\ide;$(ProgramFiles)\\HTML Help Workshop;$(MSBuildToolsPath32);$(FxCopDir);$(PATH);</ExecutablePath>')
-                if cfg.imagepath then
-                    _p(2, '<LayoutDir>%s</LayoutDir>', cfg.imagepath)
-                else
-                    _p(2, '<LayoutDir>%s</LayoutDir>', prj.name)
-                end
+
+				if cfg.imagepath then
+					_p(2, '<LayoutDir>%s</LayoutDir>', cfg.imagepath)
+				else
+					_p(2, '<LayoutDir>%s</LayoutDir>', prj.name)
+				end
+
 				if cfg.pullmappingfile ~= nil then
 					_p(2,'<PullMappingFile>%s</PullMappingFile>', premake.esc(cfg.pullmappingfile))
 				end
+
 				_p(2, '<LayoutExtensionFilter>*.pdb;*.ilk;*.exp;*.lib;*.winmd;*.appxrecipe;*.pri;*.idb</LayoutExtensionFilter>')
 				_p(2, '<IsolateConfigurationsOnDeploy>true</IsolateConfigurationsOnDeploy>')
 			end
@@ -505,7 +508,7 @@
 	end
 
 	local function item_def_lib(cfg)
-       -- The Xbox360 project files are stored in another place in the project file.
+		-- The Xbox360 project files are stored in another place in the project file.
 		if cfg.kind == 'StaticLib' and cfg.platform ~= "Xbox360" then
 			_p(1,'<Lib>')
 				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>',cfg.buildtarget.name)
