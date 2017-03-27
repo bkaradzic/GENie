@@ -72,6 +72,12 @@
 			scope = "config",
 		},
 
+		buildoptions_vala =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
 		clrreferences =
 		{
 			kind = "list",
@@ -546,7 +552,7 @@
 			kind  = "dirlist",
 			scope = "config",
 		},
-		
+
 		pullmappingfile =
 		{
 			kind  = "path",
@@ -570,7 +576,7 @@
 			kind  = "list",
 			scope = "config",
 		},
-		
+
 		sdkreferences =
 		{
 			kind  = "list",
@@ -650,6 +656,12 @@
 		uses =
 		{
 			kind  = "list",
+			scope = "config",
+		},
+
+		vapidirs =
+		{
+			kind  = "dirlist",
 			scope = "config",
 		},
 
