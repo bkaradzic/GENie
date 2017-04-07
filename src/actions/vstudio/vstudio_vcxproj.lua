@@ -401,24 +401,24 @@
 
 		if  not premake.config.isoptimizedbuild(cfg.flags) then
 			if not cfg.flags.Managed then
-				_p(3,'<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>')
+				_p(3, '<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>')
 			end
 
 			if cfg.flags.ExtraWarnings then
---				_p(3,'<SmallerTypeCheck>true</SmallerTypeCheck>')
+--				_p(3, '<SmallerTypeCheck>true</SmallerTypeCheck>')
 			end
 		else
-			_p(3,'<StringPooling>true</StringPooling>')
+			_p(3, '<StringPooling>true</StringPooling>')
 		end
 
 		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
 			_p(3, '<CompileAsWinRT>false</CompileAsWinRT>')
 		end
 
-		_p(3,'<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
+		_p(3, '<RuntimeLibrary>%s</RuntimeLibrary>', runtime(cfg))
 
 		if cfg.flags.NoBufferSecurityCheck then
-			_p(3,'<BufferSecurityCheck>false</BufferSecurityCheck>')
+			_p(3, '<BufferSecurityCheck>false</BufferSecurityCheck>')
 		end
 
 		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
@@ -426,23 +426,23 @@
 		-- If we aren't running NoMultiprocessorCompilation and not wanting a minimal rebuild,
 		-- then enable MultiProcessorCompilation.
 		if not cfg.flags.NoMultiProcessorCompilation and not cfg.flags.EnableMinimalRebuild then
-			_p(3,'<MultiProcessorCompilation>true</MultiProcessorCompilation>')
+			_p(3, '<MultiProcessorCompilation>true</MultiProcessorCompilation>')
 		else
-			_p(3,'<MultiProcessorCompilation>false</MultiProcessorCompilation>')
+			_p(3, '<MultiProcessorCompilation>false</MultiProcessorCompilation>')
 		end
 
 		precompiled_header(cfg)
 
 		if cfg.flags.ExtraWarnings then
-			_p(3,'<WarningLevel>Level4</WarningLevel>')
+			_p(3, '<WarningLevel>Level4</WarningLevel>')
 		elseif cfg.flags.MinimumWarnings then
-			_p(3,'<WarningLevel>Level1</WarningLevel>')
+			_p(3, '<WarningLevel>Level1</WarningLevel>')
 		else
-			_p(3,'<WarningLevel>Level3</WarningLevel>')
+			_p(3 ,'<WarningLevel>Level3</WarningLevel>')
 		end
 
 		if cfg.flags.FatalWarnings then
-			_p(3,'<TreatWarningAsError>true</TreatWarningAsError>')
+			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
 
 		exceptions(cfg)
@@ -453,13 +453,16 @@
 		floating_point(cfg)
 		debug_info(cfg)
 
-		if cfg.flags.Symbols then
-			_p(3,'<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
-				, path.getbasename(cfg.buildtarget.name))
+		if  cfg.flags.Symbols
+		and _ACTION:sub(3) ~= "2017"
+		then
+			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
+				, path.getbasename(cfg.buildtarget.name)
+				)
 		end
 
 		if cfg.flags.NoFramePointer then
-			_p(3,'<OmitFramePointers>true</OmitFramePointers>')
+			_p(3, '<OmitFramePointers>true</OmitFramePointers>')
 		end
 
 		if cfg.flags.UseFullPaths then
@@ -586,6 +589,14 @@
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
 		_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+
+		if  cfg.flags.Symbols
+		and _ACTION:sub(3) == "2017"
+		then
+			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
+				, path.getbasename(cfg.buildtarget.name)
+				)
+		end
 
 		if premake.config.isoptimizedbuild(cfg.flags) then
 			_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
