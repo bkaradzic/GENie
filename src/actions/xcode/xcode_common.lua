@@ -1035,7 +1035,9 @@
 			_p(4,'SYMROOT = "%s";', targetdir)
 		end
 
-		if cfg.flags.ExtraWarnings then
+		if cfg.flags.PedanticWarnings
+		or cfg.flags.ExtraWarnings
+		then
 			_p(4,'WARNING_CFLAGS = "-Wall";')
 		end
 

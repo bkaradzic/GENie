@@ -433,7 +433,9 @@
 
 		precompiled_header(cfg)
 
-		if cfg.flags.ExtraWarnings then
+		if cfg.flags.PedanticWarnings then
+			_p(3, '<WarningLevel>EnableAllWarnings</WarningLevel>')
+		elseif cfg.flags.ExtraWarnings then
 			_p(3, '<WarningLevel>Level4</WarningLevel>')
 		elseif cfg.flags.MinimumWarnings then
 			_p(3, '<WarningLevel>Level1</WarningLevel>')

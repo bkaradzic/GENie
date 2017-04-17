@@ -188,6 +188,7 @@
 					EnableSSE2 = 1,
 					EnableAVX = 1,
 					EnableAVX2 = 1,
+					PedanticWarnings = 1,
 					ExtraWarnings = 1,
 					FatalWarnings = 1,
 					FloatFast = 1,

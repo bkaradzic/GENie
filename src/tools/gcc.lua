@@ -25,19 +25,20 @@
 
 	local cflags =
 	{
-		EnableSSE      = "-msse",
-		EnableSSE2     = "-msse2",
-		EnableAVX      = "-mavx",
-		EnableAVX2     = "-mavx2",
-		ExtraWarnings  = "-Wall -Wextra",
-		FatalWarnings  = "-Werror",
-		FloatFast      = "-ffast-math",
-		FloatStrict    = "-ffloat-store",
-		NoFramePointer = "-fomit-frame-pointer",
-		Optimize       = "-O2",
-		OptimizeSize   = "-Os",
-		OptimizeSpeed  = "-O3",
-		Symbols        = "-g",
+		EnableSSE        = "-msse",
+		EnableSSE2       = "-msse2",
+		EnableAVX        = "-mavx",
+		EnableAVX2       = "-mavx2",
+		PedanticWarnings = "-Wall -Wextra -pedantic",
+		ExtraWarnings    = "-Wall -Wextra",
+		FatalWarnings    = "-Werror",
+		FloatFast        = "-ffast-math",
+		FloatStrict      = "-ffloat-store",
+		NoFramePointer   = "-fomit-frame-pointer",
+		Optimize         = "-O2",
+		OptimizeSize     = "-Os",
+		OptimizeSpeed    = "-O3",
+		Symbols          = "-g",
 	}
 
 	local cxxflags =
