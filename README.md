@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 811 (commit 2f57fe63abd367c0ebbdfa0054a0c24f4447dde6)
+	version 813 (commit 8090219b8d864c18689bc6f377ab4100b3f2dc5e)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -115,6 +115,7 @@ intention to keep it compatible with it.
  - Added vs2017 support.
  - Removed vs2008 support.
  - Added `removeplatforms` that removes VS build target platforms.
+ - Added `PedanticWarnings` flag.
 
 Debugging GENie scripts
 -----------------------
