@@ -168,7 +168,7 @@
 
 			_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
 
-			_p(2,'<OutDir>%s</OutDir>', premake.esc(outdir))
+			_p(2,'<OutDir>%s</OutDir>', iif(outdir:len() > 0, premake.esc(outdir), ".\\"))
 
 			if cfg.platform == "Xbox360" then
 				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', premake.esc(target.name))
