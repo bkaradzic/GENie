@@ -128,7 +128,7 @@ function cmake.commonDefines(conf)
     for _, cfg in ipairs(conf) do
         for _, v in ipairs(cfg.defines) do
             if(t2[v] == #conf - 1) then
-                _p('add_definitions(-D%s)', premake.esc(v))
+                _p('add_definitions(-D%s)', v)
                 table.insert(Dupes, v)
             end
             if (t2[v] == nil) then
