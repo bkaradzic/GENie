@@ -103,15 +103,49 @@ function cmake.dependencyRules(prj)
     return customdeps
 end
 
-function cmake.includeRules(cfg)
-    for _, v in ipairs(cfg.includedirs) do
-        _p(1, 'include_directories(../%s)', premake.esc(v))
+function cmake.commonIncludes(conf)
+    local Dupes = {}
+    local t2 = {}
+    for _, cfg in ipairs(conf) do
+        for _, v in ipairs(cfg.includedirs) do
+            if(t2[v] == #conf - 1) then
+                _p('include_directories(../%s)', premake.esc(v))
+                table.insert(Dupes, v)
+            end
+            if (t2[v] == nil) then
+                t2[v] = 1
+            else
+                t2[v] = t2[v] + 1
+            end
+        end
     end
+    return Dupes
 end
 
-function cmake.definesRules(cfg)
-    for _, v in ipairs(cfg.defines) do
-        _p(1, 'add_definitions(-D%s)', v)
+function cmake.commonDefines(conf)
+    local Dupes = {}
+    local t2 = {}
+    for _, cfg in ipairs(conf) do
+        for _, v in ipairs(cfg.defines) do
+            if(t2[v] == #conf - 1) then
+                _p('add_definitions(-D%s)', premake.esc(v))
+                table.insert(Dupes, v)
+            end
+            if (t2[v] == nil) then
+                t2[v] = 1
+            else
+                t2[v] = t2[v] + 1
+            end
+        end
+    end
+    return Dupes
+end
+
+function cmake.cfgRules(cfg, dupes, str)
+    for _, v in ipairs(cfg) do
+        if (not table.icontains(dupes, v)) then
+            _p(1, str, v)
+        end
     end
 end
 
@@ -135,36 +169,41 @@ function cmake.project(prj)
     local nativeplatform = iif(os.is64bit(), "x64", "x32")
     local cc = premake.gettool(prj)
     local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
-    local configurations = {}
 
     cmake.removeCrosscompiler(platforms)
 
+    local configurations = {}
 
-    -- TODO: Reduce the length of the generated code by aggregating common parts.
     for _, platform in ipairs(platforms) do
         for cfg in premake.eachconfig(prj, platform) do
-
             -- TODO: Extend support for 32-bit targets on 64-bit hosts
             if cfg.platform == nativeplatform then
                 table.insert(configurations, cfg)
-                _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
-
-                -- add includes directories
-                cmake.includeRules(cfg)
-
-                -- add build defines
-                cmake.definesRules(cfg)
-
-                -- set CXX flags
-                _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
-
-                -- set C flags
-                _p(1, 'set(CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
-
-                _p('endif()')
-                _p('')
             end
         end
+    end
+
+    local commonIncludes = cmake.commonIncludes(configurations)
+    local commonDefines = cmake.commonDefines(configurations)
+    _p('')
+
+    for _, cfg in ipairs(configurations) do
+        _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
+
+        -- add includes directories
+        cmake.cfgRules(cfg.includedirs, commonIncludes, 'include_directories(../%s)')
+
+        -- add build defines
+        cmake.cfgRules(cfg.defines, commonDefines, 'add_definitions(-D%s)')
+
+        -- set CXX flags
+        _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
+
+        -- set C flags
+        _p(1, 'set(CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
+
+        _p('endif()')
+        _p('')
     end
 
     -- force CPP if needed
