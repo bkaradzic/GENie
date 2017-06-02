@@ -8,6 +8,19 @@
 local cmake = premake.cmake
 local tree = premake.tree
 
+local function is_excluded(prj, cfg, file)
+    if table.icontains(prj.excludes, file) then
+        return true
+    end
+
+    if table.icontains(cfg.excludes, file) then
+        return true
+    end
+
+    return false
+end
+
+
 function cmake.list(value)
     if #value > 0 then
         return " " .. table.concat(value, " ")
@@ -87,31 +100,66 @@ function cmake.customtasks(prj)
     end
 end
 
-function cmake.dependencyRules(prj)
-    local customdeps = {}
-    for key, dependency in ipairs(prj.dependency or {}) do
-        _p('add_custom_target(')
-        local customname = string.format("customdep_%s_%s", premake.esc(prj.name), key)
-        table.insert(customdeps, customname)
-        _p(1, '%s', customname)
+function cmake.depRules(prj)
+    local maintable = {}
+    for _, dependency in ipairs(prj.dependency or {}) do
         for _, dep in ipairs(dependency or {}) do
-            _p(1, 'DEPENDS \"${CMAKE_CURRENT_SOURCE_DIR}/../%s\"', premake.esc(path.getrelative(prj.location, dep[2])))
+            if path.issourcefile(dep[1]) then
+                local dep1 = premake.esc(path.getrelative(prj.location, dep[1]))
+                local dep2 = premake.esc(path.getrelative(prj.location, dep[2]))
+                if not maintable[dep1] then maintable[dep1] = {} end
+                table.insert(maintable[dep1], dep2)
+            end
+        end
+    end
+
+    for key, _ in pairs(maintable) do
+        local deplist = {}
+        local depsname = string.format('%s_deps', path.getname(key))
+
+        for _, d2 in pairs(maintable[key]) do
+            table.insert(deplist, d2)
+        end
+        _p('set(')
+        _p(1, depsname)
+        for _, v in pairs(deplist) do
+            _p(1, '${CMAKE_CURRENT_SOURCE_DIR}/../%s', v)
         end
         _p(')')
         _p('')
-    end
-    return customdeps
-end
-
-function cmake.includeRules(cfg)
-    for _, v in ipairs(cfg.includedirs) do
-        _p(1, 'include_directories(../%s)', premake.esc(v))
+        _p('set_source_files_properties(')
+        _p(1, '\"${CMAKE_CURRENT_SOURCE_DIR}/../%s\"', key)
+        _p(1, 'PROPERTIES OBJECT_DEPENDS \"${%s}\"', depsname)
+        _p(')')
+        _p('')
     end
 end
 
-function cmake.definesRules(cfg)
-    for _, v in ipairs(cfg.defines) do
-        _p(1, 'add_definitions(-D%s)', v)
+function cmake.commonRules(conf, str)
+    local Dupes = {}
+    local t2 = {}
+    for _, cfg in ipairs(conf) do
+        local cfgd = iif(str == 'include_directories(../%s)', cfg.includedirs, cfg.defines)
+        for _, v in ipairs(cfgd) do
+            if(t2[v] == #conf - 1) then
+                _p(str, v)
+                table.insert(Dupes, v)
+            end
+            if not t2[v] then
+                t2[v] = 1
+            else
+                t2[v] = t2[v] + 1
+            end
+        end
+    end
+    return Dupes
+end
+
+function cmake.cfgRules(cfg, dupes, str)
+    for _, v in ipairs(cfg) do
+        if (not table.icontains(dupes, v)) then
+            _p(1, str, v)
+        end
     end
 end
 
@@ -135,36 +183,41 @@ function cmake.project(prj)
     local nativeplatform = iif(os.is64bit(), "x64", "x32")
     local cc = premake.gettool(prj)
     local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
-    local configurations = {}
 
     cmake.removeCrosscompiler(platforms)
 
+    local configurations = {}
 
-    -- TODO: Reduce the length of the generated code by aggregating common parts.
     for _, platform in ipairs(platforms) do
         for cfg in premake.eachconfig(prj, platform) do
-
             -- TODO: Extend support for 32-bit targets on 64-bit hosts
             if cfg.platform == nativeplatform then
                 table.insert(configurations, cfg)
-                _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
-
-                -- add includes directories
-                cmake.includeRules(cfg)
-
-                -- add build defines
-                cmake.definesRules(cfg)
-
-                -- set CXX flags
-                _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
-
-                -- set C flags
-                _p(1, 'set(CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
-
-                _p('endif()')
-                _p('')
             end
         end
+    end
+
+    local commonIncludes = cmake.commonRules(configurations, 'include_directories(../%s)')
+    local commonDefines = cmake.commonRules(configurations, 'add_definitions(-D%s)')
+    _p('')
+
+    for _, cfg in ipairs(configurations) do
+        _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
+
+        -- add includes directories
+        cmake.cfgRules(cfg.includedirs, commonIncludes, 'include_directories(../%s)')
+
+        -- add build defines
+        cmake.cfgRules(cfg.defines, commonDefines, 'add_definitions(-D%s)')
+
+        -- set CXX flags
+        _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
+
+        -- set C flags
+        _p(1, 'set(CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)))
+
+        _p('endif()')
+        _p('')
     end
 
     -- force CPP if needed
@@ -176,7 +229,7 @@ function cmake.project(prj)
     cmake.customtasks(prj)
 
     -- per-dependency build rules
-    local customdeps = cmake.dependencyRules(prj)
+    cmake.depRules(prj)
 
     for _, cfg in ipairs(configurations) do
         _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
@@ -191,10 +244,6 @@ function cmake.project(prj)
         if (prj.kind == 'ConsoleApp' or prj.kind == 'WindowedApp') then
             _p(1, 'add_executable(%s ${source_list})', premake.esc(cfg.buildtarget.basename))
             _p(1, 'target_link_libraries(%s%s%s)', premake.esc(cfg.buildtarget.basename), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
-        end
-
-        for _, v in ipairs(customdeps) do
-            _p(1, 'add_dependencies(%s %s)', premake.esc(cfg.buildtarget.basename), v)
         end
         _p('endif()')
         _p('')
