@@ -8,6 +8,19 @@
 local cmake = premake.cmake
 local tree = premake.tree
 
+local function is_excluded(prj, cfg, file)
+    if table.icontains(prj.excludes, file) then
+        return true
+    end
+
+    if table.icontains(cfg.excludes, file) then
+        return true
+    end
+
+    return false
+end
+
+
 function cmake.list(value)
     if #value > 0 then
         return " " .. table.concat(value, " ")
@@ -87,51 +100,52 @@ function cmake.customtasks(prj)
     end
 end
 
-function cmake.dependencyRules(prj)
-    local customdeps = {}
-    for key, dependency in ipairs(prj.dependency or {}) do
-        _p('add_custom_target(')
-        local customname = string.format("customdep_%s_%s", premake.esc(prj.name), key)
-        table.insert(customdeps, customname)
-        _p(1, '%s', customname)
+function cmake.depRules(prj)
+    local maintable = {}
+    for _, dependency in ipairs(prj.dependency or {}) do
         for _, dep in ipairs(dependency or {}) do
-            _p(1, 'DEPENDS \"${CMAKE_CURRENT_SOURCE_DIR}/../%s\"', premake.esc(path.getrelative(prj.location, dep[2])))
+            if path.issourcefile(dep[1]) then
+                local dep1 = premake.esc(path.getrelative(prj.location, dep[1]))
+                local dep2 = premake.esc(path.getrelative(prj.location, dep[2]))
+                if not maintable[dep1] then maintable[dep1] = {} end
+                table.insert(maintable[dep1], dep2)
+            end
+        end
+    end
+
+    for key, _ in pairs(maintable) do
+        local deplist = {}
+        local depsname = string.format('%s_deps', path.getname(key))
+
+        for _, d2 in pairs(maintable[key]) do
+            table.insert(deplist, d2)
+        end
+        _p('set(')
+        _p(1, depsname)
+        for _, v in pairs(deplist) do
+            _p(1, '${CMAKE_CURRENT_SOURCE_DIR}/../%s', v)
         end
         _p(')')
         _p('')
+        _p('set_source_files_properties(')
+        _p(1, '\"${CMAKE_CURRENT_SOURCE_DIR}/../%s\"', key)
+        _p(1, 'PROPERTIES OBJECT_DEPENDS \"${%s}\"', depsname)
+        _p(')')
+        _p('')
     end
-    return customdeps
 end
 
-function cmake.commonIncludes(conf)
+function cmake.commonRules(conf, str)
     local Dupes = {}
     local t2 = {}
     for _, cfg in ipairs(conf) do
-        for _, v in ipairs(cfg.includedirs) do
+        local cfgd = iif(str == 'include_directories(../%s)', cfg.includedirs, cfg.defines)
+        for _, v in ipairs(cfgd) do
             if(t2[v] == #conf - 1) then
-                _p('include_directories(../%s)', premake.esc(v))
+                _p(str, v)
                 table.insert(Dupes, v)
             end
-            if (t2[v] == nil) then
-                t2[v] = 1
-            else
-                t2[v] = t2[v] + 1
-            end
-        end
-    end
-    return Dupes
-end
-
-function cmake.commonDefines(conf)
-    local Dupes = {}
-    local t2 = {}
-    for _, cfg in ipairs(conf) do
-        for _, v in ipairs(cfg.defines) do
-            if(t2[v] == #conf - 1) then
-                _p('add_definitions(-D%s)', v)
-                table.insert(Dupes, v)
-            end
-            if (t2[v] == nil) then
+            if not t2[v] then
                 t2[v] = 1
             else
                 t2[v] = t2[v] + 1
@@ -183,8 +197,8 @@ function cmake.project(prj)
         end
     end
 
-    local commonIncludes = cmake.commonIncludes(configurations)
-    local commonDefines = cmake.commonDefines(configurations)
+    local commonIncludes = cmake.commonRules(configurations, 'include_directories(../%s)')
+    local commonDefines = cmake.commonRules(configurations, 'add_definitions(-D%s)')
     _p('')
 
     for _, cfg in ipairs(configurations) do
@@ -215,7 +229,7 @@ function cmake.project(prj)
     cmake.customtasks(prj)
 
     -- per-dependency build rules
-    local customdeps = cmake.dependencyRules(prj)
+    cmake.depRules(prj)
 
     for _, cfg in ipairs(configurations) do
         _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
@@ -230,10 +244,6 @@ function cmake.project(prj)
         if (prj.kind == 'ConsoleApp' or prj.kind == 'WindowedApp') then
             _p(1, 'add_executable(%s ${source_list})', premake.esc(cfg.buildtarget.basename))
             _p(1, 'target_link_libraries(%s%s%s)', premake.esc(cfg.buildtarget.basename), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
-        end
-
-        for _, v in ipairs(customdeps) do
-            _p(1, 'add_dependencies(%s %s)', premake.esc(cfg.buildtarget.basename), v)
         end
         _p('endif()')
         _p('')
