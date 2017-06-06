@@ -374,7 +374,7 @@
 				end
 
 				if item:find("/", nil, true) then
-					item = path.getrelative(cfg.project.location, item)
+					item = path.getrelative(cfg.location, item)
 				end
 
 			end
