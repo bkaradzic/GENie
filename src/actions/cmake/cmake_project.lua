@@ -8,6 +8,10 @@
 local cmake = premake.cmake
 local tree = premake.tree
 
+local includestr = 'include_directories(../%s)'
+local definestr = 'add_definitions(-D%s)'
+
+
 local function is_excluded(prj, cfg, file)
     if table.icontains(prj.excludes, file) then
         return true
@@ -20,6 +24,14 @@ local function is_excluded(prj, cfg, file)
     return false
 end
 
+function cmake.excludedFiles(prj, cfg, src)
+    for _, v in ipairs(src) do
+        if (is_excluded(prj, cfg, v)) then
+            _p(1, 'list(REMOVE_ITEM source_list ../%s)', v)
+        end
+
+    end
+end
 
 function cmake.list(value)
     if #value > 0 then
@@ -30,6 +42,7 @@ function cmake.list(value)
 end
 
 function cmake.files(prj)
+    local ret = {}
     local tr = premake.project.buildsourcetree(prj)
     tree.traverse(tr, {
         onbranchenter = function(node, depth)
@@ -37,9 +50,12 @@ function cmake.files(prj)
         onbranchexit = function(node, depth)
         end,
         onleaf = function(node, depth)
+            table.insert(ret, node.cfg.name)
             _p(1, '../%s', node.cfg.name)
         end,
     }, true, 1)
+
+    return ret
 end
 
 function cmake.header(prj)
@@ -139,7 +155,7 @@ function cmake.commonRules(conf, str)
     local Dupes = {}
     local t2 = {}
     for _, cfg in ipairs(conf) do
-        local cfgd = iif(str == 'include_directories(../%s)', cfg.includedirs, cfg.defines)
+        local cfgd = iif(str == includestr, cfg.includedirs, cfg.defines)
         for _, v in ipairs(cfgd) do
             if(t2[v] == #conf - 1) then
                 _p(str, v)
@@ -176,7 +192,7 @@ function cmake.project(prj)
     cmake.header(prj)
     _p('set(')
     _p('source_list')
-    cmake.files(prj)
+    local source_files = cmake.files(prj)
     _p(')')
     _p('')
 
@@ -197,18 +213,21 @@ function cmake.project(prj)
         end
     end
 
-    local commonIncludes = cmake.commonRules(configurations, 'include_directories(../%s)')
-    local commonDefines = cmake.commonRules(configurations, 'add_definitions(-D%s)')
+    local commonIncludes = cmake.commonRules(configurations, includestr)
+    local commonDefines = cmake.commonRules(configurations, definestr)
     _p('')
 
     for _, cfg in ipairs(configurations) do
         _p('if(CMAKE_BUILD_TYPE MATCHES \"%s\")', cfg.name)
 
+        -- list excluded files
+        cmake.excludedFiles(prj, cfg, source_files)
+
         -- add includes directories
-        cmake.cfgRules(cfg.includedirs, commonIncludes, 'include_directories(../%s)')
+        cmake.cfgRules(cfg.includedirs, commonIncludes, includestr)
 
         -- add build defines
-        cmake.cfgRules(cfg.defines, commonDefines, 'add_definitions(-D%s)')
+        cmake.cfgRules(cfg.defines, commonDefines, definestr)
 
         -- set CXX flags
         _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
