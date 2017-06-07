@@ -237,6 +237,7 @@
 		local result = {}
 		for _, value in ipairs(premake.getlinks(cfg, "system", "fullpath")) do
 			if premake.gcc.islibfile(value) then
+				value = path.rebase(value, cfg.project.location, cfg.location)
 				table.insert(result, _MAKE.esc(value))
 			elseif path.getextension(value) == ".framework" then
 				table.insert(result, '-framework ' .. _MAKE.esc(path.getbasename(value)))
