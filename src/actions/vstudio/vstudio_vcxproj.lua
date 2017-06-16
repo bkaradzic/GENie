@@ -1135,9 +1135,12 @@
 --
 
 	function vc2010.debugdir(cfg)
-		_p(2, '<DebuggerFlavor>%s</DebuggerFlavor>'
-			, iif(cfg.platform == "Orbis", 'ORBISDebugger', 'WindowsLocalDebugger')
-			)
+		local debuggerFlavor =
+			  iif(cfg.platform == "Orbis",   'ORBISDebugger'
+			, iif(cfg.platform == "Durango", 'XboxOneVCppDebugger'
+			,                                'WindowsLocalDebugger'
+			))
+		_p(2, '<DebuggerFlavor>%s</DebuggerFlavor>', debuggerFlavor)
 
 		if cfg.debugdir and not vstudio.iswinrt() then
 			_p(2, '<LocalDebuggerWorkingDirectory>%s</LocalDebuggerWorkingDirectory>'
