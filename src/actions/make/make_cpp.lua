@@ -7,7 +7,7 @@
 	premake.make.cpp = { }
 	premake.make.override = { }
 	premake.make.makefile_ignore = false
-	
+
 	local cpp = premake.make.cpp
 	local make = premake.make
 
@@ -67,9 +67,9 @@
 		_p('')
 
 		if os.is("MacOSX") and prj.kind == "WindowedApp" then
-			_p('all: $(OBJDIRS) prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist | $(TARGETDIR)')
+			_p('all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist')
 		else
-			_p('all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)')
+			_p('all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)')
 		end
 		_p('\t@:')
 		_p('')

@@ -219,7 +219,7 @@ RESOURCES := \
 
 .PHONY: clean prebuild prelink
 
-all: $(OBJDIRS) prebuild prelink $(TARGET) | $(TARGETDIR)
+all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)
 	@:
 
 $(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
