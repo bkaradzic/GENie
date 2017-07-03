@@ -214,6 +214,15 @@ Passes arguments direction to the compiler command line. Multiple calls in a pro
 
 **Scope:** solutions, projects, configurations
 
+You may also use one of these functions to configure buildoptions for each individual file extension:
+
+* `buildoptions_c`
+* `buildoptions_cpp`
+* `buildoptions_asm`
+* `buildoptions_objc`
+* `buildoptions_objcpp`
+* `buildoptions_swift`
+
 #### Arguments
 _options_ - list of compiler flags
 
