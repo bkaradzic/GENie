@@ -216,12 +216,13 @@ Passes arguments direction to the compiler command line. Multiple calls in a pro
 
 You may also use one of these functions to configure buildoptions for each individual file extension:
 
+* `buildoptions_asm` for .asm files
 * `buildoptions_c` for .c files
 * `buildoptions_cpp` for .cpp files
-* `buildoptions_asm` for .asm files
 * `buildoptions_objc` for .m files
 * `buildoptions_objcpp` for .mm files
 * `buildoptions_swift` for .swift files
+* `buildoptions_vala` for .vala files
 
 #### Arguments
 _options_ - list of compiler flags
