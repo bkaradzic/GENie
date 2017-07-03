@@ -118,8 +118,8 @@ end
 
 function cmake.depRules(prj)
     local maintable = {}
-    for _, dependency in ipairs(prj.dependency or {}) do
-        for _, dep in ipairs(dependency or {}) do
+    for _, dependency in ipairs(prj.dependency) do
+        for _, dep in ipairs(dependency) do
             if path.issourcefile(dep[1]) then
                 local dep1 = premake.esc(path.getrelative(prj.location, dep[1]))
                 local dep2 = premake.esc(path.getrelative(prj.location, dep[2]))
