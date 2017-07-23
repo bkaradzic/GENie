@@ -296,12 +296,10 @@
 	function premake.gcc.getdefines(defines)
 		local result = { }
 		for _,def in ipairs(defines) do
-			table.insert(result, '-D' .. def)
+			table.insert(result, "-D" .. def)
 		end
 		return result
 	end
-
-
 
 --
 -- Decorate include file search paths for the GCC command line.
@@ -310,7 +308,7 @@
 	function premake.gcc.getincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
-			table.insert(result, "-I" .. _MAKE.esc(dir))
+			table.insert(result, "-I\"" .. dir .. "\"")
 		end
 		return result
 	end
@@ -322,7 +320,7 @@
 	function premake.gcc.getquoteincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
-			table.insert(result, "-iquote " .. _MAKE.esc(dir))
+			table.insert(result, "-iquote \"" .. dir .. "\"")
 		end
 		return result
 	end
