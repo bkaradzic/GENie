@@ -47,7 +47,7 @@ ifeq ($(config),release)
   TARGETDIR           = ../../bin/windows
   override TARGET              = $(TARGETDIR)/genie.exe
   DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE
-  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           += -I"../../src/host/lua-5.3.0/src"
   INCLUDES           +=
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
   ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
@@ -131,7 +131,7 @@ ifeq ($(config),debug)
   TARGETDIR           = ../../bin/windows
   override TARGET              = $(TARGETDIR)/genie.exe
   DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE
-  INCLUDES           += -I../../src/host/lua-5.3.0/src
+  INCLUDES           += -I"../../src/host/lua-5.3.0/src"
   INCLUDES           +=
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
   ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
