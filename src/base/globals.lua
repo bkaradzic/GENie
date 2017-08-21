@@ -80,6 +80,12 @@
 			nosharedlibs    = true,
 			namestyle       = "windows",
 		},
+		TegraAndroid =
+		{
+			cfgsuffix       = "tegraandroid",
+			iscrosscompiler = true,
+			namestyle       = "TegraAndroid",
+		},
 	}
 
 

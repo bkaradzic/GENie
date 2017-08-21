@@ -40,6 +40,7 @@
 		ARM     = "ARM",
 		Orbis   = "ORBIS",
 		Durango = "Durango",
+		TegraAndroid = "Tegra-Android",
 	}
 
 

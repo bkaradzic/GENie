@@ -176,6 +176,10 @@
 		return path.hasextension(fname, ".appxmanifest")
 	end
 
+	function path.isandroidbuildfile(fname)
+		return path.getname(fname) == "AndroidManifest.xml"
+	end
+
 	function path.isnatvis(fname)
 		return path.hasextension(fname, ".natvis")
 	end
