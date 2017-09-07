@@ -1091,10 +1091,17 @@
 		table.insert(sln.groups, group)
 		sln.groups[inpath] = group
 
+		-- add to the parent's child list
+		if parent ~= nil then
+			table.insert(parent.groups, group)
+		end
+
 		group.solution = sln
 		group.name = name
 		group.uuid = os.uuid(curpath)
 		group.parent = parent
+		group.projects = { }
+		group.groups = { }
 		return group
 	end
 
@@ -1163,6 +1170,9 @@
 
 		local group = creategroupsfrompath(premake.CurrentGroup, sln)
 
+		if group ~= nil then
+			table.insert(group.projects, prj)
+		end
 
 		prj.solution       = sln
 		prj.name           = name
