@@ -789,6 +789,10 @@
 			_p(4,'EXECUTABLE_EXTENSION = %s;', ext)
 		end
 
+		if cfg.flags.ObjcARC then
+			_p(4,'CLANG_ENABLE_OBJC_ARC = YES;')
+		end
+
 		local outdir = path.getdirectory(cfg.buildtarget.bundlepath)
 		if outdir ~= "." then
 			_p(4,'CONFIGURATION_BUILD_DIR = %s;', outdir)

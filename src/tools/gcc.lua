@@ -48,6 +48,11 @@
 		UnsignedChar   = "-funsigned-char",
 	}
 
+	local objcflags =
+	{
+		ObjcARC     = "-fobjc-arc",
+	}
+
 
 --
 -- Map platforms to flags
@@ -138,6 +143,11 @@
 	function premake.gcc.getcxxflags(cfg)
 		local result = table.translate(cfg.flags, cxxflags)
 		return result
+	end
+
+
+	function premake.gcc.getobjcflags(cfg)
+		return table.translate(cfg.flags, objcflags)
 	end
 
 

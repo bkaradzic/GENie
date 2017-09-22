@@ -214,6 +214,7 @@
 					FastCall = 1,
 					StdCall = 1,
 					SingleOutputDir = 1,
+					ObjcARC = 1,
 					Optimize = 1,
 					OptimizeSize = 1,
 					OptimizeSpeed = 1,

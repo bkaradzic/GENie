@@ -116,6 +116,7 @@ intention to keep it compatible with it.
  - Removed vs2008 support.
  - Added `removeplatforms` that removes VS build target platforms.
  - Added `PedanticWarnings` flag.
+ - Added `ObjcARC` flag to enable automatic reference counting for Objective-C(++).
 
 Debugging GENie scripts
 -----------------------
