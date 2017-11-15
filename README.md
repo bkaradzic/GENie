@@ -48,8 +48,8 @@ Documentation
 History
 -------
 
-Initial version of **GENie** is fork of Premake 4.4 beta 5, and there is no
-intention to keep it compatible with it.
+Initial version of **GENie** is [fork](https://github.com/bkaradzic/GENie/blob/c7e7da4aafe4210aa014a8ae8f6b01ce1d6802f0/README.md#why-fork)
+of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
 
 ## Changelog (since fork)
 
