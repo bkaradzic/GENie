@@ -25,6 +25,7 @@
     * [files](#filesfiles)
     * [flags](#flagsflags)
     * [framework](#frameworkversion)
+    * [group](#groupname)
     * [imageoptions](#imageoptionsoptions)
     * [imagepath](#imagepathpath)
     * [implibdir](#implibdir)
@@ -40,6 +41,7 @@
     * [linkoptions](#linkoptionsoptions)
     * [links](#linksreferences)
     * [location](#locationpath)
+    * [messageskip](#messageskipoptions)
     * [newaction](#newactiondescription)
     * [newoption](#newoptionsdescription)
     * [nopch](#nopch)
@@ -52,14 +54,20 @@
     * [prebuildcommands](#prebuildcommandscommands)
     * [prelinkcommands](#prelinkcommandscommands)
     * [project](#projectname)
+    * [removefiles](#removefilesfiles)
+    * [removeflags](#removeflagsflags)
+    * [removelinks](#removelinkslinks)
+    * [removeplatforms](#removeplatformsplatforms)
     * [resdefines](#resdefinessymbols)
     * [resincludedirs](#resincludedirspaths)
     * [resoptions](#resoptionsoptions)
     * [solution](#solutionname)
+    * [startproject](#startprojectname)
     * [targetdir](#targetdirpath)
     * [targetextension](#targetextensionext)
     * [targetname](#targetnamename)
     * [targetprefix](#targetprefixprefix)
+    * [targetsubdir](#targetsubdirpath)
     * [targetsuffix](#targetsuffixsuffix)
     * [userincludedirs](#userincludedirspaths)
     * [uuid](#uuidprojectuuid)
@@ -83,7 +91,7 @@
     * [os.pathsearch](#ospathsearchfname-paths)
     * [os.rmdir](#osrmdirpath)
     * [os.stat](#osstatpath)
-    * [os.uuid](#osuuid)
+    * [os.uuid](#osuuidname)
     * [path.getabsolute](#pathgetabsolutepath)
     * [path.getbasename](#pathgetbasenamepath)
     * [path.getdirectory](#pathgetdirectorypath)
@@ -468,7 +476,7 @@ _options_ - list of arguments
 
 ---
 ### excludes({_files_...})
-Removes files added with the [`files`](#files) function. Multiple calls are concatenated.
+Excludes files from the project. This is different from [removefiles](#removefilesfiles) in that it may keep them in the project (Visual Studio) while still excluding them from the build. Multiple calls are concatenated.
 
 **Note:** May be set on the solution, project, or configuration, but only project-level file lists are currently supported.
 
@@ -528,6 +536,7 @@ Specifies build flags to modify the compiling or linking process. Multiple calls
 #### Arguments
 _flags_ - List of flag names from list below. Names are case-insensitive and ignored if not supported on a platform.
 
+* _C7DebugInfo_ - Enables C7 compatible debug info for MSVC builds.
 * _EnableSSE, EnableSSE2, EnableAVX, EnableAVX2_ - Enable SSE/AVX instruction sets
 * _ExtraWarnings_ - Sets compiler's max warning level.
 * _FatalWarnings_ - Treat warnings as errors.
@@ -545,7 +554,8 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoIncrementalLink_ - Disable support for Visual Studio's incremental linking feature.
 * _NoImportLib_ - Prevent the generation of an import library for a Windows DLL.
 * _NoManifest_ - Prevent the generation of a manifest for Windows executables and shared libraries.
-* _NoMinimalRebuild_ - Disable Visual Studio's minimal rebuild feature.
+* _NoMultiProcessorCompilation_ - Disables Visual Studio's and FastBuild's multiprocessor compilation.
+* _EnableMinimalRebuild_ - Enable Visual Studio's minimal rebuild feature.
 * _NoPCH_ - Disable precompiled headers.
 * _NoRTTI_ - Disable C++ runtime type information.
 * _NoWinMD_ - Disables Generation of Windows Metadata.
@@ -554,12 +564,15 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _Optimize_ - Perform a balanced set of optimizations.
 * _OptimizeSize_ - Optimize for the smallest file size.
 * _OptimizeSpeed_ - Optimize for the best performance.
+* _PedanticWarnings_ - Enables the pedantic warning flags.
 * _SEH_ - Enable structured exception handling.
+* _SingleOutputDir_ - Allow source files in the same project to have the same name.
 * _StaticRuntime_ - Perform a static link against the standard runtime libraries.
 * _Symbols_ - Generate debugging information.
 * _Unicode_ - Enable Unicode strings. If not specified, the default toolset behavior is used.
 * _Unsafe_ - Enable the use of unsafe code in .NET applications.
 * _UseFullPaths_ - Enable absolute paths for `__FILE__`. 
+* _UnsignedChar_ - Force `char`s to be `unsigned` by default.
 * _WinMain_ - Use WinMain() as the entry point for Windows applications, rather than main().
 
 **Note:** When not set, options will default to the tool default.
@@ -599,6 +612,29 @@ _version_ - one of the following:
 Use the .NET 3.0 framework
 ```lua
 framework "3.0"
+```
+[Back to top](#table-of-contents)
+
+---
+### group(_name_)
+Creates a solution folder for Visual Studio solutions.
+
+**Scope:** solutions
+
+#### Arguments
+_name_ - the name of the solution folder
+
+#### Examples
+```lua
+solution "MySolution"
+    group "MyGroup1"
+        project "Project1"
+        -- ...
+        project "Project2"
+        -- ...
+    group "MyGroup2"
+        project "Project3"
+        -- ...
 ```
 [Back to top](#table-of-contents)
 
@@ -902,6 +938,21 @@ solution "MySolution"
 If you plan to build with multiple tools from the same source tree, you might want to split up the project files by toolset. The _ACTION global variable contains the current toolset identifier, as specified on the command line. Note that Lua syntax requires parentheses around the function parameters in this case.
 ```lua
 location ("../build/" .. _ACTION)
+```
+[Back to top](#table-of-contents)
+
+---
+### messageskip(_options_)
+Skips certain messages in ninja and Makefile generated projects.
+
+**Scope:** solutions
+
+#### Arguments
+_options_ - one or several of "SkipCreatingMessage", "SkipBuildingMessage", "SkipCleaningMessage"
+
+#### Examples
+```lua
+messageskip { "SkipCreatingMessage", "SkipBuildingMessage", "SkipCleaningMessage" }
 ```
 [Back to top](#table-of-contents)
 
@@ -1217,6 +1268,52 @@ end
 [Back to top](#table-of-contents)
 
 ---
+### removefiles({_files_...})
+Removes files from the project. This is different from [excludes](#excludesfiles) in that it completely removes them from the project, not only from the build. Multiple calls are concatenated.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_files_ - list of files to remove.
+
+[Back to top](#table-of-contents)
+
+---
+### removeflags({_flags_...})
+Removes flags from the flag list.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_flags_ - list of flags to remove from the flag list. They must be valid flags.
+
+[Back to top](#table-of-contents)
+
+---
+### removelinks({_references_...})
+
+Removes flags from the flag list.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_references_ - list of libraries and project names to remove from the links list.
+
+[Back to top](#table-of-contents)
+
+---
+### removeplatforms({_platforms_...})
+
+Removes platforms from the platform list.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_platforms_ - list of platforms to remove from the platforms list.
+
+[Back to top](#table-of-contents)
+
+---
 ### resdefines({_symbols_...})
 Specifies preprocessor symbols for the resource compiler. Multiple calls are concatenated.
 
@@ -1311,6 +1408,28 @@ end
 ```
 [Back to top](#table-of-contents)
 
+---
+###  startproject(_name_)
+Sets the start (default) project for the solution. Works for VS, QBS and Xcode.
+
+**Scope:** solutions
+
+#### Arguments
+_name_ - name of the project to set as the start project.
+
+### Examples
+```lua
+solution "MySolution"
+    startproject "MyProjectFoo"
+    -- [...]
+
+project "MyProjectFoo"
+-- [...]
+
+project "MyProjectBar"
+-- [...]
+```
+[Back to top](#table-of-contents)
 
 ---
 ### targetdir(_path_)
@@ -1381,6 +1500,17 @@ The prefix may also be set to an empty string for no prefix
 ```lua
 targetprefix ""
 ```
+[Back to top](#table-of-contents)
+
+---
+### targetsubdir(_path_)
+Sets a subdirectory inside the target directory for the compiled binary target.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_path_ - name of the subdirectory.
+
 [Back to top](#table-of-contents)
 
 ---
@@ -1784,11 +1914,14 @@ userincludedirs { "../includes/**" }
 [Back to top](#table-of-contents)
 
 ---
-### os.uuid()
+### os.uuid(_name_)
 Returns a Universally Unique Identifier
 
+#### Arguments
+_name_ - (optional) string to be hashed
+
 #### Return Value
-A new UUID, a string value with the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+A new UUID, a string value with the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, generated from _name_ if it is provided, otherwise generated from random data
 
 [Back to top](#table-of-contents)
 
@@ -1800,7 +1933,7 @@ Converts relative path to absolute path
 _path_ - the relative path to be converted
 
 #### Return Value
-new absolute path, calculated from the current working directory
+New absolute path, calculated from the current working directory
 
 [Back to top](#table-of-contents)
 
