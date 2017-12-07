@@ -117,6 +117,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `removeplatforms` that removes VS build target platforms.
  - Added `PedanticWarnings` flag.
  - Added `ObjcARC` flag to enable automatic reference counting for Objective-C(++).
+ - Added `iostargetplatformversion`, `macostargetplatformversion`, and `tvostargetplatformversion` to specify XCode OS target version.
 
 Debugging GENie scripts
 -----------------------
