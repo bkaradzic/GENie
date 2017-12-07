@@ -690,8 +690,8 @@
 
 
 --
--- Retrieve a list of files for a particular build group, one of
--- "ClInclude", "ClCompile", "ResourceCompile", "MASM", and "None".
+-- Retrieve a list of files for a particular build group, like
+-- "ClInclude", "ClCompile", "ResourceCompile", "MASM", "None", etc.
 --
 
 	function vc2010.getfilegroup(prj, group)
@@ -701,6 +701,7 @@
 				ClCompile = {},
 				ClInclude = {},
 				MASM = {},
+				Object = {},
 				None = {},
 				ResourceCompile = {},
 				AppxManifest = {},
@@ -717,6 +718,8 @@
 					if not table.icontains(prj.removefiles, file) then
 						table.insert(sortedfiles.ClInclude, file)
 					end
+				elseif path.isobjectfile(file.name) then
+					table.insert(sortedfiles.Object, file)
 				elseif path.isresourcefile(file.name) then
 					table.insert(sortedfiles.ResourceCompile, file)
 				elseif path.isimagefile(file.name) then
@@ -781,6 +784,7 @@
 	function vc2010.files(prj)
 		vc2010.simplefilesgroup(prj, "ClInclude")
 		vc2010.compilerfilesgroup(prj)
+		vc2010.simplefilesgroup(prj, "Object")
 		vc2010.simplefilesgroup(prj, "None")
 		vc2010.customtaskgroup(prj)
 		vc2010.simplefilesgroup(prj, "ResourceCompile")
