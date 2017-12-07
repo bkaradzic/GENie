@@ -72,6 +72,12 @@
 		end,
 
 		oncheckproject = checkproject,
+
+		xcode = {
+			iOSTargetPlatformVersion = nil,
+			macOSTargetPlatformVersion = nil,
+			tvOSTargetPlatformVersion = nil,
+		},
 	}
 
 	newaction
@@ -114,4 +120,10 @@
 		end,
 
 		oncheckproject = checkproject,
+
+		xcode = {
+			iOSTargetPlatformVersion = nil,
+			macOSTargetPlatformVersion = nil,
+			tvOSTargetPlatformVersion = nil,
+		},
 	}

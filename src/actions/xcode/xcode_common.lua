@@ -827,6 +827,23 @@
 			_p(4,'INFOPLIST_FILE = "%s";', infoplist_file)
 		end
 
+		local action = premake.action.current()
+		local get_opt = function(opt, def)
+			return (opt and #opt > 0) and opt or def
+		end
+
+		local iosversion = get_opt(cfg.iostargetplatformversion, action.xcode.iOSTargetPlatformVersion)
+		local macosversion = get_opt(cfg.macostargetplatformversion, action.xcode.macOSTargetPlatformVersion)
+		local tvosversion = get_opt(cfg.tvostargetplatformversion, action.xcode.tvOSTargetPlatformVersion)
+
+		if iosversion then
+			_p(4, 'IPHONEOS_DEPLOYMENT_TARGET = %s;', iosversion)
+		elseif macosversion then
+			_p(4, 'MACOSX_DEPLOYMENT_TARGET = %s;', macosversion)
+		elseif tvosversion then
+			_p(4, 'TVOS_DEPLOYMENT_TARGET = %s;', tvosversion)
+		end
+
 		if cfg.kind == "Bundle" then
 			_p(4, 'PRODUCT_BUNDLE_IDENTIFIER = "genie.%s";', cfg.buildtarget.basename:gsub("%s+", '.')) --replace spaces with .
 		end
