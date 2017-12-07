@@ -1039,11 +1039,8 @@
 
 			item_definitions(prj)
 
-			if prj.flags.Managed then
-				vc2010.clrReferences(prj)
-			end
-
 			vc2010.files(prj)
+			vc2010.clrReferences(prj)
 			vc2010.projectReferences(prj)
 			vc2010.sdkReferences(prj)
 			vc2010.masmfiles(prj)
