@@ -207,6 +207,15 @@
 	end
 
 --
+-- Returns true if the filename represents a compiled object file. This check
+-- is used to support object files in the "files" list for archiving.
+--
+
+	function path.isobjectfile(fname)
+		return path.hasextension(fname, { ".o", ".obj" })
+	end
+
+--
 -- Returns true if the filename represents a Windows resource file. This check
 -- is used to prevent passing non-resources to the compiler in makefiles.
 --
