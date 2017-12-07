@@ -269,6 +269,24 @@
 			}
 		},
 
+		iostargetplatformversion =
+		{
+			kind  = "string",
+			scope = "project",
+		},
+
+		macostargetplatformversion =
+		{
+			kind  = "string",
+			scope = "project",
+		},
+
+		tvostargetplatformversion =
+		{
+			kind  = "string",
+			scope = "project",
+		},
+
 		windowstargetplatformversion =
 		{
 			kind  = "string",
