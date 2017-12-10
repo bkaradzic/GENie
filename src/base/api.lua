@@ -178,6 +178,7 @@
 			allowed = function(value)
 
 				local allowed_flags = {
+					AntBuildDebuggable = 1,
 					ATL = 1,
 					C7DebugInfo = 1,
 					DebugEnvsDontMerge = 1,
@@ -713,6 +714,110 @@
 		linkoptions_swift =
 		{
 			kind  = "list",
+			scope = "config",
+		},
+
+		-- Tegra Android options
+		androidtargetapi =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
+		androidminapi =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
+		androidarch =
+		{
+			kind = "string",
+			scope = "config",
+			allowed = {
+				"armv7-a",
+				"armv7-a-hard",
+				"arm64-v8a",
+				"x86",
+				"x86_64",
+			}
+		},
+
+		androidndktoolchainversion =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
+		androidstltype =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
+		androidcppstandard =
+		{
+			kind = "string",
+			scope = "config",
+			allowed = {
+				"c++98",
+				"c++11",
+				"c++1y",
+				"gnu++98",
+				"gnu++11",
+				"gnu++1y",
+			}
+		},
+
+		androidlinker =
+		{
+			kind = "string",
+			scope = "config",
+			allowed = {
+				"bfd",
+				"gold",
+			}
+		},
+
+		androiddebugintentparams =
+		{
+			kind = "list",
+			scope = "config",
+		},
+
+		antbuildjavasourcedirs =
+		{
+			kind = "dirlist",
+			scope = "config",
+		},
+
+		antbuildjardirs =
+		{
+			kind = "dirlist",
+			scope = "config",
+		},
+
+		antbuildjardependencies =
+		{
+			kind = "list",
+			scope = "config",
+		},
+
+		antbuildnativelibdirs =
+		{
+			kind = "dirlist",
+			scope = "config",
+		},
+
+		antbuildnativelibdependencies =
+		{
+			kind = "list",
+			scope = "config",
+		},
+
+		antbuildassetsdirs =
+		{
+			kind = "dirlist",
 			scope = "config",
 		},
 	}

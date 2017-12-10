@@ -10,6 +10,15 @@
 
 
 	local function vs2010_config(prj)
+		-- only include this bit if there's a Tegra platform in there
+		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
+			if cfginfo.src_platform == "TegraAndroid" then
+				_p(1,'<PropertyGroup Label="NsightTegraProject">')
+					_p(2,'<NsightTegraProjectRevisionNumber>11</NsightTegraProjectRevisionNumber>')
+				_p(1,'</PropertyGroup>')
+				break
+			end
+		end
 		_p(1,'<ItemGroup Label="ProjectConfigurations">')
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
 				_p(2,'<ProjectConfiguration Include="%s">', premake.esc(cfginfo.name))
@@ -125,6 +134,25 @@
 		if cfg.flags.Managed then
 			_p(2,'<CLRSupport>true</CLRSupport>')
 		end
+
+		if cfg.platform == "TegraAndroid" then
+			if cfg.androidtargetapi then
+				_p(2,'<AndroidTargetAPI>android-%s</AndroidTargetAPI>', cfg.androidtargetapi)
+			end
+			if cfg.androidminapi then
+				_p(2,'<AndroidMinAPI>android-%s</AndroidMinAPI>', cfg.androidminapi)
+			end
+			if cfg.androidarch then
+				_p(2,'<AndroidArch>%s</AndroidArch>', cfg.androidarch)
+			end
+			if cfg.androidndktoolchainversion then
+				_p(2,'<NdkToolchainVersion>%s</NdkToolchainVersion>', cfg.androidndktoolchainversion)
+			end
+			if cfg.androidstltype then
+				_p(2,'<AndroidStlType>%s</AndroidStlType>', cfg.androidstltype)
+			end
+		end
+
 		_p(1,'</PropertyGroup>')
 	end
 
@@ -270,11 +298,21 @@
 	end
 
 	local function exceptions(cfg)
-		if cfg.flags.NoExceptions then
-			_p(3, '<ExceptionHandling>false</ExceptionHandling>')
-		elseif cfg.flags.SEH then
-			_p(3, '<ExceptionHandling>Async</ExceptionHandling>')
-		--SEH is not required for Managed and is implied
+		if cfg.platform == "Orbis" then
+			if cfg.flags.NoExceptions then
+				_p(3, '<CppExceptions>false</CppExceptions>')
+			end
+		elseif cfg.platform == "TegraAndroid" then
+			if cfg.flags.NoExceptions then
+				_p(3, '<GccExceptionHandling>false</GccExceptionHandling>')
+			end
+		else
+			if cfg.flags.NoExceptions then
+				_p(3, '<ExceptionHandling>false</ExceptionHandling>')
+			elseif cfg.flags.SEH then
+				_p(3, '<ExceptionHandling>Async</ExceptionHandling>')
+			--SEH is not required for Managed and is implied
+			end
 		end
 	end
 
@@ -313,10 +351,18 @@
 	end
 
 	local function floating_point(cfg)
-	     if cfg.flags.FloatFast then
-			_p(3,'<FloatingPointModel>Fast</FloatingPointModel>')
-		elseif cfg.flags.FloatStrict and not cfg.flags.Managed then
-			_p(3,'<FloatingPointModel>Strict</FloatingPointModel>')
+		if cfg.platform == "Orbis" then
+			if cfg.flags.FloatFast then
+				_p(3,'<FastMath>true</FastMath>')
+			end
+		elseif cfg.platform == "TegraAndroid" then
+			-- TODO: tegra setting
+		else
+			if cfg.flags.FloatFast then
+				_p(3,'<FloatingPointModel>Fast</FloatingPointModel>')
+			elseif cfg.flags.FloatStrict and not cfg.flags.Managed then
+				_p(3,'<FloatingPointModel>Strict</FloatingPointModel>')
+			end
 		end
 	end
 
@@ -389,10 +435,42 @@
 
 		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
 			, table.concat(premake.esc(buildoptions), " ")
-			, iif(cfg.flags.UnsignedChar, unsignedChar, " ")
+			, iif(cfg.flags.UnsignedChar and cfg.platform ~= "TegraAndroid", unsignedChar, " ")
 			)
 
-		_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
+		if cfg.platform == "TegraAndroid" then
+			_p(3,'<SignedChar>%s</SignedChar>', tostring(cfg.flags.UnsignedChar == nil))
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+			if cfg.androidcppstandard then
+				_p(3,'<CppLanguageStandard>%s</CppLanguageStandard>', cfg.androidcppstandard)
+			end
+		end
+
+		if cfg.platform == "Orbis" then
+			local opt = optimisation(cfg)
+			if opt == "Disabled" then
+				_p(3,'<OptimizationLevel>Level0</OptimizationLevel>')
+			elseif opt == "MinSpace" then
+				_p(3,'<OptimizationLevel>Levelz</OptimizationLevel>') -- Oz is more aggressive than Os
+			elseif opt == "MaxSpeed" then
+				_p(3,'<OptimizationLevel>Level3</OptimizationLevel>')
+			else
+				_p(3,'<OptimizationLevel>Level2</OptimizationLevel>')
+			end
+		elseif cfg.platform == "TegraAndroid" then
+			local opt = optimisation(cfg)
+			if opt == "Disabled" then
+				_p(3,'<OptimizationLevel>O0</OptimizationLevel>')
+			elseif opt == "MinSpace" then
+				_p(3,'<OptimizationLevel>Os</OptimizationLevel>')
+			elseif opt == "MaxSpeed" then
+				_p(3,'<OptimizationLevel>O3</OptimizationLevel>')
+			else
+				_p(3,'<OptimizationLevel>O2</OptimizationLevel>')
+			end
+		else
+			_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
+		end
 
 		include_dirs(3, cfg)
 		using_dirs(3, cfg)
@@ -433,12 +511,34 @@
 
 		precompiled_header(cfg)
 
-		if cfg.flags.PedanticWarnings then
-			_p(3, '<WarningLevel>EnableAllWarnings</WarningLevel>')
-		elseif cfg.flags.ExtraWarnings then
-			_p(3, '<WarningLevel>Level4</WarningLevel>')
-		elseif cfg.flags.MinimumWarnings then
-			_p(3, '<WarningLevel>Level1</WarningLevel>')
+		if cfg.platform == "Orbis" then
+			if cfg.flags.PedanticWarnings then
+				_p(3, '<Warnings>MoreWarnings</Warnings>')
+				_p(3, '<ExtraWarnings>true</ExtraWarnings>')
+			elseif cfg.flags.ExtraWarnings then
+				_p(3, '<Warnings>NormalWarnings</Warnings>')
+				_p(3, '<ExtraWarnings>true</ExtraWarnings>')
+			elseif cfg.flags.MinimumWarnings then
+				_p(3, '<Warnings>WarningsOff</Warnings>')
+				_p(3, '<ExtraWarnings>false</ExtraWarnings>')
+			else
+				_p(3, '<Warnings>NormalWarnings</Warnings>')
+				_p(3, '<ExtraWarnings>false</ExtraWarnings>')
+			end
+			if cfg.flags.FatalWarnings then
+				_p(3, '<WarningsAsErrors>true</WarningsAsErrors>')
+			end
+		elseif cfg.platform == "TegraAndroid" then
+			if cfg.flags.PedanticWarnings or cfg.flags.ExtraWarnings then
+				_p(3, '<Warnings>AllWarnings</Warnings>')
+			elseif cfg.flags.MinimumWarnings then
+				_p(3, '<Warnings>DisableAllWarnings</Warnings>')
+			else
+				_p(3, '<Warnings>NormalWarnings</Warnings>')
+			end
+			if cfg.flags.FatalWarnings then
+				_p(3, '<WarningsAsErrors>true</WarningsAsErrors>')
+			end
 		else
 			_p(3 ,'<WarningLevel>Level3</WarningLevel>')
 		end
@@ -638,6 +738,12 @@
 			end
 		end
 
+		if cfg.platform == "TegraAndroid" then
+			if cfg.androidlinker then
+				_p(3,'<UseLinker>%s</UseLinker>',cfg.androidlinker)
+			end
+		end
+
 		_p(2,'</Link>')
 	end
 
@@ -660,6 +766,12 @@
 				deps = table.concat(links, ";")
 			end
 
+			-- On Android, we need to shove a linking group in to resolve libs
+			-- with circular deps.
+			if cfg.platform == "TegraAndroid" then
+				deps = "-Wl,--start-group;" .. deps .. ";-Wl,--end-group"
+			end
+
 			_p(tab, '<AdditionalDependencies>%s;%s</AdditionalDependencies>'
 				, deps
 				, iif(cfg.platform == "Durango"
@@ -669,6 +781,49 @@
 				)
 		elseif cfg.platform == "Durango" then
 			_p(tab, '<AdditionalDependencies>%%(XboxExtensionsDependencies)</AdditionalDependencies>')
+		end
+	end
+
+--
+-- Generate the <AntBuild> element and its children.
+--
+
+	function ant_build(prj, cfg)
+		-- only include this bit for Tegra
+		if cfg.platform == "TegraAndroid" then
+			local files = vc2010.getfilegroup(prj, "AndroidBuild")
+			_p(2,'<AntBuild>')
+			if #files > 0 then
+				_p(3,'<AndroidManifestLocation>%s</AndroidManifestLocation>',path.translate(files[1].name))
+			end
+			local isdebugbuild = premake.config.isdebugbuild(cfg)
+			_p(3,'<AntBuildType>%s</AntBuildType>',iif(isdebugbuild, 'Debug','Release'))
+			_p(3,'<Debuggable>%s</Debuggable>',tostring(cfg.flags.AntBuildDebuggable ~= nil))
+			if #cfg.antbuildjavasourcedirs > 0 then
+				local dirs = table.concat(cfg.antbuildjavasourcedirs,";")
+				_p(3,'<JavaSourceDir>%s</JavaSourceDir>',dirs)
+			end
+			if #cfg.antbuildjardirs > 0 then
+				local dirs = table.concat(cfg.antbuildjardirs,";")
+				_p(3,'<JarDirectories>%s</JarDirectories>',dirs)
+			end
+			if #cfg.antbuildjardependencies > 0 then
+				local dirs = table.concat(cfg.antbuildjardependencies,";")
+				_p(3,'<JarDependencies>%s</JarDependencies>',dirs)
+			end
+			if #cfg.antbuildnativelibdirs > 0 then
+				local dirs = table.concat(cfg.antbuildnativelibdirs,";")
+				_p(3,'<NativeLibDirectories>%s</NativeLibDirectories>',dirs)
+			end
+			if #cfg.antbuildnativelibdependencies > 0 then
+				local dirs = table.concat(cfg.antbuildnativelibdependencies,";")
+				_p(3,'<NativeLibDependencies>%s</NativeLibDependencies>',dirs)
+			end
+			if #cfg.antbuildassetsdirs > 0 then
+				local dirs = table.concat(cfg.antbuildassetsdirs,";")
+				_p(3,'<AssetsDirectories>%s</AssetsDirectories>',dirs)
+			end
+			_p(2,'</AntBuild>')
 		end
 	end
 
@@ -682,12 +837,12 @@
 				resource_compile(cfg)
 				item_def_lib(cfg)
 				vc2010.link(cfg)
+				ant_build(prj, cfg)
 				event_hooks(cfg)
 				vs10_masm(prj, cfg)
 			_p(1,'</ItemDefinitionGroup>')
 		end
 	end
-
 
 --
 -- Retrieve a list of files for a particular build group, like
@@ -705,6 +860,7 @@
 				None = {},
 				ResourceCompile = {},
 				AppxManifest = {},
+				AndroidBuild = {},
 				Natvis = {},
 				Image = {},
 				DeploymentContent = {}
@@ -727,6 +883,8 @@
 				elseif path.isappxmanifest(file.name) then
 					foundAppxManifest = true
 					table.insert(sortedfiles.AppxManifest, file)
+				elseif path.isandroidbuildfile(file.name) then
+					table.insert(sortedfiles.AndroidBuild, file)
 				elseif path.isnatvis(file.name) then
 					table.insert(sortedfiles.Natvis, file)
 				elseif path.isasmfile(file.name) then
@@ -789,6 +947,7 @@
 		vc2010.customtaskgroup(prj)
 		vc2010.simplefilesgroup(prj, "ResourceCompile")
 		vc2010.simplefilesgroup(prj, "AppxManifest")
+		vc2010.simplefilesgroup(prj, "AndroidBuild")
 		vc2010.simplefilesgroup(prj, "Natvis")
 		vc2010.deploymentcontentgroup(prj, "Image")
 		vc2010.deploymentcontentgroup(prj, "DeploymentContent", "None")
@@ -897,9 +1056,36 @@
 			for _, file in ipairs(files) do
 				local translatedpath = path.translate(file.name, "\\")
 				_p(2, '<ClCompile Include=\"%s\">', translatedpath)
-				_p(3, '<ObjectFileName>$(IntDir)%s\\</ObjectFileName>'
-					, premake.esc(path.translate(path.trimdots(path.getdirectory(file.name))))
-					)
+
+				-- Android needs a full path to an object file, not a dir.
+				-- Try to only ugly things up with this if it's necessary.
+				local supportsAndroid = false
+				local supportsNonAndroid = false
+				for _, cfginfo in ipairs(configs) do
+					if cfginfo.src_platform == "TegraAndroid" then
+						supportsAndroid = true
+					else
+						supportsNonAndroid = true
+					end
+				end
+				if supportsAndroid and supportsNonAndroid then
+					_p(3, '<ObjectFileName Condition="\'$(Platform)\'==\'%s\'">$(IntDir)%s\\%%(filename).o</ObjectFileName>'
+						, premake.esc(vstudio.platforms["TegraAndroid"])
+						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
+						)
+					_p(3, '<ObjectFileName Condition="\'$(Platform)\'!=\'%s\'">$(IntDir)%s\\</ObjectFileName>'
+						, premake.esc(vstudio.platforms["TegraAndroid"])
+						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
+						)
+				elseif supportsAndroid then
+					_p(3, '<ObjectFileName>$(IntDir)%s\\%%(filename).o</ObjectFileName>'
+						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
+						)
+				else
+					_p(3, '<ObjectFileName>$(IntDir)%s\\</ObjectFileName>'
+						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
+						)
+				end
 
 				if path.iscxfile(file.name) then
 					_p(3, '<CompileAsWinRT>true</CompileAsWinRT>')
@@ -1139,8 +1325,9 @@
 		local debuggerFlavor =
 			  iif(cfg.platform == "Orbis",   'ORBISDebugger'
 			, iif(cfg.platform == "Durango", 'XboxOneVCppDebugger'
+			, iif(cfg.platform == "TegraAndroid", 'AndroidDebugger'
 			,                                'WindowsLocalDebugger'
-			))
+			)))
 		_p(2, '<DebuggerFlavor>%s</DebuggerFlavor>', debuggerFlavor)
 
 		if cfg.debugdir and not vstudio.iswinrt() then
@@ -1167,6 +1354,14 @@
 
 		if cfg.deploymode then
 			_p('    <DeployMode>%s</DeployMode>', cfg.deploymode)
+		end
+
+		if cfg.platform == "TegraAndroid" then
+			if cfg.androiddebugintentparams then
+				_p(2, '<IntentParams>%s</IntentParams>'
+					, table.concat(cfg.androiddebugintentparams, " ")
+					)
+			end
 		end
 	end
 
