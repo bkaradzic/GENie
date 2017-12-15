@@ -60,11 +60,7 @@
 			else
 				_p(2, '<AppContainerApplication>true</AppContainerApplication>')
 				_p(2, '<MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>')
-				if vstudio.toolset == "v120_wp81" then
-					_p(2, '<ApplicationType>Windows Phone</ApplicationType>')
-				else
-					_p(2, '<ApplicationType>Windows Store</ApplicationType>')
-				end
+				_p(2, '<ApplicationType>Windows Store</ApplicationType>')
 				_p(2, '<ApplicationTypeRevision>%s</ApplicationTypeRevision>', vstudio.storeapp)
 			end
 		else
@@ -1323,11 +1319,12 @@
 
 	function vc2010.debugdir(cfg)
 		local debuggerFlavor =
-			  iif(cfg.platform == "Orbis",   'ORBISDebugger'
-			, iif(cfg.platform == "Durango", 'XboxOneVCppDebugger'
+			  iif(cfg.platform == "Orbis",        'ORBISDebugger'
+			, iif(cfg.platform == "Durango",      'XboxOneVCppDebugger'
 			, iif(cfg.platform == "TegraAndroid", 'AndroidDebugger'
-			,                                'WindowsLocalDebugger'
-			)))
+			, iif(vstudio.iswinrt(),              'AppHostLocalDebugger'
+			,                                     'WindowsLocalDebugger'
+			))))
 		_p(2, '<DebuggerFlavor>%s</DebuggerFlavor>', debuggerFlavor)
 
 		if cfg.debugdir and not vstudio.iswinrt() then
@@ -1353,7 +1350,7 @@
 		end
 
 		if cfg.deploymode then
-			_p('    <DeployMode>%s</DeployMode>', cfg.deploymode)
+			_p(2, '<DeployMode>%s</DeployMode>', cfg.deploymode)
 		end
 
 		if cfg.platform == "TegraAndroid" then
@@ -1402,22 +1399,25 @@
 		io.indent = "  "
 		io.eol = "\r\n"
 		_p('<?xml version="1.0" encoding="utf-8"?>')
-		if vstudio.toolset == "v120_wp81" then
-			_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">')
-		elseif vstudio.storeapp == "8.1" then
-			_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2013/manifest">')
+		if vstudio.storeapp == "10.0" then
+			_p('<Package')
+			_p(1, 'xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"')
+			_p(1, 'xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"')
+			_p(1, 'xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"')
+			_p(1, 'IgnorableNamespaces="uap mp">')
 		elseif vstudio.storeapp == "durango" then
 			_p('<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:mx="http://schemas.microsoft.com/appx/2013/xbox/manifest" IgnorableNamespaces="mx">')
-		else
-			_p('<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:m3="http://schemas.microsoft.com/appx/manifest/uap/windows10">')
 		end
 
-		_p(1,'<Identity Name="' .. prj.uuid .. '"')
-		_p(2,'Publisher="CN=Publisher"')
-		_p(2,'Version="1.0.0.0" />')
+		_p(1, '<Identity')
+		_p(2, 'Name="' .. prj.uuid .. '"')
+		_p(2, 'Publisher="CN=Publisher"')
+		_p(2, 'Version="1.0.0.0" />')
 
-		if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
-			_p(1,'<mp:PhoneIdentity PhoneProductId="' .. prj.uuid .. '" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
+		if vstudio.storeapp == "10.0" then
+			_p(1, '<mp:PhoneIdentity')
+			_p(2, 'PhoneProductId="' .. prj.uuid .. '"')
+			_p(2, 'PhonePublisherId="00000000-0000-0000-0000-000000000000"/>')
 		end
 
 		_p(1, '<Properties>')
@@ -1429,7 +1429,7 @@
 
 		_p(1,'</Properties>')
 
-		if vstudio.storeapp == "8.2" then
+		if vstudio.storeapp == "10.0" then
 			_p(1, '<Dependencies>')
 			_p(2, '<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10069.0" MaxVersionTested="10.0.10069.0" />')
 			_p(1, '</Dependencies>')
@@ -1438,22 +1438,34 @@
 			_p(2, '<OSMinVersion>6.2</OSMinVersion>')
 			_p(2, '<OSMaxVersionTested>6.2</OSMaxVersionTested>')
 			_p(1, '</Prerequisites>')
-		else
-			_p(1, '<Prerequisites>')
-			_p(2, '<OSMinVersion>6.3.0</OSMinVersion>')
-			_p(2, '<OSMaxVersionTested>6.3.0</OSMaxVersionTested>')
-			_p(1, '</Prerequisites>')
 		end
 
-		_p(1,'<Resources>')
-		_p(2,'<Resource Language="en-us"/>')
-		_p(1,'</Resources>')
+		_p(1, '<Resources>')
+		_p(2, '<Resource Language="en-us"/>')
+		_p(1, '</Resources>')
 
-		_p(1,'<Applications>')
-		_p(2,'<Application Id="App"')
-		_p(3,'Executable="$targetnametoken$.exe"')
-		_p(3,'EntryPoint="' .. prj.name .. '.App">')
-		if vstudio.storeapp == "durango" then
+		_p(1, '<Applications>')
+		_p(2, '<Application Id="App"')
+		_p(3, 'Executable="$targetnametoken$.exe"')
+		_p(3, 'EntryPoint="' .. prj.name .. '.App">')
+		if vstudio.storeapp == "10.0" then
+			_p(3, '<uap:VisualElements')
+			_p(4, 'DisplayName="' .. prj.name .. '"')
+			_p(4, 'Square150x150Logo="' .. prj.name .. '\\Logo.png"')
+			png1x1(prj, "%%/Logo.png")
+			if vstudio.storeapp == "10.0" then
+				_p(4, 'Square44x44Logo="' .. prj.name .. '\\SmallLogo.png"')
+				png1x1(prj, "%%/SmallLogo.png")
+			else
+				_p(4, 'Square30x30Logo="' .. prj.name .. '\\SmallLogo.png"')
+				png1x1(prj, "%%/SmallLogo.png")
+			end
+			_p(4, 'Description="' .. prj.name .. '"')
+			_p(4, 'BackgroundColor="transparent">')
+			_p(4, '<uap:SplashScreen Image="' .. prj.name .. '\\SplashScreen.png" />')
+			png1x1(prj, "%%/SplashScreen.png")
+			_p(3, '</uap:VisualElements>')
+		elseif vstudio.storeapp == "durango" then
 			_p(3, '<VisualElements')
 			_p(4, 'DisplayName="' .. prj.name .. '"')
 			_p(4, 'Logo="' .. prj.name .. '\\Logo.png"')
@@ -1471,27 +1483,9 @@
 			_p(4, '<mx:XboxSystemResources />')
 			_p(4, '</mx:Extension>')
 			_p(3, '</Extensions>')
-		else
-			_p(3, '<m3:VisualElements')
-			_p(4, 'DisplayName="' .. prj.name .. '"')
-			_p(4, 'Square150x150Logo="' .. prj.name .. '\\Logo.png"')
-			png1x1(prj, "%%/Logo.png")
-			if vstudio.toolset == "v120_wp81" or vstudio.storeapp == "8.2" then
-				_p(4, 'Square44x44Logo="' .. prj.name .. '\\SmallLogo.png"')
-				png1x1(prj, "%%/SmallLogo.png")
-			else
-				_p(4, 'Square30x30Logo="' .. prj.name .. '\\SmallLogo.png"')
-				png1x1(prj, "%%/SmallLogo.png")
-			end
-			_p(4, 'Description="' .. prj.name .. '"')
-			_p(4, 'ForegroundText="light"')
-			_p(4, 'BackgroundColor="transparent">')
-			_p(4, '<m3:SplashScreen Image="' .. prj.name .. '\\SplashScreen.png" />')
-			png1x1(prj, "%%/SplashScreen.png")
-			_p(3, '</m3:VisualElements>')
 		end
-		_p(2,'</Application>')
-		_p(1,'</Applications>')
+		_p(2, '</Application>')
+		_p(1, '</Applications>')
 
 		_p('</Package>')
 	end
