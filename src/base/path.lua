@@ -157,7 +157,7 @@
 	end
 
 	function path.iscppfile(fname)
-		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c", ".m", ".mm" })
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c++", ".c", ".m", ".mm" })
 	end
 
 	function path.iscxfile(fname)
@@ -206,7 +206,7 @@
 	end
 
 	function path.issourcefilevs(fname)
-		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c" })
+		return path.hasextension(fname, { ".cc", ".cpp", ".cxx", ".c++", ".c" })
 			or path.iscxfile(fname)
 	end
 
