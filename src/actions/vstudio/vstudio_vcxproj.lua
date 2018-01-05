@@ -108,12 +108,13 @@
 --
 
 	function vc2010.configurationPropertyGroup(cfg, cfginfo)
-		_p(1,'<PropertyGroup '..if_config_and_platform() ..' Label="Configuration">'
-				, premake.esc(cfginfo.name))
-		_p(2,'<ConfigurationType>%s</ConfigurationType>',vc2010.config_type(cfg))
-		_p(2,'<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
+		_p(1, '<PropertyGroup '..if_config_and_platform() ..' Label="Configuration">'
+			, premake.esc(cfginfo.name))
+		_p(2, '<ConfigurationType>%s</ConfigurationType>',vc2010.config_type(cfg))
+		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 
-		_p(2,'<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
+		_p(2, '<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
+		_p(2, '<PreferredToolArchitecture>x64</PreferredToolArchitecture>')
 
 		if cfg.flags.MFC then
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
