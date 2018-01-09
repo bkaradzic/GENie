@@ -114,7 +114,10 @@
 		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 
 		_p(2, '<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
-		_p(2, '<PreferredToolArchitecture>x64</PreferredToolArchitecture>')
+
+		if os.is64bit() then
+			_p(2, '<PreferredToolArchitecture>x64</PreferredToolArchitecture>')
+		end
 
 		if cfg.flags.MFC then
 			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
