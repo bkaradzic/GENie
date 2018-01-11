@@ -219,6 +219,16 @@
 		return (path.getextension(fname) == ".framework" or path.getextension(fname) == ".tbd")
 	end
 
+--
+-- Generates a unique 12 byte ID.
+-- Parameter is optional
+--
+-- @returns
+--    A 24-character string representing the 12 byte ID.
+--
+	function xcode.uuid(param)
+		return os.uuid(param):upper():gsub('-',''):sub(0,24)
+	end
 
 --
 -- Retrieves a unique 12 byte ID for an object. This function accepts and ignores two
@@ -229,14 +239,19 @@
 --    A 24-character string representing the 12 byte ID.
 --
 
-	function xcode.newid()
-		return string.format("%04X%04X%04X%04X%04X%04X",
-			math.random(0, 32767),
-			math.random(0, 32767),
-			math.random(0, 32767),
-			math.random(0, 32767),
-			math.random(0, 32767),
-			math.random(0, 32767))
+	function xcode.newid(node, usage)
+		local base = ''
+
+		if node.path ~= nil then
+			base = base .. node.path
+		elseif node.name ~= nil then
+			base = base .. node.name
+		end
+
+		if usage ~= nil then
+			base = base .. usage
+		end
+		return xcode.uuid(base)
 	end
 
 
