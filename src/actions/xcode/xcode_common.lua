@@ -294,8 +294,11 @@
 --    The Xcode specific list tag.
 --
 
-	function xcode.printlist(list, tag)
+	function xcode.printlist(list, tag, sort)
 		if #list > 0 then
+			if sort ~= nil and sort == true then
+				table.sort(list)
+			end
 			_p(4,'%s = (', tag)
 			for _, item in ipairs(list) do
 				local escaped_item = item:gsub("\"", "\\\"")
@@ -1011,7 +1014,7 @@
 			_p(4,'GCC_PREFIX_HEADER = "%s";', cfg.pchheader)
 		end
 
-		xcode.printlist(cfg.defines, 'GCC_PREPROCESSOR_DEFINITIONS')
+		xcode.printlist(cfg.defines, 'GCC_PREPROCESSOR_DEFINITIONS', true)
 
 		_p(4,'GCC_SYMBOLS_PRIVATE_EXTERN = NO;')
 
@@ -1048,8 +1051,8 @@
 			_p(4, val ..';')
 		end
 
-		xcode.printlist(table.join(flags, cfg.buildoptions, cfg.buildoptions_c), 'OTHER_CFLAGS')
-		xcode.printlist(table.join(flags, cfg.buildoptions, cfg.buildoptions_cpp), 'OTHER_CPLUSPLUSFLAGS')
+		xcode.printlist(table.join(flags, cfg.buildoptions, cfg.buildoptions_c), 'OTHER_CFLAGS', true)
+		xcode.printlist(table.join(flags, cfg.buildoptions, cfg.buildoptions_cpp), 'OTHER_CPLUSPLUSFLAGS', true)
 
 		-- build list of "other" linked flags. All libraries that aren't frameworks
 		-- are listed here, so I don't have to try and figure out if they are ".a"
@@ -1061,7 +1064,7 @@
 			end
 		end
 		flags = table.join(flags, cfg.linkoptions)
-		xcode.printlist(flags, 'OTHER_LDFLAGS')
+		xcode.printlist(flags, 'OTHER_LDFLAGS', true)
 
 		if cfg.flags.StaticRuntime then
 			_p(4,'STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;')
