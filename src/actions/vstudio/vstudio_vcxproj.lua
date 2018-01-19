@@ -264,10 +264,16 @@
 		end
 	end
 
-	local function preprocessor(indent,cfg)
+	local function preprocessor(indent,cfg,escape)
 		if #cfg.defines > 0 then
+			-- Visual Studio requires escaping of command line arguments to RC.
+			local defines = table.concat(cfg.defines, ";")
+			if escape then
+				defines = defines:gsub('"', '\\"')
+			end
+			
 			_p(indent,'<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'
-				,premake.esc(table.concat(cfg.defines, ";")))
+				,premake.esc(defines))
 		else
 			_p(indent,'<PreprocessorDefinitions></PreprocessorDefinitions>')
 		end
@@ -291,7 +297,7 @@
 
 	local function resource_compile(cfg)
 		_p(2,'<ResourceCompile>')
-			preprocessor(3,cfg)
+			preprocessor(3,cfg,true)
 			include_dirs(3,cfg)
 		_p(2,'</ResourceCompile>')
 
