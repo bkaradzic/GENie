@@ -169,6 +169,10 @@
 			end
 		end
 
+		if cfg.kind == "Bundle" then
+			table.insert(result, "-bundle")
+		end
+
 		if cfg.kind == "SharedLib" then
 			if cfg.system == "macosx" then
 				table.insert(result, "-dynamiclib")
