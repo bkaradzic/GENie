@@ -1011,7 +1011,32 @@
 
 		if cfg.pchheader and not cfg.flags.NoPCH then
 			_p(4,'GCC_PRECOMPILE_PREFIX_HEADER = YES;')
-			_p(4,'GCC_PREFIX_HEADER = "%s";', cfg.pchheader)
+
+			-- Visual Studio requires the PCH header to be specified in the same way
+			-- it appears in the #include statements used in the source code; the PCH
+			-- source actual handles the compilation of the header. GCC compiles the
+			-- header file directly, and needs the file's actual file system path in
+			-- order to locate it.
+
+			-- To maximize the compatibility between the two approaches, see if I can
+			-- locate the specified PCH header on one of the include file search paths
+			-- and, if so, adjust the path automatically so the user doesn't have
+			-- add a conditional configuration to the project script.
+
+			local pch = cfg.pchheader
+			for _, incdir in ipairs(cfg.includedirs) do
+
+				-- convert this back to an absolute path for os.isfile()
+				local abspath = path.getabsolute(path.join(cfg.project.location, incdir))
+
+				local testname = path.join(abspath, pch)
+				if os.isfile(testname) then
+					pch = path.getrelative(cfg.location, testname)
+					break
+				end
+			end
+
+			_p(4,'GCC_PREFIX_HEADER = "%s";', pch)
 		end
 
 		xcode.printlist(cfg.defines, 'GCC_PREPROCESSOR_DEFINITIONS', true)
