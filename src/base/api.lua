@@ -512,7 +512,8 @@
 
 				local allowed_options = {
 					ForceCPP = 1,
-					ArchiveSplit = 1
+					ArchiveSplit = 1,
+					SkipBundling = 1
 				}
 
 				local lowervalue = value:lower()
