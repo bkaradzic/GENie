@@ -301,7 +301,7 @@
 			end
 			_p(4,'%s = (', tag)
 			for _, item in ipairs(list) do
-				local escaped_item = item:gsub("\"", "\\\"")
+				local escaped_item = item:gsub("\"", "\\\\\\\""):gsub("'", "\\\\'")
 				_p(5, '"%s",', escaped_item)
 			end
 			_p(4,');')
