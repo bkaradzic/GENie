@@ -162,7 +162,7 @@
 			WindowedApp = "com.apple.product-type.application",
 			StaticLib   = "com.apple.product-type.library.static",
 			SharedLib   = "com.apple.product-type.library.dynamic",
-			Bundle      = "com.apple.product-type.bundle",
+			Bundle      = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.bundle", -- Ternary operator-ish
 		}
 		return types[node.cfg.kind]
 	end
@@ -183,7 +183,7 @@
 			WindowedApp = "wrapper.application",
 			StaticLib   = "archive.ar",
 			SharedLib   = "\"compiled.mach-o.dylib\"",
-			Bundle      = "wrapper.cfbundle",
+			Bundle      = node.cfg.options.SkipBundling and "\"compiled.mach-o.bundle\"" or "wrapper.cfbundle", -- Ternary operator-ish
 		}
 		return types[node.cfg.kind]
 	end
@@ -865,13 +865,13 @@
 			_p(4, 'TVOS_DEPLOYMENT_TARGET = %s;', tvosversion)
 		end
 
-		if cfg.kind == "Bundle" then
+		if cfg.kind == "Bundle" and not cfg.options.SkipBundling then
 			_p(4, 'PRODUCT_BUNDLE_IDENTIFIER = "genie.%s";', cfg.buildtarget.basename:gsub("%s+", '.')) --replace spaces with .
 		end
 
 		_p(4,'PRODUCT_NAME = "%s";', cfg.buildtarget.basename)
 
-		if cfg.kind == "Bundle" then
+		if cfg.kind == "Bundle" and not cfg.options.SkipBundling then
 			_p(4, 'WRAPPER_EXTENSION = bundle;')
 		end
 
@@ -1054,6 +1054,10 @@
 		xcode.printlist(cfg.userincludedirs, 'USER_HEADER_SEARCH_PATHS')
 		xcode.printlist(cfg.libdirs, 'LIBRARY_SEARCH_PATHS')
 
+		if cfg.kind == "Bundle" then
+			_p(4,'MACH_O_TYPE = mh_bundle;')
+		end
+		
 		_p(4,'OBJROOT = "%s";', cfg.objectsdir)
 
 		_p(4,'ONLY_ACTIVE_ARCH = %s;',iif(premake.config.isdebugbuild(cfg),'YES','NO'))
