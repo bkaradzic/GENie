@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 878 (commit 7eb0a579379e4a85695a21cc0ec6c4b37ee3af1c)
+	version 882 (commit d28b80a23448863f6c175752a7bef3ea783430ff)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -117,7 +117,8 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `removeplatforms` that removes VS build target platforms.
  - Added `PedanticWarnings` flag.
  - Added `ObjcARC` flag to enable automatic reference counting for Objective-C(++).
- - Added `iostargetplatformversion`, `macostargetplatformversion`, and `tvostargetplatformversion` to specify XCode OS target version.
+ - Added `iostargetplatformversion`, `macostargetplatformversion`, and
+   `tvostargetplatformversion` to specify XCode OS target version.
 
 Debugging GENie scripts
 -----------------------
@@ -184,7 +185,7 @@ PS3.
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
 	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld,
 	Alastair Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie,
-	Nikolay Aleksiev, Jon Olson, Mike Fitzgerald.
+	Nikolay Aleksiev, Jon Olson, Mike Fitzgerald, Anders Stenberg.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie
