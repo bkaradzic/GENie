@@ -177,6 +177,10 @@ derivative of the original Torque Engine.
 http://mtuner.net/ is a memory profiler and memory leak finder for Windows, PS4,
 PS3.
 
+Developer Crackshell used GENie for development of games
+[Heroes of Hammerwatch](http://store.steampowered.com/app/677120/Heroes_of_Hammerwatch/), and
+[Serious Sam's Bogus Detour](http://store.steampowered.com/app/272620/Serious_Sams_Bogus_Detour/).
+
 [License](https://github.com/bkaradzic/genie/blob/master/LICENSE)
 -----------------------------------------------------------------
 
