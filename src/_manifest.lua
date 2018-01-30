@@ -69,13 +69,10 @@
 		"actions/xcode/_xcode.lua",
 		"actions/xcode/xcode_common.lua",
 		"actions/xcode/xcode_project.lua",
+		"actions/xcode/xcode4.lua",
 
 		-- Xcode4 action
 		"actions/xcode/xcode4_workspace.lua",
-
-		-- Xcode6 action
-		"actions/xcode/xcode6_project.lua",
-		"actions/xcode/xcode6_config.lua",
 
 		--FASTBuild action
 		"actions/fastbuild/_fastbuild.lua",
