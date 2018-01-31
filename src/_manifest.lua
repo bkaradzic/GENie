@@ -69,7 +69,7 @@
 		"actions/xcode/_xcode.lua",
 		"actions/xcode/xcode_common.lua",
 		"actions/xcode/xcode_project.lua",
-		"actions/xcode/xcode4_workspace.lua",
+		"actions/xcode/xcode_workspace.lua",
 		"actions/xcode/xcode4.lua",
 		"actions/xcode/xcode8.lua",
 		"actions/xcode/xcode9.lua",
