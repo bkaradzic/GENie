@@ -4,6 +4,8 @@
 --
 
 	local premake = premake
+	premake.xcode4 = { }
+
 	local xcode   = premake.xcode
 	local xcode4  = premake.xcode4
 
@@ -302,7 +304,7 @@
 		default_platform = "Universal",
 
 		onsolution = function(sln)
-			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode4.workspace_generate)
+			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode.workspace_generate)
 		end,
 
 		onproject = function(prj)
