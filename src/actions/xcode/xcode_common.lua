@@ -309,21 +309,36 @@
 	end
 
 
+--
+-- Escape a string for use in an Xcode project file.
+--
+
+	function xcode.quotestr(str)
+		-- simple strings don't need quotes
+		if str:match("[^a-zA-Z0-9$._/]") == nil then
+			return str
+		end
+
+		return "\"" .. str:gsub("[\"\\\"]", "\\%0") .. "\""
+	end
+
+
+
 ---------------------------------------------------------------------------
 -- Section generator functions, in the same order in which they appear
 -- in the .pbxproj file
 ---------------------------------------------------------------------------
 
-	function xcode.Header()
-		_p('// !$*UTF8*$!')
-		_p('{')
-		_p(1,'archiveVersion = 1;')
-		_p(1,'classes = {')
-		_p(1,'};')
-		_p(1,'objectVersion = 45;')
-		_p(1,'objects = {')
-		_p('')
-	end
+function xcode.Header(tr, objversion)
+	_p('// !$*UTF8*$!')
+	_p('{')
+	_p(1,'archiveVersion = 1;')
+	_p(1,'classes = {')
+	_p(1,'};')
+	_p(1,'objectVersion = %d;', objversion)
+	_p(1,'objects = {')
+	_p('')
+end
 
 
 	function xcode.PBXBuildFile(tr)
@@ -596,12 +611,12 @@
 	end
 
 
-	function xcode.PBXProject(tr)
+	function xcode.PBXProject(tr, compatVersion)
 		_p('/* Begin PBXProject section */')
 		_p(2,'__RootObject_ /* Project object */ = {')
 		_p(3,'isa = PBXProject;')
 		_p(3,'buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "%s" */;', tr.name)
-		_p(3,'compatibilityVersion = "Xcode 3.2";')
+		_p(3,'compatibilityVersion = "Xcode %s";', compatVersion)
 		_p(3,'hasScannedForEncodings = 1;')
 		_p(3,'mainGroup = %s /* %s */;', tr.id, tr.name)
 		_p(3,'projectDirPath = "";')
@@ -788,100 +803,7 @@
 	end
 
 
-	function xcode.XCBuildConfiguration_Target(tr, target, cfg)
-		local cfgname = xcode.getconfigname(cfg)
-
-		_p(2,'%s /* %s */ = {', cfg.xcode.targetid, cfgname)
-		_p(3,'isa = XCBuildConfiguration;')
-		_p(3,'buildSettings = {')
-		_p(4,'ALWAYS_SEARCH_USER_PATHS = NO;')
-
-		if not cfg.flags.Symbols then
-			_p(4,'DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";')
-		end
-
-		if cfg.kind ~= "StaticLib" and cfg.buildtarget.prefix ~= "" then
-			_p(4,'EXECUTABLE_PREFIX = %s;', cfg.buildtarget.prefix)
-		end
-
-		if cfg.targetextension then
-			local ext = cfg.targetextension
-			ext = iif(ext:startswith("."), ext:sub(2), ext)
-			_p(4,'EXECUTABLE_EXTENSION = %s;', ext)
-		end
-
-		if cfg.flags.ObjcARC then
-			_p(4,'CLANG_ENABLE_OBJC_ARC = YES;')
-		end
-
-		local outdir = path.getdirectory(cfg.buildtarget.bundlepath)
-		if outdir ~= "." then
-			_p(4,'CONFIGURATION_BUILD_DIR = %s;', outdir)
-		end
-
-		_p(4,'GCC_DYNAMIC_NO_PIC = NO;')
-		_p(4,'GCC_MODEL_TUNING = G5;')
-
-		if tr.infoplist then
-			_p(4,'INFOPLIST_FILE = "%s";', tr.infoplist.cfg.name)
-		end
-
-		installpaths = {
-			ConsoleApp = '/usr/local/bin',
-			WindowedApp = '"$(HOME)/Applications"',
-			SharedLib = '/usr/local/lib',
-			StaticLib = '/usr/local/lib',
-			Bundle    = '"$(LOCAL_LIBRARY_DIR)/Bundles"',
-		}
-		_p(4,'INSTALL_PATH = %s;', installpaths[cfg.kind])
-
-		local infoplist_file = nil
-
-		for _, v in ipairs(cfg.files) do
-			-- for any file named *info.plist, use it as the INFOPLIST_FILE
-			if (string.find (string.lower (v), 'info.plist') ~= nil) then
-				infoplist_file = string.format('$(SRCROOT)/%s', v)
-			end
-		end
-
-		if infoplist_file ~= nil then
-			_p(4,'INFOPLIST_FILE = "%s";', infoplist_file)
-		end
-
-		local action = premake.action.current()
-		local get_opt = function(opt, def)
-			return (opt and #opt > 0) and opt or def
-		end
-
-		local iosversion = get_opt(cfg.iostargetplatformversion, action.xcode.iOSTargetPlatformVersion)
-		local macosversion = get_opt(cfg.macostargetplatformversion, action.xcode.macOSTargetPlatformVersion)
-		local tvosversion = get_opt(cfg.tvostargetplatformversion, action.xcode.tvOSTargetPlatformVersion)
-
-		if iosversion then
-			_p(4, 'IPHONEOS_DEPLOYMENT_TARGET = %s;', iosversion)
-		elseif macosversion then
-			_p(4, 'MACOSX_DEPLOYMENT_TARGET = %s;', macosversion)
-		elseif tvosversion then
-			_p(4, 'TVOS_DEPLOYMENT_TARGET = %s;', tvosversion)
-		end
-
-		if cfg.kind == "Bundle" and not cfg.options.SkipBundling then
-			_p(4, 'PRODUCT_BUNDLE_IDENTIFIER = "genie.%s";', cfg.buildtarget.basename:gsub("%s+", '.')) --replace spaces with .
-		end
-
-		_p(4,'PRODUCT_NAME = "%s";', cfg.buildtarget.basename)
-
-		if cfg.kind == "Bundle" and not cfg.options.SkipBundling then
-			_p(4, 'WRAPPER_EXTENSION = bundle;')
-		end
-
-		_p(3,'};')
-		_p(3,'name = "%s";', cfgname)
-		_p(2,'};')
-	end
-
-
-	local function cfg_excluded_files(prj, cfg)
+	function xcode.cfg_excluded_files(prj, cfg)
 		local excluded = {}
 
 		-- Converts a file path to a pattern with no relative parts, prefixed with `*`.
@@ -940,190 +862,46 @@
 	end
 
 
-	function xcode.XCBuildConfiguration_Project(tr, prj, cfg)
+	function xcode.XCBuildConfiguration_Impl(tr, id, opts, cfg)
 		local cfgname = xcode.getconfigname(cfg)
 
-		_p(2,'%s /* %s */ = {', cfg.xcode.projectid, cfgname)
+		_p(2,'%s /* %s */ = {', id, cfgname)
 		_p(3,'isa = XCBuildConfiguration;')
 		_p(3,'buildSettings = {')
 
-		local archs = {
-			Native = "$(NATIVE_ARCH_ACTUAL)",
-			x32    = "i386",
-			x64    = "x86_64",
-			Universal32 = "$(ARCHS_STANDARD_32_BIT)",
-			Universal64 = "$(ARCHS_STANDARD_64_BIT)",
-			Universal = "$(ARCHS_STANDARD_32_64_BIT)",
-		}
-		_p(4,'ARCHS = "%s";', archs[cfg.platform])
+		for k, v in table.sortedpairs(opts) do
+			if type(v) == "table" then
+				if #v > 0 then
+					_p(4,'%s = (', k)
 
-		_p(4,'SDKROOT = "%s";', xcode.toolset)
+					for i, v2 in ipairs(v) do
+						_p(5,'%s,', xcode.quotestr(tostring(v2)))
+					end
 
-		if tr.entitlements then
-			_p(4,'CODE_SIGN_ENTITLEMENTS = "%s";', tr.entitlements.cfg.name)
-		end
-
-		local targetdir = path.getdirectory(cfg.buildtarget.bundlepath)
-		if targetdir ~= "." then
-			_p(4,'CONFIGURATION_BUILD_DIR = "$(SYMROOT)";');
-		end
-
-		_p(4,'CONFIGURATION_TEMP_DIR = "$(OBJROOT)";')
-
-		if cfg.flags.Symbols then
-			_p(4,'COPY_PHASE_STRIP = NO;')
-		end
-
-		local excluded = cfg_excluded_files(prj, cfg)
-		if #excluded > 0 then
-			_p(4, 'EXCLUDED_SOURCE_FILE_NAMES = (')
-			for _, file in ipairs(excluded) do
-				_p(5, '"' .. file .. '",')
-			end
-			_p(4, ');')
-		end
-
-		_p(4,'GCC_C_LANGUAGE_STANDARD = gnu99;')
-
-		if cfg.flags.NoExceptions then
-			_p(4,'GCC_ENABLE_CPP_EXCEPTIONS = NO;')
-		end
-
-		if cfg.flags.NoRTTI then
-			_p(4,'GCC_ENABLE_CPP_RTTI = NO;')
-		end
-
-		if _ACTION ~= "xcode4" and cfg.flags.Symbols and not cfg.flags.NoEditAndContinue then
-			_p(4,'GCC_ENABLE_FIX_AND_CONTINUE = YES;')
-		end
-
-		if cfg.flags.NoExceptions then
-			_p(4,'GCC_ENABLE_OBJC_EXCEPTIONS = NO;')
-		end
-
-		if cfg.flags.Optimize or cfg.flags.OptimizeSize then
-			_p(4,'GCC_OPTIMIZATION_LEVEL = s;')
-		elseif cfg.flags.OptimizeSpeed then
-			_p(4,'GCC_OPTIMIZATION_LEVEL = 3;')
-		else
-			_p(4,'GCC_OPTIMIZATION_LEVEL = 0;')
-		end
-
-		if cfg.pchheader and not cfg.flags.NoPCH then
-			_p(4,'GCC_PRECOMPILE_PREFIX_HEADER = YES;')
-
-			-- Visual Studio requires the PCH header to be specified in the same way
-			-- it appears in the #include statements used in the source code; the PCH
-			-- source actual handles the compilation of the header. GCC compiles the
-			-- header file directly, and needs the file's actual file system path in
-			-- order to locate it.
-
-			-- To maximize the compatibility between the two approaches, see if I can
-			-- locate the specified PCH header on one of the include file search paths
-			-- and, if so, adjust the path automatically so the user doesn't have
-			-- add a conditional configuration to the project script.
-
-			local pch = cfg.pchheader
-			for _, incdir in ipairs(cfg.includedirs) do
-
-				-- convert this back to an absolute path for os.isfile()
-				local abspath = path.getabsolute(path.join(cfg.project.location, incdir))
-
-				local testname = path.join(abspath, pch)
-				if os.isfile(testname) then
-					pch = path.getrelative(cfg.location, testname)
-					break
+					_p(4,');')
 				end
+			else
+				_p(4,'%s = %s;', k, xcode.quotestr(tostring(v)))
 			end
-
-			_p(4,'GCC_PREFIX_HEADER = "%s";', pch)
-		end
-
-		xcode.printlist(cfg.defines, 'GCC_PREPROCESSOR_DEFINITIONS', true)
-
-		_p(4,'GCC_SYMBOLS_PRIVATE_EXTERN = NO;')
-
-		if cfg.flags.FatalWarnings then
-			_p(4,'GCC_TREAT_WARNINGS_AS_ERRORS = YES;')
-		end
-
-		_p(4,'GCC_WARN_ABOUT_RETURN_TYPE = YES;')
-		_p(4,'GCC_WARN_UNUSED_VARIABLE = YES;')
-
-		xcode.printlist(cfg.includedirs, 'HEADER_SEARCH_PATHS')
-		xcode.printlist(cfg.userincludedirs, 'USER_HEADER_SEARCH_PATHS')
-		xcode.printlist(cfg.libdirs, 'LIBRARY_SEARCH_PATHS')
-
-		if cfg.kind == "Bundle" then
-			_p(4,'MACH_O_TYPE = mh_bundle;')
-		end
-		
-		_p(4,'OBJROOT = "%s";', cfg.objectsdir)
-
-		_p(4,'ONLY_ACTIVE_ARCH = %s;',iif(premake.config.isdebugbuild(cfg),'YES','NO'))
-
-		-- build list of "other" C/C++ flags
-		local checks = {
-			["-ffast-math"]          = cfg.flags.FloatFast,
-			["-ffloat-store"]        = cfg.flags.FloatStrict,
-			["-fomit-frame-pointer"] = cfg.flags.NoFramePointer,
-		}
-
-		local flags = { }
-		for flag, check in pairs(checks) do
-			if check then
-				table.insert(flags, flag)
-			end
-		end
-
-		for _, val in ipairs(premake.xcode.parameters) do
-			_p(4, val ..';')
-		end
-
-		xcode.printlist(table.join(flags, cfg.buildoptions, cfg.buildoptions_c), 'OTHER_CFLAGS', true)
-		xcode.printlist(table.join(flags, cfg.buildoptions, cfg.buildoptions_cpp), 'OTHER_CPLUSPLUSFLAGS', true)
-
-		-- build list of "other" linked flags. All libraries that aren't frameworks
-		-- are listed here, so I don't have to try and figure out if they are ".a"
-		-- or ".dylib", which Xcode requires to list in the Frameworks section
-		flags = { }
-		for _, lib in ipairs(premake.getlinks(cfg, "system")) do
-			if not xcode.isframework(lib) then
-				table.insert(flags, "-l" .. lib)
-			end
-		end
-		flags = table.join(flags, cfg.linkoptions)
-		xcode.printlist(flags, 'OTHER_LDFLAGS', true)
-
-		if cfg.flags.StaticRuntime then
-			_p(4,'STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;')
-		end
-
-		if targetdir ~= "." then
-			_p(4,'SYMROOT = "%s";', targetdir)
-		end
-
-		if cfg.flags.PedanticWarnings
-		or cfg.flags.ExtraWarnings
-		then
-			_p(4,'WARNING_CFLAGS = "-Wall";')
 		end
 
 		_p(3,'};')
-		_p(3,'name = "%s";', cfgname)
+		_p(3,'name = %s;', xcode.quotestr(cfgname))
 		_p(2,'};')
 	end
 
 
-	function xcode.XCBuildConfiguration(tr, prj)
+	function xcode.XCBuildConfiguration(tr, prj, opts)
 		_p('/* Begin XCBuildConfiguration section */')
 		for _, target in ipairs(tr.products.children) do
 			for _, cfg in ipairs(tr.configs) do
-				xcode.XCBuildConfiguration_Target(tr, target, cfg)
+				local values = opts.ontarget(tr, target, cfg)
+				xcode.XCBuildConfiguration_Impl(tr, cfg.xcode.targetid, values, cfg)
 			end
 		end
 		for _, cfg in ipairs(tr.configs) do
-			xcode.XCBuildConfiguration_Project(tr, prj, cfg)
+			local values = opts.onproject(tr, prj, cfg)
+			xcode.XCBuildConfiguration_Impl(tr, cfg.xcode.projectid, values, cfg)
 		end
 		_p('/* End XCBuildConfiguration section */')
 		_p('')
