@@ -10,10 +10,6 @@
 	local xcode4 = premake.xcode4
 	local xcode8 = premake.xcode8
 
-	function xcode8.workspace_generate(sln)
-		return xcode4.workspace_generate(sln)
-	end
-
 	function xcode8.XCBuildConfiguration_Project(tr, prj, cfg)
 		local options = xcode4.XCBuildConfiguration_Project(tr, prj, cfg)
 
@@ -98,7 +94,7 @@
 		default_platform = "Native",
 
 		onsolution = function(sln)
-			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode8.workspace_generate)
+			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode.workspace_generate)
 		end,
 
 		onproject = function(prj)
