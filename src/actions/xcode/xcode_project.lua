@@ -146,32 +146,3 @@
 
 		return tr
 	end
-
-
---
--- Generate an Xcode .xcodeproj for a Premake project.
---
--- @param prj
---    The Premake project to generate.
---
-
-	function premake.xcode.project(prj)
-		local tr = xcode.buildprjtree(prj)
-		xcode.Header(tr)
-		xcode.PBXBuildFile(tr)
-		xcode.PBXContainerItemProxy(tr)
-		xcode.PBXFileReference(tr,prj)
-		xcode.PBXFrameworksBuildPhase(tr)
-		xcode.PBXGroup(tr)
-		xcode.PBXNativeTarget(tr)
-		xcode.PBXProject(tr)
-		xcode.PBXReferenceProxy(tr)
-		xcode.PBXResourcesBuildPhase(tr)
-		xcode.PBXShellScriptBuildPhase(tr)
-		xcode.PBXSourcesBuildPhase(tr,prj)
-		xcode.PBXVariantGroup(tr)
-		xcode.PBXTargetDependency(tr)
-		xcode.XCBuildConfiguration(tr, prj)
-		xcode.XCBuildConfigurationList(tr)
-		xcode.Footer(tr)
-	end
