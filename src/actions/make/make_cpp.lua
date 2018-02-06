@@ -66,7 +66,7 @@
 		_p('.PHONY: clean prebuild prelink')
 		_p('')
 
-		if os.is("MacOSX") and prj.kind == "WindowedApp" then
+		if os.is("MacOSX") and prj.kind == "WindowedApp" and not prj.options.SkipBundling then
 			_p('all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET) $(dir $(TARGETDIR))PkgInfo $(dir $(TARGETDIR))Info.plist')
 		else
 			_p('all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)')
@@ -136,7 +136,7 @@
 		_p('')
 
 		-- Mac OS X specific targets
-		if os.is("MacOSX") and prj.kind == "WindowedApp" then
+		if os.is("MacOSX") and prj.kind == "WindowedApp" and not prj.options.SkipBundling then
 			_p('$(dir $(TARGETDIR))PkgInfo:')
 			_p('$(dir $(TARGETDIR))Info.plist:')
 			_p('')

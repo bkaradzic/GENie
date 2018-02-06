@@ -506,7 +506,7 @@
 				ext = ".lib"
 			end
 		elseif namestyle == "posix" then
-			if kind == "WindowedApp" and system == "macosx" then
+			if kind == "WindowedApp" and system == "macosx" and not cfg.options.SkipBundling then
 				bundlename = name .. ".app"
 				bundlepath = path.join(dir, bundlename)
 				dir = path.join(bundlepath, "Contents/MacOS")

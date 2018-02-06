@@ -159,10 +159,10 @@
 	function xcode.getproducttype(node)
 		local types = {
 			ConsoleApp  = "com.apple.product-type.tool",
-			WindowedApp = "com.apple.product-type.application",
+			WindowedApp = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.application",
 			StaticLib   = "com.apple.product-type.library.static",
 			SharedLib   = "com.apple.product-type.library.dynamic",
-			Bundle      = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.bundle", -- Ternary operator-ish
+			Bundle      = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.bundle",
 		}
 		return types[node.cfg.kind]
 	end
@@ -180,10 +180,10 @@
 	function xcode.gettargettype(node)
 		local types = {
 			ConsoleApp  = "\"compiled.mach-o.executable\"",
-			WindowedApp = "wrapper.application",
+			WindowedApp = node.cfg.options.SkipBundling and "\"compiled.mach-o.executable\"" or "wrapper.application",
 			StaticLib   = "archive.ar",
 			SharedLib   = "\"compiled.mach-o.dylib\"",
-			Bundle      = node.cfg.options.SkipBundling and "\"compiled.mach-o.bundle\"" or "wrapper.cfbundle", -- Ternary operator-ish
+			Bundle      = node.cfg.options.SkipBundling and "\"compiled.mach-o.bundle\"" or "wrapper.cfbundle",
 		}
 		return types[node.cfg.kind]
 	end
