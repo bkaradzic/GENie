@@ -242,15 +242,30 @@
 	function xcode.newid(node, usage)
 		local base = ''
 
-		if node.path ~= nil then
-			base = base .. node.path
-		elseif node.name ~= nil then
-			base = base .. node.name
+		-- Seed the uuid with the project name and a project-specific counter.
+		-- This is to prevent matching strings from generating the same uuid,
+		-- while still generating the same uuid for the same properties across
+		-- runs.
+		local prj = node.project
+
+		if prj == nil then
+			local parent = node.parent
+			while parent ~= nil do
+				if parent.project ~= nil then
+					prj = parent.project
+					break
+				end
+				parent = parent.parent
+			end
 		end
 
-		if usage ~= nil then
-			base = base .. usage
+		if prj ~= nil then
+			prj.uuidcounter = (prj.uuidcounter or 0) + 1
+			base = base .. prj.name .. "$" .. prj.uuidcounter .. "$"
 		end
+
+		base = base .. "$" .. (node.path or node.name or "")
+		base = base .. "$" .. (usage or "")
 		return xcode.uuid(base)
 	end
 
