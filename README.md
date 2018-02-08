@@ -119,6 +119,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `ObjcARC` flag to enable automatic reference counting for Objective-C(++).
  - Added `iostargetplatformversion`, `macostargetplatformversion`, and
    `tvostargetplatformversion` to specify XCode OS target version.
+ - Removed the `xcode3` action, and added the `xcode8` and `xcode9` actions.
 
 Debugging GENie scripts
 -----------------------
