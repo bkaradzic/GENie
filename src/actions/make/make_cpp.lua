@@ -300,10 +300,22 @@
 		_p('  ' .. (table.contains(premake.make.override,"TARGETDIR") and "override " or "") .. 'TARGETDIR           = %s', _MAKE.esc(cfg.buildtarget.directory))
 		_p('  ' .. (table.contains(premake.make.override,"TARGET") and "override " or "") ..    'TARGET              = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
 		_p('  DEFINES            +=%s', make.list(cc.getdefines(cfg.defines)))
-		_p('  INCLUDES           +=%s', make.list(cc.getincludedirs(cfg.includedirs)))
-		_p('  INCLUDES           +=%s', make.list(cc.getquoteincludedirs(cfg.userincludedirs)))
-		_p('  INCLUDES           +=%s', make.list(cc.getsystemincludedirs(cfg.systemincludedirs)))
 
+		local id  = make.list(cc.getincludedirs(cfg.includedirs));
+		local uid = make.list(cc.getquoteincludedirs(cfg.userincludedirs))
+		local sid = make.list(cc.getsystemincludedirs(cfg.systemincludedirs))
+
+		if id ~= "" then
+			_p('  INCLUDES           +=%s', id)
+		end
+
+		if uid ~= "" then
+			_p('  INCLUDES           +=%s', uid)
+		end
+
+		if sid ~= "" then
+			_p('  INCLUDES           +=%s', sid)
+		end
 
 		-- set up precompiled headers
 		cpp.pchconfig(cfg)
