@@ -199,18 +199,7 @@ function qbs.generate_project(prj)
 					, cfg.defines
 				)
 
-				local sortedincdirs = {}
-				for _, includedir in ipairs(cfg.userincludedirs) do
-					if includedir ~= nil then
-						table.insert(sortedincdirs, includedir)
-					end
-				end
-				for _, includedir in ipairs(cfg.includedirs) do
-					if includedir ~= nil then
-						table.insert(sortedincdirs, includedir)
-					end
-				end
-
+				local sortedincdirs = table.join(cfg.userincludedirs, cfg.includedirs, cfg.systemincludedirs)
 				table.sort(sortedincdirs, includesort)
 				qbs.list(
 					  indent

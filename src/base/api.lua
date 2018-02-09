@@ -355,6 +355,13 @@
 			usagecopy = true,
 		},
 
+		systemincludedirs =
+		{
+			kind  = "dirlist",
+			scope = "config",
+			usagecopy = true,	
+		},
+
 		userincludedirs =
 		{
 			kind  = "dirlist",

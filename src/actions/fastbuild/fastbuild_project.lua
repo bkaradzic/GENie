@@ -54,17 +54,7 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 	end
 
 	_p(indentlevel, ".IncludeDirs = ''")
-	local sortedincdirs = {}
-	for _, includedir in ipairs(cfg.userincludedirs) do
-		if includedir ~= nil then
-			table.insert(sortedincdirs, includedir)
-		end
-	end
-	for _, includedir in ipairs(cfg.includedirs) do
-		if includedir ~= nil then
-			table.insert(sortedincdirs, includedir)
-		end
-	end
+	local sortedincdirs = table.join(cfg.userincludedirs, cfg.includedirs, cfg.systemincludedirs)
 
 	-- Setup for special include dir sort to ensure that 'nearby' dirs get precedence over others.
 	-- Gets the relative path from commonbasepath and counts the steps in that path.

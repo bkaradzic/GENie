@@ -302,6 +302,7 @@
 		_p('  DEFINES            +=%s', make.list(cc.getdefines(cfg.defines)))
 		_p('  INCLUDES           +=%s', make.list(cc.getincludedirs(cfg.includedirs)))
 		_p('  INCLUDES           +=%s', make.list(cc.getquoteincludedirs(cfg.userincludedirs)))
+		_p('  INCLUDES           +=%s', make.list(cc.getsystemincludedirs(cfg.systemincludedirs)))
 
 
 		-- set up precompiled headers

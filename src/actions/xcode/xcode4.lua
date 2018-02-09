@@ -136,7 +136,7 @@
 			GCC_SYMBOLS_PRIVATE_EXTERN      = "NO",
 			GCC_WARN_ABOUT_RETURN_TYPE      = "YES",
 			GCC_WARN_UNUSED_VARIABLE        = "YES",
-			HEADER_SEARCH_PATHS             = cfg.includedirs,
+			HEADER_SEARCH_PATHS             = table.join(cfg.includedirs, cfg.systemincludedirs),
 			LIBRARY_SEARCH_PATHS            = cfg.libdirs,
 			OBJROOT                         = cfg.objectsdir,
 			ONLY_ACTIVE_ARCH                = iif(premake.config.isdebugbuild(cfg), "YES", "NO"),
