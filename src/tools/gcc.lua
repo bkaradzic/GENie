@@ -340,6 +340,18 @@
 	end
 
 --
+-- Decorate system include file search paths for the GCC command line.
+--
+
+	function premake.gcc.getsystemincludedirs(includedirs)
+		local result = { }
+		for _,dir in ipairs(includedirs) do
+			table.insert(result, "-isystem \"" .. dir .. "\"")
+		end
+		return result
+	end
+
+--
 -- Return platform specific project and configuration level
 -- makesettings blocks.
 --

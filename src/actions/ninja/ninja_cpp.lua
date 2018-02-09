@@ -36,7 +36,7 @@ local p     = premake
 
 		local flags = {
 			defines   = ninja.list(tool.getdefines(cfg.defines)),
-			includes  = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs))),
+			includes  = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs), tool.getsystemincludedirs(cfg.systemincludedirs))),
 			cppflags  = ninja.list(tool.getcppflags(cfg)),
 			asmflags  = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_asm)),
 			cflags    = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)),

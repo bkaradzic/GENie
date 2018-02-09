@@ -280,7 +280,7 @@
 	end
 
 	local function include_dirs(indent,cfg)
-		local includedirs = table.join(cfg.userincludedirs, cfg.includedirs)
+		local includedirs = table.join(cfg.userincludedirs, cfg.includedirs, cfg.systemincludedirs)
 
 		if #includedirs> 0 then
 			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
@@ -658,7 +658,7 @@
 				, table.concat(premake.esc(table.join(cfg.buildoptions, cfg.buildoptions_asm)), " ")
 				)
 
-			local includedirs = table.join(cfg.userincludedirs, cfg.includedirs)
+			local includedirs = table.join(cfg.userincludedirs, cfg.includedirs, cfg.systemincludedirs)
 
 			if #includedirs > 0 then
 				_p(3, '<IncludePaths>%s;%%(IncludePaths)</IncludePaths>'
