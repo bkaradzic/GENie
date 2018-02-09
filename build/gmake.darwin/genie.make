@@ -48,7 +48,6 @@ ifeq ($(config),release)
   override TARGET              = $(TARGETDIR)/genie
   DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES           += -I"../../src/host/lua-5.3.0/src"
-  INCLUDES           +=
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
   ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
   ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.4
@@ -132,7 +131,6 @@ ifeq ($(config),debug)
   override TARGET              = $(TARGETDIR)/genie
   DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES           += -I"../../src/host/lua-5.3.0/src"
-  INCLUDES           +=
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
   ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
   ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.4
@@ -217,7 +215,6 @@ ifeq ($(config),releaseuniv32)
   override TARGET              = $(TARGETDIR)/genie
   DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES           += -I"../../src/host/lua-5.3.0/src"
-  INCLUDES           +=
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
   ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
   ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.4
@@ -302,7 +299,6 @@ ifeq ($(config),debuguniv32)
   override TARGET              = $(TARGETDIR)/genie
   DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES           += -I"../../src/host/lua-5.3.0/src"
-  INCLUDES           +=
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
   ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
   ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.4
