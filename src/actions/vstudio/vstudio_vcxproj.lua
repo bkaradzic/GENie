@@ -271,7 +271,7 @@
 			if escape then
 				defines = defines:gsub('"', '\\"')
 			end
-			
+
 			_p(indent,'<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'
 				,premake.esc(defines))
 		else
@@ -475,7 +475,7 @@
 				_p(3,'<OptimizationLevel>O2</OptimizationLevel>')
 			end
 		else
-			_p(3,'<Optimization>%s</Optimization>',optimisation(cfg))
+			_p(3,'<Optimization>%s</Optimization>', optimisation(cfg))
 		end
 
 		include_dirs(3, cfg)
@@ -483,8 +483,8 @@
 		preprocessor(3, cfg)
 		minimal_build(cfg)
 
-		if  not premake.config.isoptimizedbuild(cfg.flags) then
-			if not cfg.flags.Managed then
+		if not premake.config.isoptimizedbuild(cfg.flags) then
+			if not cfg.flags.Managed and not cfg.flags.NoRuntimeChecks then
 				_p(3, '<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>')
 			end
 
