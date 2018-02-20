@@ -556,6 +556,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoImportLib_ - Prevent the generation of an import library for a Windows DLL.
 * _NoManifest_ - Prevent the generation of a manifest for Windows executables and shared libraries.
 * _NoMultiProcessorCompilation_ - Disables Visual Studio's and FastBuild's multiprocessor compilation.
+* _NoRuntimeChecks_ - Disable Visual Studio's Basic Runtime Checks in Debug builds.
 * _EnableMinimalRebuild_ - Enable Visual Studio's minimal rebuild feature.
 * _NoPCH_ - Disable precompiled headers.
 * _NoRTTI_ - Disable C++ runtime type information.
