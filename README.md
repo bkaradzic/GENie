@@ -122,6 +122,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Removed the `xcode3` action, and added the `xcode8` and `xcode9` actions.
  - Added `systemincludedirs` that are always searched after directories added
    using `includedirs`.
+ - Added `NoRuntimeChecks` flag to disable Basic Runtime Checks in non-optimized Visual Studio builds.
 
 Debugging GENie scripts
 -----------------------
