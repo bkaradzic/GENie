@@ -1067,7 +1067,18 @@
 			end
 
 			_p(1,'<ItemGroup>')
+			local existingBasenames = {};
 			for _, file in ipairs(files) do
+				-- Having unique ObjectFileName for each file subverts MSBuilds ability to parallelize compilation with the /MP flag.
+				-- Instead we detect duplicates and partition them in subfolders only if needed.
+				local basename = path.getbasename(file.name)
+				local disambiguation = existingBasenames[basename] or 0;
+				if disambiguation > 0 then
+					existingBasenames[basename] = disambiguation + 1
+				else
+					existingBasenames[basename] = 1
+				end
+
 				local translatedpath = path.translate(file.name, "\\")
 				_p(2, '<ClCompile Include=\"%s\">', translatedpath)
 
@@ -1096,9 +1107,11 @@
 						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
 						)
 				else
-					_p(3, '<ObjectFileName>$(IntDir)%s\\</ObjectFileName>'
-						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
-						)
+					if disambiguation > 0 then
+						_p(3, '<ObjectFileName>$(IntDir)%s\\</ObjectFileName>'
+							, tostring(disambiguation)
+							)
+					end
 				end
 
 				if path.iscxfile(file.name) then
