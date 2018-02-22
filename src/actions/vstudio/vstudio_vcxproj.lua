@@ -1071,13 +1071,9 @@
 			for _, file in ipairs(files) do
 				-- Having unique ObjectFileName for each file subverts MSBuilds ability to parallelize compilation with the /MP flag.
 				-- Instead we detect duplicates and partition them in subfolders only if needed.
-				local basename = path.getbasename(file.name)
-				local disambiguation = existingBasenames[basename] or 0;
-				if disambiguation > 0 then
-					existingBasenames[basename] = disambiguation + 1
-				else
-					existingBasenames[basename] = 1
-				end
+				local filename = string.lower(path.getname(file.name))
+				local disambiguation = existingBasenames[filename] or 0;
+				existingBasenames[filename] = disambiguation + 1
 
 				local translatedpath = path.translate(file.name, "\\")
 				_p(2, '<ClCompile Include=\"%s\">', translatedpath)
