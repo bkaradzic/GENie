@@ -484,7 +484,9 @@
 		minimal_build(cfg)
 
 		if not premake.config.isoptimizedbuild(cfg.flags) then
-			if not cfg.flags.Managed and not cfg.flags.NoRuntimeChecks then
+			if cfg.flags.NoRuntimeChecks then
+				_p(3, '<BasicRuntimeChecks>Default</BasicRuntimeChecks>')
+			elseif not cfg.flags.Managed then
 				_p(3, '<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>')
 			end
 
