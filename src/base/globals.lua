@@ -86,6 +86,12 @@
 			iscrosscompiler = true,
 			namestyle       = "TegraAndroid",
 		},
+		NX64 =
+		{
+			cfgsuffix       = "nx64",
+			iscrosscompiler = true,
+			namestyle       = "NX",
+		},
 	}
 
 

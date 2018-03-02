@@ -153,6 +153,17 @@
 			end
 		end
 
+		if cfg.platform == "NX64" then		
+			_p(2,'<NintendoSdkRoot>$(NINTENDO_SDK_ROOT)</NintendoSdkRoot>')
+			_p(2,'<NintendoSdkSpec>NX</NintendoSdkSpec>')
+			--TODO: Allow specification of the 'Develop' build type
+			if premake.config.isdebugbuild(cfg) then
+				_p(2,'<NintendoSdkBuildType>Debug</NintendoSdkBuildType>')
+			else
+				_p(2,'<NintendoSdkBuildType>Release</NintendoSdkBuildType>')
+			end
+		end
+
 		_p(1,'</PropertyGroup>')
 	end
 
@@ -234,6 +245,10 @@
 
 			if cfg.kind ~= "StaticLib" then
 				_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(premake.config.isincrementallink(cfg)))
+			end
+
+			if cfg.applicationdatadir ~= nil then
+				_p(2,'<ApplicationDataDir>%s</ApplicationDataDir>', premake.esc(cfg.applicationdatadir))
 			end
 
 			if cfg.flags.NoManifest then
@@ -721,6 +736,10 @@
 			_p(3,'<OptimizeReferences>true</OptimizeReferences>')
 		end
 
+		if cfg.finalizemetasource ~= nil then
+			_p(3,'<FinalizeMetaSource>%s</FinalizeMetaSource>', premake.esc(cfg.finalizemetasource))
+		end
+
 		if cfg.kind ~= 'StaticLib' then
 			vc2010.additionalDependencies(3,cfg)
 			_p(3,'<OutputFile>$(OutDir)%s</OutputFile>', cfg.buildtarget.name)
@@ -1080,35 +1099,16 @@
 				local translatedpath = path.translate(file.name, "\\")
 				_p(2, '<ClCompile Include=\"%s\">', translatedpath)
 
-				-- Android needs a full path to an object file, not a dir.
-				-- Try to only ugly things up with this if it's necessary.
-				local supportsAndroid = false
-				local supportsNonAndroid = false
-				for _, cfginfo in ipairs(configs) do
-					if cfginfo.src_platform == "TegraAndroid" then
-						supportsAndroid = true
+				for _, vsconfig in ipairs(configs) do
+					-- Android and NX need a full path to an object file, not a dir.
+					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					local namestyle = premake.getnamestyle(cfg)
+					if namestyle == "TegraAndroid" or namestyle == "NX" then
+						_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s.o</ObjectFileName>', premake.esc(vsconfig.name), premake.esc(path.translate(path.trimdots(path.removeext(file.name)))) )
 					else
-						supportsNonAndroid = true
-					end
-				end
-				if supportsAndroid and supportsNonAndroid then
-					_p(3, '<ObjectFileName Condition="\'$(Platform)\'==\'%s\'">$(IntDir)%s\\%%(filename).o</ObjectFileName>'
-						, premake.esc(vstudio.platforms["TegraAndroid"])
-						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
-						)
-					_p(3, '<ObjectFileName Condition="\'$(Platform)\'!=\'%s\'">$(IntDir)%s\\</ObjectFileName>'
-						, premake.esc(vstudio.platforms["TegraAndroid"])
-						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
-						)
-				elseif supportsAndroid then
-					_p(3, '<ObjectFileName>$(IntDir)%s\\%%(filename).o</ObjectFileName>'
-						, premake.esc(path.translate(path.getdirectory(path.trimdots(file.name))))
-						)
-				else
-					if disambiguation > 0 then
-						_p(3, '<ObjectFileName>$(IntDir)%s\\</ObjectFileName>'
-							, tostring(disambiguation)
-							)
+						if disambiguation > 0 then
+							_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s\\</ObjectFileName>', premake.esc(vsconfig.name), tostring(disambiguation))
+						end
 					end
 				end
 
