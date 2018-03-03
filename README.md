@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 911 (commit bfbc52bf713d05661f9e54902394d7e3a6dbc2b3)
+	version 913 (commit 8354574fc3aa05e4951a64fac88fec0bd2e857ab)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -122,7 +122,9 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Removed the `xcode3` action, and added the `xcode8` and `xcode9` actions.
  - Added `systemincludedirs` that are always searched after directories added
    using `includedirs`.
- - Added `NoRuntimeChecks` flag to disable Basic Runtime Checks in non-optimized Visual Studio builds.
+ - Added `NoRuntimeChecks` flag to disable Basic Runtime Checks in non-optimized
+   Visual Studio builds.
+ - Added support for Nintendo Switch projects.
 
 Debugging GENie scripts
 -----------------------
