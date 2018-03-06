@@ -135,21 +135,21 @@
 		_p('  define PREBUILDCMDS')
 		if #cfg.prebuildcommands > 0 then
 			_p('\t@echo Running pre-build commands')
-			_p('\t%s', table.implode(cfg.prebuildcommands, "", "", "\n\t"))
+			_p('\t%s', table.implode(cfg.prebuildcommands, "", "", "\n\t"):gsub("%$", "$$"))
 		end
 		_p('  endef')
 
 		_p('  define PRELINKCMDS')
 		if #cfg.prelinkcommands > 0 then
 			_p('\t@echo Running pre-link commands')
-			_p('\t%s', table.implode(cfg.prelinkcommands, "", "", "\n\t"))
+			_p('\t%s', table.implode(cfg.prelinkcommands, "", "", "\n\t"):gsub("%$", "$$"))
 		end
 		_p('  endef')
 
 		_p('  define POSTBUILDCMDS')
 		if #cfg.postbuildcommands > 0 then
 			_p('\t@echo Running post-build commands')
-			_p('\t%s', table.implode(cfg.postbuildcommands, "", "", "\n\t"))
+			_p('\t%s', table.implode(cfg.postbuildcommands, "", "", "\n\t"):gsub("%$", "$$"))
 		end
 		_p('  endef')
 
