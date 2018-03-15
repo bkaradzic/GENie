@@ -100,25 +100,29 @@
 			if (not prj.archivesplit_size) then
 				prj.archivesplit_size=200
 			end
+			_p('\t$(file >$(TARGET).objects,$(OBJECTS))')
 			if (not prj.options.ArchiveSplit) then
 				_p('ifeq (posix,$(SHELLTYPE))')
 				_p('\t$(SILENT) rm -f  $(TARGET)')
 				_p('else')
 				_p('\t$(SILENT) if exist $(subst /,\\\\,$(TARGET)) del $(subst /,\\\\,$(TARGET))')
 				_p('endif')
-				_p('\t$(SILENT) $(LINKCMD) $(OBJECTS)' .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+				_p('\t$(SILENT) $(LINKCMD) @$(TARGET).objects' .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 			else
 				_p('\t$(call RM,$(TARGET))')
-				_p('\t@$(call max_args,$(LINKCMD),'.. prj.archivesplit_size ..',$(OBJECTS))' .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+				_p('\t@$(call max_args,$(LINKCMD),'.. prj.archivesplit_size ..',@$(TARGET).objects)' .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 				_p('\t$(SILENT) $(LINKCMD_NDX)')
 			end
+			_p('\t$(call RM,$(TARGET).objects)')
 		else
 			if prj.msglinking then
 				_p('\t@echo ' .. prj.msglinking)
 			else
 				_p('\t@echo Linking %s', prj.name)
 			end
+			_p('\t$(file >$(TARGET).objects,$(OBJECTS))')
 			_p('\t$(SILENT) $(LINKCMD)')
+			_p('\t$(call RM,$(TARGET).objects)')
 		end
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')
@@ -448,7 +452,7 @@
 			-- $(LIBS) moved to end (http://sourceforge.net/p/premake/bugs/279/)
 
 			local tool = iif(cfg.language == "C", "CC", "CXX")
-			_p('  LINKCMD             = $(%s) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
+			_p('  LINKCMD             = $(%s) -o $(TARGET) @$(TARGET).objects $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
 
 		end
 	end
