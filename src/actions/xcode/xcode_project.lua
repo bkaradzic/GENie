@@ -26,8 +26,8 @@
 			for _, platform in ipairs(prj.solution.xcode.platforms) do
 				local cfg = premake.getconfig(prj, cfgname, platform)
 				cfg.xcode = {}
-				cfg.xcode.targetid = xcode.newid(prj.xcode.projectnode, "tgt:"..cfgname)
-				cfg.xcode.projectid = xcode.newid(tr, "prj:"..cfgname)
+				cfg.xcode.targetid = xcode.newid(prj.xcode.projectnode, "tgt:"..platform..cfgname)
+				cfg.xcode.projectid = xcode.newid(tr, "prj:"..platform..cfgname)
 				table.insert(tr.configs, cfg)
 			end
 		end
