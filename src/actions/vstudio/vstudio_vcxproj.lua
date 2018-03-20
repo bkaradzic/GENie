@@ -164,6 +164,11 @@
 			end
 		end
 
+		-- Workaround for https://github.com/Microsoft/msbuild/issues/2353
+		if cfg.flags.Symbols and premake.action.current() == premake.action.get("vs2017") then
+			_p(2, '<DebugSymbols>true</DebugSymbols>')
+		end
+
 		_p(1,'</PropertyGroup>')
 	end
 
