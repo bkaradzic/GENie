@@ -194,6 +194,7 @@
 					FatalWarnings = 1,
 					FloatFast = 1,
 					FloatStrict = 1,
+					FullSymbols = 1,
 					Managed = 1,
 					MinimumWarnings = 1,
 					MFC = 1,

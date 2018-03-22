@@ -724,13 +724,18 @@
 --
 
 	function vc2010.link(cfg)
+		local vs2017 = premake.action.current() == premake.action.get("vs2017")
+
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
-		_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 
-		if  cfg.flags.Symbols
-		and _ACTION:sub(3) == "2017"
-		then
+		if vs2017 and cfg.flags.FullSymbols then
+			_p(3,'<GenerateDebugInformation>DebugFull</GenerateDebugInformation>')
+		else
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+		end
+
+		if vs2017 and cfg.flags.Symbols then
 			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
 				, path.getbasename(cfg.buildtarget.name)
 				)
