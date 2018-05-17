@@ -591,12 +591,21 @@
 		floating_point(cfg)
 		debug_info(cfg)
 
-		if  cfg.flags.Symbols
-		and _ACTION:sub(3) ~= "2017"
-		then
-			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
-				, path.getbasename(cfg.buildtarget.name)
-				)
+		if cfg.flags.Symbols then
+			-- The compiler pdb should be different than the linker pdb, and
+			-- the linker pdb is what should be distributed and used for
+			-- debugging. But in the case of static libraries, they have no
+			-- linker pdb, so then the compiler pdb should be in the output
+			-- dir instead...
+			if cfg.kind == "StaticLib" then
+				_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
+					, path.getbasename(cfg.buildtarget.name)
+					)
+			else
+				_p(3, '<ProgramDataBaseFileName>$(IntDir)%s.compile.pdb</ProgramDataBaseFileName>'
+					, path.getbasename(cfg.buildtarget.name)
+					)
+			end
 		end
 
 		if cfg.flags.NoFramePointer then
@@ -735,8 +744,8 @@
 			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 		end
 
-		if vs2017 and cfg.flags.Symbols then
-			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
+		if cfg.flags.Symbols then
+			_p(3, '<ProgramDatabaseFile>$(OutDir)%s.pdb</ProgramDatabaseFile>'
 				, path.getbasename(cfg.buildtarget.name)
 				)
 		end
