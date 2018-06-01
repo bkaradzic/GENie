@@ -540,12 +540,12 @@
 		for _, file in ipairs(prj.allfiles or {}) do
 			if path.issourcefile(file) then
 				if (path.isobjcfile(file)) then
-					_p('$(OBJDIR)/%s.o: %s $(GCH_OBJC) $(MAKEFILE)'
+					_p('$(OBJDIR)/%s.o: %s $(GCH_OBJC) $(MAKEFILE) | $(OBJDIR)'
 						, _MAKE.esc(path.trimdots(path.removeext(file)))
 						, _MAKE.esc(file)
 						)
 				else
-					_p('$(OBJDIR)/%s.o: %s $(GCH) $(MAKEFILE)'
+					_p('$(OBJDIR)/%s.o: %s $(GCH) $(MAKEFILE) | $(OBJDIR)'
 						, _MAKE.esc(path.trimdots(path.removeext(file)))
 						, _MAKE.esc(file)
 						)
