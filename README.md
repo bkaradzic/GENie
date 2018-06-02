@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 928 (commit 50de3766101aaf0384e7e3291062177e8c0b8aef)
+	version 930 (commit 7410ebea6ee4e2e39cf25c14024cab8bfff4637d)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
