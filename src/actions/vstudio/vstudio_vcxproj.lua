@@ -323,6 +323,17 @@
 
 	end
 
+	local function cppstandard_vs2017(cfg)
+		if cfg.flags.CppLatest then
+			_p(3, '<LanguageStandard>stdcpplatest</LanguageStandard>')
+			_p(3, '<EnableModules>true</EnableModules>')
+		elseif cfg.flags.Cpp17 then
+			_p(3, '<LanguageStandard>stdcpp17</LanguageStandard>')
+		elseif cfg.flags.Cpp14 then
+			_p(3, '<LanguageStandard>stdcpp14</LanguageStandard>')
+		end
+	end
+
 	local function exceptions(cfg)
 		if cfg.platform == "Orbis" then
 			if cfg.flags.NoExceptions then
@@ -581,6 +592,10 @@
 
 		if cfg.flags.FatalWarnings then
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
+		end
+
+		if premake.action.current() == premake.action.get("vs2017") then
+			cppstandard_vs2017(cfg)
 		end
 
 		exceptions(cfg)

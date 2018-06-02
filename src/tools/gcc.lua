@@ -25,6 +25,10 @@
 
 	local cflags =
 	{
+		Cpp11            = "-std=c++11",
+		Cpp14            = "-std=c++14",
+		Cpp17            = "-std=c++17",
+		CppLatest        = "-std=c++2a",
 		EnableSSE        = "-msse",
 		EnableSSE2       = "-msse2",
 		EnableAVX        = "-mavx",
