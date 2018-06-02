@@ -195,7 +195,8 @@ Developer Crackshell used GENie for development of games
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
 	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld,
 	Alastair Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie,
-	Nikolay Aleksiev, Jon Olson, Mike Fitzgerald, Anders Stenberg.
+	Nikolay Aleksiev, Jon Olson, Mike Fitzgerald, Anders Stenberg, Violets,
+	Hugo Amnov.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie

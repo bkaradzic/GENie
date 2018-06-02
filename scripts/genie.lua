@@ -25,6 +25,7 @@
 			"ExtraWarnings",
 			"StaticRuntime"
 		}
+
 		includedirs {
 			"../src/host/lua-5.3.0/src"
 		}
@@ -66,16 +67,11 @@
 		configuration "bsd"
 			targetdir   "../bin/bsd"
 
-		configuration "solaris"
-			targetdir   "../bin/solaris"
-			defines     { "_REENTRANT" }
-			buildoptions { "-std=gnu99" }
-			links       { "dl" }
-
-		configuration "linux or bsd or solaris"
-			defines     { "LUA_USE_POSIX", "LUA_USE_DLOPEN" }
-			links       { "m" }
-			linkoptions { "-rdynamic" }
+		configuration "linux or bsd"
+			defines      { "LUA_USE_POSIX", "LUA_USE_DLOPEN" }
+			buildoptions { "-Wno-implicit-fallthrough" }
+			links        { "m" }
+			linkoptions  { "-rdynamic" }
 
 		configuration "macosx"
 			targetdir   "../bin/darwin"
@@ -85,6 +81,8 @@
 		configuration { "macosx", "gmake" }
 			buildoptions { "-mmacosx-version-min=10.4" }
 			linkoptions  { "-mmacosx-version-min=10.4" }
+
+		configuration {}
 
 
 --
