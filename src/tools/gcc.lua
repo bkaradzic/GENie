@@ -209,7 +209,7 @@
 	function premake.gcc.getlibdirflags(cfg)
 		local result = { }
 		for _, value in ipairs(premake.getlinks(cfg, "all", "directory")) do
-			table.insert(result, '-L' .. _MAKE.esc(value))
+			table.insert(result, '-L\"' .. value .. '\"')
 		end
 		return result
 	end
