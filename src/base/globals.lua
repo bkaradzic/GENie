@@ -92,6 +92,13 @@
 			iscrosscompiler = true,
 			namestyle       = "NX",
 		},
+		Emscripten =
+		{
+			cfgsuffix       = "emscripten",
+			iscrosscompiler = true,
+			nosharedlibs    = true,
+			namestyle       = "Emscripten",
+		}, 
 	}
 
 
