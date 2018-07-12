@@ -128,6 +128,14 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added flags for selecting C++ standard: `Cpp11`, `Cpp14`, `Cpp17`,
    and `CppLatest`.
 
+build - GENie build system scripts
+----------------------------------
+
+build is a set of build system scripts and related tools, built around
+GENie project generator tool.
+
+https://milostosic.github.io/build/
+
 Debugging GENie scripts
 -----------------------
 
