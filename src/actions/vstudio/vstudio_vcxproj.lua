@@ -760,14 +760,12 @@
 
 		if vs2017 and cfg.flags.FullSymbols then
 			_p(3,'<GenerateDebugInformation>DebugFull</GenerateDebugInformation>')
-		else
-			if (vs2015 or vs2017) and cfg.flags.Symbols ~= nil then
+		elseif (vs2015 or vs2017) and cfg.flags.Symbols then
 			_p(3,'<GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>')
-			else
-			_p(3,'<GenerateDebugInformation>false</GenerateDebugInformation>')
-			end
+		else
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil)) 
 		end
-
+		
 		if cfg.flags.Symbols then
 			_p(3, '<ProgramDatabaseFile>$(OutDir)%s.pdb</ProgramDatabaseFile>'
 				, path.getbasename(cfg.buildtarget.name)
