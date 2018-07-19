@@ -131,10 +131,6 @@
 			_p(2,'<CharacterSet>Unicode</CharacterSet>')
 		end
 		
-		if optimisation(cfg) ~= "Disabled" then
-			_p(2,'<WholeProgramOptimization>true</WholeProgramOptimization>')
-		end
-
 		if cfg.flags.Managed then
 			_p(2,'<CLRSupport>true</CLRSupport>')
 		end
