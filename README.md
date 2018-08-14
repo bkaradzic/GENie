@@ -127,6 +127,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added support for Nintendo Switch projects.
  - Added flags for selecting C++ standard: `Cpp11`, `Cpp14`, `Cpp17`,
    and `CppLatest`.
+ - Added `xcodeprojectopts` and `xcodetargetopts`.
 
 build - GENie build system scripts
 ----------------------------------

@@ -905,17 +905,26 @@ end
 		_p(2,'};')
 	end
 
+	local function addoptions(options, extras)
+		for _, tbl in ipairs(extras) do
+			for tkey, tval in pairs(tbl) do
+				options[tkey] = tval
+			end
+		end
+	end
 
 	function xcode.XCBuildConfiguration(tr, prj, opts)
 		_p('/* Begin XCBuildConfiguration section */')
 		for _, target in ipairs(tr.products.children) do
 			for _, cfg in ipairs(tr.configs) do
 				local values = opts.ontarget(tr, target, cfg)
+				addoptions(values, cfg.xcodetargetopts)
 				xcode.XCBuildConfiguration_Impl(tr, cfg.xcode.targetid, values, cfg)
 			end
 		end
 		for _, cfg in ipairs(tr.configs) do
 			local values = opts.onproject(tr, prj, cfg)
+			addoptions(values, cfg.xcodeprojectopts)
 			xcode.XCBuildConfiguration_Impl(tr, cfg.xcode.projectid, values, cfg)
 		end
 		_p('/* End XCBuildConfiguration section */')

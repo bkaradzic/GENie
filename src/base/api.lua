@@ -724,6 +724,18 @@
 			scope = "container",
 		},
 
+		xcodeprojectopts =
+		{
+			kind = "table",
+			scope = "config",
+		},
+
+		xcodetargetopts =
+		{
+			kind = "table",
+			scope = "config",
+		},
+
 		-- swift options
 		swiftmodulemaps =
 		{

@@ -73,6 +73,8 @@
     * [userincludedirs](#userincludedirspaths)
     * [uuid](#uuidprojectuuid)
     * [vpaths](#vpathsgroup--pattern)
+    * [xcodeprojectopts](#xcodeprojectoptskey-value)
+    * [xcodetargetopts](#xcodetargetoptskey-value)
 * Utility functions
     * [iif](#iifcondition-trueval-falseval)
     * [os.chdir](#oschdirpath)
@@ -1628,6 +1630,37 @@ vpaths {
 }
 ```
 [Back to top](#table-of-contents)
+
+---
+### xcodeprojectopts({[_key_] = _value_, ...})
+Sets XCode project options in the generated project files. [List of options.](https://gist.github.com/tkersey/39b4fe69e14b859889ffadccb009e397)
+
+#### Arguments
+_key_ - Name of the option to set
+_value_ - Value to set it to
+
+#### Examples
+```lua
+xcodeprojectopts {
+    ENABLE_BITCODE = "NO",
+    GCC_ENABLE_TRIGRAPHS = "YES",
+}
+```
+
+---
+### xcodetargetopts({[_key_] = _value_, ...})
+Sets XCode target options in the generated project files. [List of options.](https://gist.github.com/tkersey/39b4fe69e14b859889ffadccb009e397)
+
+#### Arguments
+_key_ - Name of the option to set
+_value_ - Value to set it to
+
+#### Examples
+```lua
+xcodetargetopts {
+    ALWAYS_SEARCH_USER_PATHS = "YES",
+}
+```
 
 ---
 ## Utility functions
