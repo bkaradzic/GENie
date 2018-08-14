@@ -26,11 +26,20 @@ function xcode.workspace_group(grp, indent)
 	_p(indent + 1, 'location = "container:"')
 	_p(indent + 1, 'name = "%s">', grp.name)
 
-	for _, child in ipairs(grp.groups) do
+	local function comparenames(a, b)
+		return a.name < b.name
+	end
+
+	local groups = table.join(grp.groups)
+	local projects = table.join(grp.projects)
+	table.sort(groups, comparenames)
+	table.sort(projects, comparenames)
+
+	for _, child in ipairs(groups) do
 		xcode.workspace_group(child, indent + 1)
 	end
 
-	for _, prj in ipairs(grp.projects) do
+	for _, prj in ipairs(projects) do
 		xcode.workspace_file_ref(prj, indent + 1)
 	end
 
