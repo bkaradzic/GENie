@@ -73,8 +73,8 @@
     * [userincludedirs](#userincludedirspaths)
     * [uuid](#uuidprojectuuid)
     * [vpaths](#vpathsgroup--pattern)
-    * [xcodeprojectopts](#xcodeprojectoptskey-value)
-    * [xcodetargetopts](#xcodetargetoptskey-value)
+    * [xcodeprojectopts](#xcodeprojectoptskey--value-)
+    * [xcodetargetopts](#xcodetargetoptskey--value-)
 * Utility functions
     * [iif](#iifcondition-trueval-falseval)
     * [os.chdir](#oschdirpath)
