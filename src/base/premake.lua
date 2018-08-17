@@ -25,9 +25,9 @@
 		filename = premake.project.getfilename(obj, filename)
 
 		if (premake._checkgenerate) then
-			io.capture()
+			local prev = io.capture()
 			callback(obj)
-			local new = io.endcapture()
+			local new = io.endcapture(prev)
 
 			local delta = false
 

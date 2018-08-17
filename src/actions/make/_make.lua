@@ -166,5 +166,10 @@
 
 		oncleanproject = function(prj)
 			premake.clean.file(prj, _MAKE.getmakefilename(prj, true))
-		end
+		end,
+
+		gmake = {
+			arresponsefiles = false, -- use response files for ar
+			ldresponsefiles = false, -- use response files for ld
+		}
 	}
