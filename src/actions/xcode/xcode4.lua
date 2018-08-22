@@ -281,7 +281,7 @@
 	{
 		trigger         = "xcode4",
 		shortname       = "Xcode 4",
-		description     = "Generate Apple Xcode 4 project files (experimental)",
+		description     = "Generate Apple Xcode 4 project files",
 		os              = "macosx",
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
