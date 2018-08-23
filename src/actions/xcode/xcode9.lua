@@ -7,7 +7,6 @@
 	premake.xcode9 = { }
 
 	local xcode  = premake.xcode
-	local xcode4 = premake.xcode4
 	local xcode8 = premake.xcode8
 	local xcode9 = premake.xcode9
 
@@ -41,7 +40,7 @@
 		xcode.PBXVariantGroup(tr)
 		xcode.PBXTargetDependency(tr)
 		xcode.XCBuildConfiguration(tr, prj, {
-			ontarget = xcode4.XCBuildConfiguration_Target,
+			ontarget = xcode8.XCBuildConfiguration_Target,
 			onproject = xcode9.XCBuildConfiguration_Project,
 		})
 		xcode.XCBuildConfigurationList(tr)

@@ -7,7 +7,7 @@
 	premake.xcode10 = { }
 
 	local xcode  = premake.xcode
-	local xcode4 = premake.xcode4
+	local xcode8 = premake.xcode8
 	local xcode9 = premake.xcode9
 	local xcode10 = premake.xcode10
 
@@ -27,7 +27,7 @@
 	end
 
 	function xcode10.XCBuildConfiguration_Target(tr, target, cfg)
-		local options = xcode4.XCBuildConfiguration_Target(tr, target, cfg)
+		local options = xcode8.XCBuildConfiguration_Target(tr, target, cfg)
 
 		if not cfg.flags.ObjcARC then
 			options.CLANG_ENABLE_OBJC_WEAK = "YES"
