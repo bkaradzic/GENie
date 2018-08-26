@@ -13,6 +13,10 @@
 	function xcode9.XCBuildConfiguration_Project(tr, prj, cfg)
 		local options = xcode8.XCBuildConfiguration_Project(tr, prj, cfg)
 
+		if cfg.flags.Cpp17 or cfg.flags.CppLatest then
+			options.CLANG_CXX_LANGUAGE_STANDARD = "c++17"
+		end
+
 		return table.merge(options, {
 			CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = "YES",
 			CLANG_WARN_COMMA = "YES",

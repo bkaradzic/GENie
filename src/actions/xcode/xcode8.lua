@@ -252,6 +252,19 @@
 			options.WARNING_CFLAGS = "-Wall"
 		end
 
+		if cfg.flags.Cpp11 then
+			options.CLANG_CXX_LANGUAGE_STANDARD = "c++11"
+		elseif cfg.flags.Cpp14 or cfg.flags.CppLatest then
+			options.CLANG_CXX_LANGUAGE_STANDARD = "c++14"
+		elseif cfg.flags.Cpp17 then
+			-- XCode8 does not support C++17, but other actions use this as
+			-- base that *do* support C++17, so check if this is the current
+			-- action before erroring.
+			if premake.action.current() == premake.action.get("xcode8") then
+				error("XCode8 does not support C++17.")
+			end
+		end
+
 		for _, val in ipairs(premake.xcode.parameters) do
 			local eqpos = string.find(val, "=")
 			if eqpos ~= nil then
