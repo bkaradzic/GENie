@@ -46,6 +46,7 @@
     * [newoption](#newoptionsdescription)
     * [nopch](#nopch)
     * [objdir](#objdirpath)
+    * [options](#optionsoptions)
     * [pchheader](#pchheaderfile)
     * [pchsource](#pchsourcefile)
     * [platforms](#platformsidentifiers)
@@ -1060,6 +1061,23 @@ configuration "Debug"
 configuration "Release"
     objdir "../obj_release"
 ```
+[Back to top](#table-of-contents)
+
+---
+### options({_options_...})
+Specifies build flags to modify the compiling or linking process. This differs from `flags` in
+that these are set per project rather than per configuration.
+
+**Scope:** solutions, projects
+
+#### Arguments
+_options_ - List of option names from list below. Names are case-insensitive and ignored if not supported on a platform.
+
+* _ArchiveSplit_ - Split arguments to the gmake archiver across multiple invocations, if there are too many of them.
+* _ForceCPP_ - Force compiling source as C++ despite the file extension suggesting otherwise.
+* _SkipBundling_ - Disable generating bundles for Apple platforms.
+* _XcodeScheme_ - **(Experimental)** Generate an XCode scheme for this project.
+
 [Back to top](#table-of-contents)
 
 ---

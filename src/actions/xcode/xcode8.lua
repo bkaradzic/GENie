@@ -332,10 +332,13 @@
 
 		onsolution = function(sln)
 			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode.workspace_generate)
+			premake.generate(sln, "%%.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings", xcode.workspace_settings)
+			premake.generate(sln, "%%.xcworkspace/xcshareddata/xcschemes/-ALL-.xcscheme", xcode.workspace_scheme)
 		end,
 
 		onproject = function(prj)
 			premake.generate(prj, "%%.xcodeproj/project.pbxproj", xcode8.project)
+			premake.generate(prj, "%%.xcodeproj/xcshareddata/xcschemes/%%.xcscheme", xcode.project_scheme)
 		end,
 
 		oncleanproject = function(prj)

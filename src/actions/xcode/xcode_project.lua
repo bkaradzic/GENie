@@ -146,3 +146,16 @@
 
 		return tr
 	end
+
+
+--
+-- Generate the XCode scheme for the given project.
+--
+
+	function xcode.project_scheme(prj)
+		if prj.options and prj.options.XcodeScheme then
+			xcode.scheme({prj}, prj)
+		else
+			return false
+		end
+	end

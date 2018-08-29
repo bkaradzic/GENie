@@ -526,7 +526,8 @@
 				local allowed_options = {
 					ForceCPP = 1,
 					ArchiveSplit = 1,
-					SkipBundling = 1
+					SkipBundling = 1,
+					XcodeScheme = 1,
 				}
 
 				local lowervalue = value:lower()
@@ -593,7 +594,7 @@
 			kind  = "path",
 			scope = "config",
 		},
-		
+
 		applicationdatadir =
 		{
 			kind  = "path",
