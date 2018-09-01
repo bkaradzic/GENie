@@ -113,7 +113,7 @@ function new_cfg_proxy(cfg)
 		location    = new,
 		objectsdir  = path.rebase(cfg.objectsdir, old, new),
 		buildtarget = rebasekeys(table.deepcopy(cfg.buildtarget), keys, old, new),
-		linktarget  = rebasekeys(table.deepcopy(cfg.buildtarget), keys, old, new),
+		linktarget  = rebasekeys(table.deepcopy(cfg.linktarget), keys, old, new),
 	}
 	
 	v.files             = rebasearray(cfg.files, old, new)
