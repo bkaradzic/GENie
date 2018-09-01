@@ -66,7 +66,7 @@ local p     = premake
 
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
-		_p("  command = " .. link .. " -o $out @$out.rsp $all_ldflags $libs")
+		_p("  command = $pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $libs $post_build")
 		_p("  rspfile = $out.rsp")
   		_p("  rspfile_content = $all_outputfiles")
 		_p("  description = link $out")
@@ -242,6 +242,12 @@ local p     = premake
 			_p(1, "all_ldflags = " .. all_ldflags)
 			_p(1, "libs        = " .. libs)
 			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
+			if #cfg.prelinkcommands > 0 then
+				_p(1, 'pre_link = echo Running pre-link commands && ' .. table.implode(cfg.prelinkcommands, "", "", " && ") .. " && ")
+			end
+			if #cfg.postbuildcommands > 0 then
+				_p(1, 'post_build = && echo Running post-build commands && ' .. table.implode(cfg.postbuildcommands, "", "", " && "))
+			end
 		end
 
 		if cfg.kind == "StaticLib" then
