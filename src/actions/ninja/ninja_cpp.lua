@@ -72,6 +72,20 @@ local p     = premake
 		_p("  description = link $out")
 		_p("")
 
+		_p("rule exec")
+		_p("  command = $command")
+		_p("  description = Run $type commands")
+		_p("")
+
+		local prebuildsuffix = ""
+		if #cfg.prebuildcommands > 0 then
+			_p("build __prebuildcommands: exec")
+			_p(1, 'command = echo Running pre-build commands && ' .. table.implode(cfg.prebuildcommands, "", "", " && "))
+			_p(1, "type = pre-build")
+			_p("")
+		end
+
+
 		cpp.custombuildtask(prj, cfg)
 
 		cpp.dependencyRules(prj, cfg)
@@ -97,6 +111,8 @@ local p     = premake
 		local seen_commands = {}
 		local command_by_name = {}
 		local command_files = {}
+
+		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands" or ""
 
 		for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 			for _, buildtask in ipairs(custombuildtask or {}) do
@@ -167,7 +183,7 @@ local p     = premake
 				for i, dep in ipairs(cmdset[3]) do
 					deps = deps .. path.getrelative(cfg.location, dep) .. ' '
 				end
-				_p("build " .. file_out .. ': ' .. cmdset[4] .. ' ' .. file_in .. ' | ' .. deps)
+				_p("build " .. file_out .. ': ' .. cmdset[4] .. ' ' .. file_in .. ' | ' .. deps .. prebuildsuffix)
 				_p("")
 			end
 		end
@@ -202,6 +218,8 @@ local p     = premake
 	function cpp.file_rules(cfg, flags)
 		_p("# build files")
 
+		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands" or ""
+
 		for _, file in ipairs(cfg.files) do
 			_p("# FILE: " .. file)
 			if path.issourcefile(file) then
@@ -210,15 +228,15 @@ local p     = premake
 
 				local cflags = "cflags"
 				if path.isobjcfile(file) then
-					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps)
+					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps .. prebuildsuffix)
 					cflags = "objcflags"
 				elseif path.isasmfile(file) then
-					_p("build " .. objfilename .. ": cc " .. file .. extra_deps)
+					_p("build " .. objfilename .. ": cc " .. file .. extra_deps .. prebuildsuffix)
 					cflags = "asmflags"
 				elseif path.iscfile(file) and not cfg.options.ForceCPP then
-					_p("build " .. objfilename .. ": cc " .. file .. extra_deps)
+					_p("build " .. objfilename .. ": cc " .. file .. extra_deps .. prebuildsuffix)
 				else
-					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps)
+					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps .. prebuildsuffix)
 					cflags = "cxxflags"
 				end
 
@@ -238,6 +256,8 @@ local p     = premake
 		local lddeps      = ninja.list(premake.getlinks(cfg, "siblings", "fullpath"))
 		local libs        = lddeps .. " " .. ninja.list(tool.getlinkflags(cfg))
 
+		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands" or ""
+
 		local function writevars()
 			_p(1, "all_ldflags = " .. all_ldflags)
 			_p(1, "libs        = " .. libs)
@@ -253,17 +273,17 @@ local p     = premake
 		if cfg.kind == "StaticLib" then
 			local ar_flags = ninja.list(tool.getarchiveflags(cfg, cfg, false))
 			_p("# link static lib")
-			_p("build " .. cfg:getoutputfilename() .. ": ar " .. table.concat(objfiles, " ") .. " | " .. lddeps)
+			_p("build " .. cfg:getoutputfilename() .. ": ar " .. table.concat(objfiles, " ") .. " | " .. lddeps .. prebuildsuffix)
 			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
 		elseif cfg.kind == "SharedLib" then
 			local output = cfg:getoutputfilename()
 			_p("# link shared lib")
-			_p("build " .. output .. ": link " .. table.concat(objfiles, " ") .. " | " .. libs)
+			_p("build " .. output .. ": link " .. table.concat(objfiles, " ") .. " | " .. libs .. prebuildsuffix)
 			writevars()
 		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
 			_p("# link executable")
-			_p("build " .. cfg:getoutputfilename() .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps)
+			_p("build " .. cfg:getoutputfilename() .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps .. prebuildsuffix)
 			writevars()
 		else
 			p.error("ninja action doesn't support this kind of target " .. cfg.kind)
