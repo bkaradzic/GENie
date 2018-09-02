@@ -799,11 +799,13 @@
 		-- un-duplify it
 		local allfiles = {}
 		local allfilesDict = {}
-		for _, fname in ipairs(cfg.allfiles) do
-			if allfilesDict[fname] == nil then
-				if removefilesDict[fname] == nil then
-					allfilesDict[fname] = true
-					table.insert(allfiles, fname)
+		if cfg.allfiles ~= nil then
+			for _, fname in ipairs(cfg.allfiles) do
+				if allfilesDict[fname] == nil then
+					if removefilesDict[fname] == nil then
+						allfilesDict[fname] = true
+						table.insert(allfiles, fname)
+					end
 				end
 			end
 		end
