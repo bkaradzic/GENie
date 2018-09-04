@@ -1,4 +1,4 @@
---
+-- --
 -- make_cpp.lua
 -- Generate a C/C++ project makefile.
 -- Copyright (c) 2002-2013 Jason Perkins and the Premake project
@@ -18,7 +18,7 @@
 
 		-- build a list of supported target platforms that also includes a generic build
 		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
-		
+
 		-- output build configurations
 		local action = premake.action.current()
 		premake.gmake_cpp_header(prj, cc, platforms)
@@ -326,7 +326,7 @@
 		_p('  ' .. (table.contains(premake.make.override,"OBJDIR") and "override " or "") ..    'OBJDIR              = %s', _MAKE.esc(cfg.objectsdir))
 		_p('  ' .. (table.contains(premake.make.override,"TARGETDIR") and "override " or "") .. 'TARGETDIR           = %s', iif(targetDir == "", ".", targetDir))
 		_p('  ' .. (table.contains(premake.make.override,"TARGET") and "override " or "") ..    'TARGET              = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
-		_p('  DEFINES            +=%s', make.list(cc.getdefines(cfg.defines)))
+		_p('  DEFINES            +=%s', make.list(_MAKE.escquote(cc.getdefines(cfg.defines))))
 
 		local id  = make.list(cc.getincludedirs(cfg.includedirs));
 		local uid = make.list(cc.getquoteincludedirs(cfg.userincludedirs))
