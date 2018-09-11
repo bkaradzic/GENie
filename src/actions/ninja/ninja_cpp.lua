@@ -77,7 +77,6 @@ local p     = premake
 		_p("  description = Run $type commands")
 		_p("")
 
-		local prebuildsuffix = ""
 		if #cfg.prebuildcommands > 0 then
 			_p("build __prebuildcommands: exec")
 			_p(1, 'command = echo Running pre-build commands && ' .. table.implode(cfg.prebuildcommands, "", "", " && "))
@@ -85,12 +84,23 @@ local p     = premake
 			_p("")
 		end
 
+		cfg.pchheader_full = cfg.pchheader
+		for _, incdir in ipairs(cfg.includedirs) do
+			-- convert this back to an absolute path for os.isfile()
+			local abspath = path.getabsolute(path.join(cfg.project.location, cfg.shortname, incdir))
+
+			local testname = path.join(abspath, cfg.pchheader_full)
+			if os.isfile(testname) then
+				cfg.pchheader_full = path.getrelative(cfg.location, testname)
+				break
+			end
+		end
 
 		cpp.custombuildtask(prj, cfg)
 
 		cpp.dependencyRules(prj, cfg)
 
-		cpp.file_rules(cfg, flags)
+		cpp.file_rules(prj, cfg, flags)
 
 		local objfiles = {}
 
@@ -191,6 +201,8 @@ local p     = premake
 
 	function cpp.dependencyRules(prj, cfg)
 		local extra_deps = {}
+		local order_deps = {}
+		local extra_flags = {}
 
 		for _, dependency in ipairs(prj.dependency or {}) do
 			for _, dep in ipairs(dependency or {}) do
@@ -207,40 +219,90 @@ local p     = premake
 			end
 		end
 
+		local pchfilename = cfg.pchheader_full and cpp.pchname(cfg, cfg.pchheader_full) or ''
+		for _, file in ipairs(cfg.files) do
+			local objfilename = file == cfg.pchheader and cpp.pchname(cfg, file) or cpp.objectname(cfg, file)
+			if path.issourcefile(file) or file == cfg.pchheader then
+				if #cfg.prebuildcommands > 0 then
+					if order_deps[objfilename] == nil then
+						order_deps[objfilename] = {}
+					end
+					table.insert(order_deps[objfilename], '__prebuildcommands')
+				end
+			end
+			if path.issourcefile(file) then
+				if cfg.pchheader_full and not cfg.flags.NoPCH then
+					local nopch = table.icontains(prj.nopch, file)
+					if not nopch then
+						local suffix = path.isobjcfile(file) and '_objc' or ''
+						if extra_deps[objfilename] == nil then
+							extra_deps[objfilename] = {}
+						end
+						table.insert(extra_deps[objfilename], pchfilename .. suffix .. ".gch")
+
+						if extra_flags[objfilename] == nil then
+							extra_flags[objfilename] = {}
+						end
+						table.insert(extra_flags[objfilename], '-include ' .. pchfilename .. suffix)
+					end
+				end
+			end
+		end
+
 		-- store prepared deps for file_rules() phase
 		cfg.extra_deps = extra_deps
+		cfg.order_deps = order_deps
+		cfg.extra_flags = extra_flags
 	end
 
 	function cpp.objectname(cfg, file)
 		return path.join(cfg.objectsdir, path.trimdots(path.removeext(file)) .. ".o")
 	end
 
-	function cpp.file_rules(cfg, flags)
-		_p("# build files")
+	function cpp.pchname(cfg, file)
+		return path.join(cfg.objectsdir, path.trimdots(file))
+	end
 
-		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands" or ""
+	function cpp.file_rules(prj,cfg, flags)
+		_p("# build files")
 
 		for _, file in ipairs(cfg.files) do
 			_p("# FILE: " .. file)
-			if path.issourcefile(file) then
+			if cfg.pchheader_full == file then
+				local pchfilename = cpp.pchname(cfg, file)
+				local extra_deps = #cfg.extra_deps and '| ' .. table.concat(cfg.extra_deps[pchfilename] or {}, ' ') or ''
+				local order_deps = #cfg.order_deps and '|| ' .. table.concat(cfg.order_deps[pchfilename] or {}, ' ') or ''
+				local extra_flags = #cfg.extra_flags and ' ' .. table.concat(cfg.extra_flags[pchfilename] or {}, ' ') or ''
+				_p("build " .. pchfilename .. ".gch : cxx " .. file .. extra_deps .. order_deps)
+				_p(1, "flags    = " .. flags['cxxflags'] .. extra_flags .. iif(prj.language == "C", "-x c-header", "-x c++-header"))
+				_p(1, "includes = " .. flags.includes)
+				_p(1, "defines  = " .. flags.defines)
+
+				_p("build " .. pchfilename .. "_objc.gch : cxx " .. file .. extra_deps .. order_deps)
+				_p(1, "flags    = " .. flags['objcflags'] .. extra_flags .. iif(prj.language == "C", "-x objective-c-header", "-x objective-c++-header"))
+				_p(1, "includes = " .. flags.includes)
+				_p(1, "defines  = " .. flags.defines)
+			elseif path.issourcefile(file) then
 				local objfilename = cpp.objectname(cfg, file)
 				local extra_deps = #cfg.extra_deps and '| ' .. table.concat(cfg.extra_deps[objfilename] or {}, ' ') or ''
-
+				local order_deps = #cfg.order_deps and '|| ' .. table.concat(cfg.order_deps[objfilename] or {}, ' ') or ''
+				local extra_flags = #cfg.extra_flags and ' ' .. table.concat(cfg.extra_flags[objfilename] or {}, ' ') or ''
+		
 				local cflags = "cflags"
 				if path.isobjcfile(file) then
-					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps .. prebuildsuffix)
+					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps .. order_deps)
 					cflags = "objcflags"
 				elseif path.isasmfile(file) then
-					_p("build " .. objfilename .. ": cc " .. file .. extra_deps .. prebuildsuffix)
+					_p("build " .. objfilename .. ": cc " .. file .. extra_deps .. order_deps)
 					cflags = "asmflags"
 				elseif path.iscfile(file) and not cfg.options.ForceCPP then
-					_p("build " .. objfilename .. ": cc " .. file .. extra_deps .. prebuildsuffix)
+					_p("build " .. objfilename .. ": cc " .. file .. extra_deps .. order_deps)
 				else
-					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps .. prebuildsuffix)
+					_p("build " .. objfilename .. ": cxx " .. file .. extra_deps .. order_deps)
 					cflags = "cxxflags"
 				end
-
-				_p(1, "flags    = " .. flags[cflags])
+	
+				_p(1, "flags    = " .. flags[cflags] .. extra_flags)
 				_p(1, "includes = " .. flags.includes)
 				_p(1, "defines  = " .. flags.defines)
 			elseif path.isresourcefile(file) then
