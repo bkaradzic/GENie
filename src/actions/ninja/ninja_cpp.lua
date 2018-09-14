@@ -338,7 +338,7 @@ local p     = premake
 			_p("build " .. cfg:getoutputfilename() .. ": ar " .. table.concat(objfiles, " ") .. " | " .. lddeps .. prebuildsuffix)
 			_p(1, "flags = " .. ninja.list(tool.getarchiveflags(cfg, cfg, false)))
 			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
-		elseif cfg.kind == "SharedLib" then
+		elseif cfg.kind == "SharedLib" or cfg.kind == "Bundle" then
 			local output = cfg:getoutputfilename()
 			_p("# link shared lib")
 			_p("build " .. output .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps .. prebuildsuffix)
