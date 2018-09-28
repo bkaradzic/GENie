@@ -79,8 +79,8 @@
 			links       { "CoreServices.framework" }
 
 		configuration { "macosx", "gmake" }
-			buildoptions { "-mmacosx-version-min=10.4" }
-			linkoptions  { "-mmacosx-version-min=10.4" }
+			buildoptions { "-mmacosx-version-min=10.6" }
+			linkoptions  { "-mmacosx-version-min=10.6" }
 
 		configuration {}
 
