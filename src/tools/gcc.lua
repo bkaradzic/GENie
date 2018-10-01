@@ -109,6 +109,12 @@
 			cxx        = "orbis-clang++",
 			ar         = "orbis-ar",
 			cppflags   = "-MMD -MP",
+		},
+		Emscripten = {
+			cc         = "$(EMSCRIPTEN)/emcc",
+			cxx        = "$(EMSCRIPTEN)/em++",
+			ar         = "$(EMSCRIPTEN)/emar",
+			cppflags   = "-MMD -MP",
 		}
 	}
 
