@@ -643,11 +643,11 @@
 		if cfg.flags.FatalWarnings then
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
-
-		if premake.action.current() == premake.action.get("vs2017") then
-			cppstandard_vs2017(cfg)
-		elseif cfg.platform == "Emscripten" then
+        
+        if cfg.platform == "Emscripten" then
 			cppstandard_emscripten(cfg)
+		elseif premake.action.current() == premake.action.get("vs2017") then
+			cppstandard_vs2017(cfg)
 		end
 
 		exceptions(cfg)
