@@ -81,7 +81,16 @@
 		return t[config.kind]
 	end
 
-
+	function vc2010.config_type_emscripten(config)
+		local t =
+		{
+			SharedLib = "DynamicLibrary", -- not allowed by Emscripten platform
+			StaticLib = "StaticLibrary",
+			ConsoleApp = "JSApplication",
+			WindowedApp = "HTMLPage"
+		}
+		return t[config.kind]
+	end
 
 	local function if_config_and_platform()
 		return 'Condition="\'$(Configuration)|$(Platform)\'==\'%s\'"'
@@ -101,6 +110,47 @@
 		return result
 	end
 
+	local function optimisation_orbis(cfg)
+		local result = "Level0"
+		for _, value in ipairs(cfg.flags) do
+			if (value == "Optimize") then
+				result = "Level2"
+			elseif (value == "OptimizeSize") then
+				result = "Levelz" -- Oz is more aggressive than Os
+			elseif (value == "OptimizeSpeed") then
+				result = "Level3"
+			end
+		end
+		return result
+	end
+    
+	local function optimisation_tegra_android(cfg)
+		local result = "O0"
+		for _, value in ipairs(cfg.flags) do
+			if (value == "Optimize") then
+				result = "O2"
+			elseif (value == "OptimizeSize") then
+				result = "Os"
+			elseif (value == "OptimizeSpeed") then
+				result = "O3"
+			end
+		end
+		return result
+	end
+
+	local function optimisation_emscripten(cfg)
+		local result = "O0"
+		for _, value in ipairs(cfg.flags) do
+			if (value == "Optimize") then
+				result = "O3"
+			elseif (value == "OptimizeSize") then
+				result = "Os"
+			elseif (value == "OptimizeSpeed") then
+				result = "O2"
+			end
+		end
+		return result
+	end
 
 --
 -- This property group describes a particular configuration: what
@@ -110,7 +160,11 @@
 	function vc2010.configurationPropertyGroup(cfg, cfginfo)
 		_p(1, '<PropertyGroup '..if_config_and_platform() ..' Label="Configuration">'
 			, premake.esc(cfginfo.name))
-		_p(2, '<ConfigurationType>%s</ConfigurationType>',vc2010.config_type(cfg))
+		if cfg.platform == "Emscripten" then
+			_p(2,'<ConfigurationType>%s</ConfigurationType>', vc2010.config_type_emscripten(cfg))
+		else
+			_p(2,'<ConfigurationType>%s</ConfigurationType>', vc2010.config_type(cfg))
+		end
 		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 
 		_p(2, '<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
@@ -334,6 +388,18 @@
 		end
 	end
 
+	local function cppstandard_emscripten(cfg)
+		if cfg.flags.CppLatest then
+			_p(3, '<CppLanguageStandard>c++17</CppLanguageStandard>')
+		elseif cfg.flags.Cpp17 then
+			_p(3, '<CppLanguageStandard>c++17</CppLanguageStandard>')
+		elseif cfg.flags.Cpp14 then
+			_p(3, '<CppLanguageStandard>c++14</CppLanguageStandard>')
+		elseif cfg.flags.Cpp11 then
+			_p(3, '<CppLanguageStandard>c++11</CppLanguageStandard>')
+		end
+	end
+
 	local function exceptions(cfg)
 		if cfg.platform == "Orbis" then
 			if cfg.flags.NoExceptions then
@@ -484,27 +550,11 @@
 		end
 
 		if cfg.platform == "Orbis" then
-			local opt = optimisation(cfg)
-			if opt == "Disabled" then
-				_p(3,'<OptimizationLevel>Level0</OptimizationLevel>')
-			elseif opt == "MinSpace" then
-				_p(3,'<OptimizationLevel>Levelz</OptimizationLevel>') -- Oz is more aggressive than Os
-			elseif opt == "MaxSpeed" then
-				_p(3,'<OptimizationLevel>Level3</OptimizationLevel>')
-			else
-				_p(3,'<OptimizationLevel>Level2</OptimizationLevel>')
-			end
+			_p(3,'<OptimizationLevel>%s</OptimizationLevel>', optimisation_orbis(cfg))
 		elseif cfg.platform == "TegraAndroid" then
-			local opt = optimisation(cfg)
-			if opt == "Disabled" then
-				_p(3,'<OptimizationLevel>O0</OptimizationLevel>')
-			elseif opt == "MinSpace" then
-				_p(3,'<OptimizationLevel>Os</OptimizationLevel>')
-			elseif opt == "MaxSpeed" then
-				_p(3,'<OptimizationLevel>O3</OptimizationLevel>')
-			else
-				_p(3,'<OptimizationLevel>O2</OptimizationLevel>')
-			end
+			_p(3,'<OptimizationLevel>%s</OptimizationLevel>', optimisation_tegra_android(cfg))
+		elseif cfg.platform == "Emscripten" then
+			_p(3,'<OptimizationLevel>%s</OptimizationLevel>', optimisation_emscripten(cfg))
 		else
 			_p(3,'<Optimization>%s</Optimization>', optimisation(cfg))
 		end
@@ -593,8 +643,10 @@
 		if cfg.flags.FatalWarnings then
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
-
-		if premake.action.current() == premake.action.get("vs2017") then
+        
+        if cfg.platform == "Emscripten" then
+			cppstandard_emscripten(cfg)
+		elseif premake.action.current() == premake.action.get("vs2017") then
 			cppstandard_vs2017(cfg)
 		end
 
@@ -1137,13 +1189,17 @@
 					-- Android and NX need a full path to an object file, not a dir.
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 					local namestyle = premake.getnamestyle(cfg)
-					if namestyle == "TegraAndroid" or namestyle == "NX" then
+					if namestyle == "TegraAndroid" or namestyle == "NX" or namestyle == "Emscripten" then
 						_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s.o</ObjectFileName>', premake.esc(vsconfig.name), premake.esc(path.translate(path.trimdots(path.removeext(file.name)))) )
 					else
 						if disambiguation > 0 then
 							_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s\\</ObjectFileName>', premake.esc(vsconfig.name), tostring(disambiguation))
 						end
 					end
+				end
+                
+				if path.iscfile(file.name) then
+					_p(3, '<CppLanguageStandard>Default</CppLanguageStandard>')
 				end
 
 				if path.iscxfile(file.name) then
