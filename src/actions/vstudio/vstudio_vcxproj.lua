@@ -1352,8 +1352,11 @@
 		end
 
 		for _, ref in ipairs(prj.vsimportreferences) do
-			local iprj = premake.vstudio.getimportprj(ref, prj.solution)
-			_p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
+			-- Convert the path from being relative to the project to being
+			-- relative to the solution, for lookup.
+			local slnrelpath = path.rebase(ref, prj.location, sln.location)
+			local iprj = premake.vstudio.getimportprj(slnrelpath, prj.solution)
+			_p(2,'<ProjectReference Include=\"%s\">', ref)
 			_p(3,'<Project>{%s}</Project>', iprj.uuid)
 			_p(2,'</ProjectReference>')
 		end
