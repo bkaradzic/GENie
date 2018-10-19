@@ -213,6 +213,7 @@
 					NoManifest = 1,
 					NoMultiProcessorCompilation = 1,
 					NoNativeWChar = 1,
+					NoOptimizeLink = 1,
 					NoPCH = 1,
 					NoRTTI = 1,
 					NoRuntimeChecks = 1,
@@ -240,6 +241,7 @@
 
 				local englishToAmericanSpelling =
 				{
+				    nooptimiselink = 'nooptimizelink',
 					optimise = 'optimize',
 					optimisesize = 'optimizesize',
 					optimisespeed = 'optimizespeed',

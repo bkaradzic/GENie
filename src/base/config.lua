@@ -65,7 +65,7 @@
 
 	function premake.config.isincrementallink(cfg)
 		if cfg.kind == "StaticLib"
-				or config.isoptimizedbuild(cfg.flags)
+				or config.islinkeroptimizedbuild(cfg.flags)
 				or cfg.flags.NoIncrementalLink then
 			return false
 		end
@@ -75,11 +75,19 @@
 
 --
 -- Determine if this configuration uses one of the optimize flags.
--- Optimized builds get different treatment, such as full linking
--- instead of incremental.
 --
 
 	function premake.config.isoptimizedbuild(flags)
 		return flags.Optimize or flags.OptimizeSize or flags.OptimizeSpeed
 	end
 
+
+--
+-- Determine if this configuration uses one of the optimize flags.
+-- Optimized builds get different treatment, such as full linking
+-- instead of incremental.
+--
+
+	function premake.config.islinkeroptimizedbuild(flags)
+		return config.isoptimizedbuild(flags) and not flags.NoOptimizeLink
+	end

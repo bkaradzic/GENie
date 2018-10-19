@@ -157,7 +157,7 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 		if (cfg.flags.C7DebugInfo) then
 			table.insert(compileroptions, '/Z7')
 		else
-			if (premake.config.isoptimizedbuild(cfg.flags)
+			if (premake.config.islinkeroptimizedbuild(cfg.flags)
 				or cfg.flags.NoEditAndContinue) then
 				table.insert(compileroptions, '/Zi')
 			else
@@ -354,7 +354,7 @@ local function binary(prj, cfg, useconfig, bintype, commonbasepath)
 		table.insert(linkeroptions, '/DEBUG')
 	end
 
-	if premake.config.isoptimizedbuild(cfg.flags) then
+	if premake.config.islinkeroptimizedbuild(cfg.flags) then
 		table.insert(linkeroptions, '/OPT:REF')
 		table.insert(linkeroptions, '/OPT:ICF')
 	end
