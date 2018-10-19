@@ -153,7 +153,7 @@
 			end
 		end
 
-		if cfg.platform == "NX64" then		
+		if cfg.platform == "NX64" then
 			_p(2,'<NintendoSdkRoot>$(NINTENDO_SDK_ROOT)</NintendoSdkRoot>')
 			_p(2,'<NintendoSdkSpec>NX</NintendoSdkSpec>')
 			--TODO: Allow specification of the 'Develop' build type
@@ -416,7 +416,7 @@
 				debug_info = "OldStyle"
 			elseif (action.vstudio.supports64bitEditContinue == false and cfg.platform == "x64")
 				or cfg.flags.Managed
-				or premake.config.isoptimizedbuild(cfg.flags)
+				or premake.config.islinkeroptimizedbuild(cfg.flags)
 				or cfg.flags.NoEditAndContinue
 			then
 				debug_info = "ProgramDatabase"
@@ -765,9 +765,16 @@
 				)
 		end
 
-		if premake.config.isoptimizedbuild(cfg.flags) then
-			_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
-			_p(3,'<OptimizeReferences>true</OptimizeReferences>')
+		if premake.config.islinkeroptimizedbuild(cfg.flags) then
+			if cfg.platform == "Orbis" then
+				_p(3,'<DataStripping>StripFuncsAndData</DataStripping>')
+				_p(3,'<DuplicateStripping>true</DuplicateStripping>')
+			else
+				_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
+				_p(3,'<OptimizeReferences>true</OptimizeReferences>')
+			end
+		elseif cfg.platform == "Orbis" and not cfg.flags.NoEditAndContinue then
+			_p(3,'<EditAndContinue>true</EditAndContinue>')
 		end
 
 		if cfg.finalizemetasource ~= nil then
