@@ -272,6 +272,18 @@
 	end
 
 --
+-- Get the arguments for whole-archive linking.
+--
+
+	function premake.gcc.wholearchive(lib)
+		if premake.gcc.llvm then
+			return {"-force_load", lib}
+		else
+			return {"-Wl,--whole-archive", lib, "-Wl,--no-whole-archive"}
+		end
+	end
+
+--
 -- Get flags for passing to AR before the target is appended to the commandline
 --  prj: project
 --  cfg: configuration

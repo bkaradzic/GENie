@@ -85,7 +85,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
+		_p('$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
@@ -453,10 +453,35 @@
 --
 
 	function cpp.linker(prj, cfg, cc)
-		-- Patch #3401184 changed the order
-		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
+		local libdeps
+		local lddeps
 
-		_p('  LDDEPS             +=%s', make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath"))))
+		if #cfg.wholearchive > 0 then
+			libdeps = {}
+			lddeps  = {}
+
+			for _, linkcfg in ipairs(premake.getlinks(cfg, "siblings", "object")) do
+				local linkpath = path.rebase(linkcfg.linktarget.fullpath, linkcfg.location, cfg.location)
+
+				if table.icontains(cfg.wholearchive, linkcfg.project.name) then
+					lddeps = table.join(lddeps, cc.wholearchive(linkpath))
+				else
+					table.insert(lddeps, linkpath)
+				end
+
+				table.insert(libdeps, linkpath)
+			end
+
+			libdeps = make.list(_MAKE.esc(libdeps))
+			lddeps  = make.list(_MAKE.esc(lddeps))
+		else
+			libdeps = make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath")))
+			lddeps  = libdeps
+		end
+
+		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
+		_p('  LIBDEPS            +=%s', libdeps)
+		_p('  LDDEPS             +=%s', lddeps)
 		_p('  LIBS               += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
 		_p('  EXTERNAL_LIBS      +=%s', make.list(cc.getlibfiles(cfg)))
 		_p('  LINKOBJS            = %s', (cfg.objresponsepath and ("@" .. cfg.objresponsepath) or "$(OBJECTS)"))
@@ -469,15 +494,8 @@
 				_p('  LINKCMD_NDX         = $(AR) %s $(TARGET)', make.list(cc.getarchiveflags(prj, cfg, true)))
 			end
 		else
-
-			-- this was $(TARGET) $(LDFLAGS) $(OBJECTS)
-			--   but had trouble linking to certain static libs; $(OBJECTS) moved up
-			-- $(LDFLAGS) moved to end (http://sourceforge.net/p/premake/patches/107/)
-			-- $(LIBS) moved to end (http://sourceforge.net/p/premake/bugs/279/)
-
 			local tool = iif(cfg.language == "C", "CC", "CXX")
 			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
-
 		end
 	end
 
