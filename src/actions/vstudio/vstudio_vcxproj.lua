@@ -696,6 +696,51 @@
 		return #files > 0
 	end
 
+	local function getcfglinks(cfg)
+		local haswholearchive = #cfg.wholearchive > 0
+		local msvcnaming 	  = premake.getnamestyle(cfg) == "windows"
+		local iscppprj   	  = premake.iscppproject(cfg)
+		local isnetprj   	  = premake.isdotnetproject(cfg)
+		local linkobjs   	  = {}
+		local links      	  = iif(haswholearchive
+			, premake.getlinks(cfg, "all", "object")
+			, premake.getlinks(cfg, "system", "fullpath")
+			)
+
+		for _, link in ipairs(links) do
+			local name      = nil
+			local directory = nil
+			local whole     = nil
+
+			if type(link) == "table" then
+				-- project config
+				name      = link.linktarget.basename
+				directory = path.rebase(link.linktarget.directory, link.location, cfg.location)
+				whole     = table.icontains(cfg.wholearchive, link.project.name)
+			else
+				-- link name
+				name      = link
+				whole     = table.icontains(cfg.wholearchive, link)
+			end
+
+			if name then
+				-- If we called premake.getlinks with "object", we need to
+				-- re-add the file extensions since it didn't do it for us.
+				if haswholearchive and msvcnaming then
+					if iscppprj then
+						name = name .. ".lib"
+					elseif isnetprj then
+						name = name .. ".dll"
+					end
+				end
+
+				table.insert(linkobjs, {name=name, directory=directory, wholearchive=whole})
+			end
+		end
+
+		return linkobjs
+	end
+
 	local function vs10_masm(prj, cfg)
 		if hasmasmfiles(prj) then
 			_p(2, '<MASM>')
@@ -749,6 +794,7 @@
 
 	function vc2010.link(cfg)
 		local vs2017 = premake.action.current() == premake.action.get("vs2017")
+		local links  = getcfglinks(cfg)
 
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
@@ -782,14 +828,9 @@
 		end
 
 		if cfg.kind ~= 'StaticLib' then
-			vc2010.additionalDependencies(3,cfg)
+			vc2010.additionalDependencies(3, cfg, links)
+			vc2010.additionalLibraryDirectories(3, cfg, links)
 			_p(3,'<OutputFile>$(OutDir)%s</OutputFile>', cfg.buildtarget.name)
-
-			if #cfg.libdirs > 0 then
-				_p(3,'<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
-					, premake.esc(path.translate(table.concat(cfg.libdirs, ';'), '\\'))
-					)
-			end
 
 			if vc2010.config_type(cfg) == 'Application' and not cfg.flags.WinMain and not cfg.flags.Managed then
 				if cfg.flags.Unicode then
@@ -821,8 +862,31 @@
 		end
 
 		_p(2,'</Link>')
+
+		-- If any libraries are to be linked as whole archive, we need to
+		-- handle the linking manually, since there is no project configuration
+		-- option for that.
+		if #cfg.wholearchive > 0 then
+			_p(2, '<ProjectReference>')
+			_p(3, '<LinkLibraryDependencies>false</LinkLibraryDependencies>')
+			_p(2, '</ProjectReference>')
+		end
 	end
 
+
+	function vc2010.additionalLibraryDirectories(tab, cfg, links)
+		local dirs = cfg.libdirs
+
+		for _, link in ipairs(links) do
+			if link.directory and not table.icontains(dirs, link.directory) then
+				table.insert(dirs, link.directory)
+			end
+		end
+
+		_p(tab, '<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
+			, premake.esc(path.translate(table.concat(dirs, ';'), '\\'))
+			)
+	end
 
 --
 -- Generate the <Link/AdditionalDependencies> element, which links in system
@@ -830,16 +894,31 @@
 -- by an <ItemGroup/ProjectReference>).
 --
 
-	function vc2010.additionalDependencies(tab,cfg)
-		local links = premake.getlinks(cfg, "system", "fullpath")
+	function vc2010.additionalDependencies(tab, cfg, links)
 		if #links > 0 then
 			local deps = ""
+
 			if cfg.platform == "Orbis" then
-				for _, v in ipairs(links) do
-					deps = deps .. "-l" .. v .. ";"
+				local iswhole = false
+				for _, link in ipairs(links) do
+					if link.wholearchive and not iswhole then
+						deps = deps .. "--whole-archive;"
+						iswhole = true
+					elseif not link.wholearchive and iswhole then
+						deps = deps .. "--no-whole-archive;"
+						iswhole = false
+					end
+
+					deps = deps .. "-l" .. link.name .. ";"
 				end
 			else
-				deps = table.concat(links, ";")
+				for _, link in ipairs(links) do
+					if link.wholearchive then
+						deps = deps .. "/WHOLEARCHIVE:" .. link.name .. ";"
+					else
+						deps = deps .. link.name .. ";"
+					end
+				end
 			end
 
 			-- On Android, we need to shove a linking group in to resolve libs

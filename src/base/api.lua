@@ -739,6 +739,12 @@
 			scope = "config",
 		},
 
+		wholearchive =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
 		-- swift options
 		swiftmodulemaps =
 		{

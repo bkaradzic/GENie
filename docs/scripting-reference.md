@@ -76,6 +76,7 @@
     * [vpaths](#vpathsgroup--pattern)
     * [xcodeprojectopts](#xcodeprojectoptskey--value-)
     * [xcodetargetopts](#xcodetargetoptskey--value-)
+    * [wholearchive](#wholearchivereferences)
 * Utility functions
     * [iif](#iifcondition-trueval-falseval)
     * [os.chdir](#oschdirpath)
@@ -1664,6 +1665,7 @@ xcodeprojectopts {
     GCC_ENABLE_TRIGRAPHS = "YES",
 }
 ```
+[Back to top](#table-of-contents)
 
 ---
 ### xcodetargetopts({[_key_] = _value_, ...})
@@ -1679,6 +1681,35 @@ xcodetargetopts {
     ALWAYS_SEARCH_USER_PATHS = "YES",
 }
 ```
+[Back to top](#table-of-contents)
+
+---
+### wholearchive({_references_...})
+Specifies a list of libraries to link without stripping unreferenced object files. The libraries must have already been added using `links`, and the same identifier must be specified.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_references_ - list of library and project names
+
+#### Examples
+```lua
+project "static_lib"
+    kind "StaticLib"
+
+project "console_app"
+    kind "ConsoleApp"
+    links { "static_lib" }
+    wholearchive { "static_lib" }
+```
+
+#### References
+* [Clang documentation](https://clang.llvm.org/docs/ClangCommandLineReference.html#cmdoption-clang2-force-load)
+* [GNU documentation](https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_node/ld_3.html#IDX183)
+* [Microsoft documentation](https://docs.microsoft.com/en-us/cpp/build/reference/wholearchive-include-all-library-object-files?view=vs-2017)
+
+[Back to top](#table-of-contents)
+
 
 ---
 ## Utility functions
