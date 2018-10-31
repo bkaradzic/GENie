@@ -16,6 +16,7 @@
     * [configuration](#configurationkeywords)
     * [configurations](#configurationsnames)
     * [custombuildtask](#custombuildtasktask)
+    * [debugcmd](#debugcmd)
     * [debugargs](#debugargsargs)
     * [debugdir](#debugdirpath)
     * [defines](#definessymbols)
@@ -386,6 +387,26 @@ custombuildtask {
     }
 ```
 
+[Back to top](#table-of-contents)
+
+---
+### debugcmd(cmd)
+Specifies a command to execute when running under the debugger instead of the build target.
+
+**Note:** Not implemented for Xcode 3, where it must be configured in a per-user config file.
+
+**Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_cmd_ - the command to execute when starting with the debugger
+
+#### Examples
+```lua
+configuration 'TestConfig'
+    debugcmd 'D:\Apps\Test.exe'
+```
 [Back to top](#table-of-contents)
 
 ---
