@@ -16,7 +16,7 @@
     * [configuration](#configurationkeywords)
     * [configurations](#configurationsnames)
     * [custombuildtask](#custombuildtasktask)
-    * [debugcmd](#debugcmd)
+    * [debugcmd](#debugcmdcmd)
     * [debugargs](#debugargsargs)
     * [debugdir](#debugdirpath)
     * [defines](#definessymbols)
@@ -405,7 +405,7 @@ _cmd_ - the command to execute when starting with the debugger
 #### Examples
 ```lua
 configuration 'TestConfig'
-    debugcmd 'D:\Apps\Test.exe'
+    debugcmd 'D:\\Apps\\Test.exe'
 ```
 [Back to top](#table-of-contents)
 
