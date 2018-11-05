@@ -56,6 +56,7 @@ ifeq ($(config),release)
   ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -mmacosx-version-min=10.6
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
@@ -140,6 +141,7 @@ ifeq ($(config),debug)
   ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -mmacosx-version-min=10.6
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
@@ -225,6 +227,7 @@ ifeq ($(config),releaseuniv32)
   ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -mmacosx-version-min=10.6
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
@@ -310,6 +313,7 @@ ifeq ($(config),debuguniv32)
   ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -mmacosx-version-min=10.6
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
@@ -392,7 +396,7 @@ RESOURCES := \
 all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)

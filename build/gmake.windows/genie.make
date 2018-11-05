@@ -56,6 +56,7 @@ ifeq ($(config),release)
   ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -s
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -lole32
   EXTERNAL_LIBS      +=
@@ -140,6 +141,7 @@ ifeq ($(config),debug)
   ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"."
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -lole32
   EXTERNAL_LIBS      +=
@@ -222,7 +224,7 @@ RESOURCES := \
 all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
