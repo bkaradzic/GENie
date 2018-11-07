@@ -94,7 +94,6 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 		'"%1"',
 		'/nologo',
 		'/c',
-		'/Gy',
 		'/Gm-',
 		'/Zc:inline',
 		'/errorReport:prompt',
@@ -157,11 +156,10 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 		if (cfg.flags.C7DebugInfo) then
 			table.insert(compileroptions, '/Z7')
 		else
-			if (premake.config.islinkeroptimizedbuild(cfg.flags)
-				or cfg.flags.NoEditAndContinue) then
-				table.insert(compileroptions, '/Zi')
-			else
+			if premake.config.iseditandcontinue(cfg) then
 				table.insert(compileroptions, '/ZI')
+			else
+				table.insert(compileroptions, '/Zi')
 			end
 			local targetdir = add_trailing_backslash(cfg.buildtarget.directory)
 			table.insert(compileroptions, string.format("/Fd\"%s%s.pdb\"", targetdir, cfg.buildtarget.basename))
@@ -181,7 +179,14 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 
 	if isoptimised then
 		table.insert(compileroptions, '/GF')
+		-- Refer to vstudio.vcxproj.lua about FunctionLevelLinking
+		if cfg.flags.NoOptimizeLink and cfg.flags.NoEditAndContinue then
+			table.insert(compileroptions, '/Gy-')
+		else
+			table.insert(compileroptions, '/Gy')
+		end
 	else
+		table.insert(compileroptions, '/Gy')
 		table.insert(compileroptions, '/Od')
 		table.insert(compileroptions, '/RTC1')
 	end
