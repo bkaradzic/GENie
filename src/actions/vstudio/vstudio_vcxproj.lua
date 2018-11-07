@@ -415,9 +415,7 @@
 			if cfg.flags.C7DebugInfo then
 				debug_info = "OldStyle"
 			elseif (action.vstudio.supports64bitEditContinue == false and cfg.platform == "x64")
-				or cfg.flags.Managed
-				or premake.config.islinkeroptimizedbuild(cfg.flags)
-				or cfg.flags.NoEditAndContinue
+				or not premake.config.iseditandcontinue(cfg)
 			then
 				debug_info = "ProgramDatabase"
 			else
@@ -514,7 +512,20 @@
 		preprocessor(3, cfg)
 		minimal_build(cfg)
 
-		if not premake.config.isoptimizedbuild(cfg.flags) then
+		if premake.config.isoptimizedbuild(cfg.flags) then
+			_p(3, '<StringPooling>true</StringPooling>')
+			-- Edit and continue is unstable with release/optimized projects. If the current project
+			-- is optimized, but linker optimizations are disabled and has opted out of edit and continue
+			-- support, then ensure that function level linking is disabled. This ensures that libs that
+			-- do have edit and continue enabled don't run into undefined behavior at runtime when linking
+			-- in optimized libs.
+			if cfg.flags.NoOptimizeLink and cfg.flags.NoEditAndContinue then
+				_p(3,'<FunctionLevelLinking>false</FunctionLevelLinking>')
+			else
+				_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
+			end
+		else
+			_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
 			if cfg.flags.NoRuntimeChecks then
 				_p(3, '<BasicRuntimeChecks>Default</BasicRuntimeChecks>')
 			elseif not cfg.flags.Managed then
@@ -524,8 +535,6 @@
 			if cfg.flags.ExtraWarnings then
 --				_p(3, '<SmallerTypeCheck>true</SmallerTypeCheck>')
 			end
-		else
-			_p(3, '<StringPooling>true</StringPooling>')
 		end
 
 		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
@@ -538,7 +547,7 @@
 			_p(3, '<BufferSecurityCheck>false</BufferSecurityCheck>')
 		end
 
-		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
+
 
 		-- If we aren't running NoMultiprocessorCompilation and not wanting a minimal rebuild,
 		-- then enable MultiProcessorCompilation.
@@ -819,7 +828,7 @@
 				_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
 				_p(3,'<OptimizeReferences>true</OptimizeReferences>')
 			end
-		elseif cfg.platform == "Orbis" and not cfg.flags.NoEditAndContinue then
+		elseif cfg.platform == "Orbis" and premake.config.iseditandcontinue(cfg) then
 			_p(3,'<EditAndContinue>true</EditAndContinue>')
 		end
 
