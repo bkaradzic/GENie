@@ -96,6 +96,12 @@
 			scope = "config",
 		},
 
+		debugcmd =
+		{
+			kind = "string",
+			scope = "config",
+		},
+
 		debugargs =
 		{
 			kind = "list",

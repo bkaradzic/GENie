@@ -1494,6 +1494,10 @@
 				)
 		end
 
+		if cfg.debugcmd then
+			_p(2, '<LocalDebuggerCommand>%s</LocalDebuggerCommand>', cfg.debugcmd)
+		end
+
 		if cfg.debugargs then
 			_p(2, '<LocalDebuggerCommandArguments>%s</LocalDebuggerCommandArguments>'
 				, table.concat(cfg.debugargs, " ")
