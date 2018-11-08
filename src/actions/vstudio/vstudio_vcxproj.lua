@@ -513,19 +513,20 @@
 		minimal_build(cfg)
 
 		if premake.config.isoptimizedbuild(cfg.flags) then
-			_p(3, '<StringPooling>true</StringPooling>')
 			-- Edit and continue is unstable with release/optimized projects. If the current project
 			-- is optimized, but linker optimizations are disabled and has opted out of edit and continue
 			-- support, then ensure that function level linking is disabled. This ensures that libs that
 			-- do have edit and continue enabled don't run into undefined behavior at runtime when linking
 			-- in optimized libs.
 			if cfg.flags.NoOptimizeLink and cfg.flags.NoEditAndContinue then
-				_p(3,'<FunctionLevelLinking>false</FunctionLevelLinking>')
+				_p(3, '<StringPooling>false</StringPooling>')
+				_p(3, '<FunctionLevelLinking>false</FunctionLevelLinking>')
 			else
-				_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
+				_p(3, '<StringPooling>true</StringPooling>')
+				_p(3, '<FunctionLevelLinking>true</FunctionLevelLinking>')
 			end
 		else
-			_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
+			_p(3, '<FunctionLevelLinking>true</FunctionLevelLinking>')
 			if cfg.flags.NoRuntimeChecks then
 				_p(3, '<BasicRuntimeChecks>Default</BasicRuntimeChecks>')
 			elseif not cfg.flags.Managed then
