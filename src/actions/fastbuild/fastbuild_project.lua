@@ -178,11 +178,12 @@ local function compile(indentlevel, prj, cfg, commonbasepath)
 	end
 
 	if isoptimised then
-		table.insert(compileroptions, '/GF')
 		-- Refer to vstudio.vcxproj.lua about FunctionLevelLinking
 		if cfg.flags.NoOptimizeLink and cfg.flags.NoEditAndContinue then
+			table.insert(compileroptions, '/GF-')
 			table.insert(compileroptions, '/Gy-')
 		else
+			table.insert(compileroptions, '/GF')
 			table.insert(compileroptions, '/Gy')
 		end
 	else
