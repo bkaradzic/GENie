@@ -706,6 +706,11 @@
 		return #files > 0
 	end
 
+	local function ismanagedprj(prj, cfgname, pltname)
+		local cfg = premake.getconfig(prj, cfgname, pltname)
+		return cfg.flags.Managed == true
+	end
+
 	local function getcfglinks(cfg)
 		local haswholearchive = #cfg.wholearchive > 0
 		local msvcnaming 	  = premake.getnamestyle(cfg) == "windows"
@@ -723,10 +728,14 @@
 			local whole     = nil
 
 			if type(link) == "table" then
-				-- project config
-				name      = link.linktarget.basename
-				directory = path.rebase(link.linktarget.directory, link.location, cfg.location)
-				whole     = table.icontains(cfg.wholearchive, link.project.name)
+				-- if the link is to a managed project, we should ignore it
+				-- as managed projects don't have lib files.
+				if not ismanagedprj(link.project, cfg.name, cfg.platform) then
+					-- project config
+					name      = link.linktarget.basename
+					directory = path.rebase(link.linktarget.directory, link.location, cfg.location)
+					whole     = table.icontains(cfg.wholearchive, link.project.name)
+				end
 			else
 				-- link name
 				name      = link
