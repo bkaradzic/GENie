@@ -745,6 +745,24 @@
 			scope = "config",
 		},
 
+		xcodescriptphases =
+		{
+			kind  = "keypath",
+			scope = "config",
+		},
+
+		xcodecopyresources =
+		{
+			kind  = "keypath",
+			scope = "config",
+		},
+
+		xcodecopyframeworks =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
 		wholearchive =
 		{
 			kind  = "list",
