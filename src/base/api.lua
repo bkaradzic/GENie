@@ -757,6 +757,12 @@
 			scope = "project",
 		},
 
+		xcodecopyframeworks =
+		{
+			kind  = "filelist",
+			scope = "project",
+		},
+
 		wholearchive =
 		{
 			kind  = "list",
