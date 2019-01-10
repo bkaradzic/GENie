@@ -1140,16 +1140,20 @@
 		if #files > 0  then
 			_p(1,'<ItemGroup>')
 			local groupedBuildTasks = {}
+			local buildTaskNames = {}
+
 			for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 				for _, buildtask in ipairs(custombuildtask or {}) do
 					if (groupedBuildTasks[buildtask[1]] == nil) then
 						groupedBuildTasks[buildtask[1]] = {}
+						table.insert(buildTaskNames, buildtask[1])
 					end
 					table.insert(groupedBuildTasks[buildtask[1]], buildtask)
 				end
 			end
 
-			for name, custombuildtask in pairs(groupedBuildTasks or {}) do
+			for _, name in ipairs(buildTaskNames) do
+				custombuildtask = groupedBuildTasks[name]
 				_p(2,'<CustomBuild Include=\"%s\">', path.translate(path.getrelative(prj.location,name), "\\"))
 				_p(3,'<FileType>Text</FileType>')
 				local cmd = ""
