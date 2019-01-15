@@ -269,6 +269,26 @@
 		return xcode.uuid(base)
 	end
 
+--
+-- Creates a label for a given scriptphase
+--  based on command and config
+-- such as the result looks like this:
+-- 'Script Phase <number> [cmd] (Config)', e.g. 'Script Phase 1 [rsync] (Debug)'
+--
+-- This function is used for generating `PBXShellScriptBuildPhase` from `xcodescriptphases`.
+-- (Thus required in more than 1 place).
+--
+-- @param cmd
+--    The command itself
+-- @param count
+--    counter to avoid having duplicate label names
+-- @param cfg
+--    The configuration the command is generated for
+--
+
+	function xcode.getscriptphaselabel(cmd, count, cfg)
+		return string.format("\"Script Phase %s [%s] (%s)\"", count, cmd:match("(%w+)(.+)"), iif(cfg, xcode.getconfigname(cfg), "all"))
+	end
 
 --
 -- Create a product tree node and all projects in a solution; assigning IDs
