@@ -848,9 +848,58 @@ end
 			doblock(id, name, commands)
 		end
 
+		local function doscriptphases(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for cmd, files in pairs(cfgcmds) do
+						local label = xcode.getcommandlabel(cmd, cfg)
+						local id = xcode.uuid(label)
+						doblock(id, label, wrapcommands({cmd}, cfg), files) -- sources
+					end
+				end
+			end
+		end
+
+		local function docopyframeworks(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgfiles = cfg[which]
+				if cfgfiles ~= nil and #cfgfiles > 0 then
+					local label = xcode.getcommandlabel("Embed Frameworks", cfg)
+					local id = xcode.uuid(label)
+					doblock(id, label, wrapcommands({"carthage copy-frameworks"}, cfg), cfgfiles) -- sources
+				end
+			end
+		end
+		
+		local function docopyresources(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for target, files in pairs(cfgcmds) do
+						local label = xcode.getcommandlabel("Copy Resources into " ..target, cfg)
+						local id = xcode.uuid(label)
+
+						-- use ${SCRIPT_INPUT_FILE_COUNT} to iterate over ${SCRIPT_INPUT_FILE_n} with n as index
+						-- "for (( i = 0; i <= ${SCRIPT_INPUT_FILE_COUNT}; i++ )) ; do rsync ${SCRIPT_INPUT_FILE_$i} " .. target .. " ; done"
+						doblock(id, label, wrapcommands({
+							"mkdir -p ${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/" .. target,
+							"rsync -amyzhv ${SCRIPT_INPUT_FILE_0} ${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/" .. target}, cfg), files)
+					end
+				end
+			end
+		end
+
 		dobuildblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
 		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
 		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		doscriptphases("xcodescriptphases")
+		docopyresources("xcodecopyresources")
+
+		if tr.project.kind == "WindowedApp" then
+			-- only for .app projects
+			docopyframeworks("xcodecopyframeworks")
+		end
 
 		if wrapperWritten then
 			_p('/* End PBXShellScriptBuildPhase section */')
