@@ -269,6 +269,23 @@
 		return xcode.uuid(base)
 	end
 
+--
+-- Creates a command label for a given command and config
+-- such as the result looks like this:
+-- 'cmd (Config)', e.g. 'rsync (Debug)'
+--
+-- This function is used for generating `PBXShellScriptBuildPhase` from `xcodescriptphases`.
+-- (Thus required in more than 1 place).
+--
+-- @param cmd
+--    The command itself
+-- @param cfg
+--    The configuration the command is generated for
+--
+
+	function xcode.getcommandlabel(cmd, cfg)
+		return "\"" .. cmd .. " (" .. xcode.getconfigname(cfg) .. ")\""
+	end
 
 --
 -- Create a product tree node and all projects in a solution; assigning IDs
