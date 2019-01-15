@@ -596,22 +596,39 @@ end
 				return false
 			end
 
+			local function dobuildblock(id, label, which, action)
+				if hasBuildCommands(which) then
+					local commandcount = 0
+					for _, cfg in ipairs(tr.configs) do
+						commandcount = commandcount + #cfg[which]
+					end
+					if commandcount > 0 then
+						action(id, label)
+					end
+				end
+			end
+
+
+
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
 			_p(3,'buildConfigurationList = %s /* Build configuration list for PBXNativeTarget "%s" */;', node.cfgsection, name)
 			_p(3,'buildPhases = (')
-			if hasBuildCommands('prebuildcommands') then
-				_p(4,'9607AE1010C857E500CD1376 /* Prebuild */,')
-			end
+			dobuildblock('9607AE1010C857E500CD1376', 'Prebuild', 'prebuildcommands', function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
 			_p(4,'%s /* Resources */,', node.resstageid)
 			_p(4,'%s /* Sources */,', node.sourcesid)
-			if hasBuildCommands('prelinkcommands') then
-				_p(4,'9607AE3510C85E7E00CD1376 /* Prelink */,')
-			end
+			dobuildblock('9607AE3510C85E7E00CD1376', 'Prelink', 'prelinkcommands', function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
 			_p(4,'%s /* Frameworks */,', node.fxstageid)
-			if hasBuildCommands('postbuildcommands') then
-				_p(4,'9607AE3710C85E8F00CD1376 /* Postbuild */,')
-			end
+			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
+
+
+
 			_p(3,');')
 			_p(3,'buildRules = (')
 			_p(3,');')
