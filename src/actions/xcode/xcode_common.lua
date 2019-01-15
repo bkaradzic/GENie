@@ -610,7 +610,23 @@ end
 				end
 			end
 
-
+			local function doscriptphases(which, action)
+				local i = 0
+				for _, cfg in ipairs(tr.configs) do
+					local cfgcmds = cfg[which]
+					if cfgcmds ~= nil then
+						for __, scripts in ipairs(cfgcmds) do
+							for ___, script in ipairs(scripts) do
+								local cmd = script[1]
+								local label = xcode.getscriptphaselabel(cmd, i, cfg)
+								local id = xcode.uuid(label)
+								action(id, label)
+								i = i + 1
+							end
+						end
+					end
+				end
+			end
 
 			local function _p_label(id, label)
 				_p(4, '%s /* %s */,', id, label)
@@ -626,6 +642,7 @@ end
 			dobuildblock('9607AE3510C85E7E00CD1376', 'Prelink', 'prelinkcommands', _p_label)
 			_p(4,'%s /* Frameworks */,', node.fxstageid)
 			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
+			doscriptphases("xcodescriptphases", _p_label)
 
 			_p(3,');')
 			_p(3,'buildRules = (')
