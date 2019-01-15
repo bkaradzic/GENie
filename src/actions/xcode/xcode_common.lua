@@ -782,7 +782,7 @@ end
 		_p('')
 	end
 
-	function xcode.PBXShellScriptBuildPhase(tr,prj)
+	function xcode.PBXShellScriptBuildPhase(tr)
 		local wrapperWritten = false
 
 		local function doblock(id, name, commands, files)
@@ -931,6 +931,10 @@ end
 		_p('')
 	end
 
+	-- copyresources leads to this
+	-- xcodeembedframeworks
+	function xcode.PBXCopyFilesBuildPhase(tr)
+	end
 
 	function xcode.PBXVariantGroup(tr)
 		_p('/* Begin PBXVariantGroup section */')
