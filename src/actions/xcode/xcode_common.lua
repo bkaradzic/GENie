@@ -593,6 +593,7 @@ end
 						return true
 					end
 				end
+				return false
 			end
 
 			_p(2,'%s /* %s */ = {', node.targetid, name)
