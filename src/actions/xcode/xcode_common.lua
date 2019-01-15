@@ -598,22 +598,35 @@ end
 				end
 			end
 
+			local function dobuildblock(id, label, which, action)
+				if hasBuildCommands(which) then
+					local commandcount = 0
+					for _, cfg in ipairs(tr.configs) do
+						commandcount = commandcount + #cfg[which]
+					end
+					if commandcount > 0 then
+						action(id, label)
+					end
+				end
+			end
+
+
+
+			local function _p_label(id, label)
+				_p(4, '%s /* %s */,', id, label)
+			end
+
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
 			_p(3,'buildConfigurationList = %s /* Build configuration list for PBXNativeTarget "%s" */;', node.cfgsection, name)
 			_p(3,'buildPhases = (')
-			if hasBuildCommands('prebuildcommands') then
-				_p(4,'9607AE1010C857E500CD1376 /* Prebuild */,')
-			end
+			dobuildblock('9607AE1010C857E500CD1376', 'Prebuild', 'prebuildcommands', _p_label)
 			_p(4,'%s /* Resources */,', node.resstageid)
 			_p(4,'%s /* Sources */,', node.sourcesid)
-			if hasBuildCommands('prelinkcommands') then
-				_p(4,'9607AE3510C85E7E00CD1376 /* Prelink */,')
-			end
+			dobuildblock('9607AE3510C85E7E00CD1376', 'Prelink', 'prelinkcommands', _p_label)
 			_p(4,'%s /* Frameworks */,', node.fxstageid)
-			if hasBuildCommands('postbuildcommands') then
-				_p(4,'9607AE3710C85E8F00CD1376 /* Postbuild */,')
-			end
+			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
+
 			_p(3,');')
 			_p(3,'buildRules = (')
 			_p(3,');')
@@ -740,27 +753,27 @@ end
 				end
 			end
 
-			if #commands > 0 then
-				if not wrapperWritten then
-					_p('/* Begin PBXShellScriptBuildPhase section */')
-					wrapperWritten = true
+				if #commands > 0 then
+					if not wrapperWritten then
+						_p('/* Begin PBXShellScriptBuildPhase section */')
+						wrapperWritten = true
+					end
+					_p(2,'%s /* %s */ = {', id, name)
+					_p(3,'isa = PBXShellScriptBuildPhase;')
+					_p(3,'buildActionMask = 2147483647;')
+					_p(3,'files = (')
+					_p(3,');')
+					_p(3,'inputPaths = (');
+					_p(3,');');
+					_p(3,'name = %s;', name);
+					_p(3,'outputPaths = (');
+					_p(3,');');
+					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+					_p(3,'shellPath = /bin/sh;');
+					_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+					_p(2,'};')
 				end
-				_p(2,'%s /* %s */ = {', id, name)
-				_p(3,'isa = PBXShellScriptBuildPhase;')
-				_p(3,'buildActionMask = 2147483647;')
-				_p(3,'files = (')
-				_p(3,');')
-				_p(3,'inputPaths = (');
-				_p(3,');');
-				_p(3,'name = %s;', name);
-				_p(3,'outputPaths = (');
-				_p(3,');');
-				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-				_p(3,'shellPath = /bin/sh;');
-				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
-				_p(2,'};')
 			end
-		end
 
 		doblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
 		doblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
