@@ -608,7 +608,42 @@ end
 				end
 			end
 
-
+			local function doscriptphases(which, action)
+				for _, cfg in ipairs(tr.configs) do
+					local cfgcmds = cfg[which]
+					if cfgcmds ~= nil then
+						for cmd, files in pairs(cfgcmds) do
+							local label = xcode.getcommandlabel(cmd, cfg)
+							local id = xcode.uuid(label)
+							action(id, label)
+						end
+					end
+				end
+			end
+	
+			local function docopyframeworks(which, action)
+				for _, cfg in ipairs(tr.configs) do
+					local cfgfiles = cfg[which]
+					if cfgfiles ~= nil and #cfgfiles > 0 then
+						local label = xcode.getcommandlabel("Embed Frameworks", cfg)
+						local id = xcode.uuid(label)
+						action(id, label)
+					end
+				end
+			end
+			
+			local function docopyresources(which, action)
+				for _, cfg in ipairs(tr.configs) do
+					local cfgcmds = cfg[which]
+					if cfgcmds ~= nil then
+						for target, files in pairs(cfgcmds) do
+							local label = xcode.getcommandlabel("Copy Resources into " ..target, cfg)
+							local id = xcode.uuid(label)
+							action(id, label)
+						end
+					end
+				end
+			end
 
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
@@ -627,7 +662,18 @@ end
 				_p(4, id .. ' /* ' .. label .. '*/,')
 			end)
 
-
+			doscriptphases("xcodescriptphases", function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
+			docopyresources("xcodecopyresources", function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
+			if node.cfg.kind == "WindowedApp" then
+				-- framework embedding makes only sense for .app projects
+				docopyframeworks("xcodecopyframeworks", function(id, label)
+					_p(4, id .. ' /* ' .. label .. '*/,')
+				end)
+			end
 
 			_p(3,');')
 			_p(3,'buildRules = (')
