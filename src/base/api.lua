@@ -747,13 +747,13 @@
 
 		xcodescriptphases =
 		{
-			kind  = "keypath",
+			kind  = "table",
 			scope = "config",
 		},
 
 		xcodecopyresources =
 		{
-			kind  = "keypath",
+			kind  = "table",
 			scope = "config",
 		},
 
