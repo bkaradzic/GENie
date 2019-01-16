@@ -759,7 +759,7 @@
 
 		xcodecopyframeworks =
 		{
-			kind  = "list",
+			kind  = "filelist",
 			scope = "config",
 		},
 
