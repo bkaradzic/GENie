@@ -612,8 +612,9 @@ end
 				for _, cfg in ipairs(tr.configs) do
 					local cfgcmds = cfg[which]
 					if cfgcmds ~= nil then
-						for cmd, files in pairs(cfgcmds) do
-							local label = xcode.getcommandlabel(cmd, cfg)
+						for i, script in ipairs(cfgcmds) do
+							local cmd = script[1][1]
+							local label = xcode.getcommandlabel(cmd .. ' [' .. i .. ']', cfg)
 							local id = xcode.uuid(label)
 							action(id, label)
 						end
@@ -636,8 +637,9 @@ end
 				for _, cfg in ipairs(tr.configs) do
 					local cfgcmds = cfg[which]
 					if cfgcmds ~= nil then
-						for target, files in pairs(cfgcmds) do
-							local label = xcode.getcommandlabel("Copy Resources into " ..target, cfg)
+						for i, targetAndfiles in ipairs(cfgcmds) do
+							local target = targetAndfiles[1][1]
+							local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target, cfg)
 							local id = xcode.uuid(label)
 							action(id, label)
 						end
@@ -852,8 +854,10 @@ end
 			for _, cfg in ipairs(tr.configs) do
 				local cfgcmds = cfg[which]
 				if cfgcmds ~= nil then
-					for cmd, files in pairs(cfgcmds) do
-						local label = xcode.getcommandlabel(cmd, cfg)
+					for i, script in ipairs(cfgcmds) do
+						local cmd = script[1][1]
+						local files = script[1][2]
+						local label = xcode.getcommandlabel(cmd .. ' [' .. i .. ']', cfg)
 						local id = xcode.uuid(label)
 						doblock(id, label, wrapcommands({cmd}, cfg), files) -- sources
 					end
@@ -876,8 +880,10 @@ end
 			for _, cfg in ipairs(tr.configs) do
 				local cfgcmds = cfg[which]
 				if cfgcmds ~= nil then
-					for target, files in pairs(cfgcmds) do
-						local label = xcode.getcommandlabel("Copy Resources into " ..target, cfg)
+					for i, targetAndFiles in ipairs(cfgcmds) do
+						local target = targetAndFiles[1][1]
+						local files = targetAndFiles[1][2]
+						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target, cfg)
 						local id = xcode.uuid(label)
 
 						-- use ${SCRIPT_INPUT_FILE_COUNT} to iterate over ${SCRIPT_INPUT_FILE_n} with n as index
