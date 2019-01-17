@@ -12,12 +12,17 @@
 -- @param node
 --    The node to identify.
 -- @returns
---    An Xcode build category, one of "Sources", "Resources", "Frameworks", or nil.
+--    An Xcode build category, one of "Sources", "Resources", "Frameworks", or "CopyFiles".
 --
 
 	function xcode.getbuildcategory(node)
 		local categories = {
 			[".a"] = "Frameworks",
+			[".h"] = "Sources",
+			[".hh"] = "Sources",
+			[".hpp"] = "Sources",
+			[".hxx"] = "Sources",
+			[".inl"] = "Sources",
 			[".c"] = "Sources",
 			[".cc"] = "Sources",
 			[".cpp"] = "Sources",
@@ -40,9 +45,10 @@
 			[".xcdatamodeld"] = "Sources",
 			[".swift"] = "Sources",
 		}
-		return categories[path.getextension(node.name)]
+		local cat = categories[path.getextension(node.name)]
+		cat = iif(cat, cat, categories[string.lower(path.getextension(node.name))])
+		return iif(cat, cat, "CopyFiles")
 	end
-
 
 --
 -- Return the displayed name for a build configuration, taking into account the
@@ -378,6 +384,12 @@ end
 		tree.traverse(tr, {
 			onnode = function(node)
 				if node.buildid then
+					if xcode.isframework(node.name) then
+						-- and TODO: find in tr.config[].xcodecopyframeworks
+						print('adding extra entry for framework copy', node.name)
+						_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };',
+							xcode.uuid(node.buildid .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name)
+					end
 					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
 						node.buildid, node.name, xcode.getbuildcategory(node), node.id, node.name)
 				end
@@ -438,6 +450,7 @@ end
 				else
 					local pth, src
 					if xcode.isframework(node.path) then
+						print(node.path)
 						--respect user supplied paths
 						-- look for special variable-starting paths for different sources
 						local nodePath = node.path
@@ -449,7 +462,10 @@ end
 						end
 						if string.find(nodePath,'/')  then
 							if string.find(nodePath,'^%.')then
-								error('relative paths are not currently supported for frameworks')
+							--	error('relative paths are not currently supported for frameworks')
+								print('tr.project.location', tr.project.location)
+								--print('node.parent.project.location', node.parent.project.location)
+								nodePath = path.getabsolute(path.join(tr.project.location, nodePath))
 							end
 							pth = nodePath
 						elseif path.getextension(nodePath)=='.tbd' then
@@ -457,6 +473,7 @@ end
 						else
 							pth = "/System/Library/Frameworks/" .. nodePath
 						end
+						print('dbg: framework path', pth)
 						-- if it starts with a variable, use that as the src instead
 						if variable then
 							src = variable
@@ -484,6 +501,8 @@ end
 					if (not prj.options.ForceCPP) then
 						_p(2,'%s /* %s */ = {isa = PBXFileReference; lastKnownFileType = %s; name = "%s"; path = "%s"; sourceTree = "%s"; };',
 							node.id, node.name, xcode.getfiletype(node), node.name, pth, src)
+					-- TODO elseif xcode.isframework(node.path) then
+					-- set SETTINGS flag
 					else
 						_p(2,'%s /* %s */ = {isa = PBXFileReference; explicitFileType = %s; name = "%s"; path = "%s"; sourceTree = "%s"; };',
 							node.id, node.name, xcode.getfiletypeForced(node), node.name, pth, src)
@@ -799,6 +818,7 @@ end
 					_p(3,'isa = PBXShellScriptBuildPhase;')
 					_p(3,'buildActionMask = 2147483647;')
 					_p(3,'files = (')
+					-- TODO ?
 					_p(3,');')
 					_p(3,'inputPaths = (');
 					if files ~= nil then
@@ -900,11 +920,11 @@ end
 		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
 		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
 		doscriptphases("xcodescriptphases")
-		docopyresources("xcodecopyresources")
+		--docopyresources("xcodecopyresources")
 
 		if tr.project.kind == "WindowedApp" then
 			-- only for .app projects
-			docopyframeworks("xcodecopyframeworks")
+			--docopyframeworks("xcodecopyframeworks")
 		end
 
 		if wrapperWritten then
@@ -940,6 +960,101 @@ end
 	-- copyresources leads to this
 	-- xcodeembedframeworks
 	function xcode.PBXCopyFilesBuildPhase(tr)
+		local wrapperWritten = false
+
+		local function doblock(id, name, folderSpec, path, category, files)
+			-- note: folder spec:
+			-- 0: Absolute Path
+			-- 1: Wrapper
+			-- 6: Executables
+			-- 7: Resources
+			-- 10: Frameworks
+			-- 16: Products Directory
+			-- category: 'Frameworks' or 'CopyFiles'
+
+			if files ~= nil then
+				files = table.flatten(files)
+				if #files > 0 then
+					if not wrapperWritten then
+						_p('/* Begin PBXCopyFilesBuildPhase section */')
+						wrapperWritten = true
+					end
+					_p(2,'%s /* %s */ = {', id, name)
+					_p(3,'isa = PBXCopyFilesBuildPhase;')
+					_p(3,'buildActionMask = 2147483647;')
+					_p(3,'dstPath = \"%s\";', path)
+					_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
+					_p(3,'files = (')
+					-- TODO
+					tree.traverse(tr, {
+						onleaf = function(node)
+							print(node, node.name, xcode.getbuildcategory(node))
+							if xcode.getbuildcategory(node) == category then
+								local actualBuildid = node.buildid
+								if category == "Frameworks" then
+									actualBuildid = xcode.uuid(node.buildid .. 'in CopyFiles')
+								end
+								if node.cfg ~= nil and table.icontains(files, node.cfg.name) then
+									_p(4,'%s /* %s in %s */,', actualBuildid, node.name, 'CopyFiles')
+									print('-> found', node.name, xcode.getbuildcategory(node))
+								elseif table.icontains(files, node.name) then
+									_p(4,'%s /* %s in %s */,', actualBuildid, node.name, 'CopyFiles')
+									print('-> found (2)', node.name, xcode.getbuildcategory(node))
+								end
+							end
+						end
+					})
+					print('---')
+					if #files > 0 then
+						for _, file in ipairs(files) do
+							print(file)
+							-- _p(4, '"%s",', file)
+						end
+					end
+					print('---')
+					_p(3,');')
+					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+					_p(2,'};')
+				end
+			end
+		end
+
+		local function docopyframeworks(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgfiles = cfg[which]
+				if cfgfiles ~= nil and #cfgfiles > 0 then
+					local label = xcode.getcommandlabel("Embed Frameworks", cfg)
+					local id = xcode.uuid(label)
+					doblock(id, label, 10, '', 'Frameworks', table.translate(cfgfiles, path.getname))
+				end
+			end
+		end
+		
+		local function docopyresources(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for i, targetAndFiles in ipairs(cfgcmds) do
+						local target = targetAndFiles[1][1]
+						local files = targetAndFiles[1][2]
+						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target, cfg)
+						local id = xcode.uuid(label)
+						doblock(id, label, 7, target, table.translate(files, path.getname))
+					end
+				end
+			end
+		end
+
+		--docopyresources("xcodecopyresources")
+
+		if tr.project.kind == "WindowedApp" then
+			-- only for .app projects
+			docopyframeworks("xcodecopyframeworks")
+		end
+
+		if wrapperWritten then
+			_p('/* End PBXCopyFilesBuildPhase section */')
+		end
 	end
 
 	function xcode.PBXVariantGroup(tr)
