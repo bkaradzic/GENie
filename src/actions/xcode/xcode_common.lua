@@ -754,22 +754,10 @@ end
 	function xcode.PBXShellScriptBuildPhase(tr)
 		local wrapperWritten = false
 
-		local function doblock(id, name, which)
-			-- see if there are any commands to add for each config
-			local commands = {}
-			for _, cfg in ipairs(tr.configs) do
-				local cfgcmds = cfg[which]
-				if #cfgcmds > 0 then
-					table.insert(commands, 'if [ "${CONFIGURATION}" = "' .. xcode.getconfigname(cfg) .. '" ]; then')
-					for i = 1, #cfgcmds do
-						local cmd = cfgcmds[i]
-						cmd = cmd:gsub('\\','\\\\')
-						table.insert(commands, cmd)
-					end
-					table.insert(commands, 'fi')
-				end
+		local function doblock(id, name, commands, files)
+			if commands ~= nil then
+				commands = table.flatten(commands)
 			end
-
 				if #commands > 0 then
 					if not wrapperWritten then
 						_p('/* Begin PBXShellScriptBuildPhase section */')
@@ -781,6 +769,14 @@ end
 					_p(3,'files = (')
 					_p(3,');')
 					_p(3,'inputPaths = (');
+					if files ~= nil then
+						files = table.flatten(files)
+						if #files > 0 then
+							for _, file in ipairs(files) do
+								_p(4, '"%s",', file)
+							end
+						end
+					end
 					_p(3,');');
 					_p(3,'name = %s;', name);
 					_p(3,'outputPaths = (');
@@ -792,9 +788,37 @@ end
 				end
 			end
 
-		doblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
-		doblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
-		doblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		local function wrapcommands(cmds, cfg)
+			local commands = {}
+			if #cmds > 0 then
+				table.insert(commands, 'if [ "${CONFIGURATION}" = "' .. xcode.getconfigname(cfg) .. '" ]; then')
+				for i = 1, #cmds do
+					local cmd = cmds[i]
+					cmd = cmd:gsub('\\','\\\\')
+					table.insert(commands, cmd)
+				end
+				table.insert(commands, 'fi')
+			end
+			return commands
+		end
+
+		local function dobuildblock(id, name, which)
+			-- see if there are any commands to add for each config
+			local commands = {}
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = wrapcommands(cfg[which], cfg)
+				if #cfgcmds > 0 then
+					for i, cmd in ipairs(cfgcmds) do
+						table.insert(commands, cmd)
+					end
+				end
+			end
+			doblock(id, name, commands)
+		end
+
+		dobuildblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
+		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
+		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
 
 		if wrapperWritten then
 			_p('/* End PBXShellScriptBuildPhase section */')
