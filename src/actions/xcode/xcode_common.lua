@@ -749,7 +749,9 @@ end
 			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
 			doscriptphases("xcodescriptphases", _p_label)
 			docopyresources("xcodecopyresources", _p_label)
-			docopyframeworks("xcodecopyframeworks", _p_label)
+			if tr.project.kind == "WindowedApp" then
+				docopyframeworks("xcodecopyframeworks", _p_label)
+			end
 
 			_p(3,');')
 			_p(3,'buildRules = (')
@@ -1045,7 +1047,9 @@ end
 		end
 
 		docopyresources("xcodecopyresources")
-		docopyframeworks("xcodecopyframeworks")
+		if tr.project.kind == "WindowedApp" then
+			docopyframeworks("xcodecopyframeworks")
+		end
 
 		if wrapperWritten then
 			_p('/* End PBXCopyFilesBuildPhase section */')
