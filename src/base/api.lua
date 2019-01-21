@@ -751,6 +751,12 @@
 			scope = "config",
 		},
 
+		xcodecopyresources =
+		{
+			kind  = "table",
+			scope = "project",
+		},
+
 		wholearchive =
 		{
 			kind  = "list",
