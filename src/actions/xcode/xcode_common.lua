@@ -685,9 +685,27 @@ end
 				end
 			end
 
+			local function docopyresources(which, action)
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					if #targets > 0 then
+						local i = 0
+						for _, t in ipairs(targets) do
+							for __, tt in ipairs(t) do
+								local label = xcode.getcopyphaselabel('Resources', i, tt[1])
+								local id = xcode.uuid(label)
+								action(id, label)
+								i = i + 1
+							end
+						end
+					end
+				end
+			end
+
 			local function _p_label(id, label)
 				_p(4, '%s /* %s */,', id, label)
 			end
+
 
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
@@ -700,6 +718,7 @@ end
 			_p(4,'%s /* Frameworks */,', node.fxstageid)
 			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
 			doscriptphases("xcodescriptphases", _p_label)
+			docopyresources("xcodecopyresources", _p_label)
 
 			_p(3,');')
 			_p(3,'buildRules = (')
