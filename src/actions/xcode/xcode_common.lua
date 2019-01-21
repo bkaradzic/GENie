@@ -440,9 +440,12 @@ end
 				end
 
 				-- adds duplicate PBXBuildFile file entry as 'CopyFiles' for files marked to be copied
+				-- for frameworks: add signOnCopy flag
 				if table.icontains(copyfiles, node.name) then
-					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
-						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name)
+					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; %s };',
+						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name,
+						iif(xcode.isframework(node.name), "settings = {ATTRIBUTES = (CodeSignOnCopy, ); };", "")
+					)
 				end
 			end
 		})
