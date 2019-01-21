@@ -429,7 +429,19 @@ end
 			return table.translate(copyfiles, path.getname)
 		end
 
-		local copyfiles = gatherCopyFiles('xcodecopyresources')
+		local function gatherCopyFrameworks(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				table.insertflat(copyfiles, targets)
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local copyfiles = table.flatten({
+			gatherCopyFiles('xcodecopyresources'),
+			gatherCopyFrameworks('xcodecopyframeworks')
+		})
 
 		_p('/* Begin PBXBuildFile section */')
 		tree.traverse(tr, {
