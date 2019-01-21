@@ -927,6 +927,69 @@ end
 		_p('')
 	end
 
+	-- copyresources leads to this
+	-- xcodeembedframeworks
+	function xcode.PBXCopyFilesBuildPhase(tr)
+		local wrapperWritten = false
+
+		local function doblock(id, name, folderSpec, path, files)
+			-- note: folder spec:
+			-- 0: Absolute Path
+			-- 1: Wrapper
+			-- 6: Executables
+			-- 7: Resources
+			-- 10: Frameworks
+			-- 16: Products Directory
+			-- category: 'Frameworks' or 'CopyFiles'
+
+			if #files > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXCopyFilesBuildPhase section */')
+					wrapperWritten = true
+				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXCopyFilesBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'dstPath = \"%s\";', path)
+				_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
+				_p(3,'files = (')
+				tree.traverse(tr, {
+					onleaf = function(node)
+						-- print(node.name)
+						if table.icontains(files, node.name) then
+							_p(4,'%s /* %s in %s */,', 
+								xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles')
+						end
+					end
+				})
+				_p(3,');')
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(2,'};')
+			end
+		end
+
+		local function docopyresources(which)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local i = 0
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						local label = xcode.getcopyphaselabel('Resources', i, tt[1])
+						local id = xcode.uuid(label)
+						local files = table.translate(table.flatten(tt[2]), path.getname)
+						doblock(id, label, 7, tt[1], files)
+						i = i + 1
+					end
+				end
+			end
+		end
+
+		docopyresources("xcodecopyresources")
+
+		if wrapperWritten then
+			_p('/* End PBXCopyFilesBuildPhase section */')
+		end
+	end
 
 	function xcode.PBXVariantGroup(tr)
 		_p('/* Begin PBXVariantGroup section */')
