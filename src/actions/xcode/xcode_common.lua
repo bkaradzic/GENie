@@ -721,6 +721,17 @@ end
 				end
 			end
 
+			local function docopyframeworks(which, action)
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					if #targets > 0 then
+						local label = "Copy Frameworks"
+						local id = xcode.uuid(label)
+						action(id, label)
+					end
+				end
+			end
+
 			local function _p_label(id, label)
 				_p(4, '%s /* %s */,', id, label)
 			end
@@ -738,6 +749,7 @@ end
 			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
 			doscriptphases("xcodescriptphases", _p_label)
 			docopyresources("xcodecopyresources", _p_label)
+			docopyframeworks("xcodecopyframeworks", _p_label)
 
 			_p(3,');')
 			_p(3,'buildRules = (')
