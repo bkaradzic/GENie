@@ -1034,7 +1034,18 @@ end
 			end
 		end
 
+		local function docopyframeworks(which)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local label = "Copy Frameworks"
+				local id = xcode.uuid(label)
+				local files = table.translate(table.flatten(targets), path.getname)
+				doblock(id, label, 10, "", files)
+			end
+		end
+
 		docopyresources("xcodecopyresources")
+		docopyframeworks("xcodecopyframeworks")
 
 		if wrapperWritten then
 			_p('/* End PBXCopyFilesBuildPhase section */')
