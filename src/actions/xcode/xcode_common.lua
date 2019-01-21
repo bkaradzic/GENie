@@ -527,7 +527,8 @@ end
 						end
 						if string.find(nodePath,'/')  then
 							if string.find(nodePath,'^%.')then
-								error('relative paths are not currently supported for frameworks')
+								--error('relative paths are not currently supported for frameworks')
+								nodePath = path.getabsolute(path.join(tr.project.location, nodePath))
 							end
 							pth = nodePath
 						elseif path.getextension(nodePath)=='.tbd' then
