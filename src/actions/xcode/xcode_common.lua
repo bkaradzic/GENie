@@ -413,12 +413,33 @@ end
 
 
 	function xcode.PBXBuildFile(tr)
+		local function gatherCopyFiles(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						table.insertflat(copyfiles, tt[2])
+					end
+				end
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local copyfiles = gatherCopyFiles('xcodecopyresources')
+
 		_p('/* Begin PBXBuildFile section */')
 		tree.traverse(tr, {
 			onnode = function(node)
 				if node.buildid then
 					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
 						node.buildid, node.name, xcode.getbuildcategory(node), node.id, node.name)
+				end
+
+				-- adds duplicate PBXBuildFile file entry as 'CopyFiles' for files marked to be copied
+				if table.icontains(copyfiles, node.name) then
+					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
+						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name)
 				end
 			end
 		})
