@@ -40,7 +40,8 @@
 			[".xcdatamodeld"] = "Sources",
 			[".swift"] = "Sources",
 		}
-		return categories[path.getextension(node.name)]
+		return categories[path.getextension(node.name)] or
+			categories[string.lower(path.getextension(node.name))]
 	end
 
 
@@ -103,7 +104,8 @@
 			[".xcdatamodeld"] = "wrapper.xcdatamodeld",
 			[".swift"]     = "sourcecode.swift",
 		}
-		return types[path.getextension(node.path)] or "text"
+		return types[path.getextension(node.path)] or
+			(types[string.lower(path.getextension(node.path))] or "text")
 	end
 
 --
@@ -145,7 +147,8 @@
 			[".xcdatamodeld"] = "wrapper.xcdatamodeld",
 			[".swift"]     = "sourcecode.swift",
 		}
-		return types[path.getextension(node.path)] or "text"
+		return types[path.getextension(node.path)] or
+			(types[string.lower(path.getextension(node.path))] or "text")
 	end
 --
 -- Return the Xcode product type, based target kind.
