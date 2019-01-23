@@ -45,6 +45,10 @@
 			"../src/host/lua-5.3.0/etc/*.c",
 		}
 
+		buildoptions {
+			"-m64",
+		}
+
 		configuration "Debug"
 			defines     { "_DEBUG", "LUA_COMPAT_MODULE" }
 			flags       { "Symbols" }
