@@ -303,6 +303,29 @@
 		return string.format("\"Script Phase %s [%s] (%s)\"", count, cmd:match("(%w+)(.+)"), iif(cfg, xcode.getconfigname(cfg), "all"))
 	end
 
+
+--
+-- Creates a label for a given copy phase
+--  based on target
+-- such as the result looks like this:
+-- 'Copy <type> <number> [target]', e.g. 'Copy Files 1 [assets]'
+--
+-- This function is used for generating `PBXCopyFilesPhase` from `xcodecopyresources`.
+-- (Thus required in more than 1 place).
+--
+-- @param type
+--    The copy type ('Resources' for now)
+-- @param count
+--    counter to avoid having duplicate label names
+-- @param target
+--    The target subfolder
+--
+
+	function xcode.getcopyphaselabel(type, count, target)
+		return string.format("\"Copy %s %s [%s]\"", type, count, target)
+	end
+
+
 --
 -- Create a product tree node and all projects in a solution; assigning IDs
 -- that are needed for inter-project dependencies.
