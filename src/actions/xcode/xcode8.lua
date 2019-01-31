@@ -290,6 +290,7 @@
 		xcode.PBXReferenceProxy(tr)
 		xcode.PBXResourcesBuildPhase(tr)
 		xcode.PBXShellScriptBuildPhase(tr)
+		xcode.PBXCopyFilesBuildPhase(tr)
 		xcode.PBXSourcesBuildPhase(tr,prj)
 		xcode.PBXVariantGroup(tr)
 		xcode.PBXTargetDependency(tr)
