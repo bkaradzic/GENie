@@ -192,7 +192,7 @@ https://github.com/andr3wmac/Torque6 Torque 6 is an MIT licensed 3D engine
 loosely based on Torque2D. Being neither Torque2D or Torque3D it is the 6th
 derivative of the original Torque Engine.
 
-http://mtuner.net/ is a memory profiler and memory leak finder for Windows, PS4,
+https://milostosic.github.io/MTuner MTuner is a memory profiler and memory leak finder for Windows, PS4,
 PS3.
 
 Developer Crackshell used GENie for development of games
