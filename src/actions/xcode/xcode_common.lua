@@ -429,7 +429,19 @@ end
 			return table.translate(copyfiles, path.getname)
 		end
 
-		local copyfiles = gatherCopyFiles('xcodecopyresources')
+		local function gatherCopyFrameworks(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				table.insertflat(copyfiles, targets)
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local copyfiles = table.flatten({
+			gatherCopyFiles('xcodecopyresources'),
+			gatherCopyFrameworks('xcodecopyframeworks')
+		})
 
 		_p('/* Begin PBXBuildFile section */')
 		tree.traverse(tr, {
@@ -440,9 +452,12 @@ end
 				end
 
 				-- adds duplicate PBXBuildFile file entry as 'CopyFiles' for files marked to be copied
+				-- for frameworks: add signOnCopy flag
 				if table.icontains(copyfiles, node.name) then
-					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
-						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name)
+					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; %s };',
+						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name,
+						iif(xcode.isframework(node.name), "settings = {ATTRIBUTES = (CodeSignOnCopy, ); };", "")
+					)
 				end
 			end
 		})
@@ -512,7 +527,8 @@ end
 						end
 						if string.find(nodePath,'/')  then
 							if string.find(nodePath,'^%.')then
-								error('relative paths are not currently supported for frameworks')
+								--error('relative paths are not currently supported for frameworks')
+								nodePath = path.getabsolute(path.join(tr.project.location, nodePath))
 							end
 							pth = nodePath
 						elseif path.getextension(nodePath)=='.tbd' then
@@ -705,6 +721,17 @@ end
 				end
 			end
 
+			local function docopyframeworks(which, action)
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					if #targets > 0 then
+						local label = "Copy Frameworks"
+						local id = xcode.uuid(label)
+						action(id, label)
+					end
+				end
+			end
+
 			local function _p_label(id, label)
 				_p(4, '%s /* %s */,', id, label)
 			end
@@ -722,6 +749,9 @@ end
 			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
 			doscriptphases("xcodescriptphases", _p_label)
 			docopyresources("xcodecopyresources", _p_label)
+			if tr.project.kind == "WindowedApp" then
+				docopyframeworks("xcodecopyframeworks", _p_label)
+			end
 
 			_p(3,');')
 			_p(3,'buildRules = (')
@@ -1006,7 +1036,20 @@ end
 			end
 		end
 
+		local function docopyframeworks(which)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local label = "Copy Frameworks"
+				local id = xcode.uuid(label)
+				local files = table.translate(table.flatten(targets), path.getname)
+				doblock(id, label, 10, "", files)
+			end
+		end
+
 		docopyresources("xcodecopyresources")
+		if tr.project.kind == "WindowedApp" then
+			docopyframeworks("xcodecopyframeworks")
+		end
 
 		if wrapperWritten then
 			_p('/* End PBXCopyFilesBuildPhase section */')
