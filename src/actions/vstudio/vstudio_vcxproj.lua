@@ -616,6 +616,10 @@
 		floating_point(cfg)
 		debug_info(cfg)
 
+		if premake.action.current() == premake.action.get("vsllvm") then
+			_p(3,'<SupportJustMyCode>false</SupportJustMyCode>')
+		end
+
 		if cfg.flags.Symbols then
 			-- The compiler pdb should be different than the linker pdb, and
 			-- the linker pdb is what should be distributed and used for
@@ -813,15 +817,16 @@
 
 	function vc2010.link(cfg)
 		local vs2017 = premake.action.current() == premake.action.get("vs2017")
+		local vsllvm = premake.action.current() == premake.action.get("vsllvm")
 		local links  = getcfglinks(cfg)
 
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
 
-		if vs2017 and cfg.flags.FullSymbols then
+		if (vs2017 or vsllvm) and cfg.flags.FullSymbols then
 			_p(3,'<GenerateDebugInformation>DebugFull</GenerateDebugInformation>')
 		else
-			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(not vsllvm and (cfg.flags.Symbols ~= nil)))
 		end
 
 		if cfg.flags.Symbols then
