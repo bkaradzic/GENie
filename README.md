@@ -13,7 +13,7 @@ Supported project generators:
  * GNU Makefile
  * Ninja (experimental)
  * Qbs / QtCreator (experimental)
- * Visual Studio 2010, 2012, 2013, 2015, 2017
+ * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019
  * XCode
 
 Download (stable)
@@ -53,6 +53,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
 
 ## Changelog (since fork)
 
+ - Added vs2019 support.
  - Added vs2013 support.
  - Added hash UUID support. `os.uuid(<string>)` should produce consistent UUID.
  - Added search for default script. Default script name is changed to genie.lua

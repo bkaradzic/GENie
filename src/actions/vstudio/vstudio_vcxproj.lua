@@ -165,7 +165,9 @@
 		end
 
 		-- Workaround for https://github.com/Microsoft/msbuild/issues/2353
-		if cfg.flags.Symbols and premake.action.current() == premake.action.get("vs2017") then
+		if cfg.flags.Symbols and (	premake.action.current() == premake.action.get("vs2017") or 
+									premake.action.current() == premake.action.get("vs2019")
+								 ) then
 			_p(2, '<DebugSymbols>true</DebugSymbols>')
 		end
 
@@ -323,7 +325,7 @@
 
 	end
 
-	local function cppstandard_vs2017(cfg)
+	local function cppstandard_vs2017_and_later(cfg)
 		if cfg.flags.CppLatest then
 			_p(3, '<LanguageStandard>stdcpplatest</LanguageStandard>')
 			_p(3, '<EnableModules>true</EnableModules>')
@@ -604,8 +606,9 @@
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
 
-		if premake.action.current() == premake.action.get("vs2017") then
-			cppstandard_vs2017(cfg)
+		if premake.action.current() == premake.action.get("vs2017") or 
+			premake.action.current() == premake.action.get("vs2019") then
+			cppstandard_vs2017_and_later(cfg)
 		end
 
 		exceptions(cfg)
@@ -813,12 +816,13 @@
 
 	function vc2010.link(cfg)
 		local vs2017 = premake.action.current() == premake.action.get("vs2017")
+		local vs2019 - premake.action.current == premake.action.get("vs2019")
 		local links  = getcfglinks(cfg)
 
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
 
-		if vs2017 and cfg.flags.FullSymbols then
+		if (vs2017 or vs2019) and cfg.flags.FullSymbols then
 			_p(3,'<GenerateDebugInformation>DebugFull</GenerateDebugInformation>')
 		else
 			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
