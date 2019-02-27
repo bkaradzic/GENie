@@ -331,6 +331,29 @@ Reset the configuration filter
 ```lua
 configuration {}
 ```
+
+#### Caveats
+- Argument chaining
+  `configuration` can take multiple arguments, e.g.
+```lua
+configuration {"StaticLib", "xcode*", "osx or ios*"}
+```
+  These arguments will be combined as an `AND` clause,
+  i.e. if one of the keywords does _not_ match the actual configuration terms,
+  the following settings will not be applied.
+- Condition evaluation
+  The arguments are **not** evaluated as Lua. They are merely regex-matched against the configuration terms.
+  The implications of this is that parentheses have no effect outside of regular expression groups.
+  A condition like `"not (osx or ios*)"` will not be equivalent to `{"not osx", "not ios*}"`.
+  Furthermore, a condition like `"not osx or ios*"` will be evaluated as the negation of `"osx or ios*"`.
+- `and` is **not** a valid keyword for configuration combinations.
+  However, several keywords will be combined as an `AND` clause.
+- Limits of Lua's regular expressions
+  Each passed keyword is matched against each configuration terms from the project/solution type being built
+  using [Lua's regular expression mechanism](https://www.lua.org/manual/5.3/manual.html#6.4).
+  This means that keyword matching is subject to the same limits as regular Lua regex matching.
+  This implies that regexes like `"(osx|ios)"` do not work.
+
 [Back to top](#table-of-contents)
 
 ---
