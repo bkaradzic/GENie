@@ -1732,12 +1732,12 @@ xcodetargetopts {
 
 ---
 ### xcodescriptphases({{_cmd_, {_inputpaths_, ...}}})
-**XCode only**
-Adds a script phase to the generated XCode project file.
+#### XCode only
+Adds a script phase to the generated XCode project file.  
 One tag can contain several commands with different inputpaths.
 
 #### Arguments
-_cmd_ - The actual command to run. This can be a shell script file or direct shell code.
+_cmd_ - The actual command to run. (This can be a shell script file or direct shell code).  
 _inputpaths_ - The paths passed to the command
 
 #### Examples
@@ -1750,7 +1750,7 @@ xcodescriptphases {
 }
 ```
 
-_Copying, trimming and signing frameworks by relying on `carthage`_
+_Copying, trimming and signing frameworks by relying on [carthage](https://github.com/Carthage/Carthage)_
 ```lua
 xcodescriptphases {
     {"carthage copy-frameworks", {
@@ -1768,23 +1768,23 @@ xcodescriptphases {
   `${SCRIPT_INPUT_FILE_COUNT}`: The number of input paths provided to the script
   `${SCRIPT_INPUT_FILE_0}` ...: The input paths at index 0 and so on.
   **NOTE**: You can construct the indexed variable as in the example below:
-  ```bash
+```bash
 for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; ++i )); do
     varname=SCRIPT_INPUT_FILE_$i
     echo ${!varname}
 done
-  ```
+```
 
 [Back to top](#table-of-contents)
 
 ---
 ### xcodecopyresources({{_targetpath_, {_inputfiles_, ...}}})
-**XCode only**
-Adds a 'Copy Files' phase to the generated XCode project file.
+#### XCode only
+Adds a 'Copy Files' phase to the generated XCode project file.  
 One tag can contain several target paths with different input files.
 
 #### Arguments
-_targetpath_ - The target path relative to the _Resource_ folder in the resulting `.app` structure.
+_targetpath_ - The target path relative to the _Resource_ folder in the resulting `.app` structure.  
 _inputfiles_ - The input files to be copied.
 
 #### Examples
@@ -1809,6 +1809,7 @@ xcodecopyresources {
 
 ---
 ### xcodecopyframeworks({_inputframeworks_, ...})
+#### XCode only
 Adds a 'Copy Files' phase to the generated XCode project file that will copy and sign the provided frameworks.
 
 #### Arguments
@@ -1827,7 +1828,7 @@ xcodecopyframeworks {
 ```
 
 #### Caveats
-- Frameworks need to be known to the project to be copiable: set the link dependency accordingly using `links {}`.
+- Frameworks must be known to the project to be copiable: set the link dependency accordingly using `links {}`.
 - `xcodecopyframeworks` can only be set _per project_, not _per configuration_.
 
 [Back to top](#table-of-contents)
