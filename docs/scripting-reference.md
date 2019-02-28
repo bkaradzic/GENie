@@ -356,6 +356,11 @@ configuration {"StaticLib", "xcode*", "osx or ios*"}
   using [Lua's regular expression mechanism](https://www.lua.org/manual/5.3/manual.html#6.4).
   This means that keyword matching is subject to the same limits as regular Lua regex matching.
   This implies that regexes like `"(osx|ios)"` do not work.
+- Wildcard expansion:  
+  Wildcards will get expanded following the same rules as paths.
+  Similarly, special characters such as `()` will get escaped (i.e. converted to `%(%)`) before being matched.
+  This means that `"not (osx or ios*)"` will in fact get expanded to `"not %(osx or ios[^/]*)"` and then checked as
+  `not` _result of_ `"%(osx or ios[^/]*)"`, which in turn gets broken down to `"%(osx"` and `"ios[^/]*)"`.
 
 [Back to top](#table-of-contents)
 
