@@ -77,9 +77,9 @@
     * [vpaths](#vpathsgroup--pattern)
     * [xcodeprojectopts](#xcodeprojectoptskey--value-)
     * [xcodetargetopts](#xcodetargetoptskey--value-)
-    * [xcodescriptphases](#xcodescriptphases)
-    * [xcodecopyresources](#xcodecopyresources)
-    * [xcodecopyframeworks](#xcodecopyframeworks)
+    * [xcodescriptphases](#xcodescriptphasescmd-inputpaths-)
+    * [xcodecopyresources](#xcodecopyresourcestargetpath-inputfiles-)
+    * [xcodecopyframeworks](#xcodecopyframeworksinputframeworks-)
     * [wholearchive](#wholearchivereferences)
 * Utility functions
     * [iif](#iifcondition-trueval-falseval)
