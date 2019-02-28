@@ -77,9 +77,9 @@
     * [vpaths](#vpathsgroup--pattern)
     * [xcodeprojectopts](#xcodeprojectoptskey--value-)
     * [xcodetargetopts](#xcodetargetoptskey--value-)
-    * [xcodescriptphases](#xcodescriptphases)
-    * [xcodecopyresources](#xcodecopyresources)
-    * [xcodecopyframeworks](#xcodecopyframeworks)
+    * [xcodescriptphases](#xcodescriptphasescmd-inputpaths-)
+    * [xcodecopyresources](#xcodecopyresourcestargetpath-inputfiles-)
+    * [xcodecopyframeworks](#xcodecopyframeworksinputframeworks-)
     * [wholearchive](#wholearchivereferences)
 * Utility functions
     * [iif](#iifcondition-trueval-falseval)
@@ -336,7 +336,7 @@ configuration {}
 ```
 
 #### Caveats
-- Argument chaining
+- Argument chaining:  
   `configuration` can take multiple arguments, e.g.
 ```lua
 configuration {"StaticLib", "xcode*", "osx or ios*"}
@@ -344,18 +344,23 @@ configuration {"StaticLib", "xcode*", "osx or ios*"}
   These arguments will be combined as an `AND` clause,
   i.e. if one of the keywords does _not_ match the actual configuration terms,
   the following settings will not be applied.
-- Condition evaluation
+- Condition evaluation:  
   The arguments are **not** evaluated as Lua. They are merely regex-matched against the configuration terms.
-  The implications of this is that parentheses have no effect outside of regular expression groups.
+  The implications of this are that parentheses have no effect outside of regular expression groups.
   A condition like `"not (osx or ios*)"` will not be equivalent to `{"not osx", "not ios*}"`.
   Furthermore, a condition like `"not osx or ios*"` will be evaluated as the negation of `"osx or ios*"`.
-- `and` is **not** a valid keyword for configuration combinations.
+- `and` is **not** a valid keyword for configuration combinations.  
   However, several keywords will be combined as an `AND` clause.
-- Limits of Lua's regular expressions
+- Limits of Lua's regular expressions:  
   Each passed keyword is matched against each configuration terms from the project/solution type being built
   using [Lua's regular expression mechanism](https://www.lua.org/manual/5.3/manual.html#6.4).
   This means that keyword matching is subject to the same limits as regular Lua regex matching.
   This implies that regexes like `"(osx|ios)"` do not work.
+- Wildcard expansion:  
+  Wildcards will get expanded following the same rules as paths.
+  Similarly, special characters such as `()` will get escaped (i.e. converted to `%(%)`) before being matched.
+  This means that `"not (osx or ios*)"` will in fact get expanded to `"not %(osx or ios[^/]*)"` and then checked as
+  `not` _result of_ `"%(osx or ios[^/]*)"`, which in turn gets broken down to `"%(osx"` and `"ios[^/]*)"`.
 
 [Back to top](#table-of-contents)
 
@@ -1732,12 +1737,12 @@ xcodetargetopts {
 
 ---
 ### xcodescriptphases({{_cmd_, {_inputpaths_, ...}}})
-**XCode only**
-Adds a script phase to the generated XCode project file.
+#### XCode only
+Adds a script phase to the generated XCode project file.  
 One tag can contain several commands with different inputpaths.
 
 #### Arguments
-_cmd_ - The actual command to run. This can be a shell script file or direct shell code.
+_cmd_ - The actual command to run. (This can be a shell script file or direct shell code).  
 _inputpaths_ - The paths passed to the command
 
 #### Examples
@@ -1750,7 +1755,7 @@ xcodescriptphases {
 }
 ```
 
-_Copying, trimming and signing frameworks by relying on `carthage`_
+_Copying, trimming and signing frameworks by relying on [carthage](https://github.com/Carthage/Carthage)_
 ```lua
 xcodescriptphases {
     {"carthage copy-frameworks", {
@@ -1768,23 +1773,23 @@ xcodescriptphases {
   `${SCRIPT_INPUT_FILE_COUNT}`: The number of input paths provided to the script
   `${SCRIPT_INPUT_FILE_0}` ...: The input paths at index 0 and so on.
   **NOTE**: You can construct the indexed variable as in the example below:
-  ```bash
+```bash
 for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; ++i )); do
     varname=SCRIPT_INPUT_FILE_$i
     echo ${!varname}
 done
-  ```
+```
 
 [Back to top](#table-of-contents)
 
 ---
 ### xcodecopyresources({{_targetpath_, {_inputfiles_, ...}}})
-**XCode only**
-Adds a 'Copy Files' phase to the generated XCode project file.
+#### XCode only
+Adds a 'Copy Files' phase to the generated XCode project file.  
 One tag can contain several target paths with different input files.
 
 #### Arguments
-_targetpath_ - The target path relative to the _Resource_ folder in the resulting `.app` structure.
+_targetpath_ - The target path relative to the _Resource_ folder in the resulting `.app` structure.  
 _inputfiles_ - The input files to be copied.
 
 #### Examples
@@ -1809,6 +1814,7 @@ xcodecopyresources {
 
 ---
 ### xcodecopyframeworks({_inputframeworks_, ...})
+#### XCode only
 Adds a 'Copy Files' phase to the generated XCode project file that will copy and sign the provided frameworks.
 
 #### Arguments
@@ -1827,7 +1833,7 @@ xcodecopyframeworks {
 ```
 
 #### Caveats
-- Frameworks need to be known to the project to be copiable: set the link dependency accordingly using `links {}`.
+- Frameworks must be known to the project to be copiable: set the link dependency accordingly using `links {}`.
 - `xcodecopyframeworks` can only be set _per project_, not _per configuration_.
 
 [Back to top](#table-of-contents)
