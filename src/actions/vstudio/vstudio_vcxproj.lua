@@ -67,6 +67,10 @@
 			_p(2, '<Keyword>Win32Proj</Keyword>')
 		end
 
+		if not vstudio.xpwarning then
+			_p(2, '<XPDeprecationWarning>false</XPDeprecationWarning>')
+		end
+
 		_p(1,'</PropertyGroup>')
 	end
 
