@@ -16,7 +16,13 @@ newaction
 	module      = "qbs",
 
 	-- The capabilities of this action
-	valid_kinds     = {"ConsoleApp", "GraphicalApp", "StaticLib", "SharedLib", "Bundle"},
+	valid_kinds     = {
+		"ConsoleApp",
+		"GraphicalApp",
+		"StaticLib",
+		"SharedLib",
+		"Bundle"
+	},
 	valid_languages = {"C", "C++"},
 	valid_tools     = {
 		cc = { "gcc" },

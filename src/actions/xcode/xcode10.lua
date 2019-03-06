@@ -73,7 +73,13 @@
 		description     = "Generate Apple Xcode 10 project files (experimental)",
 		os              = "macosx",
 
-		valid_kinds     = { "ConsoleApp", "GraphicalApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = {
+			"ConsoleApp",
+			"GraphicalApp",
+			"StaticLib",
+			"SharedLib",
+			"Bundle"
+		},
 
 		valid_languages = { "C", "C++" },
 

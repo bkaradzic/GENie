@@ -64,7 +64,13 @@
 		description     = "Generate Apple Xcode 9 project files",
 		os              = "macosx",
 
-		valid_kinds     = { "ConsoleApp", "GraphicalApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = {
+			"ConsoleApp",
+			"GraphicalApp",
+			"StaticLib",
+			"SharedLib",
+			"Bundle"
+		},
 
 		valid_languages = { "C", "C++" },
 

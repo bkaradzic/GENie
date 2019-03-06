@@ -20,7 +20,13 @@
 		description     = "Generate Microsoft Visual Studio 2013 project files",
 		os              = "windows",
 
-		valid_kinds     = { "ConsoleApp", "GraphicalApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = {
+			"ConsoleApp",
+			"GraphicalApp",
+			"StaticLib",
+			"SharedLib",
+			"Bundle"
+		},
 
 		valid_languages = { "C", "C++", "C#"},
 
