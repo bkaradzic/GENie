@@ -396,6 +396,7 @@
 			scope = "config",
 			allowed = {
 				"ConsoleApp",
+				"WindowedApp",
 				"GraphicalApp",
 				"StaticLib",
 				"SharedLib",

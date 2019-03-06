@@ -16,6 +16,7 @@ newaction {
 	description     = "Generate CMake project files",
 	valid_kinds     = {
 		"ConsoleApp",
+		"WindowedApp",
 		"GraphicalApp",
 		"StaticLib",
 		"SharedLib",

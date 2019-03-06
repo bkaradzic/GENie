@@ -21,6 +21,7 @@
 
 		valid_kinds     = {
 			"ConsoleApp",
+			"WindowedApp",
 			"GraphicalApp",
 			"StaticLib",
 			"SharedLib",

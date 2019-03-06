@@ -18,6 +18,7 @@ newaction
 	-- The capabilities of this action
 	valid_kinds     = {
 		"ConsoleApp",
+		"WindowedApp",
 		"GraphicalApp",
 		"StaticLib",
 		"SharedLib",

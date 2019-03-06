@@ -31,6 +31,7 @@
 		-- Which kinds of targets this action supports; remove those you don't.
 		valid_kinds = {
 			"ConsoleApp",
+			"WindowedApp",
 			"GraphicalApp",
 			"StaticLib",
 			"SharedLib",
