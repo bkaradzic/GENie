@@ -78,8 +78,13 @@
 			return not premake.iskeywordmatch(keyword:sub(5), terms)
 		end
 
+		-- alias for backwards compatibility
+		keyword = keyword:gsub('windowedapp', 'graphicalapp')
+
 		for _, pattern in ipairs(keyword:explode(" or ")) do
 			for termkey, term in pairs(terms) do
+				-- alias for backwards compatibility
+				term = term:gsub('windowedapp', 'graphicalapp')
 				if term:match(pattern) == term then
 					return termkey
 				end
@@ -771,6 +776,10 @@
 		end
 
 		-- adjust the kind as required by the target system
+		if cfg.kind == "WindowedApp" then
+			cfg.kind = "GraphicalApp"
+		end
+
 		if cfg.kind == "Bundle"
 			and _ACTION ~= "gmake"
 			and (_ACTION ~= "ninja" and not prj.options.SkipBundling)
