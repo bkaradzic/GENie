@@ -361,6 +361,10 @@ configuration {"StaticLib", "xcode*", "osx or ios*"}
   Similarly, special characters such as `()` will get escaped (i.e. converted to `%(%)`) before being matched.
   This means that `"not (osx or ios*)"` will in fact get expanded to `"not %(osx or ios[^/]*)"` and then checked as
   `not` _result of_ `"%(osx or ios[^/]*)"`, which in turn gets broken down to `"%(osx"` and `"ios[^/]*)"`.
+- `"win*"` matchings:  
+  Intuitively, the configuration keyword to match "Windows" ("Win32", "Win64" or "WinCE") configuration would be
+  `"win*"`. However **`"win*"` also matches "WindowedApp"**. Prefer using the term `"vs*"` to check for configurations
+  targeting Windows.
 
 [Back to top](#table-of-contents)
 
