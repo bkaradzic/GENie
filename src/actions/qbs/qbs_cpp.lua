@@ -32,7 +32,7 @@ function qbs.generate_project(prj)
 	if prj.kind == "ConsoleApp" then
 		_p(indent, 'CppApplication {')
 		_p(indent, 'consoleApplication: true')
-	elseif prj.kind == "WindowedApp" then
+	elseif prj.kind == "GraphicalApp" then
 		_p(indent, 'CppApplication {')
 	elseif prj.kind == "StaticLib" then
 		_p(indent, 'StaticLibrary {')

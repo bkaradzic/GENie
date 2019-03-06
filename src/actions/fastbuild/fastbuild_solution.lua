@@ -145,7 +145,7 @@
 		local function projkindsort(a, b)
 			local projvaluemap = {
 				ConsoleApp  = 3,
-				WindowedApp = 3,
+				GraphicalApp = 3,
 				SharedLib   = 2,
 				StaticLib   = 1,
 			}

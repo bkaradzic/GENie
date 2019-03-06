@@ -83,7 +83,7 @@
 	function premake.dotnet.getkind(cfg)
 		if (cfg.kind == "ConsoleApp") then
 			return "Exe"
-		elseif (cfg.kind == "WindowedApp") then
+		elseif (cfg.kind == "GraphicalApp") then
 			return "WinExe"
 		elseif (cfg.kind == "SharedLib") then
 			return "Library"

@@ -175,7 +175,7 @@
 	function xcode.getproducttype(node)
 		local types = {
 			ConsoleApp  = "com.apple.product-type.tool",
-			WindowedApp = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.application",
+			GraphicalApp = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.application",
 			StaticLib   = "com.apple.product-type.library.static",
 			SharedLib   = "com.apple.product-type.library.dynamic",
 			Bundle      = node.cfg.options.SkipBundling and "com.apple.product-type.tool" or "com.apple.product-type.bundle",
@@ -196,7 +196,7 @@
 	function xcode.gettargettype(node)
 		local types = {
 			ConsoleApp  = "\"compiled.mach-o.executable\"",
-			WindowedApp = node.cfg.options.SkipBundling and "\"compiled.mach-o.executable\"" or "wrapper.application",
+			GraphicalApp = node.cfg.options.SkipBundling and "\"compiled.mach-o.executable\"" or "wrapper.application",
 			StaticLib   = "archive.ar",
 			SharedLib   = "\"compiled.mach-o.dylib\"",
 			Bundle      = node.cfg.options.SkipBundling and "\"compiled.mach-o.bundle\"" or "wrapper.cfbundle",
@@ -749,7 +749,7 @@ end
 			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
 			doscriptphases("xcodescriptphases", _p_label)
 			docopyresources("xcodecopyresources", _p_label)
-			if tr.project.kind == "WindowedApp" then
+			if tr.project.kind == "GraphicalApp" then
 				docopyframeworks("xcodecopyframeworks", _p_label)
 			end
 
@@ -768,7 +768,7 @@ end
 			local p
 			if node.cfg.kind == "ConsoleApp" then
 				p = "$(HOME)/bin"
-			elseif node.cfg.kind == "WindowedApp" then
+			elseif node.cfg.kind == "GraphicalApp" then
 				p = "$(HOME)/Applications"
 			end
 			if p then
@@ -1047,7 +1047,7 @@ end
 		end
 
 		docopyresources("xcodecopyresources")
-		if tr.project.kind == "WindowedApp" then
+		if tr.project.kind == "GraphicalApp" then
 			docopyframeworks("xcodecopyframeworks")
 		end
 

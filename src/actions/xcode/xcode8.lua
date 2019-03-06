@@ -13,7 +13,7 @@
 		local cfgname = xcode.getconfigname(cfg)
 		local installpaths = {
 			ConsoleApp = "/usr/local/bin",
-			WindowedApp = "$(HOME)/Applications",
+			GraphicalApp = "$(HOME)/Applications",
 			SharedLib = "/usr/local/lib",
 			StaticLib = "/usr/local/lib",
 			Bundle    = "$(LOCAL_LIBRARY_DIR)/Bundles",
@@ -314,7 +314,7 @@
 		description     = "Generate Apple Xcode 8 project files",
 		os              = "macosx",
 
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = { "ConsoleApp", "GraphicalApp", "StaticLib", "SharedLib", "Bundle" },
 
 		valid_languages = { "C", "C++" },
 

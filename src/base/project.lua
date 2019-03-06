@@ -498,7 +498,7 @@
 
 
 		if namestyle == "windows" then
-			if kind == "ConsoleApp" or kind == "WindowedApp" then
+			if kind == "ConsoleApp" or kind == "GraphicalApp" then
 				ext = ".exe"
 			elseif kind == "SharedLib" then
 				ext = ".dll"
@@ -506,11 +506,11 @@
 				ext = ".lib"
 			end
 		elseif namestyle == "posix" then
-			if kind == "WindowedApp" and system == "macosx" and not cfg.options.SkipBundling then
+			if kind == "GraphicalApp" and system == "macosx" and not cfg.options.SkipBundling then
 				bundlename = name .. ".app"
 				bundlepath = path.join(dir, bundlename)
 				dir = path.join(bundlepath, "Contents/MacOS")
-			elseif (kind == "ConsoleApp" or kind == "WindowedApp") and system == "os2" then
+			elseif (kind == "ConsoleApp" or kind == "GraphicalApp") and system == "os2" then
 				ext = ".exe"
 			elseif kind == "SharedLib" then
 				prefix = "lib"
@@ -520,14 +520,14 @@
 				ext = ".a"
 			end
 		elseif namestyle == "PS3" then
-			if kind == "ConsoleApp" or kind == "WindowedApp" then
+			if kind == "ConsoleApp" or kind == "GraphicalApp" then
 				ext = ".elf"
 			elseif kind == "StaticLib" then
 				prefix = "lib"
 				ext = ".a"
 			end
 		elseif namestyle == "Orbis" then
-			if kind == "ConsoleApp" or kind == "WindowedApp" then
+			if kind == "ConsoleApp" or kind == "GraphicalApp" then
 				ext = ".elf"
 			elseif kind == "StaticLib" then
 				prefix = "lib"
@@ -537,7 +537,7 @@
 			end
 		elseif namestyle == "TegraAndroid" then
 			-- the .so->.apk happens later for Application types
-			if kind == "ConsoleApp" or kind == "WindowedApp" or kind == "SharedLib" then
+			if kind == "ConsoleApp" or kind == "GraphicalApp" or kind == "SharedLib" then
 				prefix = "lib"
 				ext = ".so"
 			elseif kind == "StaticLib" then
@@ -548,7 +548,7 @@
 			-- NOTE: it would be cleaner to just output $(TargetExt) for all cases, but
 			-- there is logic elsewhere that assumes a '.' to be present in target name
 			-- such that it can reverse engineer the extension set here.
-			if kind == "ConsoleApp" or kind == "WindowedApp" then
+			if kind == "ConsoleApp" or kind == "GraphicalApp" then
 				ext = ".nspd_root"
 			elseif kind == "StaticLib" then
 				ext = ".a"
@@ -556,7 +556,7 @@
 				ext = ".nro"
 			end
 		elseif namestyle == "Emscripten" then
-			if kind == "ConsoleApp" or kind == "WindowedApp" then
+			if kind == "ConsoleApp" or kind == "GraphicalApp" then
 				ext = ".html"
 			elseif kind == "StaticLib" then
 				ext = ".bc"

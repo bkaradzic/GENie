@@ -27,7 +27,7 @@ function qbs.generate_solution(sln)
 end
 
 local function is_app(kind)
-	if kind == "ConsoleApp" or kind == "WindowedApp" then
+	if kind == "ConsoleApp" or kind == "GraphicalApp" then
 		return true
 	end
 

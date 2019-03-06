@@ -260,7 +260,7 @@ function cmake.project(prj)
         if (prj.kind == 'SharedLib') then
             _p(1, 'add_library(%s SHARED ${source_list})', premake.esc(cfg.buildtarget.basename))
         end
-        if (prj.kind == 'ConsoleApp' or prj.kind == 'WindowedApp') then
+        if (prj.kind == 'ConsoleApp' or prj.kind == 'GraphicalApp') then
             _p(1, 'add_executable(%s ${source_list})', premake.esc(cfg.buildtarget.basename))
             _p(1, 'target_link_libraries(%s%s%s)', premake.esc(cfg.buildtarget.basename), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
         end

@@ -343,7 +343,7 @@ local function binary(prj, cfg, useconfig, bintype, commonbasepath)
 		table.insert(linkeroptions, string.format('/LIBPATH:%s', path.translate(libdir, '\\')))
 	end
 
-	if not cfg.flags.WinMain and (cfg.kind == 'ConsoleApp' or cfg.kind == 'WindowedApp') then
+	if not cfg.flags.WinMain and (cfg.kind == 'ConsoleApp' or cfg.kind == 'GraphicalApp') then
 		if cfg.flags.Unicode then
 			table.insert(linkeroptions, '/ENTRY:wmainCRTStartup')
 		else
@@ -436,7 +436,7 @@ function premake.fastbuild.project(prj)
 
 	local targetkindmap = {
 		ConsoleApp = executable,
-		WindowedApp = executable,
+		GraphicalApp = executable,
 		SharedLib = dll,
 		StaticLib = library,
 		}

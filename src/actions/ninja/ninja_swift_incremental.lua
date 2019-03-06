@@ -169,7 +169,7 @@ function swift.linker(prj, cfg, depfiles, tool)
 	elseif cfg.kind == "SharedLib" then
 		_p("build %s : swiftlink %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), libs)
 		writevars()
-	elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
+	elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "GraphicalApp") then
 		--_p("build %s: link %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", cfg:getoutputfilename(), table.concat(objfiles, " "), lddeps)
 		--writevars()
 		_p("build %s: swiftlink %s | %s $out_dir/$module_name.swiftmodule $out_dir/$module_name.swiftdoc", output, table.concat(objfiles, " "), lddeps)

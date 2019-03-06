@@ -19,7 +19,7 @@
 		description     = "Generate Microsoft Visual Studio 2017 project files",
 		os              = "windows",
 
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = { "ConsoleApp", "GraphicalApp", "StaticLib", "SharedLib", "Bundle" },
 
 		valid_languages = { "C", "C++", "C#" },
 

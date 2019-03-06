@@ -194,7 +194,7 @@
 			end
 		end
 
-		if cfg.kind == "WindowedApp" and cfg.system == "windows" then
+		if cfg.kind == "GraphicalApp" and cfg.system == "windows" then
 			table.insert(result, "-mwindows")
 		end
 

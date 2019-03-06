@@ -142,7 +142,7 @@ end
 			cfgs["all"] = cfgs["all"] .. cfg:getoutputfilename() .. " "
 
 			-- set first configuration name
-			if (cfg_first == nil) and (cfg.kind == "ConsoleApp" or cfg.kind == "WindowedApp") then
+			if (cfg_first == nil) and (cfg.kind == "ConsoleApp" or cfg.kind == "GraphicalApp") then
 				cfg_first = key
 			end
 			if (cfg_first_lib == nil) and (cfg.kind == "StaticLib" or cfg.kind == "SharedLib") then

@@ -343,7 +343,7 @@ local p     = premake
 			_p("# link shared lib")
 			_p("build " .. output .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps .. prebuildsuffix)
 			writevars()
-		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "WindowedApp") then
+		elseif (cfg.kind == "ConsoleApp") or (cfg.kind == "GraphicalApp") then
 			_p("# link executable")
 			_p("build " .. cfg:getoutputfilename() .. ": link " .. table.concat(objfiles, " ") .. " | " .. lddeps .. prebuildsuffix)
 			writevars()

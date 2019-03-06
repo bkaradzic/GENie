@@ -80,7 +80,7 @@
 			SharedLib = "DynamicLibrary",
 			StaticLib = "StaticLibrary",
 			ConsoleApp = "Application",
-			WindowedApp = "Application"
+			GraphicalApp = "Application"
 		}
 		return t[config.kind]
 	end
@@ -873,7 +873,7 @@
 			link_target_machine(3,cfg)
 			additional_options(3,cfg)
 
-			if cfg.flags.NoWinMD and vstudio.iswinrt() and prj.kind == "WindowedApp" then
+			if cfg.flags.NoWinMD and vstudio.iswinrt() and prj.kind == "GraphicalApp" then
 				_p(3,'<GenerateWindowsMetadata>false</GenerateWindowsMetadata>' )
 			end
 		end
@@ -1075,7 +1075,7 @@
 			end
 
 			-- WinRT projects get an auto-generated appxmanifest file if none is specified
-			if vstudio.iswinrt() and prj.kind == "WindowedApp" and not foundAppxManifest then
+			if vstudio.iswinrt() and prj.kind == "GraphicalApp" and not foundAppxManifest then
 				vstudio.needAppxManifest = true
 
 				local fcfg = {}
