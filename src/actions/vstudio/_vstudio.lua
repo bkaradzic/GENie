@@ -19,6 +19,7 @@
 	}
 	premake.vstudio.toolset = toolsets[_ACTION] or "unknown?"
 	premake.vstudio.splashpath = ''
+	premake.vstudio.xpwarning = true
 
 	local vstudio = premake.vstudio
 
@@ -42,6 +43,7 @@
 		Durango = "Durango",
 		TegraAndroid = "Tegra-Android",
 		NX64    = "NX64",
+		Emscripten = "Emscripten",
 	}
 
 

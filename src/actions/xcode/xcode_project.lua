@@ -26,8 +26,8 @@
 			for _, platform in ipairs(prj.solution.xcode.platforms) do
 				local cfg = premake.getconfig(prj, cfgname, platform)
 				cfg.xcode = {}
-				cfg.xcode.targetid = xcode.newid(prj.xcode.projectnode, "tgt:"..cfgname)
-				cfg.xcode.projectid = xcode.newid(tr, "prj:"..cfgname)
+				cfg.xcode.targetid = xcode.newid(prj.xcode.projectnode, "tgt:"..platform..cfgname)
+				cfg.xcode.projectid = xcode.newid(tr, "prj:"..platform..cfgname)
 				table.insert(tr.configs, cfg)
 			end
 		end
@@ -145,4 +145,17 @@
 		node.fxstageid  = xcode.newid(node, "fxs")
 
 		return tr
+	end
+
+
+--
+-- Generate the XCode scheme for the given project.
+--
+
+	function xcode.project_scheme(prj)
+		if prj.options and prj.options.XcodeScheme then
+			xcode.scheme({prj}, prj)
+		else
+			return false
+		end
 	end

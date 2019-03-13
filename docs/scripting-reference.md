@@ -16,6 +16,7 @@
     * [configuration](#configurationkeywords)
     * [configurations](#configurationsnames)
     * [custombuildtask](#custombuildtasktask)
+    * [debugcmd](#debugcmdcmd)
     * [debugargs](#debugargsargs)
     * [debugdir](#debugdirpath)
     * [defines](#definessymbols)
@@ -46,6 +47,7 @@
     * [newoption](#newoptionsdescription)
     * [nopch](#nopch)
     * [objdir](#objdirpath)
+    * [options](#optionsoptions)
     * [pchheader](#pchheaderfile)
     * [pchsource](#pchsourcefile)
     * [platforms](#platformsidentifiers)
@@ -73,6 +75,12 @@
     * [userincludedirs](#userincludedirspaths)
     * [uuid](#uuidprojectuuid)
     * [vpaths](#vpathsgroup--pattern)
+    * [xcodeprojectopts](#xcodeprojectoptskey--value-)
+    * [xcodetargetopts](#xcodetargetoptskey--value-)
+    * [xcodescriptphases](#xcodescriptphasescmd-inputpaths-)
+    * [xcodecopyresources](#xcodecopyresourcestargetpath-inputfiles-)
+    * [xcodecopyframeworks](#xcodecopyframeworksinputframeworks-)
+    * [wholearchive](#wholearchivereferences)
 * Utility functions
     * [iif](#iifcondition-trueval-falseval)
     * [os.chdir](#oschdirpath)
@@ -326,6 +334,38 @@ Reset the configuration filter
 ```lua
 configuration {}
 ```
+
+#### Caveats
+- Argument chaining:  
+  `configuration` can take multiple arguments, e.g.
+```lua
+configuration {"StaticLib", "xcode*", "osx or ios*"}
+```
+  These arguments will be combined as an `AND` clause,
+  i.e. if one of the keywords does _not_ match the actual configuration terms,
+  the following settings will not be applied.
+- Condition evaluation:  
+  The arguments are **not** evaluated as Lua. They are merely regex-matched against the configuration terms.
+  The implications of this are that parentheses have no effect outside of regular expression groups.
+  A condition like `"not (osx or ios*)"` will not be equivalent to `{"not osx", "not ios*}"`.
+  Furthermore, a condition like `"not osx or ios*"` will be evaluated as the negation of `"osx or ios*"`.
+- `and` is **not** a valid keyword for configuration combinations.  
+  However, several keywords will be combined as an `AND` clause.
+- Limits of Lua's regular expressions:  
+  Each passed keyword is matched against each configuration terms from the project/solution type being built
+  using [Lua's regular expression mechanism](https://www.lua.org/manual/5.3/manual.html#6.4).
+  This means that keyword matching is subject to the same limits as regular Lua regex matching.
+  This implies that regexes like `"(osx|ios)"` do not work.
+- Wildcard expansion:  
+  Wildcards will get expanded following the same rules as paths.
+  Similarly, special characters such as `()` will get escaped (i.e. converted to `%(%)`) before being matched.
+  This means that `"not (osx or ios*)"` will in fact get expanded to `"not %(osx or ios[^/]*)"` and then checked as
+  `not` _result of_ `"%(osx or ios[^/]*)"`, which in turn gets broken down to `"%(osx"` and `"ios[^/]*)"`.
+- `"win*"` matchings:  
+  Intuitively, the configuration keyword to match "Windows" ("Win32", "Win64" or "WinCE") configuration would be
+  `"win*"`. However **`"win*"` also matches "WindowedApp"**. Prefer using the term `"vs*"` to check for configurations
+  targeting Windows.
+
 [Back to top](#table-of-contents)
 
 ---
@@ -382,6 +422,26 @@ custombuildtask {
     }
 ```
 
+[Back to top](#table-of-contents)
+
+---
+### debugcmd(cmd)
+Specifies a command to execute when running under the debugger instead of the build target.
+
+**Note:** Not implemented for Xcode 3, where it must be configured in a per-user config file.
+
+**Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_cmd_ - the command to execute when starting with the debugger
+
+#### Examples
+```lua
+configuration 'TestConfig'
+    debugcmd 'D:\\Apps\\Test.exe'
+```
 [Back to top](#table-of-contents)
 
 ---
@@ -543,6 +603,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _FatalWarnings_ - Treat warnings as errors.
 * _FloatFast_ - Enable floating point optimizations at the expense of accuracy.
 * _FloatStrict_ - Improve floating point consistency at the expense of performance.
+* _FullSymbols_ - Use together with _Symbols_ to generate full debug symbols with Visual Studio.
 * _Managed_ - Enable Managed C++ (.NET).
 * _MinimumWarnings_ - - Sets compiler's minimum warning level (Visual Studio only).
 * _MFC_ - Enable support for Microsoft Foundation Classes.
@@ -1057,6 +1118,23 @@ configuration "Debug"
 configuration "Release"
     objdir "../obj_release"
 ```
+[Back to top](#table-of-contents)
+
+---
+### options({_options_...})
+Specifies build flags to modify the compiling or linking process. This differs from `flags` in
+that these are set per project rather than per configuration.
+
+**Scope:** solutions, projects
+
+#### Arguments
+_options_ - List of option names from list below. Names are case-insensitive and ignored if not supported on a platform.
+
+* _ArchiveSplit_ - Split arguments to the gmake archiver across multiple invocations, if there are too many of them.
+* _ForceCPP_ - Force compiling source as C++ despite the file extension suggesting otherwise.
+* _SkipBundling_ - Disable generating bundles for Apple platforms.
+* _XcodeScheme_ - **(Experimental)** Generate an XCode scheme for this project.
+
 [Back to top](#table-of-contents)
 
 ---
@@ -1627,6 +1705,172 @@ vpaths {
 }
 ```
 [Back to top](#table-of-contents)
+
+---
+### xcodeprojectopts({[_key_] = _value_, ...})
+Sets XCode project options in the generated project files. [List of options.](https://gist.github.com/tkersey/39b4fe69e14b859889ffadccb009e397)
+
+#### Arguments
+_key_ - Name of the option to set
+_value_ - Value to set it to
+
+#### Examples
+```lua
+xcodeprojectopts {
+    ENABLE_BITCODE = "NO",
+    GCC_ENABLE_TRIGRAPHS = "YES",
+}
+```
+[Back to top](#table-of-contents)
+
+---
+### xcodetargetopts({[_key_] = _value_, ...})
+Sets XCode target options in the generated project files. [List of options.](https://gist.github.com/tkersey/39b4fe69e14b859889ffadccb009e397)
+
+#### Arguments
+_key_ - Name of the option to set
+_value_ - Value to set it to
+
+#### Examples
+```lua
+xcodetargetopts {
+    ALWAYS_SEARCH_USER_PATHS = "YES",
+}
+```
+[Back to top](#table-of-contents)
+
+---
+### xcodescriptphases({{_cmd_, {_inputpaths_, ...}}})
+#### XCode only
+Adds a script phase to the generated XCode project file.  
+One tag can contain several commands with different inputpaths.
+
+#### Arguments
+_cmd_ - The actual command to run. (This can be a shell script file or direct shell code).  
+_inputpaths_ - The paths passed to the command
+
+#### Examples
+_Building shader files_
+```lua
+xcodescriptphases {
+    {"shaderc_xcode.sh", {
+        os.matchfiles("**.shader")}
+    },
+}
+```
+
+_Copying, trimming and signing frameworks by relying on [carthage](https://github.com/Carthage/Carthage)_
+```lua
+xcodescriptphases {
+    {"carthage copy-frameworks", {
+        os.matchdirs("**.frameworks")}
+    },
+}
+```
+
+#### Caveats
+- Script phases are added in their order of declaration inside the project,
+  and in their order of declaration inside the tag.
+- The input paths are used as passed to the tag.
+  If relative paths are required, you have to rebase them beforehand using `path.getrelative()`.
+- For commands/scripts: You can iterate over the input paths using the following XCode variables:
+  `${SCRIPT_INPUT_FILE_COUNT}`: The number of input paths provided to the script
+  `${SCRIPT_INPUT_FILE_0}` ...: The input paths at index 0 and so on.
+  **NOTE**: You can construct the indexed variable as in the example below:
+```bash
+for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; ++i )); do
+    varname=SCRIPT_INPUT_FILE_$i
+    echo ${!varname}
+done
+```
+
+[Back to top](#table-of-contents)
+
+---
+### xcodecopyresources({{_targetpath_, {_inputfiles_, ...}}})
+#### XCode only
+Adds a 'Copy Files' phase to the generated XCode project file.  
+One tag can contain several target paths with different input files.
+
+#### Arguments
+_targetpath_ - The target path relative to the _Resource_ folder in the resulting `.app` structure.  
+_inputfiles_ - The input files to be copied.
+
+#### Examples
+```lua
+xcodecopyresources {
+    { ".", {
+        "GameResources", -- a folder
+    }},
+    { "shaders", {
+         os.matchfiles("**.shader"), -- sparse files
+    }},
+}
+```
+
+#### Caveats
+- The target path is only handled as relative to the _Resource_ folder. No other folder can be indicated at the moment.
+  If you need support for other targets, please file an issue on Github.
+- `xcodecopyresources` can only be set _per project_, not _per configuration_.
+
+
+[Back to top](#table-of-contents)
+
+---
+### xcodecopyframeworks({_inputframeworks_, ...})
+#### XCode only
+Adds a 'Copy Files' phase to the generated XCode project file that will copy and sign the provided frameworks.
+
+#### Arguments
+_inputframeworks_ - A list of frameworks to be copied to the `.app` structure, with the `SignOnCopy` flag set.
+
+#### Examples
+```lua
+links { -- frameworks have to be linked with the .app first
+    "GTLR.framework",
+    "BGFX.framework",
+}
+xcodecopyframeworks {
+    "GTLR.framework",
+    "BGFX.framework",
+}
+```
+
+#### Caveats
+- Frameworks must be known to the project to be copiable: set the link dependency accordingly using `links {}`.
+- `xcodecopyframeworks` can only be set _per project_, not _per configuration_.
+
+[Back to top](#table-of-contents)
+
+---
+
+---
+### wholearchive({_references_...})
+Specifies a list of libraries to link without stripping unreferenced object files. The libraries must have already been added using `links`, and the same identifier must be specified.
+
+**Scope:** solutions, projects, configurations
+
+#### Arguments
+_references_ - list of library and project names
+
+#### Examples
+```lua
+project "static_lib"
+    kind "StaticLib"
+
+project "console_app"
+    kind "ConsoleApp"
+    links { "static_lib" }
+    wholearchive { "static_lib" }
+```
+
+#### References
+* [Clang documentation](https://clang.llvm.org/docs/ClangCommandLineReference.html#cmdoption-clang2-force-load)
+* [GNU documentation](https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_node/ld_3.html#IDX183)
+* [Microsoft documentation](https://docs.microsoft.com/en-us/cpp/build/reference/wholearchive-include-all-library-object-files?view=vs-2017)
+
+[Back to top](#table-of-contents)
+
 
 ---
 ## Utility functions

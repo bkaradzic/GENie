@@ -43,16 +43,19 @@
 
 	local cxxflags =
 	{
-		NoExceptions   = "-fno-exceptions",
-		NoRTTI         = "-fno-rtti",
-		UnsignedChar   = "-funsigned-char",
+		Cpp11        = "-std=c++11",
+		Cpp14        = "-std=c++14",
+		Cpp17        = "-std=c++17",
+		CppLatest    = "-std=c++2a",
+		NoExceptions = "-fno-exceptions",
+		NoRTTI       = "-fno-rtti",
+		UnsignedChar = "-funsigned-char",
 	}
 
 	local objcflags =
 	{
-		ObjcARC     = "-fobjc-arc",
+		ObjcARC = "-fobjc-arc",
 	}
-
 
 --
 -- Map platforms to flags
@@ -105,6 +108,12 @@
 			cc         = "orbis-clang",
 			cxx        = "orbis-clang++",
 			ar         = "orbis-ar",
+			cppflags   = "-MMD -MP",
+		},
+		Emscripten = {
+			cc         = "$(EMSCRIPTEN)/emcc",
+			cxx        = "$(EMSCRIPTEN)/em++",
+			ar         = "$(EMSCRIPTEN)/emar",
 			cppflags   = "-MMD -MP",
 		}
 	}
@@ -206,7 +215,7 @@
 	function premake.gcc.getlibdirflags(cfg)
 		local result = { }
 		for _, value in ipairs(premake.getlinks(cfg, "all", "directory")) do
-			table.insert(result, '-L' .. _MAKE.esc(value))
+			table.insert(result, '-L\"' .. value .. '\"')
 		end
 		return result
 	end
@@ -260,6 +269,18 @@
 			end
 		end
 		return result
+	end
+
+--
+-- Get the arguments for whole-archive linking.
+--
+
+	function premake.gcc.wholearchive(lib)
+		if premake.gcc.llvm then
+			return {"-force_load", lib}
+		else
+			return {"-Wl,--whole-archive", lib, "-Wl,--no-whole-archive"}
+		end
 	end
 
 --

@@ -18,6 +18,11 @@
 	function xcode.getbuildcategory(node)
 		local categories = {
 			[".a"] = "Frameworks",
+			[".h"] = "Headers",
+			[".hh"] = "Headers",
+			[".hpp"] = "Headers",
+			[".hxx"] = "Headers",
+			[".inl"] = "Headers",
 			[".c"] = "Sources",
 			[".cc"] = "Sources",
 			[".cpp"] = "Sources",
@@ -40,7 +45,8 @@
 			[".xcdatamodeld"] = "Sources",
 			[".swift"] = "Sources",
 		}
-		return categories[path.getextension(node.name)]
+		return categories[path.getextension(node.name)] or
+			categories[string.lower(path.getextension(node.name))]
 	end
 
 
@@ -86,6 +92,10 @@
 			[".tbd"]       = "sourcecode.text-based-dylib-definition",
 			[".gif"]       = "image.gif",
 			[".h"]         = "sourcecode.c.h",
+			[".hh"]        = "sourcecode.cpp.h",
+			[".hpp"]       = "sourcecode.cpp.h",
+			[".hxx"]       = "sourcecode.cpp.h",
+			[".inl"]       = "sourcecode.cpp.h",
 			[".html"]      = "text.html",
 			[".lua"]       = "sourcecode.lua",
 			[".m"]         = "sourcecode.c.objc",
@@ -103,7 +113,8 @@
 			[".xcdatamodeld"] = "wrapper.xcdatamodeld",
 			[".swift"]     = "sourcecode.swift",
 		}
-		return types[path.getextension(node.path)] or "text"
+		return types[path.getextension(node.path)] or
+			(types[string.lower(path.getextension(node.path))] or "text")
 	end
 
 --
@@ -129,6 +140,10 @@
 			[".tbd"]       = "wrapper.framework",
 			[".gif"]       = "image.gif",
 			[".h"]         = "sourcecode.cpp.h",
+			[".hh"]        = "sourcecode.cpp.h",
+			[".hpp"]       = "sourcecode.cpp.h",
+			[".hxx"]       = "sourcecode.cpp.h",
+			[".inl"]       = "sourcecode.cpp.h",
 			[".html"]      = "text.html",
 			[".lua"]       = "sourcecode.lua",
 			[".m"]         = "sourcecode.cpp.objcpp",
@@ -145,7 +160,8 @@
 			[".xcdatamodeld"] = "wrapper.xcdatamodeld",
 			[".swift"]     = "sourcecode.swift",
 		}
-		return types[path.getextension(node.path)] or "text"
+		return types[path.getextension(node.path)] or
+			(types[string.lower(path.getextension(node.path))] or "text")
 	end
 --
 -- Return the Xcode product type, based target kind.
@@ -269,6 +285,49 @@
 		return xcode.uuid(base)
 	end
 
+--
+-- Creates a label for a given scriptphase
+--  based on command and config
+-- such as the result looks like this:
+-- 'Script Phase <number> [cmd] (Config)', e.g. 'Script Phase 1 [rsync] (Debug)'
+--
+-- This function is used for generating `PBXShellScriptBuildPhase` from `xcodescriptphases`.
+-- (Thus required in more than 1 place).
+--
+-- @param cmd
+--    The command itself
+-- @param count
+--    counter to avoid having duplicate label names
+-- @param cfg
+--    The configuration the command is generated for
+--
+
+	function xcode.getscriptphaselabel(cmd, count, cfg)
+		return string.format("\"Script Phase %s [%s] (%s)\"", count, cmd:match("(%w+)(.+)"), iif(cfg, xcode.getconfigname(cfg), "all"))
+	end
+
+
+--
+-- Creates a label for a given copy phase
+--  based on target
+-- such as the result looks like this:
+-- 'Copy <type> <number> [target]', e.g. 'Copy Files 1 [assets]'
+--
+-- This function is used for generating `PBXCopyFilesPhase` from `xcodecopyresources`.
+-- (Thus required in more than 1 place).
+--
+-- @param type
+--    The copy type ('Resources' for now)
+-- @param count
+--    counter to avoid having duplicate label names
+-- @param target
+--    The target subfolder
+--
+
+	function xcode.getcopyphaselabel(type, count, target)
+		return string.format("\"Copy %s %s [%s]\"", type, count, target)
+	end
+
 
 --
 -- Create a product tree node and all projects in a solution; assigning IDs
@@ -357,12 +416,48 @@ end
 
 
 	function xcode.PBXBuildFile(tr)
+		local function gatherCopyFiles(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						table.insertflat(copyfiles, tt[2])
+					end
+				end
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local function gatherCopyFrameworks(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				table.insertflat(copyfiles, targets)
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local copyfiles = table.flatten({
+			gatherCopyFiles('xcodecopyresources'),
+			gatherCopyFrameworks('xcodecopyframeworks')
+		})
+
 		_p('/* Begin PBXBuildFile section */')
 		tree.traverse(tr, {
 			onnode = function(node)
 				if node.buildid then
 					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
 						node.buildid, node.name, xcode.getbuildcategory(node), node.id, node.name)
+				end
+
+				-- adds duplicate PBXBuildFile file entry as 'CopyFiles' for files marked to be copied
+				-- for frameworks: add signOnCopy flag
+				if table.icontains(copyfiles, node.name) then
+					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; %s };',
+						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name,
+						iif(xcode.isframework(node.name), "settings = {ATTRIBUTES = (CodeSignOnCopy, ); };", "")
+					)
 				end
 			end
 		})
@@ -432,7 +527,8 @@ end
 						end
 						if string.find(nodePath,'/')  then
 							if string.find(nodePath,'^%.')then
-								error('relative paths are not currently supported for frameworks')
+								--error('relative paths are not currently supported for frameworks')
+								nodePath = path.getabsolute(path.join(tr.project.location, nodePath))
 							end
 							pth = nodePath
 						elseif path.getextension(nodePath)=='.tbd' then
@@ -578,22 +674,85 @@ end
 				end
 			end
 
+			local function dobuildblock(id, label, which, action)
+				if hasBuildCommands(which) then
+					local commandcount = 0
+					for _, cfg in ipairs(tr.configs) do
+						commandcount = commandcount + #cfg[which]
+					end
+					if commandcount > 0 then
+						action(id, label)
+					end
+				end
+			end
+
+			local function doscriptphases(which, action)
+				local i = 0
+				for _, cfg in ipairs(tr.configs) do
+					local cfgcmds = cfg[which]
+					if cfgcmds ~= nil then
+						for __, scripts in ipairs(cfgcmds) do
+							for ___, script in ipairs(scripts) do
+								local cmd = script[1]
+								local label = xcode.getscriptphaselabel(cmd, i, cfg)
+								local id = xcode.uuid(label)
+								action(id, label)
+								i = i + 1
+							end
+						end
+					end
+				end
+			end
+
+			local function docopyresources(which, action)
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					if #targets > 0 then
+						local i = 0
+						for _, t in ipairs(targets) do
+							for __, tt in ipairs(t) do
+								local label = xcode.getcopyphaselabel('Resources', i, tt[1])
+								local id = xcode.uuid(label)
+								action(id, label)
+								i = i + 1
+							end
+						end
+					end
+				end
+			end
+
+			local function docopyframeworks(which, action)
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					if #targets > 0 then
+						local label = "Copy Frameworks"
+						local id = xcode.uuid(label)
+						action(id, label)
+					end
+				end
+			end
+
+			local function _p_label(id, label)
+				_p(4, '%s /* %s */,', id, label)
+			end
+
+
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
 			_p(3,'buildConfigurationList = %s /* Build configuration list for PBXNativeTarget "%s" */;', node.cfgsection, name)
 			_p(3,'buildPhases = (')
-			if hasBuildCommands('prebuildcommands') then
-				_p(4,'9607AE1010C857E500CD1376 /* Prebuild */,')
-			end
+			dobuildblock('9607AE1010C857E500CD1376', 'Prebuild', 'prebuildcommands', _p_label)
 			_p(4,'%s /* Resources */,', node.resstageid)
 			_p(4,'%s /* Sources */,', node.sourcesid)
-			if hasBuildCommands('prelinkcommands') then
-				_p(4,'9607AE3510C85E7E00CD1376 /* Prelink */,')
-			end
+			dobuildblock('9607AE3510C85E7E00CD1376', 'Prelink', 'prelinkcommands', _p_label)
 			_p(4,'%s /* Frameworks */,', node.fxstageid)
-			if hasBuildCommands('postbuildcommands') then
-				_p(4,'9607AE3710C85E8F00CD1376 /* Postbuild */,')
+			dobuildblock('9607AE3710C85E8F00CD1376', 'Postbuild', 'postbuildcommands', _p_label)
+			doscriptphases("xcodescriptphases", _p_label)
+			docopyresources("xcodecopyresources", _p_label)
+			if tr.project.kind == "WindowedApp" then
+				docopyframeworks("xcodecopyframeworks", _p_label)
 			end
+
 			_p(3,');')
 			_p(3,'buildRules = (')
 			_p(3,');')
@@ -704,47 +863,91 @@ end
 	function xcode.PBXShellScriptBuildPhase(tr)
 		local wrapperWritten = false
 
-		local function doblock(id, name, which)
+		local function doblock(id, name, commands, files)
+			if commands ~= nil then
+				commands = table.flatten(commands)
+			end
+				if #commands > 0 then
+					if not wrapperWritten then
+						_p('/* Begin PBXShellScriptBuildPhase section */')
+						wrapperWritten = true
+					end
+					_p(2,'%s /* %s */ = {', id, name)
+					_p(3,'isa = PBXShellScriptBuildPhase;')
+					_p(3,'buildActionMask = 2147483647;')
+					_p(3,'files = (')
+					_p(3,');')
+					_p(3,'inputPaths = (');
+					if files ~= nil then
+						files = table.flatten(files)
+						if #files > 0 then
+							for _, file in ipairs(files) do
+								_p(4, '"%s",', file)
+							end
+						end
+					end
+					_p(3,');');
+					_p(3,'name = %s;', name);
+					_p(3,'outputPaths = (');
+					_p(3,');');
+					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+					_p(3,'shellPath = /bin/sh;');
+					_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+					_p(2,'};')
+				end
+			end
+
+		local function wrapcommands(cmds, cfg)
+			local commands = {}
+			if #cmds > 0 then
+				table.insert(commands, 'if [ "${CONFIGURATION}" = "' .. xcode.getconfigname(cfg) .. '" ]; then')
+				for i = 1, #cmds do
+					local cmd = cmds[i]
+					cmd = cmd:gsub('\\','\\\\')
+					table.insert(commands, cmd)
+				end
+				table.insert(commands, 'fi')
+			end
+			return commands
+		end
+
+		local function dobuildblock(id, name, which)
 			-- see if there are any commands to add for each config
 			local commands = {}
 			for _, cfg in ipairs(tr.configs) do
-				local cfgcmds = cfg[which]
+				local cfgcmds = wrapcommands(cfg[which], cfg)
 				if #cfgcmds > 0 then
-					table.insert(commands, 'if [ "${CONFIGURATION}" = "' .. xcode.getconfigname(cfg) .. '" ]; then')
-					for i = 1, #cfgcmds do
-						local cmd = cfgcmds[i]
-						cmd = cmd:gsub('\\','\\\\')
+					for i, cmd in ipairs(cfgcmds) do
 						table.insert(commands, cmd)
 					end
-					table.insert(commands, 'fi')
 				end
 			end
+			doblock(id, name, commands)
+		end
 
-			if #commands > 0 then
-				if not wrapperWritten then
-					_p('/* Begin PBXShellScriptBuildPhase section */')
-					wrapperWritten = true
+		local function doscriptphases(which)
+			local i = 0
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for __, scripts in ipairs(cfgcmds) do
+						for ___, script in ipairs(scripts) do
+							local cmd = script[1]
+							local files = script[2]
+							local label = xcode.getscriptphaselabel(cmd, i, cfg)
+							local id = xcode.uuid(label)
+							doblock(id, label, wrapcommands({cmd}, cfg), files)
+							i = i + 1
+						end
+					end
 				end
-				_p(2,'%s /* %s */ = {', id, name)
-				_p(3,'isa = PBXShellScriptBuildPhase;')
-				_p(3,'buildActionMask = 2147483647;')
-				_p(3,'files = (')
-				_p(3,');')
-				_p(3,'inputPaths = (');
-				_p(3,');');
-				_p(3,'name = %s;', name);
-				_p(3,'outputPaths = (');
-				_p(3,');');
-				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-				_p(3,'shellPath = /bin/sh;');
-				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
-				_p(2,'};')
 			end
 		end
 
-		doblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
-		doblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
-		doblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		dobuildblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
+		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
+		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		doscriptphases("xcodescriptphases")
 
 		if wrapperWritten then
 			_p('/* End PBXShellScriptBuildPhase section */')
@@ -776,6 +979,82 @@ end
 		_p('')
 	end
 
+	-- copyresources leads to this
+	-- xcodeembedframeworks
+	function xcode.PBXCopyFilesBuildPhase(tr)
+		local wrapperWritten = false
+
+		local function doblock(id, name, folderSpec, path, files)
+			-- note: folder spec:
+			-- 0: Absolute Path
+			-- 1: Wrapper
+			-- 6: Executables
+			-- 7: Resources
+			-- 10: Frameworks
+			-- 16: Products Directory
+			-- category: 'Frameworks' or 'CopyFiles'
+
+			if #files > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXCopyFilesBuildPhase section */')
+					wrapperWritten = true
+				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXCopyFilesBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'dstPath = \"%s\";', path)
+				_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
+				_p(3,'files = (')
+				tree.traverse(tr, {
+					onleaf = function(node)
+						-- print(node.name)
+						if table.icontains(files, node.name) then
+							_p(4,'%s /* %s in %s */,', 
+								xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles')
+						end
+					end
+				})
+				_p(3,');')
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(2,'};')
+			end
+		end
+
+		local function docopyresources(which)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local i = 0
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						local label = xcode.getcopyphaselabel('Resources', i, tt[1])
+						local id = xcode.uuid(label)
+						local files = table.translate(table.flatten(tt[2]), path.getname)
+						doblock(id, label, 7, tt[1], files)
+						i = i + 1
+					end
+				end
+			end
+		end
+
+		local function docopyframeworks(which)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local label = "Copy Frameworks"
+				local id = xcode.uuid(label)
+				local files = table.translate(table.flatten(targets), path.getname)
+				doblock(id, label, 10, "", files)
+			end
+		end
+
+		docopyresources("xcodecopyresources")
+		if tr.project.kind == "WindowedApp" then
+			docopyframeworks("xcodecopyframeworks")
+		end
+
+		if wrapperWritten then
+			_p('/* End PBXCopyFilesBuildPhase section */')
+		end
+	end
 
 	function xcode.PBXVariantGroup(tr)
 		_p('/* Begin PBXVariantGroup section */')
@@ -905,17 +1184,47 @@ end
 		_p(2,'};')
 	end
 
+	local function add_options(options, extras)
+		for _, tbl in ipairs(extras) do
+			for tkey, tval in pairs(tbl) do
+				options[tkey] = tval
+			end
+		end
+	end
+
+	local function add_wholearchive_links(opts, cfg)
+		if #cfg.wholearchive > 0 then
+			local linkopts = {}
+
+			for _, depcfg in ipairs(premake.getlinks(cfg, "siblings", "object")) do
+				if table.icontains(cfg.wholearchive, depcfg.project.name) then
+					local linkpath = path.rebase(depcfg.linktarget.fullpath, depcfg.location, cfg.location)
+					table.insert(linkopts, "-force_load")
+					table.insert(linkopts, linkpath)
+				end
+			end
+
+			if opts.OTHER_LDFLAGS then
+				linkopts = table.join(linkopts, opts.OTHER_LDFLAGS)
+			end
+
+			opts.OTHER_LDFLAGS = linkopts
+		end
+	end
 
 	function xcode.XCBuildConfiguration(tr, prj, opts)
 		_p('/* Begin XCBuildConfiguration section */')
 		for _, target in ipairs(tr.products.children) do
 			for _, cfg in ipairs(tr.configs) do
 				local values = opts.ontarget(tr, target, cfg)
+				add_options(values, cfg.xcodetargetopts)
 				xcode.XCBuildConfiguration_Impl(tr, cfg.xcode.targetid, values, cfg)
 			end
 		end
 		for _, cfg in ipairs(tr.configs) do
 			local values = opts.onproject(tr, prj, cfg)
+			add_options(values, cfg.xcodeprojectopts)
+			add_wholearchive_links(values, cfg)
 			xcode.XCBuildConfiguration_Impl(tr, cfg.xcode.projectid, values, cfg)
 		end
 		_p('/* End XCBuildConfiguration section */')

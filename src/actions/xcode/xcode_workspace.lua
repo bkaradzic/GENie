@@ -1,6 +1,8 @@
 local premake = premake
 local xcode = premake.xcode
 
+xcode.allscheme = false
+
 function xcode.workspace_head()
 	_p('<?xml version="1.0" encoding="UTF-8"?>')
 	_p('<Workspace')
@@ -26,11 +28,20 @@ function xcode.workspace_group(grp, indent)
 	_p(indent + 1, 'location = "container:"')
 	_p(indent + 1, 'name = "%s">', grp.name)
 
-	for _, child in ipairs(grp.groups) do
+	local function comparenames(a, b)
+		return a.name < b.name
+	end
+
+	local groups = table.join(grp.groups)
+	local projects = table.join(grp.projects)
+	table.sort(groups, comparenames)
+	table.sort(projects, comparenames)
+
+	for _, child in ipairs(groups) do
 		xcode.workspace_group(child, indent + 1)
 	end
 
-	for _, prj in ipairs(grp.projects) do
+	for _, prj in ipairs(projects) do
 		xcode.workspace_file_ref(prj, indent + 1)
 	end
 
@@ -55,6 +66,60 @@ function xcode.workspace_generate(sln)
 	end
 
 	xcode.workspace_tail()
+end
+
+
+--
+-- Generate the `-ALL` scheme, building all targets.
+--
+
+function xcode.workspace_scheme(sln)
+	if not xcode.allscheme then
+		return false
+	end
+
+	local projects = {}
+	local primary = nil
+
+	for prj in premake.solution.eachproject(sln) do
+		if not primary or (sln.startproject == prj.name) then
+			primary = prj
+		end
+		table.insert(projects, prj)
+	end
+
+	xcode.scheme(projects, primary)
+end
+
+--
+-- Generate the workspace settings file, preventing xcode from auto-generating
+-- schemes if we have manually provided any.
+--
+
+function xcode.workspace_settings(sln)
+	local generate = xcode.allscheme
+
+	if not generate then
+		for prj in premake.solution.eachproject(sln) do
+			if prj.options and prj.options.XcodeScheme then
+				generate = true
+				break
+			end
+		end
+	end
+
+	if not generate then
+		return false
+	end
+
+	_p('<?xml version="1.0" encoding="UTF-8"?>')
+	_p('<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">')
+	_p('<plist version="1.0">')
+	_p('<dict>')
+	_p(1, '<key>IDEWorkspaceSharedSettings_AutocreateContextsIfNeeded</key>')
+	_p(1, '<false/>')
+	_p('</dict>')
+	_p('</plist>')
 end
 
 --

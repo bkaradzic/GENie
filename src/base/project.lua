@@ -555,6 +555,14 @@
 			elseif kind == "SharedLib" then
 				ext = ".nro"
 			end
+		elseif namestyle == "Emscripten" then
+			if kind == "ConsoleApp" or kind == "WindowedApp" then
+				ext = ".html"
+			elseif kind == "StaticLib" then
+				ext = ".bc"
+			elseif kind == "SharedLib" then
+				ext = ".js"
+			end
 		end
 
 		prefix = cfg[field.."prefix"] or cfg.targetprefix or prefix

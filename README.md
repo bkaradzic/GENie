@@ -13,7 +13,7 @@ Supported project generators:
  * GNU Makefile
  * Ninja (experimental)
  * Qbs / QtCreator (experimental)
- * Visual Studio 2008, 2010, 2012, 2013, 2015, 2017
+ * Visual Studio 2010, 2012, 2013, 2015, 2017
  * XCode
 
 Download (stable)
@@ -21,7 +21,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 911 (commit bfbc52bf713d05661f9e54902394d7e3a6dbc2b3)
+	version 1017 (commit 54ac88e932769af60df0bc84e0e72b961420aa2d)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -119,10 +119,24 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `ObjcARC` flag to enable automatic reference counting for Objective-C(++).
  - Added `iostargetplatformversion`, `macostargetplatformversion`, and
    `tvostargetplatformversion` to specify XCode OS target version.
- - Removed the `xcode3` action, and added the `xcode8` and `xcode9` actions.
+ - Removed the `xcode3`, and `xcode4` actions.
+ - Added the `xcode8`, `xcode9`, and `xcode10` actions.
  - Added `systemincludedirs` that are always searched after directories added
    using `includedirs`.
- - Added `NoRuntimeChecks` flag to disable Basic Runtime Checks in non-optimized Visual Studio builds.
+ - Added `NoRuntimeChecks` flag to disable Basic Runtime Checks in non-optimized
+   Visual Studio builds.
+ - Added support for Nintendo Switch projects.
+ - Added flags for selecting C++ standard: `Cpp11`, `Cpp14`, `Cpp17`,
+   and `CppLatest`.
+ - Added `xcodeprojectopts` and `xcodetargetopts`.
+
+build - GENie build system scripts
+----------------------------------
+
+build is a set of build system scripts and related tools, built around
+GENie project generator tool.
+
+https://milostosic.github.io/build/
 
 Debugging GENie scripts
 -----------------------
@@ -178,7 +192,7 @@ https://github.com/andr3wmac/Torque6 Torque 6 is an MIT licensed 3D engine
 loosely based on Torque2D. Being neither Torque2D or Torque3D it is the 6th
 derivative of the original Torque Engine.
 
-http://mtuner.net/ is a memory profiler and memory leak finder for Windows, PS4,
+https://milostosic.github.io/MTuner MTuner is a memory profiler and memory leak finder for Windows, PS4,
 PS3.
 
 Developer Crackshell used GENie for development of games
@@ -193,7 +207,8 @@ Developer Crackshell used GENie for development of games
 	Drew Solomon, Ted de Munnik, Miodrag Milanović, Brett Vickers, Bill Freist,
 	Terry Hendrix II, Ryan Juckett, Andrew Johnson, Johan Sköld,
 	Alastair Murray, Patrick Munns, Jan-Eric Duden, Phil Stevens, Stuart Carnie,
-	Nikolay Aleksiev, Jon Olson, Mike Fitzgerald, Anders Stenberg.
+	Nikolay Aleksiev, Jon Olson, Mike Fitzgerald, Anders Stenberg, Violets,
+	Hugo Amnov, Christian Helmich.
 	All rights reserved.
 
 	https://github.com/bkaradzic/genie

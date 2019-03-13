@@ -67,6 +67,10 @@
 			_p(2, '<Keyword>Win32Proj</Keyword>')
 		end
 
+		if not vstudio.xpwarning then
+			_p(2, '<XPDeprecationWarning>false</XPDeprecationWarning>')
+		end
+
 		_p(1,'</PropertyGroup>')
 	end
 
@@ -153,7 +157,7 @@
 			end
 		end
 
-		if cfg.platform == "NX64" then		
+		if cfg.platform == "NX64" then
 			_p(2,'<NintendoSdkRoot>$(NINTENDO_SDK_ROOT)</NintendoSdkRoot>')
 			_p(2,'<NintendoSdkSpec>NX</NintendoSdkSpec>')
 			--TODO: Allow specification of the 'Develop' build type
@@ -162,6 +166,11 @@
 			else
 				_p(2,'<NintendoSdkBuildType>Release</NintendoSdkBuildType>')
 			end
+		end
+
+		-- Workaround for https://github.com/Microsoft/msbuild/issues/2353
+		if cfg.flags.Symbols and premake.action.current() == premake.action.get("vs2017") then
+			_p(2, '<DebugSymbols>true</DebugSymbols>')
 		end
 
 		_p(1,'</PropertyGroup>')
@@ -318,6 +327,17 @@
 
 	end
 
+	local function cppstandard_vs2017(cfg)
+		if cfg.flags.CppLatest then
+			_p(3, '<LanguageStandard>stdcpplatest</LanguageStandard>')
+			_p(3, '<EnableModules>true</EnableModules>')
+		elseif cfg.flags.Cpp17 then
+			_p(3, '<LanguageStandard>stdcpp17</LanguageStandard>')
+		elseif cfg.flags.Cpp14 then
+			_p(3, '<LanguageStandard>stdcpp14</LanguageStandard>')
+		end
+	end
+
 	local function exceptions(cfg)
 		if cfg.platform == "Orbis" then
 			if cfg.flags.NoExceptions then
@@ -399,9 +419,7 @@
 			if cfg.flags.C7DebugInfo then
 				debug_info = "OldStyle"
 			elseif (action.vstudio.supports64bitEditContinue == false and cfg.platform == "x64")
-				or cfg.flags.Managed
-				or premake.config.isoptimizedbuild(cfg.flags)
-				or cfg.flags.NoEditAndContinue
+				or not premake.config.iseditandcontinue(cfg)
 			then
 				debug_info = "ProgramDatabase"
 			else
@@ -498,7 +516,21 @@
 		preprocessor(3, cfg)
 		minimal_build(cfg)
 
-		if not premake.config.isoptimizedbuild(cfg.flags) then
+		if premake.config.isoptimizedbuild(cfg.flags) then
+			-- Edit and continue is unstable with release/optimized projects. If the current project
+			-- is optimized, but linker optimizations are disabled and has opted out of edit and continue
+			-- support, then ensure that function level linking is disabled. This ensures that libs that
+			-- do have edit and continue enabled don't run into undefined behavior at runtime when linking
+			-- in optimized libs.
+			if cfg.flags.NoOptimizeLink and cfg.flags.NoEditAndContinue then
+				_p(3, '<StringPooling>false</StringPooling>')
+				_p(3, '<FunctionLevelLinking>false</FunctionLevelLinking>')
+			else
+				_p(3, '<StringPooling>true</StringPooling>')
+				_p(3, '<FunctionLevelLinking>true</FunctionLevelLinking>')
+			end
+		else
+			_p(3, '<FunctionLevelLinking>true</FunctionLevelLinking>')
 			if cfg.flags.NoRuntimeChecks then
 				_p(3, '<BasicRuntimeChecks>Default</BasicRuntimeChecks>')
 			elseif not cfg.flags.Managed then
@@ -508,8 +540,6 @@
 			if cfg.flags.ExtraWarnings then
 --				_p(3, '<SmallerTypeCheck>true</SmallerTypeCheck>')
 			end
-		else
-			_p(3, '<StringPooling>true</StringPooling>')
 		end
 
 		if cfg.platform == "Durango" or cfg.flags.NoWinRT then
@@ -522,7 +552,7 @@
 			_p(3, '<BufferSecurityCheck>false</BufferSecurityCheck>')
 		end
 
-		_p(3,'<FunctionLevelLinking>true</FunctionLevelLinking>')
+
 
 		-- If we aren't running NoMultiprocessorCompilation and not wanting a minimal rebuild,
 		-- then enable MultiProcessorCompilation.
@@ -578,6 +608,10 @@
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
 
+		if premake.action.current() == premake.action.get("vs2017") then
+			cppstandard_vs2017(cfg)
+		end
+
 		exceptions(cfg)
 		rtti(cfg)
 		calling_convention(cfg)
@@ -586,12 +620,21 @@
 		floating_point(cfg)
 		debug_info(cfg)
 
-		if  cfg.flags.Symbols
-		and _ACTION:sub(3) ~= "2017"
-		then
-			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
-				, path.getbasename(cfg.buildtarget.name)
-				)
+		if cfg.flags.Symbols then
+			-- The compiler pdb should be different than the linker pdb, and
+			-- the linker pdb is what should be distributed and used for
+			-- debugging. But in the case of static libraries, they have no
+			-- linker pdb, so then the compiler pdb should be in the output
+			-- dir instead...
+			if cfg.kind == "StaticLib" then
+				_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
+					, path.getbasename(cfg.buildtarget.name)
+					)
+			else
+				_p(3, '<ProgramDataBaseFileName>$(IntDir)%s.compile.pdb</ProgramDataBaseFileName>'
+					, path.getbasename(cfg.buildtarget.name)
+					)
+			end
 		end
 
 		if cfg.flags.NoFramePointer then
@@ -667,6 +710,60 @@
 		return #files > 0
 	end
 
+	local function ismanagedprj(prj, cfgname, pltname)
+		local cfg = premake.getconfig(prj, cfgname, pltname)
+		return cfg.flags.Managed == true
+	end
+
+	local function getcfglinks(cfg)
+		local haswholearchive = #cfg.wholearchive > 0
+		local msvcnaming 	  = premake.getnamestyle(cfg) == "windows"
+		local iscppprj   	  = premake.iscppproject(cfg)
+		local isnetprj   	  = premake.isdotnetproject(cfg)
+		local linkobjs   	  = {}
+		local links      	  = iif(haswholearchive
+			, premake.getlinks(cfg, "all", "object")
+			, premake.getlinks(cfg, "system", "fullpath")
+			)
+
+		for _, link in ipairs(links) do
+			local name      = nil
+			local directory = nil
+			local whole     = nil
+
+			if type(link) == "table" then
+				-- if the link is to a managed project, we should ignore it
+				-- as managed projects don't have lib files.
+				if not ismanagedprj(link.project, cfg.name, cfg.platform) then
+					-- project config
+					name      = link.linktarget.basename
+					directory = path.rebase(link.linktarget.directory, link.location, cfg.location)
+					whole     = table.icontains(cfg.wholearchive, link.project.name)
+				end
+			else
+				-- link name
+				name      = link
+				whole     = table.icontains(cfg.wholearchive, link)
+			end
+
+			if name then
+				-- If we called premake.getlinks with "object", we need to
+				-- re-add the file extensions since it didn't do it for us.
+				if haswholearchive and msvcnaming then
+					if iscppprj then
+						name = name .. ".lib"
+					elseif isnetprj then
+						name = name .. ".dll"
+					end
+				end
+
+				table.insert(linkobjs, {name=name, directory=directory, wholearchive=whole})
+			end
+		end
+
+		return linkobjs
+	end
+
 	local function vs10_masm(prj, cfg)
 		if hasmasmfiles(prj) then
 			_p(2, '<MASM>')
@@ -719,21 +816,34 @@
 --
 
 	function vc2010.link(cfg)
+		local vs2017 = premake.action.current() == premake.action.get("vs2017")
+		local links  = getcfglinks(cfg)
+
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
-		_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 
-		if  cfg.flags.Symbols
-		and _ACTION:sub(3) == "2017"
-		then
-			_p(3, '<ProgramDataBaseFileName>$(OutDir)%s.pdb</ProgramDataBaseFileName>'
+		if vs2017 and cfg.flags.FullSymbols then
+			_p(3,'<GenerateDebugInformation>DebugFull</GenerateDebugInformation>')
+		else
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+		end
+
+		if cfg.flags.Symbols then
+			_p(3, '<ProgramDatabaseFile>$(OutDir)%s.pdb</ProgramDatabaseFile>'
 				, path.getbasename(cfg.buildtarget.name)
 				)
 		end
 
-		if premake.config.isoptimizedbuild(cfg.flags) then
-			_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
-			_p(3,'<OptimizeReferences>true</OptimizeReferences>')
+		if premake.config.islinkeroptimizedbuild(cfg.flags) then
+			if cfg.platform == "Orbis" then
+				_p(3,'<DataStripping>StripFuncsAndData</DataStripping>')
+				_p(3,'<DuplicateStripping>true</DuplicateStripping>')
+			else
+				_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
+				_p(3,'<OptimizeReferences>true</OptimizeReferences>')
+			end
+		elseif cfg.platform == "Orbis" and premake.config.iseditandcontinue(cfg) then
+			_p(3,'<EditAndContinue>true</EditAndContinue>')
 		end
 
 		if cfg.finalizemetasource ~= nil then
@@ -741,14 +851,9 @@
 		end
 
 		if cfg.kind ~= 'StaticLib' then
-			vc2010.additionalDependencies(3,cfg)
+			vc2010.additionalDependencies(3, cfg, links)
+			vc2010.additionalLibraryDirectories(3, cfg, links)
 			_p(3,'<OutputFile>$(OutDir)%s</OutputFile>', cfg.buildtarget.name)
-
-			if #cfg.libdirs > 0 then
-				_p(3,'<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
-					, premake.esc(path.translate(table.concat(cfg.libdirs, ';'), '\\'))
-					)
-			end
 
 			if vc2010.config_type(cfg) == 'Application' and not cfg.flags.WinMain and not cfg.flags.Managed then
 				if cfg.flags.Unicode then
@@ -780,8 +885,31 @@
 		end
 
 		_p(2,'</Link>')
+
+		-- If any libraries are to be linked as whole archive, we need to
+		-- handle the linking manually, since there is no project configuration
+		-- option for that.
+		if #cfg.wholearchive > 0 then
+			_p(2, '<ProjectReference>')
+			_p(3, '<LinkLibraryDependencies>false</LinkLibraryDependencies>')
+			_p(2, '</ProjectReference>')
+		end
 	end
 
+
+	function vc2010.additionalLibraryDirectories(tab, cfg, links)
+		local dirs = cfg.libdirs
+
+		for _, link in ipairs(links) do
+			if link.directory and not table.icontains(dirs, link.directory) then
+				table.insert(dirs, link.directory)
+			end
+		end
+
+		_p(tab, '<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
+			, premake.esc(path.translate(table.concat(dirs, ';'), '\\'))
+			)
+	end
 
 --
 -- Generate the <Link/AdditionalDependencies> element, which links in system
@@ -789,16 +917,31 @@
 -- by an <ItemGroup/ProjectReference>).
 --
 
-	function vc2010.additionalDependencies(tab,cfg)
-		local links = premake.getlinks(cfg, "system", "fullpath")
+	function vc2010.additionalDependencies(tab, cfg, links)
 		if #links > 0 then
 			local deps = ""
+
 			if cfg.platform == "Orbis" then
-				for _, v in ipairs(links) do
-					deps = deps .. "-l" .. v .. ";"
+				local iswhole = false
+				for _, link in ipairs(links) do
+					if link.wholearchive and not iswhole then
+						deps = deps .. "--whole-archive;"
+						iswhole = true
+					elseif not link.wholearchive and iswhole then
+						deps = deps .. "--no-whole-archive;"
+						iswhole = false
+					end
+
+					deps = deps .. "-l" .. link.name .. ";"
 				end
 			else
-				deps = table.concat(links, ";")
+				for _, link in ipairs(links) do
+					if link.wholearchive then
+						deps = deps .. "/WHOLEARCHIVE:" .. link.name .. ";"
+					else
+						deps = deps .. link.name .. ";"
+					end
+				end
 			end
 
 			-- On Android, we need to shove a linking group in to resolve libs
@@ -1001,16 +1144,20 @@
 		if #files > 0  then
 			_p(1,'<ItemGroup>')
 			local groupedBuildTasks = {}
+			local buildTaskNames = {}
+
 			for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 				for _, buildtask in ipairs(custombuildtask or {}) do
 					if (groupedBuildTasks[buildtask[1]] == nil) then
 						groupedBuildTasks[buildtask[1]] = {}
+						table.insert(buildTaskNames, buildtask[1])
 					end
 					table.insert(groupedBuildTasks[buildtask[1]], buildtask)
 				end
 			end
 
-			for name, custombuildtask in pairs(groupedBuildTasks or {}) do
+			for _, name in ipairs(buildTaskNames) do
+				custombuildtask = groupedBuildTasks[name]
 				_p(2,'<CustomBuild Include=\"%s\">', path.translate(path.getrelative(prj.location,name), "\\"))
 				_p(3,'<FileType>Text</FileType>')
 				local cmd = ""
@@ -1318,8 +1465,11 @@
 		end
 
 		for _, ref in ipairs(prj.vsimportreferences) do
-			local iprj = premake.vstudio.getimportprj(ref, prj.solution)
-			_p(2,'<ProjectReference Include=\"%s\">', iprj.relpath)
+			-- Convert the path from being relative to the project to being
+			-- relative to the solution, for lookup.
+			local slnrelpath = path.rebase(ref, prj.location, sln.location)
+			local iprj = premake.vstudio.getimportprj(slnrelpath, prj.solution)
+			_p(2,'<ProjectReference Include=\"%s\">', ref)
 			_p(3,'<Project>{%s}</Project>', iprj.uuid)
 			_p(2,'</ProjectReference>')
 		end
@@ -1360,6 +1510,10 @@
 			_p(2, '<LocalDebuggerWorkingDirectory>%s</LocalDebuggerWorkingDirectory>'
 				, path.translate(cfg.debugdir, '\\')
 				)
+		end
+
+		if cfg.debugcmd then
+			_p(2, '<LocalDebuggerCommand>%s</LocalDebuggerCommand>', cfg.debugcmd)
 		end
 
 		if cfg.debugargs then
