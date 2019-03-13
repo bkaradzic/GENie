@@ -645,6 +645,10 @@
 			_p(3, '<UseFullPaths>true</UseFullPaths>')
 		end
 
+		if cfg.flags.NoJMC then
+			_p(3,'<SupportJustMyCode>false</SupportJustMyCode>' )
+		end
+
 		compile_language(cfg)
 
 		forcedinclude_files(3,cfg);
