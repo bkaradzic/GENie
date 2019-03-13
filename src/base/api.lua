@@ -616,18 +616,6 @@
 			scope = "config",
 		},
 
-		applicationdatadir =
-		{
-			kind  = "path",
-			scope = "config",
-		},
-
-		finalizemetasource =
-		{
-			kind  = "path",
-			scope = "config",
-		},
-
 		resdefines =
 		{
 			kind  = "list",
