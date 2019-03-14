@@ -480,6 +480,7 @@
 		end
 
 		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
+		_p('  LATE_LDFLAGS       +=%s', make.list(cfg.linkoptions_late))
 		_p('  LIBDEPS            +=%s', libdeps)
 		_p('  LDDEPS             +=%s', lddeps)
 		_p('  LIBS               += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
@@ -495,7 +496,7 @@
 			end
 		else
 			local tool = iif(cfg.language == "C", "CC", "CXX")
-			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
+			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS) $(LATE_LDFLAGS)', tool)
 		end
 	end
 

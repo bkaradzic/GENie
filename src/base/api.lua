@@ -430,6 +430,12 @@
 			scope = "config",
 		},
 
+		linkoptions_late =
+		{
+			kind  = "list",
+			scope = "config",
+		},
+
 		links =
 		{
 			kind  = "list",
