@@ -42,6 +42,7 @@
 		Orbis   = "ORBIS",
 		Durango = "Durango",
 		TegraAndroid = "Tegra-Android",
+		NX32    = "NX32",
 		NX64    = "NX64",
 		Emscripten = "Emscripten",
 	}
