@@ -157,8 +157,8 @@
 			end
 		end
 
-		if cfg.platform == "NX64" then
-			_p(2,'<NintendoSdkRoot>$(NINTENDO_SDK_ROOT)</NintendoSdkRoot>')
+		if cfg.platform == "NX32" or cfg.platform == "NX64" then
+			_p(2,'<NintendoSdkRoot>$(NINTENDO_SDK_ROOT)\\</NintendoSdkRoot>')
 			_p(2,'<NintendoSdkSpec>NX</NintendoSdkSpec>')
 			--TODO: Allow specification of the 'Develop' build type
 			if premake.config.isdebugbuild(cfg) then
