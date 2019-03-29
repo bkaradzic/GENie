@@ -1501,13 +1501,15 @@
 --
 
 	function vc2010.debugdir(cfg)
+		local isnx = (cfg.platform == "NX32" or cfg.platform == "NX64")
 		local debuggerFlavor =
-			  iif(cfg.platform == "Orbis",        'ORBISDebugger'
+			  iif(isnx,                           'OasisNXDebugger'
+			, iif(cfg.platform == "Orbis",        'ORBISDebugger'
 			, iif(cfg.platform == "Durango",      'XboxOneVCppDebugger'
 			, iif(cfg.platform == "TegraAndroid", 'AndroidDebugger'
 			, iif(vstudio.iswinrt(),              'AppHostLocalDebugger'
 			,                                     'WindowsLocalDebugger'
-			))))
+			)))))
 		_p(2, '<DebuggerFlavor>%s</DebuggerFlavor>', debuggerFlavor)
 
 		if cfg.debugdir and not vstudio.iswinrt() then
