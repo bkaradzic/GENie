@@ -551,9 +551,13 @@ end
 						-- something else; probably a source code file
 						src = "<group>"
 
-						-- if the parent node is virtual, it won't have a local path
-						-- of its own; need to use full relative path from project
-						if node.parent.isvpath then
+						if node.location then
+							pth = node.location
+						elseif node.parent.isvpath then
+							-- if the parent node is virtual, it won't have a local path
+							-- of its own; need to use full relative path from project
+							-- (in fact, often almost all paths are virtual because vpath
+							-- trims the leading dots from the full path)
 							pth = node.cfg.name
 						else
 							pth = tree.getlocalpath(node)
@@ -633,7 +637,10 @@ end
 					_p(3,'name = Products;')
 				else
 					_p(3,'name = "%s";', node.name)
-					if node.path and not node.isvpath then
+
+					if node.location then
+						_p(3,'path = "%s";', node.location)
+					elseif node.path and not node.isvpath then
 						local p = node.path
 						if node.parent.path then
 							p = path.getrelative(node.parent.path, node.path)
@@ -1009,7 +1016,7 @@ end
 					onleaf = function(node)
 						-- print(node.name)
 						if table.icontains(files, node.name) then
-							_p(4,'%s /* %s in %s */,', 
+							_p(4,'%s /* %s in %s */,',
 								xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles')
 						end
 					end

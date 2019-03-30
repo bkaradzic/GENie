@@ -119,7 +119,7 @@ local xcode   = premake.xcode
 --    The target to set as test/profile/launch target.
 --
 
-	function xcode.scheme(tobuild, primary)
+	function xcode.scheme(tobuild, primary, schemecfg)
 		_p('<?xml version="1.0" encoding="UTF-8"?>')
 		_p('<Scheme')
 		_p(1, 'LastUpgradeVersion = "0940"')
@@ -140,8 +140,8 @@ local xcode   = premake.xcode
 			_p(3, '</BuildActionEntry>')
 		end
 
-		local debugcfg    = bestconfig(primary, true)
-		local releasecfg  = bestconfig(primary, false)
+		local debugcfg    = schemecfg or bestconfig(primary, true)
+		local releasecfg  = schemecfg or bestconfig(primary, false)
 		local debugname   = xcode.getconfigname(debugcfg)
 		local releasename = xcode.getconfigname(releasecfg)
 
@@ -175,10 +175,17 @@ local xcode   = premake.xcode
 		_p(2, 'debugDocumentVersioning = "YES"')
 		_p(2, 'debugServiceExtension = "internal"')
 		_p(2, 'allowLocationSimulation = "YES">')
-		_p(2, '<BuildableProductRunnable')
-		_p(3, 'runnableDebuggingMode = "0">')
-		buildableref(3, primary, debugcfg)
-		_p(2, '</BuildableProductRunnable>')
+		if debugcfg.debugcmd then
+			_p(2, '<PathRunnable')
+			_p(3, 'runnableDebuggingMode = "0"')
+			_p(3, 'FilePath = "%s">', debugcfg.debugcmd)
+			_p(2, '</PathRunnable>')
+		else
+			_p(2, '<BuildableProductRunnable')
+			_p(3, 'runnableDebuggingMode = "0">')
+			buildableref(3, primary, debugcfg)
+			_p(2, '</BuildableProductRunnable>')
+		end
 		cmdlineargs(2, debugcfg)
 		envvars(2, debugcfg)
 		_p(2, '<AdditionalOptions>')
@@ -210,4 +217,11 @@ local xcode   = premake.xcode
 		_p(2, 'revealArchiveInOrganizer = "YES">')
 		_p(1, '</ArchiveAction>')
 		_p('</Scheme>')
+	end
+
+	function xcode.project_has_scheme(prj)
+		return prj.options and (
+			prj.options.XcodeScheme
+			or (prj.options.XcodeSchemeAppsOnly and (prj.kind == "ConsoleApp" or prj.kind == "WindowedApp"))
+		)
 	end
