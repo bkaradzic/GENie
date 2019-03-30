@@ -101,7 +101,7 @@ function xcode.workspace_settings(sln)
 
 	if not generate then
 		for prj in premake.solution.eachproject(sln) do
-			if prj.options and prj.options.XcodeScheme then
+			if prj.options and prj.options.XcodeScheme or prj.options.XcodeSchemeAppsOnly then
 				generate = true
 				break
 			end
