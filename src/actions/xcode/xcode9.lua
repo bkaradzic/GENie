@@ -89,17 +89,7 @@
 
 		onproject = function(prj)
 			premake.generate(prj, "%%.xcodeproj/project.pbxproj", xcode9.project)
-
-			if xcode.project_has_scheme(prj) then
-				if prj.options and prj.options.XcodeSchemePerConfig then
-					for cfg in premake.eachconfig(prj) do
-						premake.generate(prj, "%%.xcodeproj/xcshareddata/xcschemes/%% " .. cfg.name .. ".xcscheme",
-							function(prj) xcode.project_scheme(prj, cfg) end)
-					end
-				else
-					premake.generate(prj, "%%.xcodeproj/xcshareddata/xcschemes/%%.xcscheme", xcode.project_scheme)
-				end
-			end
+			xcode.generate_schemes(prj, "%%.xcodeproj/xcshareddata/xcschemes")
 		end,
 
 		oncleanproject = function(prj)
