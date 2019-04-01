@@ -98,7 +98,7 @@
 
 		onproject = function(prj)
 			premake.generate(prj, "%%.xcodeproj/project.pbxproj", xcode10.project)
-			premake.generate(prj, "%%.xcodeproj/xcshareddata/xcschemes/%%.xcscheme", xcode.project_scheme)
+			xcode.generate_schemes(prj, "%%.xcodeproj/xcshareddata/xcschemes")
 		end,
 
 		oncleanproject = function(prj)
