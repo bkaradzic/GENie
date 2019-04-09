@@ -652,6 +652,13 @@
 		compile_language(cfg)
 
 		forcedinclude_files(3,cfg);
+
+		if vstudio.diagformat then
+			_p(3, '<DiagnosticsFormat>%s</DiagnosticsFormat>', vstudio.diagformat)
+		else
+			_p(3, '<DiagnosticsFormat>Caret</DiagnosticsFormat>')
+		end
+
 		_p(2,'</ClCompile>')
 	end
 
