@@ -4,10 +4,10 @@
 -- Copyright (c) 2002-2009 Jason Perkins and the Premake project
 --
 
-	
+
 	premake.dotnet = { }
 	premake.dotnet.namestyle = "windows"
-	
+
 
 --
 -- Translation of Premake flags into CSC flags
@@ -40,9 +40,9 @@
 			return "None"
 		end
 	end
-	
-	
-	
+
+
+
 --
 -- Returns the compiler filename (they all use the same arguments)
 --
@@ -55,7 +55,7 @@
 				return "mcs"
 			elseif (cfg.framework >= "4.0") then
 				return "dmcs"
-			else 
+			else
 				return "gmcs"
 			end
 		else
@@ -71,7 +71,7 @@
 
 	function premake.dotnet.getflags(cfg)
 		local result = table.translate(cfg.flags, flags)
-		return result		
+		return result
 	end
 
 
