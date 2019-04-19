@@ -205,7 +205,7 @@
 		_p('clean:')
 		_p('\t@echo Cleaning %s', prj.name)
 		_p('ifeq (posix,$(SHELLTYPE))')
-		_p('\t$(SILENT) rm -f $(TARGETDIR)/%s.* $(COPYFILES)', prj.buildtarget.basename)
+		_p('\t$(SILENT) rm -f $(TARGET) $(COPYFILES)')
 		_p('\t$(SILENT) rm -rf $(OBJDIR)')
 		_p('else')
 		_p('\t$(SILENT) if exist $(subst /,\\\\,$(TARGETDIR)/%s.*) del $(subst /,\\\\,$(TARGETDIR)/%s.*)', prj.buildtarget.basename, prj.buildtarget.basename)
