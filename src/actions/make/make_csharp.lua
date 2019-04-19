@@ -262,8 +262,10 @@
 
 	function premake.gmake_cs_config(cfg, csc, cfglibs)
 
+		local targetDir = _MAKE.esc(cfg.buildtarget.directory)
+
 		_p('ifneq (,$(findstring %s,$(config)))', _MAKE.esc(cfg.name:lower()))
-		_p('  TARGETDIR  := %s', _MAKE.esc(cfg.buildtarget.directory))
+		_p('  TARGETDIR  := %s', iif(targetDir == "", ".", targetDir))
 		_p('  OBJDIR     := %s', _MAKE.esc(cfg.objectsdir))
 		_p('  DEPENDS    := %s', table.concat(_MAKE.esc(premake.getlinks(cfg, "dependencies", "fullpath")), " "))
 		_p('  REFERENCES := %s', table.implode(_MAKE.esc(cfglibs[cfg]), "/r:", "", " "))

@@ -51,13 +51,7 @@
 		if (_OPTIONS.dotnet == "msnet") then
 			return "csc"
 		elseif (_OPTIONS.dotnet == "mono") then
-			if (cfg.framework <= "1.1") then
-				return "mcs"
-			elseif (cfg.framework >= "4.0") then
-				return "dmcs"
-			else
-				return "gmcs"
-			end
+			return "mcs"
 		else
 			return "cscc"
 		end
