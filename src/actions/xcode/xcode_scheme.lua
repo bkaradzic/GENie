@@ -219,25 +219,22 @@ local xcode   = premake.xcode
 		_p('</Scheme>')
 	end
 
+--
+-- Generate XCode schemes for the given project.
+--
+
 	function xcode.generate_schemes(prj, base_path)
-		if not prj.options then
-			return
-		end
+		if (prj.kind == "ConsoleApp" or prj.kind == "WindowedApp") or (prj.options and prj.options.XcodeLibrarySchemes) then
 
-		if not (
-				prj.options.XcodeScheme
-			or (prj.options.XcodeSchemeAppsOnly and (prj.kind == "ConsoleApp" or prj.kind == "WindowedApp"))
-			)
-		then
-			return
-		end
-
-		if prj.options.XcodeSchemePerConfig then
-			for cfg in premake.eachconfig(prj) do
-				premake.generate(prj, path.join(base_path, "%% " .. cfg.name .. ".xcscheme"),
-					function(prj) xcode.project_scheme(prj, cfg) end)
+			if prj.options and prj.options.XcodeSchemeNoConfigs then
+				premake.generate(prj, path.join(base_path, "%%.xcscheme"),
+					function(prj) xcode.scheme({prj}, prj) end)
+			else
+				for cfg in premake.eachconfig(prj) do
+					premake.generate(prj, path.join(base_path, "%% " .. cfg.name .. ".xcscheme"),
+						function(prj) xcode.scheme({prj}, prj, cfg) end)
+				end
 			end
-		else
-			premake.generate(prj, path.join(base_path, "%%.xcscheme", xcode.project_scheme))
 		end
 	end
+

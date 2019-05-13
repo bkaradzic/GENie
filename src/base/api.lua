@@ -536,10 +536,8 @@
 					ForceCPP = 1,
 					ArchiveSplit = 1,
 					SkipBundling = 1,
-					XcodeScheme = 1,
-					XcodeSchemeAppsOnly = 1,
-					XcodeSchemePerConfig = 1,
-					XcodeGroupLocations = 1,
+					XcodeLibrarySchemes = 1,
+					XcodeSchemeNoConfigs = 1,
 				}
 
 				local lowervalue = value:lower()
