@@ -821,6 +821,22 @@
 			_p(2, '</MASM>')
 		end
 	end
+	
+	local function additional_manifest(cfg)
+		if(cfg.dpiawareness ~= nil) then
+			_p(2,'<Manifest>')
+				if(cfg.dpiawareness == "None") then
+					_p(3, '<EnableDpiAwareness>false</EnableDpiAwareness>')
+				end
+				if(cfg.dpiawareness == "High") then
+					_p(3, '<EnableDpiAwareness>true</EnableDpiAwareness>')
+				end
+				if(cfg.dpiawareness == "HighPerMonitor") then
+					_p(3, '<EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>')
+				end	
+			_p(2,'</Manifest>')
+		end
+	end
 
 --
 -- Generate the <Link> element and its children.
@@ -1029,6 +1045,7 @@
 				ant_build(prj, cfg)
 				event_hooks(cfg)
 				vs10_masm(prj, cfg)
+				additional_manifest(cfg)
 			_p(1,'</ItemDefinitionGroup>')
 		end
 	end
