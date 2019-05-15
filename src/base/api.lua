@@ -734,6 +734,17 @@
 			kind = "filelist",
 			scope = "container",
 		},
+		
+		dpiawareness = 
+		{
+			kind = "string",
+			scope = "config",
+			allowed = {
+				"None",
+				"High",
+				"HighPerMonitor",
+			}
+		},
 
 		xcodeprojectopts =
 		{
