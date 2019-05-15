@@ -450,8 +450,6 @@ custombuildtask {
 ### debugcmd(cmd)
 Specifies a command to execute when running under the debugger instead of the build target.
 
-**Note:** For Xcode you must currently enable *XcodeScheme* via `options { "XcodeScheme" }` to enable this functionality.
-
 **Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
 
 **Scope:** solutions, projects, configurations
@@ -472,8 +470,6 @@ configuration 'TestConfig'
 ### debugargs({_args_...})
 Specifies a list of arguments to pas to the application when run under the debugger.
 
-**Note:** For Xcode you must currently enable *XcodeScheme* via `options { "XcodeScheme" }` to enable this functionality.
-
 **Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
 
 **Scope:** solutions, projects, configurations
@@ -493,8 +489,6 @@ configuration "Debug"
 ---
 ### debugdir(_path_)
 Sets the working directory for the integrated debugger.
-
-**Note:** For Xcode you must currently enable *XcodeScheme* via `options { "XcodeScheme" }` to enable this functionality.
 
 **Note:** In Visual Studio, this can be overridden by a per-user config file (e.g. ProjectName.vcxproj.MYDOMAIN-MYUSERNAME.user).
 
@@ -1226,10 +1220,8 @@ _options_ - List of option names from list below. Names are case-insensitive and
 * _ArchiveSplit_ - Split arguments to the gmake archiver across multiple invocations, if there are too many of them.
 * _ForceCPP_ - Force compiling source as C++ despite the file extension suggesting otherwise.
 * _SkipBundling_ - Disable generating bundles for Apple platforms.
-* _XcodeScheme_ - Generate an XCode scheme for this project.
-* _XcodeSchemeAppOnly_ - Generate an XCode scheme for this project if it is an app.
-* _XcodeSchemePerConfig_ - Generate schemes for each separate project config.
-* _XcodeGroupLocations_ - Use relative locations for project files and groups where possible.
+* _XcodeLibrarySchemes_ - Generate XCode schemes for libraries too. (By default schemes are only created for runnable apps.)
+* _XcodeSchemeNoConfigs_ - Generate a single scheme per project, rather than one per project config.
 
 [Back to top](#table-of-contents)
 
@@ -1863,6 +1855,7 @@ vpaths {
 
 ---
 ### xcodeprojectopts({[_key_] = _value_, ...})
+#### XCode only
 Sets XCode project options in the generated project files. [List of options.](https://gist.github.com/tkersey/39b4fe69e14b859889ffadccb009e397)
 
 #### Arguments
@@ -1882,6 +1875,7 @@ xcodeprojectopts {
 
 ---
 ### xcodetargetopts({[_key_] = _value_, ...})
+#### XCode only
 Sets XCode target options in the generated project files. [List of options.](https://gist.github.com/tkersey/39b4fe69e14b859889ffadccb009e397)
 
 #### Arguments

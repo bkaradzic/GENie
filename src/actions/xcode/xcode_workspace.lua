@@ -93,25 +93,10 @@ end
 
 --
 -- Generate the workspace settings file, preventing xcode from auto-generating
--- schemes if we have manually provided any.
+-- schemes we have manually provided.
 --
 
 function xcode.workspace_settings(sln)
-	local generate = xcode.allscheme
-
-	if not generate then
-		for prj in premake.solution.eachproject(sln) do
-			if prj.options and prj.options.XcodeScheme or prj.options.XcodeSchemeAppsOnly then
-				generate = true
-				break
-			end
-		end
-	end
-
-	if not generate then
-		return false
-	end
-
 	_p('<?xml version="1.0" encoding="UTF-8"?>')
 	_p('<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">')
 	_p('<plist version="1.0">')
