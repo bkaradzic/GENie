@@ -637,6 +637,10 @@
 			end
 		end
 
+		if cfg.flags.Hotpatchable then
+			_p(3, '<CreateHotpatchableImage>true</CreateHotpatchableImage>')
+		end
+
 		if cfg.flags.NoFramePointer then
 			_p(3, '<OmitFramePointers>true</OmitFramePointers>')
 		end
@@ -909,6 +913,10 @@
 			if cfg.androidlinker then
 				_p(3,'<UseLinker>%s</UseLinker>',cfg.androidlinker)
 			end
+		end
+		
+		if cfg.flags.Hotpatchable then
+			_p(3, '<CreateHotPatchableImage>Enabled</CreateHotPatchableImage>')
 		end
 
 		_p(2,'</Link>')
