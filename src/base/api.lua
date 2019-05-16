@@ -244,6 +244,7 @@
 					UnsignedChar = 1,
 					UseFullPaths = 1,
 					WinMain = 1,
+					Hotpatchable = 1
 				}
 
 				local englishToAmericanSpelling =
