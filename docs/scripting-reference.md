@@ -648,6 +648,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoFramePointer_ - Disable the generation of stack frame pointers.
 * _NoIncrementalLink_ - Disable support for Visual Studio's incremental linking feature.
 * _NoImportLib_ - Prevent the generation of an import library for a Windows DLL.
+* _NoLibGroups_ - Prevent the linker from iterating over library groups to resolve symbols (make and ninja only).
 * _NoManifest_ - Prevent the generation of a manifest for Windows executables and shared libraries.
 * _NoMultiProcessorCompilation_ - Disables Visual Studio's and FastBuild's multiprocessor compilation.
 * _NoRuntimeChecks_ - Disable Visual Studio's Basic Runtime Checks in Debug builds.
