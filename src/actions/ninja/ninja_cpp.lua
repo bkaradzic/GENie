@@ -66,7 +66,11 @@ local p     = premake
 
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
-		_p("  command = $pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $libs $post_build")
+		if (cfg.flags.NoLibGroups) then
+			_p("  command = $pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $libs $post_build")
+		else
+			_p("  command = $pre_link " .. link .. " -o $out @$out.rsp $all_ldflags -Wl,--start-group $libs -Wl,--end-group $post_build")
+		end
 		_p("  rspfile = $out.rsp")
   		_p("  rspfile_content = $all_outputfiles")
 		_p("  description = link $out")
