@@ -246,6 +246,8 @@
 					Unsafe = 1,
 					UnsignedChar = 1,
 					UseFullPaths = 1,
+					UseLDResponseFile = 1,
+					UseObjectResponseFile = 1,
 					WinMain = 1
 				}
 
