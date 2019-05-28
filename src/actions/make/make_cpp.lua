@@ -295,36 +295,14 @@
 	end
 
 	function premake.gmake_cpp_configs(prj, cc, platforms)
-		local useresponse = (prj.kind == "StaticLib" and action.gmake.arresponsefiles)
-			or (prj.kind ~= "StaticLib" and action.gmake.ldresponsefiles)
-
 		for _, platform in ipairs(platforms) do
 			for cfg in premake.eachconfig(prj, platform) do
-				if useresponse then
-					cfg.objresponsepath = string.format("%s.%s.objects"
-						, path.removeext(_MAKE.getmakefilename(prj, true))
-						, _MAKE.esc(cfg.shortname)
-						)
-
-					premake.generate(prj, cfg.objresponsepath, function()
-						for _, file in ipairs(cfg.files) do
-							if path.issourcefile(file) and not is_excluded(prj, cfg, file) then
-								_p('%s/%s.o'
-									, _MAKE.esc(cfg.objectsdir)
-									, _MAKE.esc(path.trimdots(path.removeext(file)))
-									)
-							end
-						end
-					end)
-				end
-
 				premake.gmake_cpp_config(prj, cfg, cc)
 			end
 		end
 	end
 
 	function premake.gmake_cpp_config(prj, cfg, cc)
-
 		_p('ifeq ($(config),%s)', _MAKE.esc(cfg.shortname))
 
 		-- if this platform requires a special compiler or linker, list it here
