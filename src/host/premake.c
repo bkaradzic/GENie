@@ -265,7 +265,7 @@ int process_option(lua_State* L, const char* arg)
 	char* ptr = strchr(arg, '=');
 	if (ptr)
 	{
-		int len = ptr - arg;
+		int len = (int)(ptr - arg);
 		if (len > 511) len = 511;
 		strncpy(key, arg, len);
 		key[len] = '\0';

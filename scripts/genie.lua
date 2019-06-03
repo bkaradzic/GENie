@@ -58,7 +58,9 @@
 			flags       { "OptimizeSize" }
 
 		configuration "vs*"
-			defines     { "_CRT_SECURE_NO_WARNINGS" }
+		    platforms          { "x64" }
+			defines            { "_CRT_SECURE_NO_WARNINGS" }
+			removebuildoptions { "-m64" }
 
 		configuration "windows"
 			targetdir   "../bin/windows"
