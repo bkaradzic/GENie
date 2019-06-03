@@ -114,10 +114,14 @@
 	function vc2010.configurationPropertyGroup(cfg, cfginfo)
 		_p(1, '<PropertyGroup '..if_config_and_platform() ..' Label="Configuration">'
 			, premake.esc(cfginfo.name))
-		_p(2, '<ConfigurationType>%s</ConfigurationType>',vc2010.config_type(cfg))
-		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
 
-		_p(2, '<PlatformToolset>%s</PlatformToolset>', premake.vstudio.toolset)
+		local is2019 = premake.action.current() == premake.action.get("vs2019")
+		if is2019 then
+		    _p(2, '<VCProjectVersion>%s</VCProjectVersion>', premake.vstudio.toolset)
+		end
+		_p(2, '<ConfigurationType>%s</ConfigurationType>', vc2010.config_type(cfg))
+		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
+		_p(2, '<PlatformToolset>%s</PlatformToolset>',     premake.vstudio.toolset)
 
 		if os.is64bit() then
 			_p(2, '<PreferredToolArchitecture>x64</PreferredToolArchitecture>')
@@ -169,7 +173,7 @@
 		end
 
 		-- Workaround for https://github.com/Microsoft/msbuild/issues/2353
-		if cfg.flags.Symbols and premake.action.current() == premake.action.get("vs2017") then
+		if cfg.flags.Symbols and (premake.action.current() == premake.action.get("vs2017") or is2019) then
 			_p(2, '<DebugSymbols>true</DebugSymbols>')
 		end
 
@@ -327,7 +331,7 @@
 
 	end
 
-	local function cppstandard_vs2017(cfg)
+	local function cppstandard_vs2017_or_2019(cfg)
 		if cfg.flags.CppLatest then
 			_p(3, '<LanguageStandard>stdcpplatest</LanguageStandard>')
 			_p(3, '<EnableModules>true</EnableModules>')
@@ -608,8 +612,9 @@
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
 
-		if premake.action.current() == premake.action.get("vs2017") then
-			cppstandard_vs2017(cfg)
+		if premake.action.current() == premake.action.get("vs2017") or
+		   premake.action.current() == premake.action.get("vs2019") then
+			cppstandard_vs2017_or_2019(cfg)
 		end
 
 		exceptions(cfg)
@@ -825,7 +830,7 @@
 			_p(2, '</MASM>')
 		end
 	end
-	
+
 	local function additional_manifest(cfg)
 		if(cfg.dpiawareness ~= nil) then
 			_p(2,'<Manifest>')
@@ -837,7 +842,7 @@
 				end
 				if(cfg.dpiawareness == "HighPerMonitor") then
 					_p(3, '<EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>')
-				end	
+				end
 			_p(2,'</Manifest>')
 		end
 	end
@@ -847,13 +852,14 @@
 --
 
 	function vc2010.link(cfg)
-		local vs2017 = premake.action.current() == premake.action.get("vs2017")
+		local vs2017OrLater = premake.action.current() == premake.action.get("vs2017") or
+		    premake.action.current() == premake.action.get("vs2019")
 		local links  = getcfglinks(cfg)
 
 		_p(2,'<Link>')
 		_p(3,'<SubSystem>%s</SubSystem>', iif(cfg.kind == "ConsoleApp", "Console", "Windows"))
 
-		if vs2017 and cfg.flags.FullSymbols then
+		if vs2017OrLater and cfg.flags.FullSymbols then
 			_p(3,'<GenerateDebugInformation>DebugFull</GenerateDebugInformation>')
 		else
 			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
@@ -914,7 +920,7 @@
 				_p(3,'<UseLinker>%s</UseLinker>',cfg.androidlinker)
 			end
 		end
-		
+
 		if cfg.flags.Hotpatchable then
 			_p(3, '<CreateHotPatchableImage>Enabled</CreateHotPatchableImage>')
 		end
