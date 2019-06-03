@@ -13,7 +13,7 @@ Supported project generators:
  * GNU Makefile
  * Ninja (experimental)
  * Qbs / QtCreator (experimental)
- * Visual Studio 2010, 2012, 2013, 2015, 2017
+ * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019
  * XCode
 
 Download (stable)
@@ -129,6 +129,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added flags for selecting C++ standard: `Cpp11`, `Cpp14`, `Cpp17`,
    and `CppLatest`.
  - Added `xcodeprojectopts` and `xcodetargetopts`.
+ - Added vs2019 support.
 
 build - GENie build system scripts
 ----------------------------------
