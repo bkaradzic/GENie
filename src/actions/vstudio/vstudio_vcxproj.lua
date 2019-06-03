@@ -117,7 +117,7 @@
 
 		local is2019 = premake.action.current() == premake.action.get("vs2019")
 		if is2019 then
-		    _p(2, '<VCProjectVersion>%s</VCProjectVersion>', premake.vstudio.toolset)
+		    _p(2, '<VCProjectVersion>%s</VCProjectVersion>', premake.vstudio.toolsVersion)
 		end
 		_p(2, '<ConfigurationType>%s</ConfigurationType>', vc2010.config_type(cfg))
 		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
