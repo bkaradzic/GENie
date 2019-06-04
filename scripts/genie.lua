@@ -23,7 +23,6 @@
 		flags {
 			"ExtraWarnings",
 			"No64BitChecks",
-			"NoLibGroups",
 			"StaticRuntime"
 		}
 
