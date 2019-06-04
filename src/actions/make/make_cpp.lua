@@ -495,11 +495,7 @@
 			end
 		else
 			local tool = iif(cfg.language == "C", "CC", "CXX")
-			if (cfg.flags.NoLibGroups) then
-				_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
-			else
-				_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) -Wl,--start-group $(LIBS) -Wl,--end-group', tool)
-			end
+			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
 		end
 	end
 
