@@ -130,6 +130,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
    and `CppLatest`.
  - Added `xcodeprojectopts` and `xcodetargetopts`.
  - Added vs2019 support.
+ - Added UnitySupport flag to enable Unity (Jumbo) builds in Visual Studio 2019
 
 build - GENie build system scripts
 ----------------------------------
