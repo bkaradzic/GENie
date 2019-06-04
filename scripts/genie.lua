@@ -21,8 +21,9 @@
 		language "C"
 		kind "ConsoleApp"
 		flags {
-			"No64BitChecks",
 			"ExtraWarnings",
+			"No64BitChecks",
+			"NoLibGroups",
 			"StaticRuntime"
 		}
 
@@ -58,9 +59,7 @@
 			flags       { "OptimizeSize" }
 
 		configuration "vs*"
-		    platforms          { "x64" }
-			defines            { "_CRT_SECURE_NO_WARNINGS" }
-			removebuildoptions { "-m64" }
+			defines     { "_CRT_SECURE_NO_WARNINGS" }
 
 		configuration "windows"
 			targetdir   "../bin/windows"
