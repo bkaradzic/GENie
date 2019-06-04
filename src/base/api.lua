@@ -205,6 +205,7 @@
 					FloatFast = 1,
 					FloatStrict = 1,
 					FullSymbols = 1,
+					Hotpatchable = 1,
 					Managed = 1,
 					MinimumWarnings = 1,
 					MFC = 1,
@@ -240,11 +241,11 @@
 					StaticRuntime = 1,
 					Symbols = 1,
 					Unicode = 1,
+					UnitySupport = 1,
 					Unsafe = 1,
 					UnsignedChar = 1,
 					UseFullPaths = 1,
-					WinMain = 1,
-					Hotpatchable = 1
+					WinMain = 1
 				}
 
 				local englishToAmericanSpelling =
@@ -735,8 +736,8 @@
 			kind = "filelist",
 			scope = "container",
 		},
-		
-		dpiawareness = 
+
+		dpiawareness =
 		{
 			kind = "string",
 			scope = "config",
