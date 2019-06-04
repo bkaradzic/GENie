@@ -217,7 +217,6 @@
 					NoImportLib = 1,
 					NoIncrementalLink = 1,
 					NoJMC = 1,
-					NoLibGroups = 1,
 					NoManifest = 1,
 					NoMultiProcessorCompilation = 1,
 					NoNativeWChar = 1,
