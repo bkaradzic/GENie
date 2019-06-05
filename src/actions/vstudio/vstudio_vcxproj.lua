@@ -1232,18 +1232,49 @@
 	end
 
 	function vc2010.simplefilesgroup(prj, section, subtype)
+		local configs = prj.solution.vstudio_configs
 		local files = vc2010.getfilegroup(prj, section)
+
 		if #files > 0  then
-			_p(1,'<ItemGroup>')
-			for _, file in ipairs(files) do
-				if subtype then
-					_p(2,'<%s Include=\"%s\">', section, path.translate(file.name, "\\"))
-					_p(3,'<SubType>%s</SubType>', subtype)
-					_p(2,'</%s>', section)
-				else
-					_p(2,'<%s Include=\"%s\" />', section, path.translate(file.name, "\\"))
+			local config_mappings = {}
+
+			for _, cfginfo in ipairs(configs) do
+				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+				if cfg.pchheader and cfg.pchsource and not cfg.flags.NoPCH then
+					config_mappings[cfginfo] = path.translate(cfg.pchsource, "\\")
 				end
 			end
+
+			_p(1,'<ItemGroup>')
+
+			for _, file in ipairs(files) do
+				_p(2, '<%s Include=\"%s\">', section, path.translate(file.name, "\\"))
+
+				if subtype then
+					_p(3, '<SubType>%s</SubType>', subtype)
+				end
+
+				if table.icontains(prj.excludes, file.name) then
+					_p(3, '<ExcludedFromBuild>true</ExcludedFromBuild>')
+				else
+					for _, vsconfig in ipairs(configs) do
+						local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+						local fileincfg = table.icontains(cfg.files, file.name)
+						local cfgexcluded = table.icontains(cfg.excludes, file.name)
+
+						if not fileincfg or cfgexcluded then
+							_p(3, '<ExcludedFromBuild '
+								.. if_config_and_platform()
+								.. '>true</ExcludedFromBuild>'
+								, premake.esc(vsconfig.name)
+								)
+						end
+					end
+				end
+
+				_p(2,'</%s>', section)
+			end
+
 			_p(1,'</ItemGroup>')
 		end
 	end
