@@ -206,6 +206,7 @@
 					FloatStrict = 1,
 					FullSymbols = 1,
 					Hotpatchable = 1,
+					LinkSupportCircularDependencies = 1,
 					Managed = 1,
 					MinimumWarnings = 1,
 					MFC = 1,
