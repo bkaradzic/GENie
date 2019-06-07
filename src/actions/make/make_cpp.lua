@@ -117,14 +117,6 @@
 			_p('\t$(SILENT) $(LINKCMD)')
 		end
 
-		_p('ifneq (,$(OBJRESP))')
-		_p('\t$(call RM,$(OBJRESP))')
-		_p('endif')
-
-		_p('ifneq (,$(LDRESP))')
-		_p('\t$(call RM,$(LDRESP))')
-		_p('endif')
-
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')
 
