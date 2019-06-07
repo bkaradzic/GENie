@@ -495,7 +495,13 @@
 			end
 		else
 			local tool = iif(cfg.language == "C", "CC", "CXX")
-			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
+			local startgroup = ''
+			local endgroup = ''
+			if (cfg.flags.LinkSupportCircularDependencies) then
+				startgroup = '-Wl,--start-group'
+				endgroup = '-Wl,--end-group'
+			end
+			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) %s $(LIBS) %s', tool, startgroup, endgroup)
 		end
 	end
 
