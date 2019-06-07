@@ -637,6 +637,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _FloatFast_ - Enable floating point optimizations at the expense of accuracy.
 * _FloatStrict_ - Improve floating point consistency at the expense of performance.
 * _FullSymbols_ - Use together with _Symbols_ to generate full debug symbols with Visual Studio.
+* _LinkSupportCircularDependencies_ - Enables the linker to iterate over provided libs in order to resolve circular dependencies (make and ninja only).
 * _Managed_ - Enable Managed C++ (.NET).
 * _MinimumWarnings_ - - Sets compiler's minimum warning level (Visual Studio only).
 * _MFC_ - Enable support for Microsoft Foundation Classes.
