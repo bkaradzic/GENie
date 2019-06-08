@@ -1284,7 +1284,7 @@
 
 					_p(2,'</%s>', section)
 				else
-					_p(2, '<%s Include=\"%s\"/>', section, path.translate(file.name, "\\"))
+					_p(2, '<%s Include=\"%s\" />', section, path.translate(file.name, "\\"))
 				end
 			end
 
