@@ -579,17 +579,15 @@
 
 		_p('ifneq (,$(OBJRESP))')
 		_p('$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(file >$@,$^)')
-		--_p('\t$(file >$@) $(foreach O,$^,$(file >>$@,$O))') -- write 1 file per line instead
 		_p('\t$(SILENT) echo $^')
+		_p('\t$(SILENT) echo $^ > $@')
 		_p('endif')
 		_p('')
 
 		_p('ifneq (,$(LDRESP))')
 		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(file >$@,$^)')
-		--_p('\t$(file >$@) $(foreach O,$^,$(file >>$@,$O))') -- write 1 file per line instead
 		_p('\t$(SILENT) echo $^')
+		_p('\t$(SILENT) echo $^ > $@')
 		_p('endif')
 		_p('')
 
