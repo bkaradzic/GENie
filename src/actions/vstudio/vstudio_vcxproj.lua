@@ -1541,6 +1541,12 @@
 			return
 		end
 
+		-- Sort dependencies by uuid to keep the project files from changing
+		-- unnecessarily.
+		local function compareuuid(a, b) return a.uuid < b.uuid end
+		table.sort(deps, compareuuid)
+		table.sort(table.join(prj.vsimportreferences), compareuuid)
+
 		_p(1,'<ItemGroup>')
 
 		for _, dep in ipairs(deps) do
