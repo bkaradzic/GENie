@@ -188,8 +188,5 @@
 			premake.clean.file(prj, _MAKE.getmakefilename(prj, true))
 		end,
 
-		gmake = {
-			arresponsefiles = false, -- use response files for ar
-			ldresponsefiles = false, -- use response files for ld
-		}
+		gmake = {}
 	}
