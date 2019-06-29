@@ -86,7 +86,12 @@
 
 		if cfg.kind == "Bundle" and not cfg.options.SkipBundling then
 			options.PRODUCT_BUNDLE_IDENTIFIER = "genie." .. cfg.buildtarget.basename:gsub("%s+", ".") --replace spaces with .
-			options.WRAPPER_EXTENSION = "bundle"
+			local ext = cfg.targetextension
+			if ext then
+				options.WRAPPER_EXTENSION = iif(ext:startswith("."), ext:sub(2), ext)
+			else
+				options.WRAPPER_EXTENSION = "bundle"
+			end
 		end
 
 		return options
