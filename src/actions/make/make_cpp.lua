@@ -239,6 +239,11 @@
 		_p('endif')
 		_p('')
 
+		_p('blank =')
+		_p('comma =,')
+		_p('space = ')
+		_p('space += ')
+		_p('')
 		_p('ifeq (posix,$(SHELLTYPE))')
 		_p('  MKDIR  = $(SILENT) mkdir -p "$(1)"')
 		_p('  COPY   = $(SILENT) cp -fR "$(1)" "$(2)"')
