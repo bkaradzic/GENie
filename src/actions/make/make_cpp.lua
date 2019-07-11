@@ -603,6 +603,7 @@
 		_p('$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)')
 		_p('\t$(call FPRINT,,>,$@)')
 		_p('\t$(foreach v,$^,$(call FPRINT,$(v),>>,$@))')
+		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
 
@@ -610,6 +611,7 @@
 		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
 		_p('\t$(call FPRINT,,>,$@)')
 		_p('\t$(foreach v,$^,$(call FPRINT,$(v),>>,$@))')
+		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
 
@@ -621,6 +623,7 @@
 		else
 			_p('\t$(foreach v,$^,$(call FPRINT,-Wl$(comma)--whole-archive $(v) -Wl$(comma)--no-whole-archive,>>,$@))')
 		end
+		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
 
