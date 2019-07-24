@@ -85,7 +85,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) $(OBJRESP) $(LDRESP) $(LDWARESP) | $(TARGETDIR) $(OBJDIRS)')
+		_p('$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) $(OBJRESP) $(LDRESP) | $(TARGETDIR) $(OBJDIRS)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
@@ -448,18 +448,16 @@
 	function cpp.linker(prj, cfg, cc)
 		local libdeps
 		local lddeps
-		local ldwadeps
 
 		if #cfg.wholearchive > 0 then
 			libdeps  = {}
 			lddeps   = {}
-			ldwadeps = {}
 
 			for _, linkcfg in ipairs(premake.getlinks(cfg, "siblings", "object")) do
 				local linkpath = path.rebase(linkcfg.linktarget.fullpath, linkcfg.location, cfg.location)
 
 				if table.icontains(cfg.wholearchive, linkcfg.project.name) then
-					table.insert(ldwadeps, linkpath)
+					lddeps = table.join(lddeps, cc.wholearchive(linkpath))
 				else
 					table.insert(lddeps, linkpath)
 				end
@@ -469,32 +467,21 @@
 
 			libdeps = make.list(_MAKE.esc(libdeps))
 			lddeps  = make.list(_MAKE.esc(lddeps))
-			ldwadeps  = make.list(_MAKE.esc(ldwadeps))
 		else
 			libdeps   = make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath")))
 			lddeps   = libdeps
-			ldwadeps = ""
 		end
 
 		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
 		_p('  LIBDEPS            +=%s', libdeps)
 		_p('  LDDEPS             +=%s', lddeps)
-		_p('  LDWADEPS           +=%s', ldwadeps)
 
 		if cfg.flags.UseLDResponseFile then
 			_p('  LDRESP              = $(OBJDIR)/%s_libs', prj.name)
-			_p('  LDWARESP            = $(OBJDIR)/%s_wholearchives', prj.name)
-			_p('  LIBS               += @$(LDWARESP) @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
+			_p('  LIBS               += @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
 		else
 			_p('  LDRESP              =')
-			_p('  LDWARESP            =')
-			if ldwadeps then
-				ldwadeps = "$(foreach v,$(LDWADEPS),-Wl$(comma)--whole-archive $(v) -Wl$(comma)--no-whole-archive)"
-				if premake.gcc.llvm then
-					ldwadeps = "$(foreach v,$(LDWADEPS),-force_load $(v))"
-				end
-			end
-			_p('  LIBS               += %s $(LDDEPS)%s', ldwadeps or "", make.list(cc.getlinkflags(cfg)))
+			_p('  LIBS               += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
 		end
 
 		_p('  EXTERNAL_LIBS      +=%s', make.list(cc.getlibfiles(cfg)))
@@ -611,18 +598,6 @@
 		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
 		_p('\t$(call FPRINT,,>,$@)')
 		_p('\t$(foreach v,$^,$(call FPRINT,$(v),>>,$@))')
-		_p('\t$(call CAT,$@)')
-		_p('endif')
-		_p('')
-
-		_p('ifneq (,$(LDWARESP))')
-		_p('$(LDWARESP): $(LDWADEPS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(call FPRINT,,>,$@)')
-		if premake.gcc.llvm then
-			_p('\t$(foreach v,$^,$(call FPRINT,-force_load $(v),>>,$@))')
-		else
-			_p('\t$(foreach v,$^,$(call FPRINT,-Wl$(comma)--whole-archive $(v) -Wl$(comma)--no-whole-archive,>>,$@))')
-		end
 		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
