@@ -595,9 +595,9 @@
 		_p('')
 
 		_p('ifneq (,$(LDRESP))')
-		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
+		_p('$(LDRESP): $(LIBDEPS) | $(TARGETDIR) $(OBJDIRS)')
 		_p('\t$(call FPRINT,,>,$@)')
-		_p('\t$(foreach v,$^,$(call FPRINT,$(v),>>,$@))')
+		_p('\t$(foreach v,$(LDDEPS),$(call FPRINT,$(v),>>,$@))')
 		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
