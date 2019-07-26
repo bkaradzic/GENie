@@ -7,7 +7,7 @@
 premake.fields = {}
 
 
-premake.check_paths = false
+	premake.check_paths = false
 
 --
 -- Check to see if a value exists in a list of values, using a
@@ -1540,6 +1540,18 @@ end
 		kind = "dirlist",
 		scope = "config",
 	}
+
+	newapifield {
+		name  = "postsolutioncallbacks",
+		kind  = "list",
+		scope = "solution",
+	},
+
+	newapifield {
+		name  = "postprojectcallbacks",
+		kind  = "list",
+		scope = "project",
+	},
 
 --
 -- End of API
