@@ -345,7 +345,7 @@
 
 		-- add objects for compilation, and remove any that are excluded per config.
 		if cfg.flags.UseObjectResponseFile then
-			_p('  OBJRESP             = $(OBJDIR)/%s_objects', prj.name)
+			_p('  OBJRESP             = $(OBJDIR)/$(basename $(notdir $(TARGET)))_objects')
 		else
 			_p('  OBJRESP             =')
 		end
@@ -477,7 +477,7 @@
 		_p('  LDDEPS             +=%s', lddeps)
 
 		if cfg.flags.UseLDResponseFile then
-			_p('  LDRESP              = $(OBJDIR)/%s_libs', prj.name)
+			_p('  LDRESP              = $(OBJDIR)/$(basename $(notdir $(TARGET)))_libs')
 			_p('  LIBS               += @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
 		else
 			_p('  LDRESP              =')
