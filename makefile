@@ -28,8 +28,10 @@ GENIE=bin/$(OS)/genie
 
 SILENT?=@
 
+GENIE_OPTIONS?=
+
 $(GENIE):
-	$(SILENT) $(MAKE) -C build/gmake.$(OS)
+	$(SILENT) $(MAKE) -C build/gmake.$(OS) GENIE_OPTIONS=$(GENIE_OPTIONS)
 
 all: $(SILENT) $(GENIE)
 
@@ -38,10 +40,10 @@ clean:
 	$(SILENT) -rm -rf bin
 
 projgen:
-	$(SILENT) $(GENIE) --to=../build/gmake.windows --os=windows gmake
-	$(SILENT) $(GENIE) --to=../build/gmake.linux   --os=linux gmake
-	$(SILENT) $(GENIE) --to=../build/gmake.darwin  --os=macosx --platform=universal32 gmake
-	$(SILENT) $(GENIE) --to=../build/gmake.freebsd --os=bsd gmake
+	$(SILENT) $(GENIE) --to=../build/gmake.windows --os=windows $(GENIE_OPTIONS) gmake
+	$(SILENT) $(GENIE) --to=../build/gmake.linux   --os=linux $(GENIE_OPTIONS) gmake
+	$(SILENT) $(GENIE) --to=../build/gmake.darwin  --os=macosx --platform=universal32 $(GENIE_OPTIONS) gmake
+	$(SILENT) $(GENIE) --to=../build/gmake.freebsd --os=bsd $(GENIE_OPTIONS) gmake
 
 rebuild:
 	$(SILENT) $(MAKE) -C build/gmake.$(OS) clean all
