@@ -9,6 +9,15 @@
 --
 	premake.make.override = { "TARGET" }
 
+--
+-- Experimental option to use LuaJIT 2.1.x instead of regular Lua 5.x
+-- default is off.
+--
+	newoption {
+		trigger = "with-luajit",
+		description = "Enable usage of LuaJIT instead of regular Lua.",
+	}
+
 	solution "genie"
 		configurations {
 			"Release",
@@ -26,24 +35,56 @@
 			"StaticRuntime"
 		}
 
-		includedirs {
-			"../src/host/lua-5.3.0/src"
-		}
+		if _OPTIONS["with-luajit"] ~= nil then
+			includedirs {
+				"../src/host/luajit-2.1.0-beta3/src",
+			}
+		else
+			includedirs {
+				"../src/host/lua-5.3.0/src",
+			}
+		end
 
 		files {
 			"../**.lua",
 			"../src/**.h",
 			"../src/**.c",
+			"../src/**.S",
 			"../src/host/scripts.c",
 		}
 
 		excludes {
 			"../src/premake.lua",
-			"../src/host/lua-5.3.0/src/lua.c",
-			"../src/host/lua-5.3.0/src/luac.c",
-			"../src/host/lua-5.3.0/**.lua",
-			"../src/host/lua-5.3.0/etc/*.c",
 		}
+
+		if _OPTIONS["with-luajit"] ~= nil then
+			defines {
+				"LUAJIT_ENABLE_LUA52COMPAT",
+				"WITH_LUAJIT=1",
+			}
+			excludes {
+				"../src/host/luajit-2.1.0-beta3/src/lua.c",
+				"../src/host/luajit-2.1.0-beta3/src/luac.c",
+				"../src/host/luajit-2.1.0-beta3/**.lua",
+				"../src/host/luajit-2.1.0-beta3/etc/*.c",
+				"../src/host/luajit-2.1.0-beta3/src/ljamalg.c",
+				"../src/host/luajit-2.1.0-beta3/src/host/*.c",
+				"../src/host/luajit-2.1.0-beta3/src/luajit.c",
+			}
+			removefiles {
+				"../src/host/lua-5.3.0/**.*",
+			}
+		else
+			excludes {
+				"../src/host/lua-5.3.0/src/lua.c",
+				"../src/host/lua-5.3.0/src/luac.c",
+				"../src/host/lua-5.3.0/**.lua",
+				"../src/host/lua-5.3.0/etc/*.c",
+			}
+			removefiles {
+				"../src/host/luajit-2.1.0-beta3/**.*",
+			}
+		end
 
 		buildoptions {
 			"-m64",
@@ -78,9 +119,13 @@
 			linkoptions  { "-rdynamic" }
 
 		configuration "macosx"
-			targetdir   "../bin/darwin"
-			defines     { "LUA_USE_MACOSX" }
-			links       { "CoreServices.framework" }
+			targetdir    "../bin/darwin"
+			defines      { "LUA_USE_MACOSX" }
+			links        { "CoreServices.framework" }
+
+			if _OPTIONS["with-luajit"] ~= nil then
+				linkoptions  { "-pagezero_size 10000", "-image_base 100000000" }
+			end
 
 		configuration { "macosx", "gmake" }
 			buildoptions { "-mmacosx-version-min=10.6" }
