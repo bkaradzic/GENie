@@ -109,8 +109,14 @@ function qbs.generate_project(prj)
 					_p(indent, 'cpp.cxxLanguageVersion: "c++98"')
 				end
 
-				if prj.kind == "WindowedApp" and not cfg.flags.WinMain then
-					_p(indent, 'cpp.entryPoint: "mainCRTStartup"')
+				if os.is("windows") then
+					if not cfg.flags.WinMain and (cfg.kind == 'ConsoleApp' or cfg.kind == 'WindowedApp') then
+						if cfg.flags.Unicode then
+							_p(indent, 'cpp.entryPoint: "wmainCRTStartup"')
+						else
+							_p(indent, 'cpp.entryPoint: "mainCRTStartup"')
+						end
+					end
 				end
 
 				qbs.list(
