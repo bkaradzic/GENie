@@ -1541,6 +1541,18 @@ end
 		scope = "config",
 	}
 
+	newapifield {
+		name  = "postsolutioncallbacks",
+		kind  = "list",
+		scope = "solution",
+	}
+
+	newapifield {
+		name  = "postprojectcallbacks",
+		kind  = "list",
+		scope = "project",
+	}
+
 --
 -- End of API
 --
