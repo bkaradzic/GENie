@@ -58,10 +58,12 @@ ifeq ($(config),release)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -143,10 +145,12 @@ ifeq ($(config),debug)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -229,10 +233,12 @@ ifeq ($(config),releaseuniv32)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -315,10 +321,12 @@ ifeq ($(config),debuguniv32)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
@@ -396,7 +404,7 @@ RESOURCES := \
 all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) $(OBJRESP) $(LDRESP) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
@@ -433,6 +441,18 @@ $(GCH): $(PCH) $(MAKEFILE) | $(OBJDIR)
 $(GCH_OBJC): $(PCH) $(MAKEFILE) | $(OBJDIR)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_OBJCFLAGS) -x objective-c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
+endif
+
+ifneq (,$(OBJRESP))
+$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)
+	$(SILENT) echo $^
+	$(SILENT) echo $^ > $@
+endif
+
+ifneq (,$(LDRESP))
+$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)
+	$(SILENT) echo $^
+	$(SILENT) echo $^ > $@
 endif
 
 $(OBJDIR)/src/host/lua-5.3.0/src/lapi.o: ../../src/host/lua-5.3.0/src/lapi.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/lua-5.3.0/src
