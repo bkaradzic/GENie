@@ -59,6 +59,6 @@
 			toolsVersion    = "16.0",
 			windowsTargetPlatformVersion = "8.1",
 			supports64bitEditContinue    = true,
-			intDirAbsolute  = true,
+			intDirAbsolute  = false,
 		}
 	}
