@@ -8,7 +8,7 @@ local ninja = premake.ninja
 local cpp   = premake.ninja.cpp
 local p     = premake
 
-local function wrap_command(c)
+local function wrap_ninja_cmd(c)
 	if os.is("windows") then
 		return 'cmd /c "' .. c .. '"'
 	else
@@ -56,20 +56,22 @@ end
 
 		_p("# core rules for " .. cfg.name)
 		_p("rule cc")
-		_p("  command = " .. wrap_command(tool.cc .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in"))
+		_p("  command     = " .. wrap_ninja_cmd(tool.cc .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in"))
 		_p("  description = cc $out")
-		_p("  depfile = $out.d")
-		_p("  deps = gcc")
+		_p("  depfile     = $out.d")
+		_p("  deps        = gcc")
 		_p("")
 		_p("rule cxx")
-		_p("  command = " .. wrap_command(tool.cxx .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in"))
+		_p("  command     = " .. wrap_ninja_cmd(tool.cxx .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in"))
 		_p("  description = cxx $out")
-		_p("  depfile = $out.d")
-		_p("  deps = gcc")
+		_p("  depfile     = $out.d")
+		_p("  deps        = gcc")
 		_p("")
 		_p("rule ar")
-		_p("  command = " .. wrap_command(tool.ar .. " $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or "")))
-		_p("  description = ar $out")
+		_p("  command         = " .. wrap_ninja_cmd(tool.ar .. " $flags $out @$out.rsp " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or "")))
+		_p("  description     = ar $out")
+		_p("  rspfile         = $out.rsp")
+		_p("  rspfile_content = $in $libs")
 		_p("")
 
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
@@ -80,21 +82,21 @@ end
 			startgroup = '-Wl,--start-group'
 			endgroup = '-Wl,--end-group'
 		end
-		_p("  command = " .. wrap_command("$pre_link " .. link .. string.format(" -o $out @$out.rsp $all_ldflags %s $libs %s $post_build", startgroup, endgroup)))
-		_p("  rspfile = $out.rsp")
-  		_p("  rspfile_content = $all_outputfiles")
-		_p("  description = link $out")
+		_p("  command         = " .. wrap_ninja_cmd("$pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $post_build"))
+		_p("  description     = link $out")
+		_p("  rspfile         = $out.rsp")
+  		_p("  rspfile_content = $all_outputfiles " .. string.format("%s $libs %s", startgroup, endgroup))
 		_p("")
 
 		_p("rule exec")
-		_p("  command = " .. wrap_command("$command"))
+		_p("  command     = " .. wrap_ninja_cmd("$command"))
 		_p("  description = Run $type commands")
 		_p("")
 
 		if #cfg.prebuildcommands > 0 then
 			_p("build __prebuildcommands: exec")
-			_p(1, "command = " .. wrap_command("echo Running pre-build commands && " .. table.implode(cfg.prebuildcommands, "", "", " && ")))
-			_p(1, "type = pre-build")
+			_p(1, "command = " .. wrap_ninja_cmd("echo Running pre-build commands && " .. table.implode(cfg.prebuildcommands, "", "", " && ")))
+			_p(1, "type    = pre-build")
 			_p("")
 		end
 
@@ -196,7 +198,7 @@ end
 		_p("# custom build rules")
 		for command, details in pairs(seen_commands) do
 			_p("rule " .. details.name)
-			_p(1, "command = " .. wrap_command(command))
+			_p(1, "command = " .. wrap_ninja_cmd(command))
 		end
 
 		for cmd_index, cmdsets in ipairs(command_files) do
@@ -340,13 +342,9 @@ end
 			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
 			if #cfg.prelinkcommands > 0 then
 				_p(1, 'pre_link        = echo Running pre-link commands && ' .. table.implode(cfg.prelinkcommands, "", "", " && ") .. " && ")
-			else
-				_p(1, 'pre_link        =')
 			end
 			if #cfg.postbuildcommands > 0 then
 				_p(1, 'post_build      = && echo Running post-build commands && ' .. table.implode(cfg.postbuildcommands, "", "", " && "))
-			else
-				_p(1, 'post_build      =')
 			end
 		end
 
