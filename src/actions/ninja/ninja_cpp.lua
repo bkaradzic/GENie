@@ -94,7 +94,7 @@ end
 		_p("")
 
 		if #cfg.prebuildcommands > 0 then
-			_p("build __prebuildcommands: exec")
+			_p("build __prebuildcommands_" .. premake.esc(prj.name) .. ": exec")
 			_p(1, "command = " .. wrap_ninja_cmd("echo Running pre-build commands && " .. table.implode(cfg.prebuildcommands, "", "", " && ")))
 			_p(1, "type    = pre-build")
 			_p("")
@@ -138,7 +138,7 @@ end
 		local command_by_name = {}
 		local command_files = {}
 
-		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands" or ""
+		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands_" .. premake.esc(prj.name) or ""
 
 		for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 			for _, buildtask in ipairs(custombuildtask or {}) do
@@ -243,7 +243,7 @@ end
 					if order_deps[objfilename] == nil then
 						order_deps[objfilename] = {}
 					end
-					table.insert(order_deps[objfilename], '__prebuildcommands')
+					table.insert(order_deps[objfilename], '__prebuildcommands_' .. premake.esc(prj.name))
 				end
 			end
 			if path.issourcefile(file) then
