@@ -303,8 +303,15 @@
 				defines = defines:gsub('"', '\\"')
 			end
 
-			_p(indent,'<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'
-				,premake.esc(defines))
+			-- do not add `%(PreprocessorDefinitions)` if it's already part of defines
+			local isPreprocessorDefinitionPresent = string.find(defines, "%%%(PreprocessorDefinitions%)")
+			if isPreprocessorDefinitionPresent then
+				_p(indent,'<PreprocessorDefinitions>%s</PreprocessorDefinitions>'
+					,premake.esc(defines))
+			else
+				_p(indent,'<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'
+					,premake.esc(defines))
+			end
 		else
 			_p(indent,'<PreprocessorDefinitions></PreprocessorDefinitions>')
 		end
