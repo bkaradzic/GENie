@@ -25,8 +25,6 @@ help:
 	@echo "CONFIGURATIONS:"
 	@echo "   release"
 	@echo "   debug"
-	@echo "   releaseuniv32"
-	@echo "   debuguniv32"
 	@echo ""
 	@echo "TARGETS:"
 	@echo "   all (default)"

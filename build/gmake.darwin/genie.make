@@ -49,11 +49,11 @@ ifeq ($(config),release)
   DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES           += -I"../../src/host/lua-5.3.0/src"
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -mmacosx-version-min=10.6
-  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -mmacosx-version-min=10.6
-  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -mmacosx-version-min=10.6
-  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -mmacosx-version-min=10.6
-  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -mmacosx-version-min=10.6
+  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os $(MPARAM) -mmacosx-version-min=10.6
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os $(MPARAM) -mmacosx-version-min=10.6
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os $(MPARAM) -mmacosx-version-min=10.6
+  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os $(MPARAM) -mmacosx-version-min=10.6
+  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os $(MPARAM) -mmacosx-version-min=10.6
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
   LIBDEPS            +=
@@ -136,189 +136,13 @@ ifeq ($(config),debug)
   DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
   INCLUDES           += -I"../../src/host/lua-5.3.0/src"
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -mmacosx-version-min=10.6
-  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -mmacosx-version-min=10.6
-  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -mmacosx-version-min=10.6
-  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -mmacosx-version-min=10.6
-  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -mmacosx-version-min=10.6
+  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g $(MPARAM) -mmacosx-version-min=10.6
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g $(MPARAM) -mmacosx-version-min=10.6
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g $(MPARAM) -mmacosx-version-min=10.6
+  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g $(MPARAM) -mmacosx-version-min=10.6
+  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g $(MPARAM) -mmacosx-version-min=10.6
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
-  LIBDEPS            +=
-  LDDEPS             +=
-  LDRESP              =
-  LIBS               += $(LDDEPS) -framework CoreServices
-  EXTERNAL_LIBS      +=
-  LINKOBJS            = $(OBJECTS)
-  LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
-  OBJRESP             =
-  OBJECTS := \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbitlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcode.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcorolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lctype.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldblib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldebug.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldo.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lfunc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lgc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/linit.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/liolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/llex.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmathlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmem.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loadlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lobject.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lopcodes.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loslib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lparser.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstate.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstring.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstrlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltable.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltablib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lundump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o \
-	$(OBJDIR)/src/host/os_chdir.o \
-	$(OBJDIR)/src/host/os_copyfile.o \
-	$(OBJDIR)/src/host/os_getcwd.o \
-	$(OBJDIR)/src/host/os_is64bit.o \
-	$(OBJDIR)/src/host/os_isdir.o \
-	$(OBJDIR)/src/host/os_isfile.o \
-	$(OBJDIR)/src/host/os_match.o \
-	$(OBJDIR)/src/host/os_mkdir.o \
-	$(OBJDIR)/src/host/os_pathsearch.o \
-	$(OBJDIR)/src/host/os_rmdir.o \
-	$(OBJDIR)/src/host/os_stat.o \
-	$(OBJDIR)/src/host/os_ticks.o \
-	$(OBJDIR)/src/host/os_uuid.o \
-	$(OBJDIR)/src/host/path_getabsolute.o \
-	$(OBJDIR)/src/host/path_getrelative.o \
-	$(OBJDIR)/src/host/path_helpers.o \
-	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/premake.o \
-	$(OBJDIR)/src/host/premake_main.o \
-	$(OBJDIR)/src/host/scripts.o \
-	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/string_hash.o \
-
-  define PREBUILDCMDS
-  endef
-  define PRELINKCMDS
-  endef
-  define POSTBUILDCMDS
-  endef
-endif
-
-ifeq ($(config),releaseuniv32)
-  AR         = libtool
-  OBJDIR              = obj/Universal32/Release
-  TARGETDIR           = ../../bin/darwin
-  override TARGET              = $(TARGETDIR)/genie
-  DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
-  INCLUDES           += -I"../../src/host/lua-5.3.0/src"
-  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
-  LIBDEPS            +=
-  LDDEPS             +=
-  LDRESP              =
-  LIBS               += $(LDDEPS) -framework CoreServices
-  EXTERNAL_LIBS      +=
-  LINKOBJS            = $(OBJECTS)
-  LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
-  OBJRESP             =
-  OBJECTS := \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbitlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcode.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcorolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lctype.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldblib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldebug.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldo.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lfunc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lgc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/linit.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/liolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/llex.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmathlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmem.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loadlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lobject.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lopcodes.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loslib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lparser.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstate.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstring.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstrlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltable.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltablib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lundump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o \
-	$(OBJDIR)/src/host/os_chdir.o \
-	$(OBJDIR)/src/host/os_copyfile.o \
-	$(OBJDIR)/src/host/os_getcwd.o \
-	$(OBJDIR)/src/host/os_is64bit.o \
-	$(OBJDIR)/src/host/os_isdir.o \
-	$(OBJDIR)/src/host/os_isfile.o \
-	$(OBJDIR)/src/host/os_match.o \
-	$(OBJDIR)/src/host/os_mkdir.o \
-	$(OBJDIR)/src/host/os_pathsearch.o \
-	$(OBJDIR)/src/host/os_rmdir.o \
-	$(OBJDIR)/src/host/os_stat.o \
-	$(OBJDIR)/src/host/os_ticks.o \
-	$(OBJDIR)/src/host/os_uuid.o \
-	$(OBJDIR)/src/host/path_getabsolute.o \
-	$(OBJDIR)/src/host/path_getrelative.o \
-	$(OBJDIR)/src/host/path_helpers.o \
-	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/premake.o \
-	$(OBJDIR)/src/host/premake_main.o \
-	$(OBJDIR)/src/host/scripts.o \
-	$(OBJDIR)/src/host/string_endswith.o \
-	$(OBJDIR)/src/host/string_hash.o \
-
-  define PREBUILDCMDS
-  endef
-  define PRELINKCMDS
-  endef
-  define POSTBUILDCMDS
-  endef
-endif
-
-ifeq ($(config),debuguniv32)
-  AR         = libtool
-  OBJDIR              = obj/Universal32/Debug
-  TARGETDIR           = ../../bin/darwin
-  override TARGET              = $(TARGETDIR)/genie
-  DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_MACOSX
-  INCLUDES           += -I"../../src/host/lua-5.3.0/src"
-  ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -arch i386 -arch ppc -m64 -mmacosx-version-min=10.6
-  ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
   LDRESP              =
