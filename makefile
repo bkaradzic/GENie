@@ -22,14 +22,14 @@ else
 OS=windows
 endif
 
-UNAME_P := $(shell uname -p)
-ifeq ($(UNAME_P),$(filter i%86,$(UNAME_P)))
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),$(filter i%86,$(UNAME_M)))
 MPARAM=-m32
 else
-ifeq ($(UNAME_P),$(filter aarch64,$(UNAME_P)))
+ifeq ($(UNAME_M),$(filter aarch64,$(UNAME_M)))
 MPARAM=
 else
-ifeq ($(UNAME_P),$(filter armv%,$(UNAME_P)))
+ifeq ($(UNAME_M),$(filter armv%,$(UNAME_M)))
 MPARAM=
 else
 MPARAM=-m64
