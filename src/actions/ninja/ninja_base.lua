@@ -143,7 +143,7 @@ function cfg_proxy:getoutputfilename()
 end
 
 function cfg_proxy:getdummysourcefilename(extension, fullpath)
-	local name = self.project.name .. extension
+	local name = self.project.name .. "_dummy" .. extension
 	
 	if fullpath ~= nil then
 		return path.join(self.location, name)
