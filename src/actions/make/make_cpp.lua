@@ -463,6 +463,10 @@
 			lddeps  = libdeps
 		end
 
+		if #libdeps == 0 and not table.icontains(table.translate(cfg.files, path.issourcefile), true) then
+			return
+		end
+
 		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
 		_p('  LIBDEPS            +=%s', libdeps)
 		_p('  LDDEPS             +=%s', lddeps)
