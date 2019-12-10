@@ -847,6 +847,7 @@ end
 				NativeWChar = 1,
 				No64BitChecks = 1,
 				NoBufferSecurityCheck = 1,
+				NoDummySource = 1,
 				NoEditAndContinue = 1,
 				NoExceptions = 1,
 				NoFramePointer = 1,
