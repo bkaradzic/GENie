@@ -172,6 +172,8 @@
 			if premake.isdotnetproject(prj) then
 				premake.generate(prj, makefile, premake.make_csharp)
 			elseif premake.iscppproject(prj) then
+				local dummyfile = _MAKE.getdummysourcefilename(prj)
+				if dummyfile then premake.generate(prj, dummyfile, premake.make_cpp_dummy) end
 				premake.generate(prj, makefile, premake.make_cpp)
 			elseif premake.isswiftproject(prj) then
 				premake.generate(prj, makefile, premake.make_swift)

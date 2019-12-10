@@ -382,6 +382,63 @@
 		_p('')
 	end
 
+--
+-- Generate dummy build unit
+--
+
+	function _MAKE.getdummysourcefilename(prj)
+		-- create a shortcut to the compiler interface
+		local cc = premake.gettool(prj)
+
+		-- build a list of supported target platforms that also includes a generic build
+		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
+
+		-- check whether dummy should be generated
+		--> no flag 'NoDummySource'
+		--> no actual source file
+		local shouldGenerate = false
+		for _, platform in ipairs(platforms) do
+			for cfg in premake.eachconfig(prj, platform) do
+				if not table.icontains(cfg.flags, "NoDummySource") then
+					if (prj.language == 'C++' and not table.icontains(table.translate(cfg.files, path.iscppfile), true))
+					or (prj.language == 'C' and not table.icontains(table.translate(cfg.files, path.iscfile), true)) then
+						shouldGenerate = true
+						break
+					end
+				end
+			end
+		end
+
+		if not shouldGenerate then
+			return nil
+		end
+
+		local extension = ("_dummy%s"):format(prj.language == 'C++' and '.cpp' or '.c')
+		return prj.name .. extension
+	end
+
+	function premake.make_cpp_dummy(prj)
+		local dummyfile = _MAKE.getdummysourcefilename(prj)
+
+		-- generate dummy
+		premake.ninja.cpp.generate_dummysourcefile(prj)
+
+		-- add dummy back to configuration that need it
+		--> same conditions as above
+		local cc = premake.gettool(prj)
+		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
+		for _, platform in ipairs(platforms) do
+			for cfg in premake.eachconfig(prj, platform) do
+				if not table.icontains(cfg.flags, "NoDummySource") then
+					if (prj.language == 'C++' and not table.icontains(table.translate(cfg.files, path.iscppfile), true))
+					or (prj.language == 'C' and not table.icontains(table.translate(cfg.files, path.iscfile), true)) then
+						table.insert(cfg.files, dummyfile)
+					end
+				end
+			end
+		end
+	end
+
 
 --
 -- Platform support
