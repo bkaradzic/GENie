@@ -393,6 +393,23 @@
 	end
 
 
+--
+-- Checks if the project has something to link
+--
+
+	function premake.projectdoeslink(prj, cfgname, platform)
+		local prjcfg = premake.getconfig(prj, cfgname, platform)
+		local lnkobj = table.icontains(table.translate(prjcfg.files, path.issourcefile), true)
+		local lnkdep = false
+		if prj.kind ~= 'StaticLib' then
+			lnkdep = table.icontains(table.translate(prjcfg.links, function(lnk)
+				local link = premake.findproject(lnk)
+				return premake.projectdoeslink(link, cfgname, platform)
+			end), true)
+		end
+		return lnkobj or lnkdep
+	end
+
 
 --
 -- Gets the name style for a configuration, indicating what kind of prefix,
