@@ -110,6 +110,10 @@ local p     = premake
 	
 	function swift.linker(prj, cfg, objfiles, tool)
 		local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
+
+		if #objfiles + #lddeps == 0 then
+			return
+		end
 		
 		if cfg.kind == "StaticLib" then
 			_p("build $target: ar %s | %s ", ninja.list(objfiles), lddeps)
