@@ -26,15 +26,18 @@ end
 
 		for _, platform in ipairs(platforms) do
 			for cfg in p.eachconfig(pxy, platform) do
+
+				local dummyfile
 				if prj.language == 'C++' and not table.icontains(table.translate(cfg.files, path.iscppfile), true) then
-					local dummyfile = cfg:getdummysourcefilename('.cpp')
-					p.generate(cfg, dummyfile, function() cpp.generate_dummysourcefile(prj, cfg) end)
-					table.insert(cfg.files, dummyfile)
+					dummyfile = cfg:getdummysourcefilename('.cpp')
 				elseif prj.language == 'C' and not table.icontains(table.translate(cfg.files, path.iscfile), true) then
-					local dummyfile = cfg:getdummysourcefilename('.c')
+					dummyfile = cfg:getdummysourcefilename('.c')
+				end
+				if dummyfile then
 					p.generate(cfg, dummyfile, function() cpp.generate_dummysourcefile(prj, cfg) end)
 					table.insert(cfg.files, dummyfile)
 				end
+
 				p.generate(cfg, cfg:getprojectfilename(), function() cpp.generate_config(prj, cfg) end)
 			end
 		end
