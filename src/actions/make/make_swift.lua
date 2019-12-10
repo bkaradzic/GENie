@@ -120,7 +120,11 @@ function swift.file_rules(prj, objfiles)
 end
 
 function swift.linker(prj, tool)
-	local lddeps = make.list(premake.getlinks(prj, "siblings", "fullpath")) 
+	local lddeps = make.list(premake.getlinks(prj, "siblings", "fullpath"))
+
+	if #lddeps == 0 and not table.icontains(table.translate(prj.files, path.isswiftfile), true) then
+		return
+	end
 
 	if prj.kind == "StaticLib" then
 		_p("$(TARGET): $(OBJECTS) %s ", lddeps)
