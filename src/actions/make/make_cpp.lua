@@ -239,14 +239,23 @@
 		_p('endif')
 		_p('')
 
+		_p('blank =')
+		_p('comma =,')
+		_p('space = ')
+		_p('space += ')
+		_p('')
 		_p('ifeq (posix,$(SHELLTYPE))')
-		_p('  MKDIR = $(SILENT) mkdir -p "$(1)"')
-		_p('  COPY  = $(SILENT) cp -fR "$(1)" "$(2)"')
-		_p('  RM    = $(SILENT) rm -f "$(1)"')
+		_p('  MKDIR  = $(SILENT) mkdir -p "$(1)"')
+		_p('  COPY   = $(SILENT) cp -fR "$(1)" "$(2)"')
+		_p('  RM     = $(SILENT) rm -f "$(1)"')
+		_p('  FPRINT = $(shell echo $(1)$(2) "$(3)")')
+		_p('  CAT    = $(SILENT) cat "$(1)"')
 		_p('else')
-		_p('  MKDIR = $(SILENT) mkdir "$(subst /,\\\\,$(1))" 2> nul || exit 0')
-		_p('  COPY  = $(SILENT) copy /Y "$(subst /,\\\\,$(1))" "$(subst /,\\\\,$(2))"')
-		_p('  RM    = $(SILENT) del /F "$(subst /,\\\\,$(1))" 2> nul || exit 0')
+		_p('  MKDIR  = $(SILENT) mkdir "$(subst /,\\\\,$(1))" 2> nul || exit 0')
+		_p('  COPY   = $(SILENT) copy /Y "$(subst /,\\\\,$(1))" "$(subst /,\\\\,$(2))"')
+		_p('  RM     = $(SILENT) del /F "$(subst /,\\\\,$(1))" 2> nul || exit 0')
+		_p('  FPRINT = $(shell echo. $(1)$(2) "$(subst /,\\\\,$(3))")')
+		_p('  CAT    = $(SILENT) type "$(subst /,\\\\,$(1))"')
 		_p('endif')
 		_p('')
 
@@ -336,7 +345,7 @@
 
 		-- add objects for compilation, and remove any that are excluded per config.
 		if cfg.flags.UseObjectResponseFile then
-			_p('  OBJRESP             = $(OBJDIR)/%s_objects', prj.name)
+			_p('  OBJRESP             = $(OBJDIR)/$(basename $(notdir $(TARGET)))_objects')
 		else
 			_p('  OBJRESP             =')
 		end
@@ -441,8 +450,8 @@
 		local lddeps
 
 		if #cfg.wholearchive > 0 then
-			libdeps = {}
-			lddeps  = {}
+			libdeps  = {}
+			lddeps   = {}
 
 			for _, linkcfg in ipairs(premake.getlinks(cfg, "siblings", "object")) do
 				local linkpath = path.rebase(linkcfg.linktarget.fullpath, linkcfg.location, cfg.location)
@@ -459,8 +468,8 @@
 			libdeps = make.list(_MAKE.esc(libdeps))
 			lddeps  = make.list(_MAKE.esc(lddeps))
 		else
-			libdeps = make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath")))
-			lddeps  = libdeps
+			libdeps   = make.list(_MAKE.esc(premake.getlinks(cfg, "siblings", "fullpath")))
+			lddeps   = libdeps
 		end
 
 		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
@@ -468,7 +477,7 @@
 		_p('  LDDEPS             +=%s', lddeps)
 
 		if cfg.flags.UseLDResponseFile then
-			_p('  LDRESP              = $(OBJDIR)/%s_libs', prj.name)
+			_p('  LDRESP              = $(OBJDIR)/$(basename $(notdir $(TARGET)))_libs')
 			_p('  LIBS               += @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
 		else
 			_p('  LDRESP              =')
@@ -579,15 +588,17 @@
 
 		_p('ifneq (,$(OBJRESP))')
 		_p('$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(SILENT) echo $^')
-		_p('\t$(SILENT) echo $^ > $@')
+		_p('\t$(call FPRINT,,>,$@)')
+		_p('\t$(foreach v,$^,$(call FPRINT,$(v),>>,$@))')
+		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
 
 		_p('ifneq (,$(LDRESP))')
-		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(SILENT) echo $^')
-		_p('\t$(SILENT) echo $^ > $@')
+		_p('$(LDRESP): $(LIBDEPS) | $(TARGETDIR) $(OBJDIRS)')
+		_p('\t$(call FPRINT,,>,$@)')
+		_p('\t$(foreach v,$(LDDEPS),$(call FPRINT,$(v),>>,$@))')
+		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
 
