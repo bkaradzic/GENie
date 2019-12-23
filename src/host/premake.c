@@ -258,33 +258,26 @@ int process_arguments(lua_State* L, int argc, const char** argv)
  */
 int process_option(lua_State* L, const char* arg)
 {
-	char key[512];
-	const char* value;
-
 	/* If a value is specified, split the option into a key/value pair */
-	char* ptr = strchr(arg, '=');
-	if (ptr)
+	const char* value = strchr(arg, '=');
+	if (value)
 	{
-		int len = (int)(ptr - arg);
-		if (len > 511) len = 511;
-		strncpy(key, arg, len);
-		key[len] = '\0';
-		value = ptr + 1;
+		/* Store it in the Options table, which is already on the stack */
+		lua_pushlstring(L, arg, value - arg);
+		lua_pushstring(L, ++value);
+		lua_settable(L, -4);
+
+		/* The /scripts option gets picked up here to find the built-in scripts */
+		if (strncmp(arg, "scripts=", value - arg) == 0 && strlen(value) > 0)
+		{
+			scripts_path = value;
+		}
 	}
 	else
 	{
-		strcpy(key, arg);
-		value = "";
-	}
-
-	/* Store it in the Options table, which is already on the stack */
-	lua_pushstring(L, value);
-	lua_setfield(L, -3, key);
-
-	/* The /scripts option gets picked up here to find the built-in scripts */
-	if (strcmp(key, "scripts") == 0 && strlen(value) > 0)
-	{
-		scripts_path = value;
+		/* No value, store empty string in the Options table */
+		lua_pushliteral(L, "");
+		lua_setfield(L, -3, arg);
 	}
 
 	return OKAY;
