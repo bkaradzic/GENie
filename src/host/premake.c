@@ -262,13 +262,16 @@ int process_option(lua_State* L, const char* arg)
 	const char* value = strchr(arg, '=');
 	if (value)
 	{
+		static const char key[] = "scripts=";
+		size_t len = sizeof(key) - 1;
+
 		/* Store it in the Options table, which is already on the stack */
 		lua_pushlstring(L, arg, value - arg);
 		lua_pushstring(L, ++value);
 		lua_settable(L, -4);
 
 		/* The /scripts option gets picked up here to find the built-in scripts */
-		if (strncmp(arg, "scripts=", value - arg) == 0 && strlen(value) > 0)
+		if (value - arg == len && !memcmp(key, arg, len) && value[0])
 		{
 			scripts_path = value;
 		}
