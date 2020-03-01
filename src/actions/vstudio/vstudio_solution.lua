@@ -87,6 +87,8 @@
 		_p('Microsoft Visual Studio Solution File, Format Version %d.00', action.vstudio.solutionVersion)
 		if(_ACTION:sub(3) == "2015" or  _ACTION:sub(3) == "2017") then
 			_p('# Visual Studio %s', action.vstudio.toolsVersion:sub(1,2))
+		elseif(_ACTION:sub(3) == "2019") then
+			_p('# Visual Studio Version %s', action.vstudio.toolsVersion:sub(1,2))
 		else
 			_p('# Visual Studio %s', _ACTION:sub(3))
 		end
