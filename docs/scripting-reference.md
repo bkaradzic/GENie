@@ -903,7 +903,7 @@ Sets the kind of binary object being created by the project, such as a console o
 _kind_ - project kind identifier. One of:
 
 * _ConsoleApp_ - console executable
-* _WindowedApp_ - application that runs in a desktop window. Does not apply on Linux.
+* _WindowedApp_ - application that runs in a window (Windows, Android, MacOS and iOS). Does not apply on Linux.
 * _StaticLib_ - static library
 * _SharedLib_ - shared library or DLL
 * _Bundle_ - Xcode: Cocoa Bundle, everywhere else: alias to _SharedLib_
