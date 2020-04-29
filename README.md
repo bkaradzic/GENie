@@ -90,7 +90,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added support for generating PS4/Orbis projects.
  - Fixed PCH race when using concurrent Makefile build.
  - Added Green Hills Software compiler support.
- - Added edit & continue support for 64-bit builds in VS2013 upwards.
+ - Added edit & continue support for 64-bit builds in vs2013 upwards.
  - Added `windowstargetplatformversion` to specify VS Windows target version.
  - Added `NoWinRT` flag to disable WinRT CX builds.
  - Added `NoBufferSecurityCheck` flag to disable security checks in VS.
@@ -130,7 +130,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
    and `CppLatest`.
  - Added `xcodeprojectopts` and `xcodetargetopts`.
  - Added vs2019 support.
- - Added UnitySupport flag to enable Unity (Jumbo) builds in Visual Studio 2019
+ - Added `UnitySupport` flag to enable Unity (Jumbo) builds in vs2019
 
 build - GENie build system scripts
 ----------------------------------
