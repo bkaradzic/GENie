@@ -53,7 +53,6 @@ end
 		}
 
 		_p("")
-
 		_p("# core rules for " .. cfg.name)
 		_p("rule cc")
 		_p("  command     = " .. wrap_ninja_cmd(tool.cc .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in"))
@@ -67,12 +66,20 @@ end
 		_p("  depfile     = $out.d")
 		_p("  deps        = gcc")
 		_p("")
-		_p("rule ar")
-		_p("  command         = " .. wrap_ninja_cmd(tool.ar .. " $flags $out @$out.rsp " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or "")))
-		_p("  description     = ar $out")
-		_p("  rspfile         = $out.rsp")
-		_p("  rspfile_content = $in $libs")
-		_p("")
+
+		if cfg.flags.UseObjectResponseFile then
+			_p("rule ar")
+			_p("  command         = " .. wrap_ninja_cmd(tool.ar .. " $flags $out @$out.rsp " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or "")))
+			_p("  description     = ar $out")
+			_p("  rspfile         = $out.rsp")
+			_p("  rspfile_content = $in $libs")
+			_p("")
+		else
+			_p("rule ar")
+			_p("  command         = " .. wrap_ninja_cmd(tool.ar .. " $flags $out $in $libs" .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or "")))
+			_p("  description     = ar $out")
+			_p("")
+		end
 
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
