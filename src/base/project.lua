@@ -595,8 +595,8 @@
 -- any relevant command-line options.
 --
 
-	function premake.gettool(cfg)
-		if premake.iscppproject(cfg) then
+	function premake.gettool(prj)
+		if premake.iscppproject(prj) then
 			if _OPTIONS.cc then
 				return premake[_OPTIONS.cc]
 			end
@@ -605,9 +605,9 @@
 				return premake[action.valid_tools.cc[1]]
 			end
 			return premake.gcc
-		elseif premake.isdotnetproject(cfg) then
+		elseif premake.isdotnetproject(prj) then
 			return premake.dotnet
-		elseif premake.isswiftproject(cfg) then
+		elseif premake.isswiftproject(prj) then
 			return premake.swift
 		else
 			return premake.valac
@@ -631,7 +631,7 @@
 
 		local fname = path.getname(abspath)
 		local max = abspath:len() - fname:len()
-        
+
         -- First check for an exact match from the inverse vpaths
         if prj.inversevpaths and prj.inversevpaths[abspath] then
             return path.join(prj.inversevpaths[abspath], fname)
@@ -687,7 +687,7 @@
 				end
 			end
 		end
-        
+
         if #matches > 0 then
             -- for the sake of determinism, return the first alphabetically
             table.sort(matches)
@@ -731,7 +731,8 @@
 --
 
 	function premake.project.iscproject(prj)
-		return prj.language == "C"
+		local language = prj.language or prj.solution.language
+		return language == "C"
 	end
 
 
@@ -740,7 +741,8 @@
 --
 
 	function premake.iscppproject(prj)
-		return (prj.language == "C" or prj.language == "C++")
+		local language = prj.language or prj.solution.language
+		return (language == "C" or language == "C++")
 	end
 
 
@@ -750,7 +752,8 @@
 --
 
 	function premake.isdotnetproject(prj)
-		return (prj.language == "C#")
+		local language = prj.language or prj.solution.language
+		return (language == "C#")
 	end
 
 --
@@ -758,7 +761,8 @@
 --
 
 	function premake.isvalaproject(prj)
-		return (prj.language == "Vala")
+		local language = prj.language or prj.solution.language
+		return (language == "Vala")
 	end
 
 --
@@ -766,5 +770,6 @@
 --
 
 	function premake.isswiftproject(prj)
-		return (prj.language == "Swift")
+		local language = prj.language or prj.solution.language
+		return (language == "Swift")
 	end

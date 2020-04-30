@@ -11,6 +11,7 @@ multiple projects easy.
 Supported project generators:
  * FASTBuild (experimental)
  * GNU Makefile
+ * [JSON Compilation Database][jcdb]
  * Ninja (experimental)
  * Qbs / QtCreator (experimental)
  * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019
@@ -131,6 +132,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `xcodeprojectopts` and `xcodetargetopts`.
  - Added vs2019 support.
  - Added `UnitySupport` flag to enable Unity (Jumbo) builds in vs2019
+ - Added the `jcdb` action for generating a [JSON compilation database][jcdb].
 
 build - GENie build system scripts
 ----------------------------------
@@ -240,4 +242,5 @@ Developer Crackshell used GENie for development of games
 	OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+  [jcdb]: https://clang.llvm.org/docs/JSONCompilationDatabase.html
   [zbs]: https://studio.zerobrane.com
