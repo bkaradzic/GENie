@@ -331,7 +331,7 @@ end
 
 	function cpp.linker(prj, cfg, objfiles, tool)
 		local all_ldflags    = ninja.list(table.join(tool.getlibdirflags(cfg), tool.getldflags(cfg), cfg.linkoptions))
-		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands" or ""
+		local prebuildsuffix = #cfg.prebuildcommands > 0 and ("||__prebuildcommands_" .. premake.esc(prj.name)) or ""
 		local libs           = {}
 		local walibs         = {}
 		local lddeps         = {}
