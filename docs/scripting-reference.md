@@ -671,8 +671,8 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _Unsafe_ - Enable the use of unsafe code in .NET applications.
 * _UnsignedChar_ - Force `char`s to be `unsigned` by default.
 * _UseFullPaths_ - Enable absolute paths for `__FILE__`. 
-* _UseLDResponseFile_ - Enable use of response file (aka @file) for linking lib dependencies (make only).
-* _UseObjectResponseFile_ - Enable use of response file (aka @file) for linking objects (make only).
+* _UseLDResponseFile_ - Enable use of response file (aka @file) for linking lib dependencies (make and ninja).
+* _UseObjectResponseFile_ - Enable use of response file (aka @file) for linking objects (make and ninja).
 * _WinMain_ - Use WinMain() as the entry point for Windows applications, rather than main().
 
 **Note:** When not set, options will default to the tool default.
