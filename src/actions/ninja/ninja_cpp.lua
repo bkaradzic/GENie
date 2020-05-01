@@ -89,11 +89,19 @@ end
 			startgroup = '-Wl,--start-group'
 			endgroup = '-Wl,--end-group'
 		end
-		_p("  command         = " .. wrap_ninja_cmd("$pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $post_build"))
-		_p("  description     = link $out")
-		_p("  rspfile         = $out.rsp")
-		_p("  rspfile_content = $all_outputfiles $walibs" .. string.format("%s $libs %s", startgroup, endgroup))
-		_p("")
+
+		local rspfile_content = "$all_outputfiles $walibs" .. string.format("%s $libs %s", startgroup, endgroup)
+		if cfg.flags.UseLDResponseFile then
+			_p("  command         = " .. wrap_ninja_cmd("$pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $post_build"))
+			_p("  description     = link $out")
+			_p("  rspfile         = $out.rsp")
+			_p("  rspfile_content = %s", rspfile_content)
+			_p("")
+		else
+			_p("  command         = " .. wrap_ninja_cmd("$pre_link " .. link .. " -o $out " .. rspfile_content .. " $all_ldflags $post_build"))
+			_p("  description     = link $out")
+			_p("")
+		end
 
 		_p("rule exec")
 		_p("  command     = " .. wrap_ninja_cmd("$command"))
