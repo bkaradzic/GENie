@@ -633,10 +633,10 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _AntBuildDebuggable_ - ???
 * _ATL_ - ???
 * _C7DebugInfo_ - Enables C7 compatible debug info for MSVC builds.
-* _Cpp11_ - ???
-* _Cpp14_ - ???
-* _Cpp17_ - ???
-* _CppLatest_ - ???
+* _Cpp11_ - Enable usage of C++11 features.
+* _Cpp14_ - Enable usage of C++14 features.
+* _Cpp17_ - Enable usage of C++17 features.
+* _CppLatest_ - Enable usage of latest C++ features.
 * _DebugEnvsDontMerge_ - ???
 * _DebugEnvsInherit_ - ???
 * _DeploymentContent_ - ???
