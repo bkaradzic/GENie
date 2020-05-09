@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://repository-images.githubusercontent.com/23779242/961ad700-8d21-11ea-85d3-1d64eccc4531" width="1280"> 
+</p>
+
 [GENie](https://github.com/bkaradzic/genie#what-is-it) - Project generator tool
 ===============================================================================
 
