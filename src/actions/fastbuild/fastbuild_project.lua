@@ -10,7 +10,6 @@
 --		NoManifest = 1,
 --		NoPCH = 1,
 --		SingleOutputDir = 1,
---		StaticATL = 1,
 --		Symbols = 1,
 --		Unicode = 1,
 --		Unsafe = 1,

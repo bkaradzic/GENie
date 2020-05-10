@@ -130,14 +130,6 @@
 			_p(2, '<PreferredToolArchitecture>x64</PreferredToolArchitecture>')
 		end
 
-		if cfg.flags.MFC then
-			_p(2,'<UseOfMfc>%s</UseOfMfc>', iif(cfg.flags.StaticRuntime, "Static", "Dynamic"))
-		end
-
-		if cfg.flags.ATL or cfg.flags.StaticATL then
-			_p(2,'<UseOfAtl>%s</UseOfAtl>', iif(cfg.flags.StaticATL, "Static", "Dynamic"))
-		end
-
 		if cfg.flags.Unicode then
 			_p(2,'<CharacterSet>Unicode</CharacterSet>')
 		end

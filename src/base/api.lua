@@ -818,7 +818,6 @@ end
 		allowed = function(value)
 			local allowed_flags = {
 				AntBuildDebuggable = 1,
-				ATL = 1,
 				C7DebugInfo = 1,
 				Cpp11 = 1,
 				Cpp14 = 1,
@@ -843,7 +842,6 @@ end
 				LinkSupportCircularDependencies = 1,
 				Managed = 1,
 				MinimumWarnings = 1,
-				MFC = 1,
 				NativeWChar = 1,
 				No64BitChecks = 1,
 				NoBufferSecurityCheck = 1,
@@ -872,7 +870,6 @@ end
 				DebugRuntime = 1,
 				ReleaseRuntime = 1,
 				SEH = 1,
-				StaticATL = 1,
 				StaticRuntime = 1,
 				Symbols = 1,
 				Unicode = 1,
