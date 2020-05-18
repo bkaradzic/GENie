@@ -630,7 +630,7 @@ Specifies build flags to modify the compiling or linking process. Multiple calls
 #### Arguments
 _flags_ - List of flag names from list below. Names are case-insensitive and ignored if not supported on a platform.
 
-* _AntBuildDebuggable_ - Enables Visual Studio projects to target Android via the NVIDIA Nsight Tegra tools. ([#321](https://github.com/bkaradzic/GENie/pull/321))
+* _AntBuildDebuggable_ - Enables Visual Studio projects targetting Android to be debugged using the NVIDIA Nsight Tegra tools. ([#321](https://github.com/bkaradzic/GENie/pull/321))
 * _ATL_ - Obsolete flag: do not use.
 * _C7DebugInfo_ - Enables C7 compatible debug info for MSVC builds.
 * _Cpp11_ - Enable usage of C++11 features.
