@@ -650,7 +650,6 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _GenerateMapFiles_ - Enable .map file outputs from the Visual Studio linker.
 * _LinkSupportCircularDependencies_ - Enables the linker to iterate over provided libs in order to resolve circular dependencies (make and ninja only).
 * _Managed_ - Enable Managed C++ (.NET).
-* _MFC_ - Enable support for Microsoft Foundation Classes.
 * _MinimumWarnings_ - - Sets compiler's minimum warning level (Visual Studio only).
 * _NativeWChar, NoNativeWChar_ - Toggle support for the wchar data type.
 * _No64BitChecks_ - Disable 64-bit portability warnings.
