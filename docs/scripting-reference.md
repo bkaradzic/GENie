@@ -630,7 +630,15 @@ Specifies build flags to modify the compiling or linking process. Multiple calls
 #### Arguments
 _flags_ - List of flag names from list below. Names are case-insensitive and ignored if not supported on a platform.
 
+* _AntBuildDebuggable_ - Enables Visual Studio projects targetting Android to be debugged using the NVIDIA Nsight Tegra tools. ([#321](https://github.com/bkaradzic/GENie/pull/321))
 * _C7DebugInfo_ - Enables C7 compatible debug info for MSVC builds.
+* _Cpp11_ - Enable usage of C++11 features.
+* _Cpp14_ - Enable usage of C++14 features.
+* _Cpp17_ - Enable usage of C++17 features.
+* _CppLatest_ - Enable usage of latest C++ features.
+* _DebugEnvsDontMerge_ - Cause Visual Studio projects to not merge debug environment with the one inherited from the parent process. (i.e. sets `Project Properties > Debugging > Merge Environment` to `false`)
+* _DebugEnvsInherit_ - Cause Visual Studio projects to inherit debug environment. (i.e. sets in `Project Properties > Debugging > Environment > Edit > Inherit from parent of project defaults` to `true`)
+* _DeploymentContent_ - Mark files with `DeploymentContent` flag in the project file. (For C++ Win Store apps) ([#139](https://github.com/bkaradzic/GENie/pull/139))
 * _EnableMinimalRebuild_ - Enable Visual Studio's minimal rebuild feature.
 * _EnableSSE, EnableSSE2, EnableAVX, EnableAVX2_ - Enable SSE/AVX instruction sets
 * _ExtraWarnings_ - Sets compiler's max warning level.
@@ -650,6 +658,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoFramePointer_ - Disable the generation of stack frame pointers.
 * _NoImportLib_ - Prevent the generation of an import library for a Windows DLL.
 * _NoIncrementalLink_ - Disable support for Visual Studio's incremental linking feature.
+* _NoJMC_ - Disable Visual Studio's 'Just my Code' feature.
 * _NoManifest_ - Prevent the generation of a manifest for Windows executables and shared libraries.
 * _NoMultiProcessorCompilation_ - Disables Visual Studio's and FastBuild's multiprocessor compilation.
 * _NoPCH_ - Disable precompiled headers.
