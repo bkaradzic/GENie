@@ -29,6 +29,7 @@
 		"base/profiler.lua",
 		"tools/dotnet.lua",
 		"tools/gcc.lua",
+		"tools/clang.lua",
 		"tools/ghs.lua",
 		"tools/msc.lua",
 		"tools/ow.lua",
