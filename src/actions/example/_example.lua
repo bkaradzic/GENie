@@ -38,7 +38,7 @@
 		-- is specified with the /cc and /dotnet command-line options. You can find
 		-- the tool interfaces at src/tools.
 		valid_tools     = {
-			cc     = { "msc", "gcc", "ow" },
+			cc     = { "msc", "gcc", "clang", "ow" },
 			dotnet = { "mono", "msnet", "pnet" },
 		},
 

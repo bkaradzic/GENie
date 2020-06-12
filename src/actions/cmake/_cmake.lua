@@ -17,7 +17,7 @@ newaction {
 	valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
 	valid_languages = { "C", "C++" },
 	valid_tools     = {
-		cc   = { "gcc" },
+		cc   = { "gcc", "clang" },
 	},
 	onsolution = function(sln)
 		premake.generate(sln, "CMakeLists.txt", premake.cmake.workspace)
