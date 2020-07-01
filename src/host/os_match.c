@@ -8,6 +8,10 @@
 #include <string.h>
 #include "premake.h"
 
+int os_matchisrelative(const char* path)
+{
+	return strcmp(path, ".") == 0 || strcmp(path, "..") == 0;
+}
 
 #if PLATFORM_WINDOWS
 
@@ -69,7 +73,7 @@ int os_matchnext(lua_State* L)
 		}
 
 		m->is_first = 0;
-		if (m->entry.cFileName[0] != '.')
+		if (!os_matchisrelative(m->entry.cFileName))
 		{
 			lua_pushboolean(L, 1);
 			return 1;
@@ -169,7 +173,7 @@ int os_matchnext(lua_State* L)
 	while (m->entry != NULL)
 	{
 		const char* name = m->entry->d_name;
-		if (name[0] != '.' && fnmatch(m->mask, name, 0) == 0)
+		if (!os_matchisrelative(name) && fnmatch(m->mask, name, 0) == 0)
 		{
 			lua_pushboolean(L, 1);
 			return 1;
