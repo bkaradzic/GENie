@@ -75,6 +75,7 @@
 		"actions/xcode/xcode8.lua",
 		"actions/xcode/xcode9.lua",
 		"actions/xcode/xcode10.lua",
+		"actions/xcode/xcode11.lua",
 
 		--FASTBuild action
 		"actions/fastbuild/_fastbuild.lua",
