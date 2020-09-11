@@ -1295,6 +1295,7 @@ _identifiers_ - list of hardware platform specifiers from this list:
 * _Xbox360_ - Xbox 360 compiler and linker under Visual Studio
 * _PowerPC_ - PowerPC processors
 * _ARM_ - ARM-based processors
+* _ARM64_ - ARM64-based processors
 * _Orbis_ - Playstation 4
 * _Durango_ - Xbox One
 
