@@ -811,7 +811,7 @@
 			-- _WIN64:  For 64-bit platforms
 			-- _EXPORT: `EXPORT` for shared libraries, empty for other project kinds
 			table.insertflat(defines, iif(premake.config.isdebugbuild(cfg), "_DEBUG", {}))
-			table.insert(defines, iif(cfg.platform == "x64", "_WIN64", "_WIN32"))
+			table.insert(defines, iif(cfg.platform == "x64" or cfg.platform == "ARM64", "_WIN64", "_WIN32"))
 			table.insert(defines, iif(prj.kind == "SharedLib", "_EXPORT=EXPORT", "_EXPORT="))
 
 			_p(3, '<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'

@@ -40,6 +40,7 @@
 		PS3     = "PS3",
 		Xbox360 = "Xbox 360",
 		ARM     = "ARM",
+		ARM64     = "ARM64",
 		Orbis   = "ORBIS",
 		Durango = "Durango",
 		TegraAndroid = "Tegra-Android",
