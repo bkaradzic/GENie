@@ -137,6 +137,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added vs2019 support.
  - Added `UnitySupport` flag to enable Unity (Jumbo) builds in vs2019
  - Added the `jcdb` action for generating a [JSON compilation database][jcdb].
+ - Added support for generating Switch/NX32 Switch/NX64 projects.
 
 build - GENie build system scripts
 ----------------------------------

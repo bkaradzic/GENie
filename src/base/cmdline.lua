@@ -78,6 +78,8 @@
 			{ "ARM",         "ARM" },
 			{ "ARM64",         "ARM64" },
 			{ "PowerPC",     "PowerPC" },
+			{ "nx32",        "Nintendo Switch, 32-bit only" },
+			{ "nx64",        "Nintendo Switch, 64-bit only" },
 		}
 	}
 

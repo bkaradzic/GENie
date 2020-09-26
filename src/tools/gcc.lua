@@ -115,7 +115,21 @@
 			cxx        = "$(EMSCRIPTEN)/em++",
 			ar         = "$(EMSCRIPTEN)/emar",
 			cppflags   = "-MMD -MP",
-		}
+		},
+		NX32 = {
+			cc         = "clang",
+			cxx        = "clang++",
+			ar         = "armv7l-nintendo-nx-eabihf-ar",
+			cppflags   = "-MMD -MP",
+			flags      = "-march=armv7l",
+		},
+		NX64 = {
+			cc         = "clang",
+			cxx        = "clang++",
+			ar         = "aarch64-nintendo-nx-elf-ar",
+			cppflags   = "-MMD -MP",
+			flags      = "-march=aarch64",
+		},
 	}
 
 	local platforms = premake.gcc.platforms
