@@ -353,6 +353,12 @@
 			if cfg.flags.NoExceptions then
 				_p(3, '<GccExceptionHandling>false</GccExceptionHandling>')
 			end
+		elseif cfg.platform == "NX32" or cfg.platform == "NX64" then
+			if cfg.flags.NoExceptions then
+				_p(3, '<CppExceptions>false</CppExceptions>')
+			else
+				_p(3, '<CppExceptions>true</CppExceptions>')
+			end
 		else
 			if cfg.flags.NoExceptions then
 				_p(3, '<ExceptionHandling>false</ExceptionHandling>')
@@ -404,6 +410,10 @@
 			end
 		elseif cfg.platform == "TegraAndroid" then
 			-- TODO: tegra setting
+		elseif cfg.platform == "NX32" or cfg.platform == "NX64" then
+			if cfg.flags.FloatFast then
+				_p(3, '<FastMath>true</FastMath>')
+			end
 		else
 			if cfg.flags.FloatFast then
 				_p(3,'<FloatingPointModel>Fast</FloatingPointModel>')
@@ -472,6 +482,11 @@
 			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 		end
 
+		if cfg.platform == "NX32" or cfg.platform == "NX64" then
+			unsignedChar = "-funsigned-char ";
+			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
+		end
+
 		if cfg.language == "C" and not cfg.options.ForceCPP then
 			buildoptions = table.join(buildoptions, cfg.buildoptions_c)
 		else
@@ -503,6 +518,17 @@
 				_p(3,'<OptimizationLevel>Level2</OptimizationLevel>')
 			end
 		elseif cfg.platform == "TegraAndroid" then
+			local opt = optimisation(cfg)
+			if opt == "Disabled" then
+				_p(3,'<OptimizationLevel>O0</OptimizationLevel>')
+			elseif opt == "MinSpace" then
+				_p(3,'<OptimizationLevel>Os</OptimizationLevel>')
+			elseif opt == "MaxSpeed" then
+				_p(3,'<OptimizationLevel>O3</OptimizationLevel>')
+			else
+				_p(3,'<OptimizationLevel>O2</OptimizationLevel>')
+			end
+		elseif cfg.platform == "NX32" or cfg.platform == "NX64" then
 			local opt = optimisation(cfg)
 			if opt == "Disabled" then
 				_p(3,'<OptimizationLevel>O0</OptimizationLevel>')
@@ -594,6 +620,23 @@
 				_p(3, '<Warnings>DisableAllWarnings</Warnings>')
 			else
 				_p(3, '<Warnings>NormalWarnings</Warnings>')
+			end
+			if cfg.flags.FatalWarnings then
+				_p(3, '<WarningsAsErrors>true</WarningsAsErrors>')
+			end
+		elseif cfg.platform == "NX32" or cfg.platform == "NX64" then
+			if cfg.flags.PedanticWarnings then
+				_p(3, '<Warnings>MoreWarnings</Warnings>')
+				_p(3, '<ExtraWarnings>true</ExtraWarnings>')
+			elseif cfg.flags.ExtraWarnings then
+				_p(3, '<Warnings>NormalWarnings</Warnings>')
+				_p(3, '<ExtraWarnings>true</ExtraWarnings>')
+			elseif cfg.flags.MinimumWarnings then
+				_p(3, '<Warnings>WarningsOff</Warnings>')
+				_p(3, '<ExtraWarnings>false</ExtraWarnings>')
+			else
+				_p(3, '<Warnings>NormalWarnings</Warnings>')
+				_p(3, '<ExtraWarnings>false</ExtraWarnings>')
 			end
 			if cfg.flags.FatalWarnings then
 				_p(3, '<WarningsAsErrors>true</WarningsAsErrors>')

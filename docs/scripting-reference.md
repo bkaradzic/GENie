@@ -1298,6 +1298,8 @@ _identifiers_ - list of hardware platform specifiers from this list:
 * _ARM64_ - ARM64-based processors
 * _Orbis_ - Playstation 4
 * _Durango_ - Xbox One
+* _NX32_ - Nintendo Switch 32-bit
+* _NX64_ - Nintendo Switch 64-bit
 
 #### Return Value
 Current list of target platforms for the active solution
