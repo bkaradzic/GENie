@@ -10,6 +10,7 @@ local tree = premake.tree
 
 local includestr = 'include_directories(../%s)'
 local definestr = 'add_definitions(-D%s)'
+local linkdirstr = 'link_directories(../%s)'
 
 
 local function is_excluded(prj, cfg, file)
@@ -218,6 +219,7 @@ function cmake.project(prj)
 
     local commonIncludes = cmake.commonRules(configurations, includestr)
     local commonDefines = cmake.commonRules(configurations, definestr)
+    local commonLinkDirs = cmake.commonRules(configurations, linkdirstr)
     _p('')
 
     for _, cfg in ipairs(configurations) do
@@ -231,6 +233,9 @@ function cmake.project(prj)
 
         -- add build defines
         cmake.cfgRules(cfg.defines, commonDefines, definestr)
+
+        -- add link directories
+        cmake.cfgRules(cfg.libdirs, commonLinkDirs, linkdirstr)
 
         -- set CXX flags
         _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
