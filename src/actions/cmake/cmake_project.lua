@@ -10,7 +10,6 @@ local tree = premake.tree
 
 local includestr = 'include_directories(../%s)'
 local definestr = 'add_definitions(-D%s)'
-local linkdirstr = 'link_directories(../%s)'
 
 
 local function is_excluded(prj, cfg, file)
@@ -37,6 +36,14 @@ end
 function cmake.list(value)
     if #value > 0 then
         return " " .. table.concat(value, " ")
+    else
+        return ""
+    end
+end
+
+function cmake.listWrapped(value, prefix, postfix)
+    if #value > 0 then
+        return prefix .. table.concat(value, postfix .. prefix) .. postfix
     else
         return ""
     end
@@ -219,7 +226,7 @@ function cmake.project(prj)
 
     local commonIncludes = cmake.commonRules(configurations, includestr)
     local commonDefines = cmake.commonRules(configurations, definestr)
-    local commonLinkDirs = cmake.commonRules(configurations, linkdirstr)
+
     _p('')
 
     for _, cfg in ipairs(configurations) do
@@ -233,9 +240,6 @@ function cmake.project(prj)
 
         -- add build defines
         cmake.cfgRules(cfg.defines, commonDefines, definestr)
-
-        -- add link directories
-        cmake.cfgRules(cfg.libdirs, commonLinkDirs, linkdirstr)
 
         -- set CXX flags
         _p(1, 'set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} %s\")', cmake.list(table.join(cc.getcppflags(cfg), cc.getcflags(cfg), cc.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)))
@@ -270,7 +274,10 @@ function cmake.project(prj)
         end
         if (prj.kind == 'ConsoleApp' or prj.kind == 'WindowedApp') then
             _p(1, 'add_executable(%s ${source_list})', premake.esc(cfg.buildtarget.basename))
-            _p(1, 'target_link_libraries(%s%s%s)', premake.esc(cfg.buildtarget.basename), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
+            
+            local libdirs = cmake.listWrapped(premake.esc(premake.getlinks(cfg, "all", "directory")), " -L\"../", "\"")
+
+            _p(1, 'target_link_libraries(%s%s%s%s%s%s)', premake.esc(cfg.buildtarget.basename), libdirs, cmake.list(cfg.linkoptions), cmake.list(cc.getldflags(cfg)), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
         end
         _p('endif()')
         _p('')
