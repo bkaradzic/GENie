@@ -90,7 +90,7 @@ end
 			endgroup = '-Wl,--end-group'
 		end
 
-		local rspfile_content = "$all_outputfiles $walibs" .. string.format("%s $libs %s", startgroup, endgroup)
+		local rspfile_content = "$all_outputfiles $walibs " .. string.format("%s $libs %s", startgroup, endgroup)
 		if cfg.flags.UseLDResponseFile then
 			_p("  command         = " .. wrap_ninja_cmd("$pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $post_build"))
 			_p("  description     = link $out")
