@@ -41,6 +41,14 @@ function cmake.list(value)
     end
 end
 
+function cmake.listWrapped(value, prefix, postfix)
+    if #value > 0 then
+        return prefix .. table.concat(value, postfix .. prefix) .. postfix
+    else
+        return ""
+    end
+end
+
 function cmake.files(prj)
     local ret = {}
     local tr = premake.project.buildsourcetree(prj)
@@ -218,6 +226,7 @@ function cmake.project(prj)
 
     local commonIncludes = cmake.commonRules(configurations, includestr)
     local commonDefines = cmake.commonRules(configurations, definestr)
+
     _p('')
 
     for _, cfg in ipairs(configurations) do
@@ -265,7 +274,10 @@ function cmake.project(prj)
         end
         if (prj.kind == 'ConsoleApp' or prj.kind == 'WindowedApp') then
             _p(1, 'add_executable(%s ${source_list})', premake.esc(cfg.buildtarget.basename))
-            _p(1, 'target_link_libraries(%s%s%s)', premake.esc(cfg.buildtarget.basename), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
+            
+            local libdirs = cmake.listWrapped(premake.esc(premake.getlinks(cfg, "all", "directory")), " -L\"../", "\"")
+
+            _p(1, 'target_link_libraries(%s%s%s%s%s%s)', premake.esc(cfg.buildtarget.basename), libdirs, cmake.list(cfg.linkoptions), cmake.list(cc.getldflags(cfg)), cmake.list(premake.esc(premake.getlinks(cfg, "siblings", "basename"))), cmake.list(cc.getlinkflags(cfg)))
         end
         _p('endif()')
         _p('')
