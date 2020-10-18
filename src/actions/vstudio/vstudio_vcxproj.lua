@@ -230,6 +230,12 @@
 				_p(2,'<IgnoreImportLibrary>%s</IgnoreImportLibrary>', tostring(ignore))
 			end
 
+			if cfg.platform == "NX32" or cfg.platform == "NX64" then
+				if cfg.flags.Cpp17 then
+					_p(2,'<CppLanguageStandard>Gnu++17</CppLanguageStandard>')
+				end
+			end
+
 			if cfg.platform == "Durango" then
 				_p(2, '<ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>')
 				_p(2, '<LibraryPath>$(Console_SdkLibPath)</LibraryPath>')
