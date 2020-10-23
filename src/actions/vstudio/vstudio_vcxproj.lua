@@ -186,7 +186,8 @@
 			if #cfg.propertysheets > 0 then
 				local dirs = cfg.propertysheets
 				for _, dir in ipairs(dirs) do
-					_p(2,'<Import Project="%s" />', path.translate(dir))
+					local translated = path.translate(dir)
+					_p(2,'<Import Project="%s" Condition="exists(\'%s\')" />', translated, translated)
 				end
 			end
 
