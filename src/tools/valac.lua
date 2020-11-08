@@ -40,7 +40,18 @@
 		Symbols                   = "-g",                             -- Produce debug information
 	}
 
-	premake.valac.platforms = {}
+--
+-- Map platforms to flags
+--
+
+	premake.valac.platforms =
+	{
+		Native = {
+		},
+		x64 = {
+			flags = "-m64"
+		},
+	}
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
@@ -79,18 +90,6 @@
 	end
 
 
-
---
--- Decorate C flags for the Vala command line.
---
-
-	function premake.valac.getbuildoptions(buildoptions)
-		local result = { }
-		for _, def in ipairs(buildoptions) do
-			table.insert(result, '-X ' .. def)
-		end
-		return result
-	end
 
 --
 -- Decorate vapidirs for the Vala command line.
