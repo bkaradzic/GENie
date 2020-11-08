@@ -178,7 +178,7 @@
 		_p('  FLAGS      += $(DEFINES) $(VAPIDIRS) $(PKGS)%s', make.list(table.join(valac.getvalaflags(cfg), cfg.buildoptions_vala)))
 		_p('  ALL_LDFLAGS+= $(LDFLAGS)%s', make.list(table.join(cfg.linkoptions)))
 		_p('  LINKOBJS    = %s', "$(OBJECTS)")
-		_p('  ALL_CFLAGS += $(CFLAGS) $(ARCH)%s', make.list(table.join(cfg.buildoptions, cfg.buildoptions_c)))
+		_p('  ALL_CFLAGS += $(CFLAGS) $(ARCH)%s', make.list(table.join(cfg.buildoptions, cfg.buildoptions_c, valac.getvalaccflags(cfg))))
 		_p('  LINKCMD     = $(CC) -o $(TARGET) $(LINKOBJS) $(ARCH) $(ALL_LDFLAGS)');
 
 		table.sort(cfg.files)

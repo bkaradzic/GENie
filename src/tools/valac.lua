@@ -34,9 +34,14 @@
 		FatalWarnings             = "--fatal-warnings",               -- Treat warnings as fatal
 		HideInternal              = "--hide-internal",                -- Hide symbols marked as internal
 		NoStdPkg                  = "--nostdpkg",                     -- Do not include standard packages
-		Optimize                  = "-X -O2",
-		OptimizeSize              = "-X -Os",
-		OptimizeSpeed             = "-X -O3",
+		Symbols                   = "-g",                             -- Produce debug information
+	}
+
+	local valaccflags =
+	{
+		Optimize                  = "-O2",
+		OptimizeSize              = "-Os",
+		OptimizeSpeed             = "-O3",
 		Symbols                   = "-g",                             -- Produce debug information
 	}
 
@@ -53,12 +58,24 @@
 		},
 	}
 
+
+
 --
--- Returns a list of compiler flags, based on the supplied configuration.
+-- Returns a list of compiler flags for `valac`, based on the supplied configuration.
 --
 
 	function premake.valac.getvalaflags(cfg)
 		return table.translate(cfg.flags, valaflags)
+	end
+
+
+
+--
+-- Returns a list of compiler flags for `cc`, based on the supplied configuration.
+--
+
+	function premake.valac.getvalaccflags(cfg)
+		return table.translate(cfg.flags, valaccflags)
 	end
 
 
