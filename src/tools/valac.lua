@@ -12,7 +12,7 @@
 --
 
 	premake.valac.valac  = "valac"
-	premake.valac.cc     = "gcc"
+	premake.valac.cc     = premake.gcc.cc
 
 
 --
@@ -30,7 +30,6 @@
 		EnableExperimentalNonNull = "--enable-experimental-non-null", -- Enable experimental enhancements for non-null types
 		EnableGObjectTracing      = "--enable-gobject-tracing",       -- Enable GObject creation tracing
 		EnableMemProfiler         = "--enable-mem-profiler",          -- Enable GLib memory profiler
-		EnableThreading           = "--thread",                       -- Enable multithreading support
 		FatalWarnings             = "--fatal-warnings",               -- Treat warnings as fatal
 		HideInternal              = "--hide-internal",                -- Hide symbols marked as internal
 		NoStdPkg                  = "--nostdpkg",                     -- Do not include standard packages
