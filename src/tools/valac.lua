@@ -12,7 +12,7 @@
 --
 
 	premake.valac.valac  = "valac"
-	premake.valac.cc     = "gcc"
+	premake.valac.cc     = premake.gcc.cc
 
 
 --
