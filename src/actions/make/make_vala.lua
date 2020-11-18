@@ -168,7 +168,7 @@
 
 		_p('ifeq ($(config),%s)', _MAKE.esc(cfg.shortname))
 
-		_p('  BASEDIR    = %s', _MAKE.esc(cfg.basedir))
+		_p('  BASEDIR    = %s', _MAKE.esc(path.getrelative(cfg.location, _WORKING_DIR)))
 		_p('  OBJDIR     = %s', _MAKE.esc(cfg.objectsdir))
 		_p('  TARGETDIR  = %s', _MAKE.esc(cfg.buildtarget.directory))
 		_p('  TARGET     = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
