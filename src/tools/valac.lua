@@ -13,6 +13,7 @@
 
 	premake.valac.valac  = "valac"
 	premake.valac.cc     = premake.gcc.cc
+	premake.valac.glibrc = "glib-compile-resources"
 
 
 --
