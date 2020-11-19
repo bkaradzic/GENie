@@ -192,6 +192,11 @@
 		return path.hasextension(fname, ".vala")
 	end
 
+	function path.isgresource(fname)
+		local ending = ".gresource.xml"
+		return ending == "" or fname:sub(-#ending) == ending
+	end
+
 	function path.isswiftfile(fname)
 		return path.hasextension(fname, ".swift")
 	end

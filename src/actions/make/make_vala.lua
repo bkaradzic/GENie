@@ -30,7 +30,7 @@
 		local objdirs = {}
 		local additionalobjdirs = {}
 		for _, file in ipairs(prj.allfiles) do
-			if path.issourcefile(file) then
+			if path.issourcefile(file) or path.isgresource(file) then
 				objdirs[_MAKE.esc(path.getdirectory(path.trimdots(file)))] = 1
 			end
 		end
@@ -141,8 +141,9 @@
 		_p('endif')
 		_p('')
 
-		_p('VALAC = %s', valac.valac)
-		_p('CC    = %s', valac.cc)
+		_p('VALAC  = %s', valac.valac)
+		_p('CC     = %s', valac.cc)
+		_p('GLIBRC = %s', valac.glibrc)
 		_p('')
 	end
 
@@ -168,7 +169,7 @@
 
 		_p('ifeq ($(config),%s)', _MAKE.esc(cfg.shortname))
 
-		_p('  BASEDIR    = %s', _MAKE.esc(cfg.basedir))
+		_p('  BASEDIR    = %s', _MAKE.esc(path.getrelative(cfg.location, _WORKING_DIR)))
 		_p('  OBJDIR     = %s', _MAKE.esc(cfg.objectsdir))
 		_p('  TARGETDIR  = %s', _MAKE.esc(cfg.buildtarget.directory))
 		_p('  TARGET     = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
@@ -186,7 +187,7 @@
 		-- add objects for compilation, and remove any that are excluded per config.
 		_p('  OBJECTS := \\')
 		for _, file in ipairs(cfg.files) do
-			if path.issourcefile(file) then
+			if path.issourcefile(file) or path.isgresource(file) then
 				if not is_excluded(prj, cfg, file) then
 					_p('\t$(OBJDIR)/%s.o \\'
 						, _MAKE.esc(path.trimdots(path.removeext(file)))
@@ -199,6 +200,16 @@
 		_p('  SOURCES := \\')
 		for _, file in ipairs(cfg.files) do
 			if path.issourcefile(file) and path.isvalafile(file) then
+				if not is_excluded(prj, cfg, file) then
+					_p('\t%s \\', _MAKE.esc(file))
+				end
+			end
+		end
+		_p('')
+
+		_p('  GRESOURCES := \\')
+		for _, file in ipairs(cfg.files) do
+			if path.isgresource(file) then
 				if not is_excluded(prj, cfg, file) then
 					_p('\t%s \\', _MAKE.esc(file))
 				end
@@ -257,18 +268,20 @@
 		local pattern_targets = ""
 		table.sort(prj.allfiles)
 		for _, file in ipairs(prj.allfiles or {}) do
-			if path.issourcefile(file) then
-				if path.isvalafile(file) or path.iscfile(file) then
-					if (path.isvalafile(file)) then
+			if path.issourcefile(file) or path.isgresource(file) then
+				if path.isvalafile(file) or path.iscfile(file) or path.isgresource(file) then
+					if path.isvalafile(file) or path.isgresource(file) then
 						_p('$(OBJDIR)/%s.o: $(OBJDIR)/%s.c $(GCH) $(MAKEFILE) | $(OBJDIR)/%s'
 							, _MAKE.esc(path.trimdots(path.removeext(file)))
 							, _MAKE.esc(path.trimdots(path.removeext(file)))
 							, _MAKE.esc(path.getdirectory(path.trimdots(file)))
 							)
-						pattern_targets = pattern_targets
-							.. "$(OBJDIR)/"
-							.. _MAKE.esc(path.trimdots(path.removeext(file)))
-							.. ".% \\\n" -- Pattern rule: https://stackoverflow.com/a/3077254
+						if not path.isgresource(file) then
+							pattern_targets = pattern_targets
+								.. "$(OBJDIR)/"
+								.. _MAKE.esc(path.trimdots(path.removeext(file)))
+								.. ".% \\\n" -- Pattern rule: https://stackoverflow.com/a/3077254
+						end
 					else
 						_p('$(OBJDIR)/%s.o: %s $(GCH) $(MAKEFILE) | $(OBJDIR)/%s'
 							, _MAKE.esc(path.trimdots(path.removeext(file)))
@@ -289,6 +302,28 @@
 						_p('\t$(SILENT) %s', task)
 						_p('')
 					end
+					_p('')
+
+					if path.isgresource(file) then
+						_p('$(OBJDIR)/%s.c: %s $(GCH) $(MAKEFILE) | $(OBJDIR)/%s'
+							, _MAKE.esc(path.trimdots(path.removeext(file)))
+							, _MAKE.esc(file)
+							, _MAKE.esc(path.getdirectory(path.trimdots(file)))
+							)
+						if prj.msgcompile then
+							_p('\t@echo ' .. prj.msgcompile)
+						else
+							_p('\t@echo $(notdir $<)')
+						end
+						_p('\t$(SILENT) %s "$<" --target="$@" --sourcedir="%s" --generate'
+							, "$(GLIBRC)"
+							, _MAKE.esc(path.getdirectory(file))
+							)
+						for _, task in ipairs(prj.postcompiletasks or {}) do
+							_p('\t$(SILENT) %s', task)
+							_p('')
+						end
+					end
 
 					_p('')
 				end
@@ -297,13 +332,13 @@
 
 		if pattern_targets ~= "" then
 			-- Generate .c from corresponding .vala
-			_p('%s: $(SOURCES) $(GCH) $(MAKEFILE)', pattern_targets)
+			_p('%s: $(SOURCES) $(GRESOURCES) $(GCH) $(MAKEFILE)', pattern_targets)
 			if prj.msgcompile then
 				_p('\t@echo ' .. prj.msgcompile)
 			else
 				_p('\t@echo [GEN] valac')
 			end
-			_p('\t$(SILENT) %s $(SOURCES) --directory $(OBJDIR) --basedir $(BASEDIR) -C > /dev/null'
+			_p('\t$(SILENT) %s $(SOURCES) --directory $(OBJDIR) --basedir $(BASEDIR) --gresources=$(GRESOURCES) -C > /dev/null'
 				, "$(VALAC) $(FLAGS)"
 				)
 			for _, task in ipairs(prj.postcompiletasks or {}) do
