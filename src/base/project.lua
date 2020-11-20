@@ -463,7 +463,7 @@
 
 		-- Fix things up based on the current system
 		local kind = cfg.kind
-		if premake.iscppproject(cfg) then
+		if premake.iscppproject(cfg) or premake.isvalaproject(cfg) then
 			-- On Windows, shared libraries link against a static import library
 			if (namestyle == "windows" or system == "windows")
 				and kind == "SharedLib" and direction == "link"
