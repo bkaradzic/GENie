@@ -140,17 +140,22 @@ end
 			cfgs[key] = cfg:getoutputfilename() .. " "
 
 			if not cfgs["all"] then cfgs["all"] = "" end
-			cfgs["all"] = cfgs["all"] .. cfg:getoutputfilename() .. " "
 
-			-- set first configuration name
+			-- set first configuration name and 'all' configs to build
 			if (cfg_start == nil) and (cfg.solution.startproject == key) then
 				cfg_start = key
 			end
 			if (cfg_first == nil) and (cfg.kind == "ConsoleApp" or cfg.kind == "WindowedApp") then
 				cfg_first = key
+				cfgs["all"] = cfgs["all"] .. cfg:getoutputfilename() .. " "
 			end
 			if (cfg_first_lib == nil) and (cfg.kind == "StaticLib" or cfg.kind == "SharedLib") then
 				cfg_first_lib = key
+
+				-- only set if there's actually something to build
+				if table.icontains(table.translate(cfg.files, path.issourcefile), true) then
+					cfgs["all"] = cfgs["all"] .. cfg:getoutputfilename() .. " "
+				end
 			end
 
 			-- include other ninja file

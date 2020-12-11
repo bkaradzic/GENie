@@ -159,8 +159,12 @@ function swift.linker(prj, cfg, depfiles, tool)
 
 	_p("build $out_dir/$module_name.swiftmodule | $out_dir/$module_name.swiftdoc: swiftm %s | %s", table.concat(modfiles, " "), table.concat(docfiles, " "))
 	_p("")
-		
+
 	local output = cfg:getoutputfilename()
+
+	if #objfiles + #modfiles + #docfiles == 0 then
+		return
+	end
 
 	if cfg.kind == "StaticLib" then
 		local ar_flags = ninja.list(tool.getarchiveflags(cfg, cfg, false))

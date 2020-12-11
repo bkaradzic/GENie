@@ -371,6 +371,10 @@ end
 		libs                 = ninja.list(libs) .. " " .. ninja.list(tool.getlinkflags(cfg))
 		walibs               = ninja.list(walibs)
 
+		if #objfiles + #lddeps == 0 then
+			return
+		end
+
 		local function writevars()
 			_p(1, "all_ldflags     = " .. all_ldflags)
 			_p(1, "libs            = " .. libs)

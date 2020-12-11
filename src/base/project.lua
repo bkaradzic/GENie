@@ -340,7 +340,7 @@
 			if prj and kind ~= "system" then
 
 				local prjcfg = premake.getconfig(prj, cfgname, cfg.platform)
-				if kind == "dependencies" or canlink(cfg, prjcfg) then
+				if kind == "dependencies" or canlink(cfg, prjcfg) and premake.projectdoeslink(prj, cfgname, cfg.platform) then
 					if (part == "directory") then
 						item = path.rebase(prjcfg.linktarget.directory, prjcfg.location, cfg.location)
 					elseif (part == "basename") then
@@ -392,6 +392,23 @@
 		return result
 	end
 
+
+--
+-- Checks if the project has something to link
+--
+
+	function premake.projectdoeslink(prj, cfgname, platform)
+		local prjcfg = premake.getconfig(prj, cfgname, platform)
+		local lnkobj = table.icontains(table.translate(prjcfg.files, path.issourcefile), true)
+		local lnkdep = false
+		if prj.kind ~= 'StaticLib' then
+			lnkdep = table.icontains(table.translate(prjcfg.links, function(lnk)
+				local link = premake.findproject(lnk)
+				return premake.projectdoeslink(link, cfgname, platform)
+			end), true)
+		end
+		return lnkobj or lnkdep
+	end
 
 
 --
