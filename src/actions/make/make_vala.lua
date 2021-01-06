@@ -4,6 +4,7 @@
 --
 
 	premake.make.vala = { }
+	premake.make.makefile_ignore = false
 
 	local vala = premake.make.vala
 	local make = premake.make
@@ -149,6 +150,11 @@
 		_p('CC     = %s', valac.cc)
 		_p('GLIBRC = %s', valac.glibrc)
 		_p('')
+
+		if (not premake.make.makefile_ignore) then
+			_p('MAKEFILE = %s', _MAKE.getmakefilename(prj, true))
+			_p('')
+		end
 	end
 
 
