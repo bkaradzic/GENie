@@ -31,22 +31,22 @@
 --
 
 	vstudio.platforms = {
-		any     = "Any CPU",
-		mixed   = "Mixed Platforms",
-		Native  = "Win32",
-		x86     = "x86",
-		x32     = "Win32",
-		x64     = "x64",
-		PS3     = "PS3",
-		Xbox360 = "Xbox 360",
-		ARM     = "ARM",
-		ARM64     = "ARM64",
-		Orbis   = "ORBIS",
-		Durango = "Durango",
-		TegraAndroid = "Tegra-Android",
-		NX32    = "NX32",
-		NX64    = "NX64",
-		Emscripten = "Emscripten",
+		any           = "Any CPU",
+		mixed         = "Mixed Platforms",
+		Native        = "Win32",
+		x86           = "x86",
+		x32           = "Win32",
+		x64           = "x64",
+		PS3           = "PS3",
+		Xbox360       = "Xbox 360",
+		ARM           = "ARM",
+		ARM64         = "ARM64",
+		Orbis         = "ORBIS",
+		Durango       = "Durango",
+		TegraAndroid  = "Tegra-Android",
+		NX32          = "NX32",
+		NX64          = "NX64",
+		Emscripten    = "Emscripten",
 	}
 
 
