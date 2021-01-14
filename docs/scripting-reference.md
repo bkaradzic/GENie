@@ -341,13 +341,13 @@ configuration "not windows"
     defines { "NOT_WINDOWS" }
 ```
 
-Define a symbol based on custom command line argument
+Define a symbol based on custom command line option
 
 ```lua
 newoption {
     trigger     = "gfxapi",
     description = "Choose a particular 3D API for rendering",
-    allowed     = { { "opengl", "OpenGL" } }
+    allowed     = { { "opengl", "OpenGL Renderer" } }
 }
 
 configuration "opengl"
