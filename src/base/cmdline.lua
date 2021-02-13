@@ -15,9 +15,10 @@
 		value       = "VALUE",
 		description = "Choose a C/C++ compiler set",
 		allowed = {
-			{ "gcc", "GNU GCC (gcc/g++)" },
-			{ "ow",  "OpenWatcom"        },
-			{ "ghs", "Green Hills Software" },
+			{ "gcc",   "GNU GCC (gcc/g++)" },
+			{ "clang", "LLVM Clang (clang/clang++)" },
+			{ "ow",    "OpenWatcom"        },
+			{ "ghs",   "Green Hills Software" },
 		}
 	}
 

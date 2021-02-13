@@ -11,7 +11,7 @@ newaction {
 
 	valid_kinds = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
 	valid_languages = { "C", "C++" },
-	valid_tools = { cc = { "gcc" } },
+	valid_tools = { cc = { "gcc", "clang" } },
 
 	onsolution = function(sln)
 		local jsonpath = path.join(sln.location, "compile_commands.json")

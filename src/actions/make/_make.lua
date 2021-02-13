@@ -157,7 +157,7 @@
 		valid_languages = { "C", "C++", "C#", "Vala", "Swift" },
 
 		valid_tools     = {
-			cc     = { "gcc", "ghs" },
+			cc     = { "gcc", "clang", "ghs" },
 			dotnet = { "mono", "msnet", "pnet" },
 			valac  = { "valac" },
 			swift  = { "swift" },
