@@ -13,7 +13,6 @@ generates project from Lua script, making applying the same settings for
 multiple projects easy.
 
 Supported project generators:
- * FASTBuild (experimental)
  * GNU Makefile
  * [JSON Compilation Database][jcdb]
  * Ninja (experimental)
@@ -138,6 +137,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `UnitySupport` flag to enable Unity (Jumbo) builds in vs2019
  - Added the `jcdb` action for generating a [JSON compilation database][jcdb].
  - Added support for generating Switch/NX32 Switch/NX64 projects.
+ - Removed FASTBuild.
 
 build - GENie build system scripts
 ----------------------------------

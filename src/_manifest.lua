@@ -77,11 +77,6 @@
 		"actions/xcode/xcode10.lua",
 		"actions/xcode/xcode11.lua",
 
-		--FASTBuild action
-		"actions/fastbuild/_fastbuild.lua",
-		"actions/fastbuild/fastbuild_project.lua",
-		"actions/fastbuild/fastbuild_solution.lua",
-
 		-- ninja action
 		"actions/ninja/_ninja.lua",
 		"actions/ninja/ninja_base.lua",
