@@ -85,12 +85,6 @@
 		"actions/ninja/ninja_swift.lua",
 		"actions/ninja/ninja_swift_incremental.lua",
 
-		-- qbs action
-		"actions/qbs/_qbs.lua",
-		"actions/qbs/qbs_base.lua",
-		"actions/qbs/qbs_solution.lua",
-		"actions/qbs/qbs_cpp.lua",
-
 		-- jcdb action
 		"actions/jcdb/_jcdb.lua",
 		"actions/jcdb/jcdb_solution.lua",
