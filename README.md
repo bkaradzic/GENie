@@ -16,7 +16,6 @@ Supported project generators:
  * GNU Makefile
  * [JSON Compilation Database][jcdb]
  * Ninja (experimental)
- * Qbs / QtCreator (experimental)
  * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019
  * XCode
 
@@ -25,7 +24,7 @@ Download (stable)
 
 [![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
 
-	version 1153 (commit bedc68359ffe4329fbde68307034de7cf482b36a)
+	version 1157 (commit 5fecb127855ee069df345f20d17fea78220fee93)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -138,6 +137,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added the `jcdb` action for generating a [JSON compilation database][jcdb].
  - Added support for generating Switch/NX32 Switch/NX64 projects.
  - Removed FASTBuild.
+ - Removed Qbs support.
 
 build - GENie build system scripts
 ----------------------------------
