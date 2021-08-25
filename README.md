@@ -22,8 +22,6 @@ Supported project generators:
 Download (stable)
 -----------------
 
-[![Build Status](https://travis-ci.org/bkaradzic/GENie.svg?branch=master)](https://travis-ci.org/bkaradzic/GENie)
-
 	version 1157 (commit 5fecb127855ee069df345f20d17fea78220fee93)
 
 Linux:  
