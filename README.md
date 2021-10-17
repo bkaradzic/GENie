@@ -136,6 +136,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added support for generating Switch/NX32 Switch/NX64 projects.
  - Removed FASTBuild.
  - Removed Qbs support.
+ - Added vs2022 support.
 
 build - GENie build system scripts
 ----------------------------------
