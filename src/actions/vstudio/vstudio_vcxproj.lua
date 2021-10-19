@@ -116,7 +116,8 @@
 			, premake.esc(cfginfo.name))
 
 		local is2019 = premake.action.current() == premake.action.get("vs2019")
-		if is2019 then
+		local is2022 = premake.action.current() == premake.action.get("vs2022")
+		if is2019 or is2022 then
 		    _p(2, '<VCProjectVersion>%s</VCProjectVersion>', action.vstudio.toolsVersion)
 			if cfg.flags.UnitySupport then
 			    _p(2, '<EnableUnitySupport>true</EnableUnitySupport>')
@@ -340,7 +341,7 @@
 
 	end
 
-	local function cppstandard_vs2017_or_2019(cfg)
+	local function cppstandard(cfg)
 		if cfg.flags.CppLatest then
 			_p(3, '<LanguageStandard>stdcpplatest</LanguageStandard>')
 			_p(3, '<EnableModules>true</EnableModules>')
@@ -665,8 +666,9 @@
 		end
 
 		if premake.action.current() == premake.action.get("vs2017") or
-		   premake.action.current() == premake.action.get("vs2019") then
-			cppstandard_vs2017_or_2019(cfg)
+		   premake.action.current() == premake.action.get("vs2019") or
+		   premake.action.current() == premake.action.get("vs2022") then
+			cppstandard(cfg)
 		end
 
 		exceptions(cfg)
