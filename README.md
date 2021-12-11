@@ -44,7 +44,11 @@ Documentation
 -------------
 
 [Scripting Reference](https://github.com/bkaradzic/genie/blob/master/docs/scripting-reference.md#scripting-reference)  
-[Introduction to GENie - CppCon 2016](https://onedrive.live.com/view.aspx?cid=171ee76e679935c8&page=view&resid=171EE76E679935C8!139573&parId=171EE76E679935C8!18835&authkey=!AKv_SGrgJwxDGDg&app=PowerPoint)
+
+Introduction to GENie - CppCon 2016  
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=_vArtdDTrTM" 
+target="_blank"><img src="http://img.youtube.com/vi/_vArtdDTrTM/0.jpg" 
+alt="Introduction to GENie - CppCon 2016" width="640" height="480" border="0" /></a>
 
 History
 -------
