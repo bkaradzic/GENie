@@ -648,6 +648,7 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _Cpp11_ - Enable usage of C++11 features.
 * _Cpp14_ - Enable usage of C++14 features.
 * _Cpp17_ - Enable usage of C++17 features.
+* _Cpp20_ - Enable usage of C++20 features.
 * _CppLatest_ - Enable usage of latest C++ features.
 * _DebugEnvsDontMerge_ - Cause Visual Studio projects to not merge debug environment with the one inherited from the parent process. (i.e. sets `Project Properties > Debugging > Merge Environment` to `false`)
 * _DebugEnvsInherit_ - Cause Visual Studio projects to inherit debug environment. (i.e. sets in `Project Properties > Debugging > Environment > Edit > Inherit from parent of project defaults` to `true`)

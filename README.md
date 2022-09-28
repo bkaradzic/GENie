@@ -131,7 +131,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added `NoRuntimeChecks` flag to disable Basic Runtime Checks in non-optimized
    Visual Studio builds.
  - Added support for Nintendo Switch projects.
- - Added flags for selecting C++ standard: `Cpp11`, `Cpp14`, `Cpp17`,
+ - Added flags for selecting C++ standard: `Cpp11`, `Cpp14`, `Cpp17`, `Cpp20`
    and `CppLatest`.
  - Added `xcodeprojectopts` and `xcodetargetopts`.
  - Added vs2019 support.

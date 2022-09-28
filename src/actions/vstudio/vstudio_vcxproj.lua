@@ -235,6 +235,8 @@
 			if cfg.platform == "NX32" or cfg.platform == "NX64" then
 				if cfg.flags.Cpp17 then
 					_p(2,'<CppLanguageStandard>Gnu++17</CppLanguageStandard>')
+				elseif cfg.flags.Cpp20 then
+					_p(2,'<CppLanguageStandard>Gnu++20</CppLanguageStandard>')
 				end
 			end
 
@@ -345,6 +347,8 @@
 		if cfg.flags.CppLatest then
 			_p(3, '<LanguageStandard>stdcpplatest</LanguageStandard>')
 			_p(3, '<EnableModules>true</EnableModules>')
+		elseif cfg.flags.Cpp20 then
+			_p(3, '<LanguageStandard>stdcpp20</LanguageStandard>')
 		elseif cfg.flags.Cpp17 then
 			_p(3, '<LanguageStandard>stdcpp17</LanguageStandard>')
 		elseif cfg.flags.Cpp14 then
