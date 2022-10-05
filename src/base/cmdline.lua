@@ -80,6 +80,8 @@
 			{ "PowerPC",     "PowerPC" },
 			{ "nx32",        "Nintendo Switch, 32-bit only" },
 			{ "nx64",        "Nintendo Switch, 64-bit only" },
+			{ "GDKOne",      "GDK Xbox One" },
+			{ "GDKScarlett", "GDK Xbox Scarlett" },
 		}
 	}
 

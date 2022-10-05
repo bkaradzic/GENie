@@ -201,6 +201,10 @@
 			    if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
    				    _p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 			    end
+
+			    if premake.vstudio.isgdk(cfg) and prj.kind == "WindowedApp" then
+				    _p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
+			    end
 			end
 		end
 	end

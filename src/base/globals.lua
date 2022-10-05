@@ -110,6 +110,16 @@
 			nosharedlibs    = true,
 			namestyle       = "Emscripten",
 		},
+		["GDKOne"] =
+		{
+			cfgsuffix       = "gdkone",
+			namestyle       = "windows",
+		},
+		["GDKScarlett"] =
+		{
+			cfgsuffix       = "gdkscarlett",
+			namestyle       = "windows",
+		},
 	}
 
 

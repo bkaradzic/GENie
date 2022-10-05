@@ -48,6 +48,8 @@
 		NX32          = "NX32",
 		NX64          = "NX64",
 		Emscripten    = "Emscripten",
+		GDKOne        = "Gaming.Xbox.XboxOne.x64",
+		GDKScarlett   = "Gaming.Xbox.Scarlett.x64",
 	}
 
 
@@ -72,6 +74,15 @@
 	end
 
 
+
+	function vstudio.isgdk(cfg)
+		for _,p in pairs({"GDKOne", "GDKScarlett"}) do
+			if cfg.platform == p then
+				return true
+			end
+		end
+		return false
+	end
 
 --
 -- Process the solution's list of configurations and platforms, creates a list
