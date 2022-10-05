@@ -261,6 +261,19 @@
 				_p(2, '<IsolateConfigurationsOnDeploy>true</IsolateConfigurationsOnDeploy>')
 			end
 
+			if vstudio.isgdkconsole(cfg) then
+				_p(2, '<ExecutablePath>$(Console_SdkRoot)bin;$(Console_SdkToolPath);$(ExecutablePath)</ExecutablePath>')
+				_p(2, '<IncludePath>$(Console_SdkIncludeRoot)</IncludePath>')
+				_p(2, '<ReferencePath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</ReferencePath>')
+				_p(2, '<LibraryPath>$(Console_SdkLibPath)</LibraryPath>')
+				_p(2, '<LibraryWPath>$(Console_SdkLibPath);$(Console_SdkWindowsMetadataPath)</LibraryWPath>')
+			end
+
+			if vstudio.isgdkdesktop(cfg) then
+				_p(2, '<IncludePath>$(Console_SdkIncludeRoot);$(IncludePath)</IncludePath>')
+				_p(2, '<LibraryPath>$(Console_SdkLibPath);$(LibraryPath)</LibraryPath>')
+			end
+
 			if cfg.kind ~= "StaticLib" then
 				_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(premake.config.isincrementallink(cfg)))
 			end
@@ -1053,15 +1066,18 @@
 				deps = "-Wl,--start-group;" .. deps .. ";-Wl,--end-group"
 			end
 
-			_p(tab, '<AdditionalDependencies>%s;%s</AdditionalDependencies>'
-				, deps
-				, iif(cfg.platform == "Durango"
-					, '%(XboxExtensionsDependencies)'
-					, '%(AdditionalDependencies)'
-					)
-				)
+			local adddeps =
+				  iif(cfg.platform == "Durango",       '%(XboxExtensionsDependencies)'
+				, iif(vstudio.isgdkconsole(cfg),       '$(Console_Libs);%(XboxExtensionsDependencies);%(AdditionalDependencies)'
+				, iif(vstudio.isgdkdesktop(cfg),       '$(Console_Libs);%(AdditionalDependencies)'
+				,                                      '%(AdditionalDependencies)')))
+			_p(tab, '<AdditionalDependencies>%s;%s</AdditionalDependencies>', deps, adddeps)
 		elseif cfg.platform == "Durango" then
 			_p(tab, '<AdditionalDependencies>%%(XboxExtensionsDependencies)</AdditionalDependencies>')
+		elseif vstudio.isgdkconsole(cfg) then
+			_p(tab, '<AdditionalDependencies>$(Console_Libs);%%(XboxExtensionsDependencies);%%(AdditionalDependencies)</AdditionalDependencies>')
+		elseif vstudio.isgdkdesktop(cfg) then
+			_p(tab, '<AdditionalDependencies>$(Console_Libs);%%(AdditionalDependencies)</AdditionalDependencies>')
 		end
 	end
 
