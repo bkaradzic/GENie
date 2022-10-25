@@ -179,17 +179,19 @@
 
 		_p('ifeq ($(config),%s)', _MAKE.esc(cfg.shortname))
 
-		_p('  BASEDIR    = %s', _MAKE.esc(path.getrelative(cfg.location, _WORKING_DIR)))
-		_p('  OBJDIR     = %s', _MAKE.esc(cfg.objectsdir))
-		_p('  TARGETDIR  = %s', _MAKE.esc(cfg.buildtarget.directory))
-		_p('  TARGET     = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
+		_p('  BASEDIR     = %s', _MAKE.esc(path.getrelative(cfg.location, _WORKING_DIR)))
+		_p('  OBJDIR      = %s', _MAKE.esc(cfg.objectsdir))
+		_p('  TARGETDIR   = %s', _MAKE.esc(cfg.buildtarget.directory))
+		_p('  TARGET      = $(TARGETDIR)/%s', _MAKE.esc(cfg.buildtarget.name))
 		_p('  DEFINES    +=%s', make.list(valac.getdefines(cfg.defines)))
 		_p('  VAPIDIRS   +=%s', make.list(valac.getvapidirs(cfg.vapidirs)))
 		_p('  PKGS       +=%s', make.list(valac.getlinks(cfg.links)))
 		_p('  FLAGS      += $(DEFINES) $(VAPIDIRS) $(PKGS)%s', make.list(table.join(valac.getvalaflags(cfg), cfg.buildoptions_vala)))
-		_p('  ALL_LDFLAGS+= $(LDFLAGS)%s', make.list(table.join(cfg.linkoptions)))
+		_p('  VALA_LDFLAGS= $(shell pkg-config --libs%s)', make.list(cfg.links))
+		_p('  ALL_LDFLAGS+= $(LDFLAGS)%s $(VALA_LDFLAGS)', make.list(table.join(cfg.linkoptions)))
 		_p('  LINKOBJS    = %s', "$(OBJECTS)")
-		_p('  ALL_CFLAGS += $(CFLAGS) $(ARCH)%s', make.list(table.join(cfg.buildoptions, cfg.buildoptions_c, valac.getvalaccflags(cfg))))
+		_p('  VALA_CFLAGS = $(shell pkg-config --cflags%s)', make.list(cfg.links))
+		_p('  ALL_CFLAGS += $(CFLAGS) $(ARCH)%s $(VALA_CFLAGS)', make.list(table.join(cfg.buildoptions, cfg.buildoptions_c)))
 		_p('  LINKCMD     = $(CC) -o $(TARGET) $(LINKOBJS) $(ARCH) $(ALL_LDFLAGS)');
 
 		table.sort(cfg.files)
@@ -348,7 +350,7 @@
 			else
 				_p('\t@echo [GEN] valac')
 			end
-			_p('\t$(SILENT) %s $(SOURCES) --directory $(OBJDIR) --basedir $(BASEDIR) --gresources=$(GRESOURCES) -C > /dev/null'
+			_p('\t$(SILENT) %s $(SOURCES) --directory $(OBJDIR) --basedir $(BASEDIR) --gresources=$(GRESOURCES) -C'
 				, "$(VALAC) $(FLAGS)"
 				)
 			for _, task in ipairs(prj.postcompiletasks or {}) do
