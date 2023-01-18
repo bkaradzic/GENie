@@ -36,6 +36,7 @@ SILENT?=@
 
 $(GENIE):
 	$(SILENT) $(MAKE) -C build/$(PROJECT_TYPE).$(OS)
+	./bin/$(OS)/genie vs2022
 
 all: $(SILENT) $(GENIE)
 
