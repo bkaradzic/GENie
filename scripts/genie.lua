@@ -46,7 +46,6 @@
 		}
 
 		buildoptions {
-			"-m64",
 		}
 
 		configuration "Debug"
