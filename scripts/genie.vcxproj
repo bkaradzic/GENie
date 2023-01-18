@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2D20800F-9934-A8C0-62B6-4B20CE89A4F1}</ProjectGuid>
+    <RootNamespace>genie</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\bin\windows\</OutDir>
+    <IntDir>obj\Release\</IntDir>
+    <TargetName>genie</TargetName>
+    <TargetExt>.exe</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin\windows\</OutDir>
+    <IntDir>obj\Debug\</IntDir>
+    <TargetName>genie</TargetName>
+    <TargetExt>.exe</TargetExt>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MinSpace</Optimization>
+      <AdditionalIncludeDirectories>..\src\host\lua-5.3.0\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;LUA_COMPAT_MODULE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat></DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;LUA_COMPAT_MODULE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\src\host\lua-5.3.0\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ole32.lib;;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)genie.exe</OutputFile>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>  %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\src\host\lua-5.3.0\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;LUA_COMPAT_MODULE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)genie.compile.pdb</ProgramDataBaseFileName>
+      <CompileAs>CompileAsC</CompileAs>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;LUA_COMPAT_MODULE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\src\host\lua-5.3.0\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)genie.pdb</ProgramDatabaseFile>
+      <AdditionalDependencies>ole32.lib;;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)genie.exe</OutputFile>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\host\version.h" />
+    <ClInclude Include="..\src\host\premake.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lctype.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lzio.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lcode.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lua.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\ldo.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\ldebug.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lgc.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lstring.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lparser.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\llex.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\luaconf.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\llimits.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lundump.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lstate.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\ltable.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lualib.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lfunc.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lapi.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lvm.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\ltm.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lobject.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lauxlib.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lprefix.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lopcodes.h" />
+    <ClInclude Include="..\src\host\lua-5.3.0\src\lmem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\host\string_hash.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_ticks.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_is64bit.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\premake.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_rmdir.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_isfile.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\path_getrelative.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\path_isabsolute.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\scripts.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\path_helpers.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_isdir.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_match.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_chdir.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_getcwd.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_stat.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\premake_main.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_uuid.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\string_endswith.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_mkdir.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_copyfile.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\os_pathsearch.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\path_getabsolute.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ltablib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lapi.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lstring.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lparser.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ltable.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\llex.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ldump.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\loadlib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lbaselib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lvm.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lfunc.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lctype.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lbitlib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lcode.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ltm.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lzio.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\linit.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lua.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\luac.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lcorolib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\loslib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lutf8lib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lundump.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lstrlib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ldblib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ldo.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lauxlib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\liolib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lgc.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lmathlib.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lmem.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lopcodes.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lstate.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\lobject.c">
+    </ClCompile>
+    <ClCompile Include="..\src\host\lua-5.3.0\src\ldebug.c">
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="genie.lua" />
+    <None Include="release.lua" />
+    <None Include="embed.lua" />
+    <None Include="..\tests\test_dofile.lua" />
+    <None Include="..\tests\premake4.lua" />
+    <None Include="..\tests\test_premake.lua" />
+    <None Include="..\tests\test_keywords.lua" />
+    <None Include="..\tests\test_gmake_cpp.lua" />
+    <None Include="..\tests\testfx.lua" />
+    <None Include="..\tests\test_project.lua" />
+    <None Include="..\tests\test_stress.lua" />
+    <None Include="..\tests\test_targets.lua" />
+    <None Include="..\tests\pepperfish_profiler.lua" />
+    <None Include="..\tests\test_gmake_cs.lua" />
+    <None Include="..\tests\test_string.lua" />
+    <None Include="..\tests\test_platforms.lua" />
+    <None Include="..\tests\tools\test_gcc.lua" />
+    <None Include="..\tests\actions\test_clean.lua" />
+    <None Include="..\tests\actions\make\test_wiidev.lua" />
+    <None Include="..\tests\actions\make\test_make_linking.lua" />
+    <None Include="..\tests\actions\make\test_make_escaping.lua" />
+    <None Include="..\tests\actions\make\test_make_pch.lua" />
+    <None Include="..\tests\actions\make\test_makesettings.lua" />
+    <None Include="..\tests\actions\vstudio\test_vs2010_flags.lua" />
+    <None Include="..\tests\actions\vstudio\test_vs2010_project_kinds.lua" />
+    <None Include="..\tests\actions\vstudio\test_vs200x_vcproj_linker.lua" />
+    <None Include="..\tests\actions\vstudio\test_vs200x_vcproj.lua" />
+    <None Include="..\tests\actions\vstudio\test_vs2010_vcxproj.lua" />
+    <None Include="..\tests\actions\vstudio\sln2005\platforms.lua" />
+    <None Include="..\tests\actions\vstudio\sln2005\projects.lua" />
+    <None Include="..\tests\actions\vstudio\sln2005\header.lua" />
+    <None Include="..\tests\actions\vstudio\sln2005\layout.lua" />
+    <None Include="..\tests\actions\vstudio\sln2005\projectplatforms.lua" />
+    <None Include="..\tests\actions\vstudio\sln2005\dependencies.lua" />
+    <None Include="..\tests\actions\vstudio\vc200x\debugdir.lua" />
+    <None Include="..\tests\actions\vstudio\vc200x\test_files.lua" />
+    <None Include="..\tests\actions\vstudio\vc200x\test_filters.lua" />
+    <None Include="..\tests\actions\vstudio\vc200x\header.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_link_settings.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_header.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_files.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_filters.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_project_refs.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_pch.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_config_props.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_output_props.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_debugdir.lua" />
+    <None Include="..\tests\actions\vstudio\vc2010\test_links.lua" />
+    <None Include="..\tests\actions\vstudio\cs2005\test_files.lua" />
+    <None Include="..\tests\actions\vstudio\cs2005\projectsettings.lua" />
+    <None Include="..\tests\actions\vstudio\cs2005\projectelement.lua" />
+    <None Include="..\tests\actions\vstudio\cs2005\propertygroup.lua" />
+    <None Include="..\tests\actions\vstudio\cs2002\test_files.lua" />
+    <None Include="..\tests\project\test_eachfile.lua" />
+    <None Include="..\tests\project\test_vpaths.lua" />
+    <None Include="..\tests\baking\test_merging.lua" />
+    <None Include="..\tests\base\test_api.lua" />
+    <None Include="..\tests\base\test_config.lua" />
+    <None Include="..\tests\base\test_path.lua" />
+    <None Include="..\tests\base\test_table.lua" />
+    <None Include="..\tests\base\test_os.lua" />
+    <None Include="..\tests\base\test_baking.lua" />
+    <None Include="..\tests\base\test_location.lua" />
+    <None Include="..\tests\base\test_premake_command.lua" />
+    <None Include="..\tests\base\test_config_bug.lua" />
+    <None Include="..\tests\base\test_tree.lua" />
+    <None Include="..\tests\base\test_action.lua" />
+    <None Include="..\tests\folder\ok.lua" />
+    <None Include="..\src\_premake_main.lua" />
+    <None Include="..\src\_manifest.lua" />
+    <None Include="..\src\tools\snc.lua" />
+    <None Include="..\src\tools\gcc.lua" />
+    <None Include="..\src\tools\valac.lua" />
+    <None Include="..\src\tools\msc.lua" />
+    <None Include="..\src\tools\ow.lua" />
+    <None Include="..\src\tools\swift.lua" />
+    <None Include="..\src\tools\ghs.lua" />
+    <None Include="..\src\tools\dotnet.lua" />
+    <None Include="..\src\actions\jcdb\jcdb_solution.lua" />
+    <None Include="..\src\actions\jcdb\_jcdb.lua" />
+    <None Include="..\src\actions\example\example_project.lua" />
+    <None Include="..\src\actions\example\example_solution.lua" />
+    <None Include="..\src\actions\example\_example.lua" />
+    <None Include="..\src\actions\ninja\ninja_base.lua" />
+    <None Include="..\src\actions\ninja\ninja_swift.lua" />
+    <None Include="..\src\actions\ninja\ninja_solution.lua" />
+    <None Include="..\src\actions\ninja\_ninja.lua" />
+    <None Include="..\src\actions\ninja\ninja_swift_incremental.lua" />
+    <None Include="..\src\actions\ninja\ninja_cpp.lua" />
+    <None Include="..\src\actions\cmake\_cmake.lua" />
+    <None Include="..\src\actions\cmake\cmake_project.lua" />
+    <None Include="..\src\actions\cmake\cmake_workspace.lua" />
+    <None Include="..\src\actions\make\make_cpp.lua" />
+    <None Include="..\src\actions\make\_make.lua" />
+    <None Include="..\src\actions\make\make_vala.lua" />
+    <None Include="..\src\actions\make\make_swift.lua" />
+    <None Include="..\src\actions\make\make_csharp.lua" />
+    <None Include="..\src\actions\make\make_solution.lua" />
+    <None Include="..\src\actions\vstudio\vs2010.lua" />
+    <None Include="..\src\actions\vstudio\vs2022.lua" />
+    <None Include="..\src\actions\vstudio\vs2015.lua" />
+    <None Include="..\src\actions\vstudio\vs2013.lua" />
+    <None Include="..\src\actions\vstudio\vs2012.lua" />
+    <None Include="..\src\actions\vstudio\vs2017.lua" />
+    <None Include="..\src\actions\vstudio\vstudio_vcxproj.lua" />
+    <None Include="..\src\actions\vstudio\vstudio_vcxproj_filters.lua" />
+    <None Include="..\src\actions\vstudio\vstudio_solution.lua" />
+    <None Include="..\src\actions\vstudio\vs2019.lua" />
+    <None Include="..\src\actions\vstudio\_vstudio.lua" />
+    <None Include="..\src\actions\xcode\xcode_project.lua" />
+    <None Include="..\src\actions\xcode\xcode_workspace.lua" />
+    <None Include="..\src\actions\xcode\xcode10.lua" />
+    <None Include="..\src\actions\xcode\_xcode.lua" />
+    <None Include="..\src\actions\xcode\xcode8.lua" />
+    <None Include="..\src\actions\xcode\xcode_common.lua" />
+    <None Include="..\src\actions\xcode\xcode_scheme.lua" />
+    <None Include="..\src\actions\xcode\xcode9.lua" />
+    <None Include="..\src\actions\xcode\xcode11.lua" />
+    <None Include="..\src\base\cmdline.lua" />
+    <None Include="..\src\base\table.lua" />
+    <None Include="..\src\base\option.lua" />
+    <None Include="..\src\base\set.lua" />
+    <None Include="..\src\base\help.lua" />
+    <None Include="..\src\base\iter.lua" />
+    <None Include="..\src\base\tree.lua" />
+    <None Include="..\src\base\io.lua" />
+    <None Include="..\src\base\inspect.lua" />
+    <None Include="..\src\base\os.lua" />
+    <None Include="..\src\base\solution.lua" />
+    <None Include="..\src\base\path.lua" />
+    <None Include="..\src\base\profiler.lua" />
+    <None Include="..\src\base\config.lua" />
+    <None Include="..\src\base\string.lua" />
+    <None Include="..\src\base\api.lua" />
+    <None Include="..\src\base\bake.lua" />
+    <None Include="..\src\base\project.lua" />
+    <None Include="..\src\base\globals.lua" />
+    <None Include="..\src\base\premake.lua" />
+    <None Include="..\src\base\action.lua" />
+    <None Include="..\src\base\validate.lua" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
