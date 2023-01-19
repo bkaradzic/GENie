@@ -1,5 +1,5 @@
-GENie - Project generator tool
-==============================
+GENie - Project generator tool (XYZ Reality customized)
+=======================================================
 
 What is it?
 -----------
