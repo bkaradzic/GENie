@@ -1,5 +1,5 @@
-GENie - Project generator tool (XYZ Reality customized)
-=======================================================
+GENie - Project generator tool (XYZ Reality fork)
+=================================================
 
 What is it?
 -----------
