@@ -190,7 +190,7 @@
 		_p('  VALA_LDFLAGS= $(shell pkg-config --libs%s)', make.list(cfg.links))
 		_p('  ALL_LDFLAGS+= $(LDFLAGS)%s $(VALA_LDFLAGS)', make.list(table.join(cfg.linkoptions)))
 		_p('  LINKOBJS    = %s', "$(OBJECTS)")
-		_p('  VALA_CFLAGS = $(shell pkg-config --cflags%s)', make.list(cfg.links))
+		_p('  VALA_CFLAGS = $(shell pkg-config --cflags%s)%s', make.list(cfg.links), make.list(valac.getvalaccflags(cfg)))
 		_p('  ALL_CFLAGS += $(CFLAGS) $(ARCH)%s $(VALA_CFLAGS)', make.list(table.join(cfg.buildoptions, cfg.buildoptions_c)))
 		_p('  LINKCMD     = $(CC) -o $(TARGET) $(LINKOBJS) $(ARCH) $(ALL_LDFLAGS)');
 
