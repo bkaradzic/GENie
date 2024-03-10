@@ -32,6 +32,8 @@
 		if not cfg.flags.ObjcARC then
 			options.CLANG_ENABLE_OBJC_WEAK = "YES"
 		end
+		
+		options.FRAMEWORK_SEARCH_PATHS = cfg.libdirs
 
 		return options
 	end
