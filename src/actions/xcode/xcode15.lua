@@ -1,17 +1,18 @@
 --
--- xcode14.lua
--- Define the Apple XCode 14.0 action and support functions.
+-- xcode15.lua
+-- Define the Apple XCode 15.0 action and support functions.
 --
 
 	local premake = premake
-	premake.xcode14 = { }
+	premake.xcode15 = { }
 
 	local xcode  = premake.xcode
 	local xcode10 = premake.xcode10
 	local xcode11 = premake.xcode11
 	local xcode14 = premake.xcode14
+	local xcode15 = premake.xcode15
 
-	function xcode14.XCBuildConfiguration_Target(tr, target, cfg)
+	function xcode15.XCBuildConfiguration_Target(tr, target, cfg)
 		local options = xcode11.XCBuildConfiguration_Target(tr, target, cfg)
 		options.CODE_SIGN_IDENTITY = "-"
 
@@ -21,22 +22,23 @@
 		local iosversion = options.IPHONEOS_DEPLOYMENT_TARGET
 		local macosversion = options.MACOSX_DEPLOYMENT_TARGET
 		local tvosversion = options.TVOS_DEPLOYMENT_TARGET
+		local xrosversion = options.XROS_DEPLOYMENT_TARGET
 
-		if iosversion and not xcode.versionge(iosversion, "11") then
-		   error("XCode14 does not support deployment for iOS older than 11")
-		elseif macosversion and not xcode.versionge(macosversion, "10.13") then
-		   error("XCode14 does not support deployment for macOS older than 10.13")
-		elseif tvosversion and not xcode.versionge(tvosversion, "11") then
-		   error("XCode14 does not support deployment for tvOS older than 11")
+		if iosversion and not xcode.versionge(iosversion, "12") then
+		   error("XCode15 does not support deployment for iOS older than 12")
+		elseif macosversion and not xcode.versionge(macosversion, "13.5") then
+		   error("XCode15 does not support deployment for macOS older than 13.5")
+		elseif tvosversion and not xcode.versionge(tvosversion, "12") then
+		   error("XCode15 does not support deployment for tvOS older than 12")
+		elseif xrosversion and not xcode.versionge(xrosversion, "1.0") then
+		   error("XCode15 does not support deployment for visionOS older than 1.0")
 		end
 
 		return options
 	end
 
-	function xcode14.XCBuildConfiguration_Project(tr, prj, cfg)
+	function xcode15.XCBuildConfiguration_Project(tr, prj, cfg)
 		local options = xcode10.XCBuildConfiguration_Project(tr, prj, cfg)
-
-		options.ENABLE_BITCODE = "NO" -- Bitcode is now deprecated.
 
 		-- We need to set the deployment target for both target
 		-- and project. XCode will complain, otherwise.
@@ -46,7 +48,7 @@
 		return options
 	end
 
-	function xcode14.project(prj)
+	function xcode15.project(prj)
 		local tr = xcode.buildprjtree(prj)
 		xcode.Header(tr, 48)
 		xcode.PBXBuildFile(tr)
@@ -64,8 +66,8 @@
 		xcode.PBXVariantGroup(tr)
 		xcode.PBXTargetDependency(tr)
 		xcode.XCBuildConfiguration(tr, prj, {
-			ontarget = xcode14.XCBuildConfiguration_Target,
-			onproject = xcode14.XCBuildConfiguration_Project,
+			ontarget = xcode15.XCBuildConfiguration_Target,
+			onproject = xcode15.XCBuildConfiguration_Project,
 		})
 		xcode.XCBuildConfigurationList(tr)
 		xcode.Footer(tr)
@@ -74,14 +76,14 @@
 
 
 --
--- xcode14 action
+-- xcode15 action
 --
 
 	newaction
 	{
-		trigger         = "xcode14",
-		shortname       = "Xcode 14",
-		description     = "Generate Apple Xcode 14 project files",
+		trigger         = "xcode15",
+		shortname       = "Xcode 15",
+		description     = "Generate Apple Xcode 15 project files",
 		os              = "macosx",
 
 		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
@@ -117,5 +119,6 @@
 			iOSTargetPlatformVersion = nil,
 			macOSTargetPlatformVersion = nil,
 			tvOSTargetPlatformVersion = nil,
+			visionOSTargetPlatformVersion = nil,
 		},
 	}

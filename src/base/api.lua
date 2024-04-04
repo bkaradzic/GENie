@@ -941,6 +941,12 @@ end
 	}
 
 	newapifield {
+		name  = "visionostargetplatformversion",
+		kind  = "string",
+		scope = "project",
+	}
+
+	newapifield {
 		name  = "windowstargetplatformversion",
 		kind  = "string",
 		scope = "project",
