@@ -415,6 +415,7 @@
 		local iosversion = get_opt(cfg.iostargetplatformversion, def.iOSTargetPlatformVersion)
 		local macosversion = get_opt(cfg.macostargetplatformversion, def.macOSTargetPlatformVersion)
 		local tvosversion = get_opt(cfg.tvostargetplatformversion, def.tvOSTargetPlatformVersion)
+		local visionosversion = get_opt(cfg.visionostargetplatformversion, def.visionOSTargetPlatformVersion)
 
 		if iosversion then
 			opts.IPHONEOS_DEPLOYMENT_TARGET = iosversion
@@ -422,6 +423,8 @@
 			opts.MACOSX_DEPLOYMENT_TARGET = macosversion
 		elseif tvosversion then
 			opts.TVOS_DEPLOYMENT_TARGET = tvosversion
+		elseif visionosversion then
+			opts.XROS_DEPLOYMENT_TARGET = tvosversion
 		end
 	end
 
@@ -1297,6 +1300,21 @@ end
 		_p('')
 	end
 
+	function xcode.versionge(version, reference)
+		local vparts = string.explode(version, ".", true)
+		local rparts = string.explode(reference, ".", true)
+
+		for i=1,#rparts do
+			local rnum = tonumber(rparts[i]) or 0
+			local vnum = tonumber(vparts[i]) or 0
+
+			if vnum < rnum then
+				return false
+			end
+		end
+
+		return true
+	end
 
 	function xcode.Footer()
 		_p(1,'};')

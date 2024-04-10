@@ -141,6 +141,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Removed FASTBuild.
  - Removed Qbs support.
  - Added vs2022 support.
+ - Added xcode15 action with visionOS support.
 
 build - GENie build system scripts
 ----------------------------------
