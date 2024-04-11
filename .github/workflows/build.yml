@@ -1,0 +1,64 @@
+name: Build and Upload Artifact
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout code
+
+      - name: Install dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
+        shell: bash
+
+      - name: Install dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install make
+        shell: bash
+
+      - name: Install dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install make
+        shell: pwsh
+
+      - name: Build project
+        run: make
+        shell: bash
+
+      - name: Archive production artifacts (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-linux
+          path: bin/linux/genie
+
+      - name: Archive production artifacts (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-macos
+          path: bin/darwin/genie
+
+      - name: Archive production artifacts (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-windows
+          path: bin/windows/genie.exe
