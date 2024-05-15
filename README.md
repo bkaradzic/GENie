@@ -5,6 +5,8 @@
 [GENie](https://github.com/bkaradzic/genie#what-is-it) - Project generator tool
 ===============================================================================
 
+[![Build and Upload Artifact](https://github.com/bkaradzic/GENie/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/bkaradzic/GENie/actions/workflows/build.yml)
+
 What is it?
 -----------
 
