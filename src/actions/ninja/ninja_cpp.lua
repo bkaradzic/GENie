@@ -149,14 +149,16 @@ end
 
 	function cpp.custombuildtask(prj, cfg)
 		local cmd_index = 1
-		local seen_commands = {}
-		local command_by_name = {}
-		local command_files = {}
+
+		local ninja_rules = {}
+		local ninja_builds = {}
 
 		local prebuildsuffix = #cfg.prebuildcommands > 0 and "||__prebuildcommands_" .. premake.esc(prj.name) or ""
 
 		for _, custombuildtask in ipairs(prj.custombuildtask or {}) do
 			for _, buildtask in ipairs(custombuildtask or {}) do
+
+				local commands = {}
 				for _, cmd in ipairs(buildtask[4] or {}) do
 					local num = 1
 
@@ -170,63 +172,40 @@ end
 					cmd = string.gsub(cmd, '%$%(<%)', '$in')
 					cmd = string.gsub(cmd, '%$%(@%)', '$out')
 
-					local cmd_name -- shortened command name
-
-					-- generate shortened rule names for the command, may be nonsensical
-					-- in some cases but it will at least be unique.
-					if seen_commands[cmd] == nil then
-						local _, _, name = string.find(cmd, '([.%w]+)%s')
-						name = 'cmd' .. cmd_index .. '_' .. string.gsub(name, '[^%w]', '_')
-
-						seen_commands[cmd] = {
-							name = name,
-							index = cmd_index,
-						}
-
-						cmd_index = cmd_index + 1
-						cmd_name = name
-					else
-						cmd_name = seen_commands[cmd].name
-					end
-
-					local index = seen_commands[cmd].index
-
-					if command_files[index] == nil then
-						command_files[index] = {}
-					end
-
-					local cmd_set = command_files[index]
-
-					table.insert(cmd_set, {
-						buildtask[1],
-						buildtask[2],
-						buildtask[3],
-						seen_commands[cmd].name,
-					})
-
-					command_files[index] = cmd_set
-					command_by_name[cmd_name] = cmd
+					table.insert(commands, cmd)
 				end
+
+				ninja_rules["cmd_" .. cmd_index] = commands
+
+				table.insert(ninja_builds, {
+					file_in = buildtask[1],
+					file_out = buildtask[2],
+					rule = "cmd_" .. cmd_index,
+					deps = buildtask[3]
+				})
+
+				cmd_index = cmd_index + 1
 			end
 		end
 
 		_p("# custom build rules")
-		for command, details in pairs(seen_commands) do
-			_p("rule " .. details.name)
-			_p(1, "command = " .. wrap_ninja_cmd(command))
+
+		for rule, commands in pairs(ninja_rules) do
+			_p("rule " .. rule)
+			_p(1, "command = " .. wrap_ninja_cmd(table.concat(commands, " && ")))
 		end
 
-		for cmd_index, cmdsets in ipairs(command_files) do
-			for _, cmdset in ipairs(cmdsets) do
-				local file_in = path.getrelative(cfg.location, cmdset[1])
-				local file_out = path.getrelative(cfg.location, cmdset[2])
-				local deps = ''
-				for i, dep in ipairs(cmdset[3]) do
-					deps = deps .. path.getrelative(cfg.location, dep) .. ' '
-				end
-				_p("build " .. file_out .. ': ' .. cmdset[4] .. ' ' .. file_in .. ' | ' .. deps .. prebuildsuffix)
-				_p("")
+
+		for i = 1,#ninja_builds do
+			local build = ninja_builds[i]
+
+			local deps = ''
+			for i, dep in ipairs(build.deps) do
+				deps = deps .. path.getrelative(cfg.location, dep) .. ' '
 			end
+
+			_p("build " .. path.getrelative(cfg.location, build.file_out) .. ': ' .. build.rule .. ' ' .. path.getrelative(cfg.location, build.file_in) .. ' | ' .. deps .. prebuildsuffix)
+			_p("")
 		end
 	end
 
