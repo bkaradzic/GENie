@@ -18,7 +18,7 @@ Supported project generators:
  * GNU Makefile
  * [JSON Compilation Database][jcdb]
  * Ninja (experimental)
- * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019
+ * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019, 2022
  * XCode
 
 Download (stable)
