@@ -559,7 +559,7 @@
 			if kind == "ConsoleApp" or kind == "WindowedApp" then
 				ext = ".html"
 			elseif kind == "StaticLib" then
-				ext = ".bc"
+				ext = ".a"
 			elseif kind == "SharedLib" then
 				ext = ".js"
 			end
