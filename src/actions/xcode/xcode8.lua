@@ -118,6 +118,11 @@
 			end
 		end
 
+		local defines = {}
+		for k, v in pairs(cfg.defines or {}) do
+			defines[k] = v:gsub('[\'"\\\n\r\t ]', function (c) return ({ ['\n'] = '\\n', ['\r'] = '\\r', ['\t'] = '\\t' })[c] or '\\'..c end)
+		end
+
 		-- options table to return
 		local options = {
 			ARCHS                              = archs[cfg.platform],
@@ -135,7 +140,7 @@
 			ENABLE_TESTABILITY                 = "YES",
 			GCC_C_LANGUAGE_STANDARD            = "gnu99",
 			GCC_NO_COMMON_BLOCKS               = "YES",
-			GCC_PREPROCESSOR_DEFINITIONS       = cfg.defines,
+			GCC_PREPROCESSOR_DEFINITIONS       = defines,
 			GCC_SYMBOLS_PRIVATE_EXTERN         = "NO",
 			GCC_WARN_64_TO_32_BIT_CONVERSION   = "YES",
 			GCC_WARN_ABOUT_RETURN_TYPE         = "YES",
