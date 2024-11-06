@@ -167,6 +167,7 @@
 			for _, pattern in ipairs(removes) do
 				if pattern == tbl[i] then
 					table.remove(tbl, i)
+					break
 				end
 			end
 		end
