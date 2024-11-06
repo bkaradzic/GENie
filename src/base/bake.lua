@@ -166,7 +166,7 @@
 		for i = #tbl, 1, -1 do
 			for _, pattern in ipairs(removes) do
 				if pattern == tbl[i] then
-					table.remove(tbl, k)
+					table.remove(tbl, i)
 				end
 			end
 		end
