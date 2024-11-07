@@ -44,21 +44,21 @@ jobs:
 
       - name: Archive production artifacts (Linux)
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-linux
           path: bin/linux/genie
 
       - name: Archive production artifacts (macOS)
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-macos
           path: bin/darwin/genie
 
       - name: Archive production artifacts (Windows)
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-windows
           path: bin/windows/genie.exe
