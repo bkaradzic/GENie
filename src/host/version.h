@@ -1,2 +1,2 @@
-#define VERSION 1181
-#define VERSION_STR "version 1181 (commit 29e6832fdf3b106c0906d288c8ced6c0761b8985)"
+#define VERSION 1187
+#define VERSION_STR "version 1187 (commit 6d94bd661b120b2b14432527d2d82fb79111cef0)"
