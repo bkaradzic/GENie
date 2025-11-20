@@ -19,48 +19,13 @@ function slnx.generate(sln)
     -- Mark the file as Unicode
     _p('\239\187\191')
 
-    slnx.reorderProjects(sln)
-
+    -- Write out solution file
     _p('<Solution>')
     slnx.configurations(sln)
     for prj in premake.solution.eachproject(sln) do
         slnx.project(prj)
     end
     _p('</Solution>')
-end
-
---
--- If a startup project is specified, move it to the front of the project list.
--- This will make Visual Studio treat it like a startup project.
---
-
-function slnx.reorderProjects(sln)
-    if sln.startproject then
-        for i, prj in ipairs(sln.projects) do
-            if sln.startproject == prj.name then
-                -- Move group tree containing the project to start of group list
-                local cur = prj.group
-                while cur ~= nil do
-                    -- Remove group from array
-                    for j, group in ipairs(sln.groups) do
-                        if group == cur then
-                            table.remove(sln.groups, j)
-                            break
-                        end
-                    end
-
-                    -- Add back at start
-                    table.insert(sln.groups, 1, cur)
-                    cur = cur.parent
-                end
-
-                -- Move the project itself to start
-                table.remove(sln.projects, i)
-                table.insert(sln.projects, 1, prj)
-                break
-            end
-        end
-    end
 end
 
 --
@@ -72,7 +37,7 @@ function slnx.project(prj)
     local projpath = path.translate(
     path.getrelative(prj.solution.location, vstudio.projectfile(prj)), "\\")
 
-    _p('  <Project Path="%s" />', projpath)
+    _p('  <Project Path="%s" Id="%s" />', projpath, prj.uuid)
 end
 
 --
