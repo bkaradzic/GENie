@@ -18,13 +18,13 @@ Supported project generators:
  * GNU Makefile
  * [JSON Compilation Database][jcdb]
  * Ninja (experimental)
- * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019, 2022
+ * Visual Studio 2010, 2012, 2013, 2015, 2017, 2019, 2022, 2026
  * XCode
 
 Download (stable)
 -----------------
 
-	version 1192 (commit 8ebbdb42a0b2e08547465aa147c192b8d2c2d72c)
+	version 1196 (commit 5ae13c9940b4d5a62b1ea086ffcdacc2ddc16b50)
 
 Linux:  
 https://github.com/bkaradzic/bx/raw/master/tools/bin/linux/genie
@@ -144,6 +144,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Removed Qbs support.
  - Added vs2022 support.
  - Added xcode15 action with visionOS support.
+ - Added vs2026 support.
 
 build - GENie build system scripts
 ----------------------------------
