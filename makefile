@@ -22,6 +22,22 @@ else
 OS=windows
 endif
 
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),$(filter i%86,$(UNAME_M)))
+MPARAM=-m32
+else
+ifeq ($(UNAME_M),$(filter aarch64,$(UNAME_M)))
+MPARAM=
+else
+ifeq ($(UNAME_M),$(filter armv%,$(UNAME_M)))
+MPARAM=
+else
+MPARAM=-m64
+endif
+endif
+endif
+export MPARAM
+
 .PHONY: release
 
 GENIE=bin/$(OS)/genie
