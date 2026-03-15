@@ -83,17 +83,35 @@ local function msvc_condition(matched_keyword)
     return "MSVC"
 end
 
-local function mingw_condition(matched_keyword)
-    return "MINGW"
+-- Check if a keyword matches the "vs" action pattern.
+-- Keywords are stored as Lua patterns after path.wildcards() and :lower() transformation.
+-- Accepts transformed forms of: vs*, vs20*, vs2022, vs2019
+-- Rejects transformed forms of: vs*-clang, vs*-orbis (contain %-suffix)
+local function is_vs_action_keyword(keyword)
+    -- Must start with "vs", then only digits and wildcard patterns [^/]* or .*
+    -- Must NOT contain %-  (transformed from "-", indicates user-defined variant)
+    if not keyword:match("^vs") then
+        return false
+    end
+    if keyword:find("%%%-") then
+        return false
+    end
+    -- After "vs", only digits, wildcard chars [^/]*, .*, or Lua pattern escapes
+    local rest = keyword:sub(3)
+    -- Strip known wildcard patterns
+    rest = rest:gsub("%[%^/%]%*", "")  -- [^/]* from single *
+    rest = rest:gsub("%.%*", "")        -- .* from **
+    -- What remains should be only digits (or empty)
+    return rest:match("^%d*$") ~= nil
 end
 
--- Extract platform-specific settings from project blocks gated behind a keyword pattern.
+-- Extract settings from project blocks gated behind action-name keywords.
 -- These blocks don't get baked when _ACTION="cmake", so we manually scan for them.
--- keyword_pattern: Lua pattern to match against block keywords (e.g. "vs" or "mingw")
+-- match_fn: function(keyword) -> bool, tests if a keyword matches the action family
 -- condition_fn: maps matched keyword to a CMake condition string
 -- Returns an array of { condition = "...", settings = { includedirs, defines, ... } }
 -- grouped by condition, generic conditions first.
-function cmake.getplatform_settings(prj, cfgname, keyword_pattern, condition_fn)
+function cmake.getplatform_settings(prj, cfgname, match_fn, condition_fn)
     local groups = {}
 
     -- Get the raw project object (prj may be a baked config)
@@ -117,7 +135,7 @@ function cmake.getplatform_settings(prj, cfgname, keyword_pattern, condition_fn)
                 -- Check each alternative in "or"-separated keywords
                 for _, alt in ipairs(kw:explode(" or ")) do
                     alt = alt:match("^%s*(.-)%s*$") -- trim
-                    if alt:match(keyword_pattern) then
+                    if match_fn(alt) then
                         matched_alt = alt
                     end
                     -- Check if this keyword is a config filter
@@ -131,7 +149,6 @@ function cmake.getplatform_settings(prj, cfgname, keyword_pattern, condition_fn)
 
             -- If cfgname specified, block must either match it or not mention any known config
             if cfgname and cfgname ~= "" then
-                -- Check if block has any config-like keyword (Debug, Release, etc.)
                 local block_has_config_filter = false
                 for _, kw in ipairs(blk.keywords) do
                     for _, alt in ipairs(kw:explode(" or ")) do
@@ -230,11 +247,7 @@ local function flatten_platform_groups(groups)
 end
 
 function cmake.getmsvc_settings(prj, cfgname)
-    return cmake.getplatform_settings(prj, cfgname, "vs", msvc_condition)
-end
-
-function cmake.getmingw_settings(prj, cfgname)
-    return cmake.getplatform_settings(prj, cfgname, "mingw", mingw_condition)
+    return cmake.getplatform_settings(prj, cfgname, is_vs_action_keyword, msvc_condition)
 end
 
 
@@ -582,34 +595,10 @@ function cmake.project(prj)
         end
     end
 
-    -- MSVC-specific includes, defines, links, and link options from vs*-gated config blocks
+    -- MSVC-specific includes, defines, links, and link options from vs*-gated blocks
     -- Version-specific settings (e.g. vs2019-only) get their own MSVC_VERSION conditions
     local msvc_groups = cmake.getmsvc_settings(prj)
     for _, group in ipairs(msvc_groups) do
-        local s = group.settings
-        if #s.includedirs > 0 or #s.defines > 0 or #s.links > 0 or #s.linkoptions > 0 then
-            _p('if(%s)', group.condition)
-            for _, v in ipairs(s.includedirs) do
-                _p(1, 'target_include_directories(%s PRIVATE ../../%s)', targetname, v)
-            end
-            for _, v in ipairs(s.defines) do
-                _p(1, 'target_compile_definitions(%s PRIVATE %s)', targetname, v)
-            end
-            if #s.links > 0 then
-                _p(1, 'target_link_libraries(%s PRIVATE%s)', targetname, cmake.list(s.links))
-            end
-            if (prj.kind == 'ConsoleApp' or prj.kind == 'WindowedApp') then
-                for _, v in ipairs(s.linkoptions) do
-                    _p(1, 'target_link_options(%s PRIVATE %s)', targetname, v)
-                end
-            end
-            _p('endif()')
-        end
-    end
-
-    -- MinGW-specific includes, defines, links, and options from mingw*-gated config blocks
-    local mingw_groups = cmake.getmingw_settings(prj)
-    for _, group in ipairs(mingw_groups) do
         local s = group.settings
         if #s.includedirs > 0 or #s.defines > 0 or #s.links > 0 or #s.buildoptions > 0 or #s.linkoptions > 0 then
             _p('if(%s)', group.condition)
