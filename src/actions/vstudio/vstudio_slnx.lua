@@ -23,7 +23,9 @@ function slnx.generate(sln)
     _p('<Solution>')
     slnx.configurations(sln)
     for group in premake.solution.eachgroup(sln) do
-        slnx.group(group)
+        if #group.projects > 0 then
+            slnx.group(group)
+        end
     end
     for prj in premake.solution.eachproject(sln) do
         if prj.group == nil then
