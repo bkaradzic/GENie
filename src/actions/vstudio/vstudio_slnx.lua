@@ -22,10 +22,35 @@ function slnx.generate(sln)
     -- Write out solution file
     _p('<Solution>')
     slnx.configurations(sln)
+    for group in premake.solution.eachgroup(sln) do
+        slnx.group(group)
+    end
     for prj in premake.solution.eachproject(sln) do
-        slnx.project(prj)
+        if prj.group == nil then
+            slnx.project(prj)
+        end
     end
     _p('</Solution>')
+end
+
+--
+-- Write a folder entry for a group and write all projects under the group
+--
+
+function slnx.group(group)
+    local folderName = group.name .. "/"
+
+    local groupParent = group.parent
+    while groupParent ~= nil do
+        folderName = groupParent.name .. "/" .. folderName
+        groupParent = groupParent.parent
+    end
+
+    _p('  <Folder Name="/%s">', folderName)
+    for _, prj in ipairs(group.projects) do
+        slnx.project(prj)
+    end
+    _p('  </Folder>')
 end
 
 --
@@ -37,7 +62,11 @@ function slnx.project(prj)
     local projpath = path.translate(
     path.getrelative(prj.solution.location, vstudio.projectfile(prj)), "\\")
 
-    _p('  <Project Path="%s" Id="%s" />', projpath, prj.uuid)
+    local indent = '  '
+    if prj.group ~= nil then
+        indent = '    '
+    end
+    _p('%s<Project Path="%s" Id="%s" />', indent, projpath, prj.uuid)
 end
 
 --
