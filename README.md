@@ -146,13 +146,13 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added xcode15 action with visionOS support.
  - Added vs2026 support.
 
-build - GENie build system scripts
+zidar - GENie build system scripts
 ----------------------------------
 
-build is a set of build system scripts and related tools, built around
+zidar is a set of build system scripts and related tools, built around
 GENie project generator tool.
 
-https://milostosic.github.io/build/
+https://github.com/RudjiGames/zidar
 
 Debugging GENie scripts
 -----------------------
