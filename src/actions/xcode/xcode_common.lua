@@ -38,6 +38,7 @@
 			[".strings"] = "Resources",
 			[".nib"] = "Resources",
 			[".xib"] = "Resources",
+			[".storyboard"] = "Resources",
 			[".icns"] = "Resources",
 			[".bmp"] = "Resources",
 			[".wav"] = "Resources",
@@ -105,6 +106,7 @@
 			[".pch"]       = "sourcecode.c.h",
 			[".plist"]     = "text.plist.xml",
 			[".strings"]   = "text.plist.strings",
+			[".storyboard"] = "file.storyboard",
 			[".xib"]       = "file.xib",
 			[".icns"]      = "image.icns",
 			[".bmp"]       = "image.bmp",
@@ -152,6 +154,7 @@
 			[".pch"]       = "sourcecode.cpp.h",
 			[".plist"]     = "text.plist.xml",
 			[".strings"]   = "text.plist.strings",
+			[".storyboard"] = "file.storyboard",
 			[".xib"]       = "file.xib",
 			[".icns"]      = "image.icns",
 			[".bmp"]       = "image.bmp",
@@ -926,6 +929,7 @@ end
 						end
 					end
 					_p(3,');');
+					_p(3,'alwaysOutOfDate = 1;');
 					_p(3,'name = %s;', name);
 					_p(3,'outputPaths = (');
 					_p(3,');');
