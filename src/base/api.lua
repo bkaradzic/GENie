@@ -1406,6 +1406,18 @@ end
 	}
 
 	newapifield {
+		name  = "xcodepostbuildinputs",
+		kind  = "list",
+		scope = "config",
+	}
+
+	newapifield {
+		name  = "xcodepostbuildoutputs",
+		kind  = "list",
+		scope = "config",
+	}
+
+	newapifield {
 		name  = "xcodecopyresources",
 		kind  = "table",
 		scope = "project",
