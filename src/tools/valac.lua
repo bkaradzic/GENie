@@ -13,6 +13,7 @@
 
 	premake.valac.valac  = "valac"
 	premake.valac.cc     = premake.gcc.cc
+	premake.valac.rc     = premake.gcc.rc
 	premake.valac.glibrc = "glib-compile-resources"
 
 
@@ -76,6 +77,20 @@
 
 	function premake.valac.getvalaccflags(cfg)
 		return table.translate(cfg.flags, valaccflags)
+	end
+
+
+
+--
+-- Returns a list of linker flags for the application kind.
+--
+
+	function premake.valac.getldflags(cfg)
+		local result = { }
+		if cfg.kind == "WindowedApp" and cfg.system == "windows" then
+			table.insert(result, "-mwindows")
+		end
+		return result
 	end
 
 
