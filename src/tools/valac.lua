@@ -82,6 +82,20 @@
 
 
 --
+-- Returns a list of linker flags for the application kind.
+--
+
+	function premake.valac.getldflags(cfg)
+		local result = { }
+		if cfg.kind == "WindowedApp" and cfg.system == "windows" then
+			table.insert(result, "-mwindows")
+		end
+		return result
+	end
+
+
+
+--
 -- Decorate pkgs for the Vala command line.
 --
 
