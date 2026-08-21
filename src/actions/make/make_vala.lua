@@ -46,6 +46,14 @@
 		end
 		_p('')
 
+		_p('RESOURCES := \\')
+		for _, file in ipairs(prj.allfiles) do
+			if path.isresourcefile(file) then
+				_p('\t$(OBJDIR)/%s.res \\', _MAKE.esc(path.getbasename(file)))
+			end
+		end
+		_p('')
+
 		-- main build rule(s)
 		_p('.PHONY: clean prebuild prelink')
 		_p('')
@@ -55,7 +63,7 @@
 		_p('')
 
 		-- target build rule
-		_p('$(TARGET): $(OBJECTS) | $(TARGETDIR)')
+		_p('$(TARGET): $(OBJECTS) $(RESOURCES) | $(TARGETDIR)')
 		_p('\t@echo Linking %s', prj.name)
 		_p('\t$(SILENT) $(LINKCMD)')
 
@@ -152,6 +160,15 @@
 		_p('GLIBRC = %s', valac.glibrc)
 		_p('')
 
+		_p('ifndef RESCOMP')
+		_p('  ifdef WINDRES')
+		_p('    RESCOMP = $(WINDRES)')
+		_p('  else')
+		_p('    RESCOMP = %s', valac.rc or 'windres')
+		_p('  endif')
+		_p('endif')
+		_p('')
+
 		if (not premake.make.makefile_ignore) then
 			_p('MAKEFILE = %s', _MAKE.getmakefilename(prj, true))
 			_p('')
@@ -193,7 +210,15 @@
 		_p('  LINKOBJS    = %s', "$(OBJECTS)")
 		_p('  VALA_CFLAGS = $(shell pkg-config --cflags%s)%s', make.list(cfg.links), make.list(valac.getvalaccflags(cfg)))
 		_p('  ALL_CFLAGS += $(CFLAGS) $(ARCH)%s $(VALA_CFLAGS)', make.list(table.join(cfg.buildoptions, cfg.buildoptions_c)))
-		_p('  LINKCMD     = $(CC) -o $(TARGET) $(LINKOBJS) $(ARCH) $(ALL_LDFLAGS)');
+		_p('  ALL_RESFLAGS+= $(RESFLAGS)%s', make.list(table.join(
+			premake.gcc.getdefines(cfg.defines or {}),
+			premake.gcc.getincludedirs(cfg.includedirs or {}),
+			premake.gcc.getquoteincludedirs(cfg.userincludedirs or {}),
+			premake.gcc.getsystemincludedirs(cfg.systemincludedirs or {}),
+			premake.gcc.getdefines(cfg.resdefines or {}),
+			premake.gcc.getincludedirs(cfg.resincludedirs or {}),
+			cfg.resoptions or {})))
+		_p('  LINKCMD     = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS)');
 
 		table.sort(cfg.files)
 
@@ -340,6 +365,15 @@
 
 					_p('')
 				end
+			elseif path.isresourcefile(file) then
+				_p('$(OBJDIR)/%s.res: %s', _MAKE.esc(path.getbasename(file)), _MAKE.esc(file))
+				if prj.msgresource then
+					_p('\t@echo ' .. prj.msgresource)
+				else
+					_p('\t@echo $(notdir $<)')
+				end
+				_p('\t$(SILENT) $(RESCOMP) $< -O coff -o "$@" $(ALL_RESFLAGS)')
+				_p('')
 			end
 		end
 
