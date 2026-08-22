@@ -38,6 +38,7 @@
 			[".strings"] = "Resources",
 			[".nib"] = "Resources",
 			[".xib"] = "Resources",
+			[".storyboard"] = "Resources",
 			[".icns"] = "Resources",
 			[".bmp"] = "Resources",
 			[".wav"] = "Resources",
@@ -105,6 +106,7 @@
 			[".pch"]       = "sourcecode.c.h",
 			[".plist"]     = "text.plist.xml",
 			[".strings"]   = "text.plist.strings",
+			[".storyboard"] = "file.storyboard",
 			[".xib"]       = "file.xib",
 			[".icns"]      = "image.icns",
 			[".bmp"]       = "image.bmp",
@@ -152,6 +154,7 @@
 			[".pch"]       = "sourcecode.cpp.h",
 			[".plist"]     = "text.plist.xml",
 			[".strings"]   = "text.plist.strings",
+			[".storyboard"] = "file.storyboard",
 			[".xib"]       = "file.xib",
 			[".icns"]      = "image.icns",
 			[".bmp"]       = "image.bmp",
@@ -902,7 +905,7 @@ end
 	function xcode.PBXShellScriptBuildPhase(tr)
 		local wrapperWritten = false
 
-		local function doblock(id, name, commands, files)
+		local function doblock(id, name, commands, inputfiles, outputfiles)
 			if commands ~= nil then
 				commands = table.flatten(commands)
 			end
@@ -917,17 +920,28 @@ end
 					_p(3,'files = (')
 					_p(3,');')
 					_p(3,'inputPaths = (');
-					if files ~= nil then
-						files = table.flatten(files)
-						if #files > 0 then
-							for _, file in ipairs(files) do
+					if inputfiles ~= nil then
+						inputfiles = table.flatten(inputfiles)
+						if #inputfiles > 0 then
+							for _, file in ipairs(inputfiles) do
 								_p(4, '"%s",', file)
 							end
 						end
 					end
 					_p(3,');');
+					if outputfiles == nil or #table.flatten(outputfiles) == 0 then
+						_p(3,'alwaysOutOfDate = 1;');
+					end
 					_p(3,'name = %s;', name);
 					_p(3,'outputPaths = (');
+					if outputfiles ~= nil then
+						outputfiles = table.flatten(outputfiles)
+						if #outputfiles > 0 then
+							for _, file in ipairs(outputfiles) do
+								_p(4, '"%s",', file)
+							end
+						end
+					end
 					_p(3,');');
 					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
 					_p(3,'shellPath = /bin/sh;');
@@ -950,9 +964,10 @@ end
 			return commands
 		end
 
-		local function dobuildblock(id, name, which)
+		local function dobuildblock(id, name, which, inputswhich, outputswhich)
 			-- see if there are any commands to add for each config
 			local commands = {}
+			local inputfiles, outputfiles
 			for _, cfg in ipairs(tr.configs) do
 				local cfgcmds = wrapcommands(cfg[which], cfg)
 				if #cfgcmds > 0 then
@@ -960,8 +975,14 @@ end
 						table.insert(commands, cmd)
 					end
 				end
+				if inputswhich and cfg[inputswhich] and #cfg[inputswhich] > 0 then
+					inputfiles = cfg[inputswhich]
+				end
+				if outputswhich and cfg[outputswhich] and #cfg[outputswhich] > 0 then
+					outputfiles = cfg[outputswhich]
+				end
 			end
-			doblock(id, name, commands)
+			doblock(id, name, commands, inputfiles, outputfiles)
 		end
 
 		local function doscriptphases(which)
@@ -985,7 +1006,7 @@ end
 
 		dobuildblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
 		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
-		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands", "xcodepostbuildinputs", "xcodepostbuildoutputs")
 		doscriptphases("xcodescriptphases")
 
 		if wrapperWritten then
