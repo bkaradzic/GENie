@@ -45,11 +45,10 @@
 			options.CLANG_ENABLE_OBJC_ARC = "YES"
 		end
 
---		local outdir = path.getdirectory(cfg.buildtarget.directory)
---		if outdir ~= "." then
---			options.CONFIGURATION_BUILD_DIR = outdir
---		end
-		options.CONFIGURATION_BUILD_DIR = "$(SYSROOT)"
+		local outdir = path.getdirectory(cfg.buildtarget.directory)
+		if outdir ~= "." then
+			options.CONFIGURATION_BUILD_DIR = outdir
+		end
 
 		if tr.infoplist then
 			options.INFOPLIST_FILE = tr.infoplist.cfg.name
