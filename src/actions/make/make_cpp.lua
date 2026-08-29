@@ -584,15 +584,19 @@
 
 		_p('ifneq (,$(OBJRESP))')
 		_p('$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(SILENT) echo $^')
-		_p('\t$(SILENT) echo $^ > $@')
+		_p('\t$(info $@ $^)')
+		_p('ifeq (,$(findstring n,$(firstword -$(MAKEFLAGS))))')
+		_p('\t$(file >$@,$^)')
+		_p('endif')
 		_p('endif')
 		_p('')
 
 		_p('ifneq (,$(LDRESP))')
 		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
-		_p('\t$(SILENT) echo $^')
-		_p('\t$(SILENT) echo $^ > $@')
+		_p('\t$(info $@ $^)')
+		_p('ifeq (,$(findstring n,$(firstword -$(MAKEFLAGS))))')
+		_p('\t$(file >$@,$^)')
+		_p('endif')
 		_p('endif')
 		_p('')
 
