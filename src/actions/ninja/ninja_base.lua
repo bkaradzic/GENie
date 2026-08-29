@@ -142,6 +142,16 @@ function cfg_proxy:getoutputfilename()
 	return path.join(self.buildtarget.directory, self.buildtarget.name)
 end
 
+function cfg_proxy:getdummysourcefilename(extension, fullpath)
+	local name = self.project.name .. "_dummy" .. extension
+	
+	if fullpath ~= nil then
+		return path.join(self.location, name)
+	end
+	
+	return name
+end
+
 local proxy_cache = { 
 	prj = { new = new_prj_proxy }, 
 	cfg = { new = new_cfg_proxy },
